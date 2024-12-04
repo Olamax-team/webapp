@@ -1,9 +1,11 @@
 import './App.css'
-import Home from './pages/Home';
+import documentTitle from './lib/utils';
+import LandingPage from './pages/LandingPage';
 
 function App() {
+  documentTitle('Home');
 
-  return <Home/>;
+  return <LandingPage/>;
 }
 
 export default App;
