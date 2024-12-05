@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,4 +9,65 @@
     --radius: 0.5rem
   }
 }
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(15deg); /* Rotate by 15deg and start position */
+  }
+  50% {
+    transform: translateY(-10px) rotate(15deg); /* Float up with the same rotation */
+  }
+  100% {
+    transform: translateY(0) rotate(15deg); /* Return to original position with rotation */
+  }
+}
+@keyframes floatDown {
+  0% {
+    transform: translateY(0) rotate(15deg); /* Rotate by 15deg and start position */
+  }
+  50% {
+    transform: translateY(10px) rotate(15deg); /* Float up with the same rotation */
+  }
+  100% {
+    transform: translateY(0) rotate(15deg); /* Return to original position with rotation */
+  }
+}
+
+@keyframes floatReverseUp {
+  0% {
+    transform: translateY(0) rotate(-15deg); /* Rotate by -15deg and start position */
+  }
+  50% {
+    transform: translateY(-10px) rotate(-15deg); /* Float up with the same rotation */
+  }
+  100% {
+    transform: translateY(0) rotate(-15deg); /* Return to original position with rotation */
+  }
+}@keyframes floatReverseDown {
+  0% {
+    transform: translateY(0) rotate(-15deg); /* Rotate by -15deg and start position */
+  }
+  50% {
+    transform: translateY(10px) rotate(-15deg); /* Float up with the same rotation */
+  }
+  100% {
+    transform: translateY(0) rotate(-15deg); /* Return to original position with rotation */
+  }
+}
+
+/* Class for floating tags with a positive rotation */
+.float-up {
+  animation: floatUp 2s ease-in-out infinite;
+}
+.float-down {
+  animation: floatDown 2s ease-in-out infinite;
+}
+
+/* Class for floating tags with a negative rotation */
+.float-reverse-up {
+  animation: floatReverseUp 2s ease-in-out infinite;
+}
+.float-reverse-down {
+  animation: floatReverseDown 2s ease-in-out infinite;
+}
+
 
