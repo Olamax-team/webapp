@@ -1,7 +1,7 @@
 
 const Navigation = () => {
   return (
-    <div>
+    <div className="w-full bg-primary py-6 px-10">
       Navigation
     </div>
   )
