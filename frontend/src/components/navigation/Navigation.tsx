@@ -1,9 +1,15 @@
+import React from "react";
+import TopHeader from "./TopHeader";
+import BottomHeader from "./BottomHeader";
 
 const Navigation = () => {
+
+
   return (
-    <div className="w-full bg-primary py-6 px-10">
-      Navigation
-    </div>
+    <React.Fragment>
+      <TopHeader/>
+      <BottomHeader/>
+    </React.Fragment>
   )
 }
 
