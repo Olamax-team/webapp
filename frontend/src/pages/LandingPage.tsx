@@ -10,7 +10,6 @@ const LandingPage = () => {
       <HeroSection/>
       <Crypto />
       <UseOlamax  />
-
     </>
   )
 }
