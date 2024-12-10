@@ -58,7 +58,7 @@ const TradeCrypto = () => {
               <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div>
                   <p className="leading-[21px] text-[14px]">
-                    You {subTab === "Buy" ? "Pay" : "Receive"}
+                    You {subTab === "Buy" ? "Pay" : "Sell"}
                   </p>
                   <Input
                     placeholder="0.00"
@@ -150,11 +150,123 @@ const TradeCrypto = () => {
         );
       case "Airtime & Data":
         return (
-          <div className="space-y-4">
-            <Input placeholder="Enter Phone Number" className="w-full" />
-            <Input placeholder="Amount" className="w-full" />
-            <Button className="w-full bg-primary text-white">Buy Airtime</Button>
-          </div>
+            <>
+                <div className="space-y-4">
+                {/* Sub-Tabs for Airtime & Data */}
+                    <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
+                    <Button
+                        variant={subTab === "CRYPTO" ? "default" : "ghost"}
+                        onClick={() => setSubTab("CRYPTO")}
+                        className={`p-5 ${
+                        subTab === "CRYPTO"
+                            ? "bg-bg hover:bg-bg text-primary font-semibold"
+                            : "text-[18px] leading-[27px] hover:none font-semibold"
+                        }`}
+                    >
+                        CRYPTO
+                    </Button>
+                    <Button
+                        variant={subTab === "FIAT" ? "default" : "ghost"}
+                        onClick={() => setSubTab("FIAT")}
+                        className={`pb-2 ${
+                        subTab === "FIAT"
+                            ? "bg-bg hover:bg-bg text-primary"
+                            : "text-[18px] leading-[27px] hover:none font-semibold"
+                        }`}
+                    >
+                        FIAT
+                    </Button>
+                    </div>
+
+                    {/* First Currency Input */}
+                    <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                    <div>
+                        <p className="leading-[21px] text-[14px]">
+                        You {subTab === "CRYPTO" ? "Pay" : "Receive"}
+                        </p>
+                        <Input
+                        placeholder="0.00"
+                        className="text-[23px] shadow-none bg-bg font-bold leading-[34.5px] border-none outline-none"
+                        />
+                    </div>
+                    <div className="flex items-center justify-center gap-1">
+                        <img
+                        src={`../../../src/assets/images/${currency1} Circular.png`}
+                        alt={`${currency1} logo`}
+                        className="w-[32px] h-[32px]"
+                        />
+                        <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                        {currency1}
+                        </span>
+                        <DropdownMenu>
+                        <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {["NGN", "USD", "EUR", "GBP"].map((currency) => (
+                            <DropdownMenuItem
+                                key={currency}
+                                onClick={() => setCurrency1(currency)}
+                            >
+                                {currency}
+                            </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                    </div>
+
+                    {/* Switch Button */}
+                    <div className="flex justify-center font-bold text-primary my-2">
+                    <Button variant="ghost" size="icon" disabled>
+                        ⇅
+                    </Button>
+                    </div>
+
+                    {/* Second Currency Input */}
+                    <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                    <div>
+                        <p className="text-sm">
+                        You {subTab === "CRYPTO" ? "Receive" : "Pay"}
+                        </p>
+                        <Input
+                        placeholder="0.00"
+                        className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                        />
+                    </div>
+                    <div className="flex items-center justify-center gap-1">
+                        <img
+                        src={`../../../src/assets/images/${currency2} Circular.png`}
+                        alt={`${currency2} logo`}
+                        className="w-[32px] h-[32px]"
+                        />
+                        <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                        {currency2}
+                        </span>
+                        <DropdownMenu>
+                        <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {["BTC","ETH", "USDT", "SOL" ].map((currency) => (
+                            <DropdownMenuItem
+                                key={currency}
+                                onClick={() => setCurrency2(currency)}
+                            >
+                                {currency}
+                            </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                    </div>
+                </div>
+            <div className="flex justify-center items-center">
+                <Button className="py-3 mt-6 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
+                Buy
+                </Button>
+            </div>
+          </>
         );
       case "Bills & Payment":
         return (
@@ -178,7 +290,7 @@ const TradeCrypto = () => {
             className={`pb-2 font-poppins text-[16px] leading-[24px] ${
               activeTab === "Buy & Sell Crypto" ? "border-b-2" : ""
             }`}
-            onClick={() => setActiveTab("Buy & Sell Crypto")}
+            onClick={() => {setActiveTab("Buy & Sell Crypto"); setSubTab("Buy");}}
           >
             Buy & Sell Crypto
           </Button>
@@ -187,7 +299,7 @@ const TradeCrypto = () => {
             className={`pb-2 font-poppins text-[16px] leading-[24px] ${
               activeTab === "Airtime & Data" ? "border-b-2" : ""
             }`}
-            onClick={() => setActiveTab("Airtime & Data")}
+            onClick={() => {setActiveTab("Airtime & Data");setSubTab("CRYPTO");}}
           >
             Airtime & Data
           </Button>
