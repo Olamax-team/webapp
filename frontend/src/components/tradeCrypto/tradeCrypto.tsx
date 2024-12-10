@@ -262,7 +262,7 @@ const TradeCrypto = () => {
                     </div>
                 </div>
             <div className="flex justify-center items-center">
-                <Button className="py-3 mt-6 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
+                <Button className="py-3 mt-6  bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
                 Buy
                 </Button>
             </div>
@@ -282,7 +282,7 @@ const TradeCrypto = () => {
   };
 
   return (
-    <section className="relative bg-bg overflow-hidden w-[1440px] h-[650px] mx-auto border-2 flex items-center justify-center">
+    <section className="relative bg-bg overflow-hidden w-full h-[650px] mx-auto border-2 flex items-center justify-center">
       <div className="absolute top-[80px] w-[1085px] h-[584px]">
         <div className="flex space-x-4 relative h-[44px] w-[1085px] mx-auto justify-start">
           <Button
