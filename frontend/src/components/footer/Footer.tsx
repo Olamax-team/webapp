@@ -1,7 +1,12 @@
+import BottomSection from "./BottomSection";
+import TopHeader from "./TopHeader";
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <>
+      <TopHeader/>
+      <BottomSection/>
+    </>
   )
 }
 
