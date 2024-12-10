@@ -14,12 +14,13 @@ import {
 const TradeCrypto = () => {
   const [activeTab, setActiveTab] = useState("Buy & Sell Crypto");
   const [subTab, setSubTab] = useState("Buy");
-  const [currency1, setCurrency1] = useState("NGN");
-  const [currency2, setCurrency2] = useState("BTC");
+  const [cat, setCat] = useState("Electricity");
+  const [prop1, setprop1] = useState("NGN");
+  const [prop2, setprop2] = useState("BTC");
 
-//   const toggleCurrency = () => {
-//     setCurrency1((prev) => currency2);
-//     setCurrency2((prev) => currency1);
+//   const toggleprop = () => {
+//     setprop1((prev) => prop2);
+//     setprop2((prev) => prop1);
 //   };
 
   const renderContent = () => {
@@ -54,7 +55,7 @@ const TradeCrypto = () => {
                 </Button>
               </div>
 
-              {/* First Currency Input */}
+              {/* First prop Input */}
               <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div>
                   <p className="leading-[21px] text-[14px]">
@@ -67,24 +68,24 @@ const TradeCrypto = () => {
                 </div>
                 <div className="flex items-center justify-center gap-1">
                   <img
-                    src={`../../../src/assets/images/${currency1} Circular.png`}
-                    alt={`${currency1} logo`}
+                    src={`../../../src/assets/images/${prop1} Circular.png`}
+                    alt={`${prop1} logo`}
                     className="w-[32px] h-[32px]"
                   />
                   <span className="text-sm leading-[24px] text-[16px] font-semibold">
-                    {currency1}
+                    {prop1}
                   </span>
                   <DropdownMenu>
                     <DropdownMenuTrigger>▼</DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
+                      <DropdownMenuLabel>Select</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      {["NGN", "USD", "EUR", "GBP"].map((currency) => (
+                      {["NGN", "USD", "EUR", "GBP"].map((prop) => (
                         <DropdownMenuItem
-                          key={currency}
-                          onClick={() => setCurrency1(currency)}
+                          key={prop}
+                          onClick={() => setprop1(prop)}
                         >
-                          {currency}
+                          {prop}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
@@ -99,7 +100,7 @@ const TradeCrypto = () => {
                 </Button>
               </div>
 
-              {/* Second Currency Input */}
+              {/* Second prop Input */}
               <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div>
                   <p className="text-sm">
@@ -112,24 +113,24 @@ const TradeCrypto = () => {
                 </div>
                 <div className="flex items-center justify-center gap-1">
                   <img
-                    src={`../../../src/assets/images/${currency2} Circular.png`}
-                    alt={`${currency2} logo`}
+                    src={`../../../src/assets/images/${prop2} Circular.png`}
+                    alt={`${prop2} logo`}
                     className="w-[32px] h-[32px]"
                   />
                   <span className="text-sm leading-[24px] text-[16px] font-semibold">
-                    {currency2}
+                    {prop2}
                   </span>
                   <DropdownMenu>
                     <DropdownMenuTrigger>▼</DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
+                      <DropdownMenuLabel>Select</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      {["BTC","ETH", "USDT", "SOL" ].map((currency) => (
+                      {["BTC","ETH", "USDT", "SOL" ].map((prop) => (
                         <DropdownMenuItem
-                          key={currency}
-                          onClick={() => setCurrency2(currency)}
+                          key={prop}
+                          onClick={() => setprop2(prop)}
                         >
-                          {currency}
+                          {prop}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
@@ -178,7 +179,7 @@ const TradeCrypto = () => {
                     </Button>
                     </div>
 
-                    {/* First Currency Input */}
+                    {/* First prop Input */}
                     <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                     <div>
                         <p className="leading-[21px] text-[14px]">
@@ -191,24 +192,24 @@ const TradeCrypto = () => {
                     </div>
                     <div className="flex items-center justify-center gap-1">
                         <img
-                        src={`../../../src/assets/images/${currency1} Circular.png`}
-                        alt={`${currency1} logo`}
+                        src={`../../../src/assets/images/${prop1} Circular.png`}
+                        alt={`${prop1} logo`}
                         className="w-[32px] h-[32px]"
                         />
                         <span className="text-sm leading-[24px] text-[16px] font-semibold">
-                        {currency1}
+                        {prop1}
                         </span>
                         <DropdownMenu>
                         <DropdownMenuTrigger>▼</DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
+                            <DropdownMenuLabel>Select prop</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            {["NGN", "USD", "EUR", "GBP"].map((currency) => (
+                            {["NGN", "USD", "EUR", "GBP"].map((prop) => (
                             <DropdownMenuItem
-                                key={currency}
-                                onClick={() => setCurrency1(currency)}
+                                key={prop}
+                                onClick={() => setprop1(prop)}
                             >
-                                {currency}
+                                {prop}
                             </DropdownMenuItem>
                             ))}
                         </DropdownMenuContent>
@@ -223,7 +224,7 @@ const TradeCrypto = () => {
                     </Button>
                     </div>
 
-                    {/* Second Currency Input */}
+                    {/* Second prop Input */}
                     <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                     <div>
                         <p className="text-sm">
@@ -236,24 +237,24 @@ const TradeCrypto = () => {
                     </div>
                     <div className="flex items-center justify-center gap-1">
                         <img
-                        src={`../../../src/assets/images/${currency2} Circular.png`}
-                        alt={`${currency2} logo`}
+                        src={`../../../src/assets/images/${prop2} Circular.png`}
+                        alt={`${prop2} logo`}
                         className="w-[32px] h-[32px]"
                         />
                         <span className="text-sm leading-[24px] text-[16px] font-semibold">
-                        {currency2}
+                        {prop2}
                         </span>
                         <DropdownMenu>
                         <DropdownMenuTrigger>▼</DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
+                            <DropdownMenuLabel>Select prop</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            {["BTC","ETH", "USDT", "SOL" ].map((currency) => (
+                            {["BTC","ETH", "USDT", "SOL" ].map((prop) => (
                             <DropdownMenuItem
-                                key={currency}
-                                onClick={() => setCurrency2(currency)}
+                                key={prop}
+                                onClick={() => setprop2(prop)}
                             >
-                                {currency}
+                                {prop}
                             </DropdownMenuItem>
                             ))}
                         </DropdownMenuContent>
@@ -270,11 +271,122 @@ const TradeCrypto = () => {
         );
       case "Bills & Payment":
         return (
+          <>
           <div className="space-y-4">
-            <Input placeholder="Enter Bill Details" className="w-full" />
-            <Input placeholder="Amount" className="w-full" />
-            <Button className="w-full bg-primary text-white">Pay Bill</Button>
+          {/* Sub-Tabs for Bills & Payment */}
+              <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
+                <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                  <div>
+                      <p className="leading-[21px] text-[14px]">Pay {cat} Bill</p>
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                        {cat}
+                        </span>
+                        <DropdownMenu>
+                        <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>Select</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {["Electricity" ].map((prop) => (
+                            <DropdownMenuItem
+                                key={prop}
+                                onClick={() => setCat(prop)}
+                            >
+                                {prop}
+                            </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </div>
+              </div>
+              </div>
+
+              {/* First prop Input */}
+              <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+              <div>
+                  <p className="leading-[21px] text-[14px]">Enter Amount</p>
+                  <Input
+                  placeholder="0.00"
+                  className="text-[23px] shadow-none bg-bg font-bold leading-[34.5px] border-none outline-none"
+                  />
+              </div>
+              <div className="flex items-center justify-center gap-1">
+                  <img
+                  src={`../../../src/assets/images/${prop1} Circular.png`}
+                  alt={`${prop1} logo`}
+                  className="w-[32px] h-[32px]"
+                  />
+                  <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                  {prop1}
+                  </span>
+                  <DropdownMenu>
+                  <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                      <DropdownMenuLabel>Select</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {["NGN", "USD", "EUR", "GBP"].map((prop) => (
+                      <DropdownMenuItem
+                          key={prop}
+                          onClick={() => setprop1(prop)}
+                      >
+                          {prop}
+                      </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuContent>
+                  </DropdownMenu>
+              </div>
+              </div>
+
+              {/* Switch Button */}
+              <div className="flex justify-center font-bold text-primary my-2">
+              <Button variant="ghost" size="icon" disabled>
+                  ⇅
+              </Button>
+              </div>
+
+              {/* Second prop Input */}
+              <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+              <div>
+                  <p className="text-sm">You Pay</p>
+                  <Input
+                  placeholder="0.00"
+                  className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                  />
+              </div>
+              <div className="flex items-center justify-center gap-1">
+                  <img
+                  src={`../../../src/assets/images/${prop2} Circular.png`}
+                  alt={`${prop2} logo`}
+                  className="w-[32px] h-[32px]"
+                  />
+                  <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                  {prop2}
+                  </span>
+                  <DropdownMenu>
+                  <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                      <DropdownMenuLabel>Select prop</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {["BTC","ETH", "USDT", "SOL" ].map((prop) => (
+                      <DropdownMenuItem
+                          key={prop}
+                          onClick={() => setprop2(prop)}
+                      >
+                          {prop}
+                      </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuContent>
+                  </DropdownMenu>
+              </div>
+              </div>
           </div>
+      <div className="flex justify-center items-center">
+          <Button className="py-3 mt-6  bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
+          Buy
+          </Button>
+      </div>
+    </>
         );
       default:
         return null;
@@ -282,7 +394,7 @@ const TradeCrypto = () => {
   };
 
   return (
-    <section className="relative bg-bg overflow-hidden w-full h-[650px] mx-auto border-2 flex items-center justify-center">
+    <section className="relative bg-bg overflow-hidden w-full h-[650px] mx-auto flex items-center justify-center">
       <div className="absolute top-[80px] w-[1085px] h-[584px]">
         <div className="flex space-x-4 relative h-[44px] w-[1085px] mx-auto justify-start">
           <Button
