@@ -9,6 +9,22 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+		animation: {
+		moveRight: 'moveRight 10s linear infinite',
+		moveLeft: 'moveLeft 10s linear infinite',
+		},
+		keyframes: {
+		moveRight: {
+			'0%': { transform: 'translateX(0)' },
+			'50%': { transform: 'translateX(100px)' },
+			'100%': { transform: 'translateX(0)' },
+		},
+		moveLeft: {
+			'0%': { transform: 'translateX(0)' },
+			'50%': { transform: 'translateX(-100px)' },
+			'100%': { transform: 'translateX(0)' },
+		},
+		},
 		fontFamily: {
 			poppins: ['Poppins', 'sans-serif'], // Added Poppins font
 			DMSans: ['DM Sans', 'sans-serif'],// Added DM Sans font
