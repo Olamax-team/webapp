@@ -4,7 +4,7 @@ import FloatingTag from '../ui/floating-tag';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative mt-10 bg-bgSurface overflow-hidden w-[1440px] h-[650px] mx-auto border-2">
+    <section className="relative bg-bgSurface overflow-hidden w-[1440px] h-[650px] mx-auto border-2">
 
       {/* Content */}
       <>
@@ -63,7 +63,7 @@ const HeroSection: React.FC = () => {
               animate='float-up'
               boxPosition={{bottom:'-5px', left:'-2px'}} />
 
-            <div className='relative block top-[85.98px] left-[208.45px] text-center justify-center w-[802px] h-[230px]'>
+            <div className='relative block mx-auto text-center justify-center w-[802px] h-[230px]'>
               {/* Content */}
               <h1 className="font-DMSans text-[32px] font-bold leading-[48px] text-textDark mt-4 mb-4">
               Your all-in-one crypto platform to buy, sell & trade,<br /> cryptocurrencies
@@ -72,7 +72,7 @@ const HeroSection: React.FC = () => {
                 OLAMAX is a highly-secure crypto platform to buy, sell or trade Bitcoin, Ethereum, 
                 Tether <br/>(USDT), Celo, Stellar, USDC, and other cryptocurrencies at the best rates.
               </p>
-              <Button className="bg-primary font-poppins text-white  hover:bg-secondary">
+              <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary">
                 Trade Now !
               </Button>
             </div>
@@ -82,5 +82,4 @@ const HeroSection: React.FC = () => {
     </section>
   );
 };
-
 export default HeroSection;
