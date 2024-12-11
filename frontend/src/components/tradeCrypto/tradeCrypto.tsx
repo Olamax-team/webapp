@@ -221,7 +221,7 @@ const TradeCrypto = () => {
                     <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                     <div>
                         <p className="leading-[21px] text-[14px]">
-                        You {subTab === "CRYPTO" ? "Pay" : "Receive"}
+                        You Receive
                         </p>
                         <Input
                         placeholder="0.00"
@@ -263,28 +263,31 @@ const TradeCrypto = () => {
                     <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                     <div>
                         <p className="text-sm">
-                        You {subTab === "CRYPTO" ? "Receive" : "Pay"}
-                        </p>
+                        You Pay                        </p>
                         <Input
                         placeholder="0.00"
                         className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
                         />
                     </div>
                     <div className="flex items-center justify-center gap-1">
-                        <img
-                        src={`../../../src/assets/images/${prop2} Circular.png`}
-                        alt={`${prop2} logo`}
+                      <img
+                        src={`../../../src/assets/images/${
+                          subTab === "CRYPTO" ? prop2 : prop1
+                        } Circular.png`}
+                        alt={`${
+                          subTab === "CRYPTO" ? prop2 : prop1
+                        } logo`}
                         className="w-[32px] h-[32px]"
-                        />
-                        <span className="text-sm leading-[24px] text-[16px] font-semibold">
-                        {prop2}
-                        </span>
+                      />
+                      <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                        {subTab === "CRYPTO" ? prop2 : prop1}
+                      </span>
                         <DropdownMenu>
                         <DropdownMenuTrigger>▼</DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuLabel>Select prop</DropdownMenuLabel>
+                            <DropdownMenuLabel>Select</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            {["BTC","ETH", "USDT", "SOL" ].map((prop) => (
+                            {(subTab === "CRYPTO" ? props2 : props1).map((prop) => (
                             <DropdownMenuItem
                                 key={prop}
                                 onClick={() => setprop2(prop)}
