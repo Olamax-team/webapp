@@ -4,11 +4,11 @@ import FloatingTag from '../ui/floating-tag';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative bg-bgSurface overflow-hidden w-[1440px] h-[650px] mx-auto border-2">
+    <section className="relative bg-bgSurface overfl6ow-hidden w-full h-[650px] mx-auto">
 
       {/* Content */}
       <>
-        <div className="relative items-center flex text-center justify-center top-[72px] left-[110px] bottom-[251.66px] w-[1220.42px] h-[326.34px]">
+        <div className="relative mx-auto flex items-center text-center justify-center top-[72px] left-[110px] bottom-[251.66px] w-[1220.42px] h-[326.34px]">
           {/* Floating Tags */}
           <div className="font-poppins w-full flex text-center">
             {/* Top-Left */}
