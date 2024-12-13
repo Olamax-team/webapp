@@ -18,7 +18,7 @@ const Crypto = () => {
             <img 
               src={strokes} 
               alt="Decorative Strokes" 
-              className="object-contain w-[100px]   md:w-20   "
+              className="object-contain w-20   md:w-20   "
             />
           </div>
 
@@ -33,12 +33,12 @@ const Crypto = () => {
 
 
           {/* Heading and Description */}
-          <div className="pt-10">
+          <div className="pt-16 p-0  lg:pt-0 ">
 
             {/* H1: Absolute positioned, centered horizontally */}
-            <div className="whitespace-nowrap absolute hidden sm:block w-[120px] h-[120px] top-[162px] left-[131px] md:w-[792px] md:h-[90px] md:left-[81.5px] md:top-[132px] ">
-              <h1 className=" font-DMSans font-bold leading-tight text-center text-[80px]  text-[#121826]">
-                Crypto Trading <span className="text-white font-DMSans font-bold text-[80px] text-center leading-tight">Made Seamless</span>
+            <div className="whitespace-nowrap absolute hidden sm:block w-[480px] h-[120px] top-[162px]  md:w-[792px] md:h-[90px] md:left-[81.5px] md:top-[132px]   ">
+              <h1 className=" font-DMSans font-bold leading-tight tracking-[3px] text-center text-[75px]  text-[#121826]">
+                Crypto Trading <span className="text-white font-DMSans font-bold text-[75px] text-center tracking-[2px] leading-tight">Made Seamless</span>
               </h1>
             </div>
 
@@ -60,7 +60,7 @@ const Crypto = () => {
             </div>
 
             {/* Centered Button */}
-                <Button className="bg-[#0073AD] text-[#ffffff] rounded-[5px] text-[13px] pt-[15px] pl-[25px] pr[25px] pb-[15px] w-[160px] h-[38px] top-[300px]  left-[32px] gap-[10px] md:w-[193px] md:h-[46px] md:top-[312px] md:left[82px] lg:w-[226px] lg:h-[54px] lg:top-[392px] lg:rounded-[10px] font-poppins lg:text-[16px] lg:font-semibold  ">
+                <Button className="bg-[#0073AD] text-[#ffffff] rounded-[5px] text-[13px] pt-[15px] pl-[25px] pr[25px] pb-[15px] w-[160px] h-[38px] top-[300px]  left-[32px] gap-[10px] md:w-[193px] md:h-[46px] md:top-[312px] md:left[82px] lg:w-[226px] lg:h-[54px] lg:top-[392px] lg:rounded-[10px] font-poppins lg:text-[16px] lg:font-semibold hover:bg-[#0073AD]  ">
                   Start Crypto Trading!
                 </Button>
           </div>
