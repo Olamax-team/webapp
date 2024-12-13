@@ -1,8 +1,8 @@
 import React from 'react';
-import { ChevronDown, Menu, X} from 'lucide-react';
+import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
-import { cn } from '../../lib/utils';
+import { cn, timelineCreator } from '../../lib/utils';
 import fastTrade from '../../assets/images/eva--swap-fill 1.png';
 import airtimeData from '../../assets/images/device-mobile.png';
 import billPayment from '../../assets/images/healthicons_electricity.png';
@@ -14,6 +14,9 @@ import building from '../../assets/images/md-library.png'
 import news from '../../assets/images/mingcute_news-2-fill.png'
 import education from '../../assets/images/game-icons_graduate-cap.png'
 import money from '../../assets/images/cash.png'
+import userimage from '../../assets/images/avatar_1.png'
+import ImageAvatar from '../ui/image-avatar';
+import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
 
 type menuItemProps = {
   image: string;
@@ -27,6 +30,22 @@ type dropDownMenuProps = {
   style: string;
   isOpen: boolean
 };
+
+type bottomProps = {
+  userLoggedIn: boolean;
+  notifications: boolean;
+}
+
+type notification = {
+  title: string;
+  content: string;
+  alertType: string;
+}
+
+type notificationCardProps = {
+  date: string;
+  notifications: notification[]
+}
 
 const tradeCryptoList = [
   {
@@ -103,17 +122,72 @@ const moreList = [
   },
 ];
 
-const BottomHeader = () => {
+
+const notificationList = [
+  {
+    date: '2024-12-12T06:41:18.421Z',
+    notifications: [
+      {
+        title: 'Transaction Successful',
+        content: "Your crypto has been converted to Naira. Check your wallet for the updated balance.",
+        alertType: 'transaction-alert'
+      },
+      {
+        title: 'New Feature Alert!',
+        content: "We’ve added a quick-buy option for USDT. Access faster transactions directly from your dashboard.",
+        alertType: 'feature-update'
+      },
+    ],
+  },
+  {
+    date: '2024-12-11T07:38:18.421Z',
+    notifications: [
+      {
+        title: 'Security Update Required',
+        content: "Please verify your email address and enable two-factor authentication to keep your account secure.",
+        alertType: 'security-update'
+      },
+      {
+        title: 'Referral Program Ending Soon!',
+        content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
+        alertType: 'referral-update'
+      },
+      {
+        title: 'Transaction Successful',
+        content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
+        alertType: 'transaction-alert'
+      },
+    ]
+  },
+  {
+    date: '2024-12-10T11:31:18.421Z',
+    notifications: [
+      {
+        title: 'Transaction Successful',
+        content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
+        alertType: 'transaction-alert'
+      },
+      {
+        title: 'Referral Program Ending Soon!',
+        content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
+        alertType: 'referral-update'
+      },
+    ]
+  }
+];
+
+const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
   const [openTrade, setOpenTrade] = React.useState(false);
   const [openSupport, setOpenSupport] = React.useState(false);
   const [openMore, setOpenMore] = React.useState(false);
   const [openMobile, setOpenMobile] = React.useState(false);
+  const [openNotification, setOpenNotification] = React.useState(false);
 
   // navbar styles for normal
-  const navbar = 'bg-bgSurface w-full h-[64px] xl:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
+  const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
 
   // navbar styles for fixed 
-  const navbarFixed = 'bg-bgSurface z-[4000] fixed w-full h-[64px] xl:h-[100px] -top-[100px] transform translate-y-[100px] transition-all ease-out duration-1000 shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
+  const navbarFixed = 'bg-bgSurface z-[4000] fixed w-full h-[64px] lg:h-[100px] -top-[100px] transform translate-y-[100px] transition-all ease-out duration-1000 shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
 
   const [navIsFixed, setNavIsFixed] = React.useState(navbar);
 
@@ -187,6 +261,46 @@ const BottomHeader = () => {
         {menuList.map((item:menuItemProps) => (
           <MenuItem key={item.title} {...item}/>
         ))}
+      </div>
+    )
+  };
+
+  //function for selection of icon
+  const iconSelector = (alertType:string) => {
+    if (alertType === 'transaction-alert') {
+      return <HiCheckCircle className='size-[16px] lg:size-[20px]'/>
+    } else if (alertType === 'feature-update') {
+      return <HiExclamationCircle className='size-[16px] lg:size-[20px]'/>
+    } else if (alertType === 'security-update') {
+      return <HiShieldCheck className='size-[16px] lg:size-[20px]'/>
+    } else {
+      return <HiGift className='size-[16px] lg:size-[20px]'/>
+    }
+  }
+
+  // for each notification item
+  const NotificationCard = ({date, notifications}:notificationCardProps) => {
+    return (
+      <div className='flex flex-col gap-3 font-Inter'>
+        <h3 className='text-base mb-1 text-gray-500'>
+          {timelineCreator(date)}
+        </h3>
+        {notifications.map((notification:notification, index:number) => (
+          <div className='flex gap-4' key={index}>
+            <div className="size-[40px] lg:size-[50px] rounded-full flex items-center justify-center bg-primary/20 text-primary flex-none">
+              {iconSelector(notification.alertType)}
+            </div>
+            <div className='flex-1'>
+              <div className='flex-1 flex flex-col gap-1'>
+                <div className='flex items-center justify-between'>
+                  <h2 className='font-Inter text-base lg:text-lg font-bold'>{notification.title}</h2>
+                  <p className='text-[12px] leading-[19px] font-semibold text-gray-500'>1h</p>
+                </div>
+                <p className='text-[12px] leading-[19px]'>{notification.content}</p>
+              </div>
+            </div>
+          </div>
+          ))}
       </div>
     )
   };
@@ -291,11 +405,44 @@ const BottomHeader = () => {
           </div>
         }
 
-        {/* auth buttons */}
-        <div className='flex items-center gap-2'>
-          <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] text-primary hover:text-primary'>Sign In</Button>
-          <Button className='font-semibold  w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px]'>Sign Up</Button>
-        </div>
+        {/* notifications */}
+        {openNotification &&
+          <div className={cn('overflow-y-auto w-full h-screen fixed top-0 left-0 bg-black/10 z-[4000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
+            <div className="ml-auto lg:w-[540px] md:w-[440px] w-[80%] bg-bgSurface h-full lg:px-8 px-5">
+              <div className="w-full h-[96px] flex place-items-end mb-4">
+                <div className="w-full flex items-center justify-between">
+                  <h2 className='text-[24px] md:text-[32px] font-bold font-DMSans'>Notifications</h2>
+                  <X size={25} className='cursor-pointer' onClick={() =>setOpenNotification(false)}/>
+                </div>
+              </div>
+              { notificationList.map((notification, index:number) => (
+                <NotificationCard key={index} {...notification}/>
+              ))}
+            </div>
+          </div>
+        }
+
+        {/* if user is logged in he will see either his notifications and profile picture else login and sign in */}
+        { userLoggedIn ? 
+          (
+            <div className='flex items-center gap-4'>
+              <span className='text-primary hidden md:block'>My Account</span>
+              <button className='size-[32px] md:size-[40px] bg-bg rounded-full flex items-center justify-center' onClick={() =>setOpenNotification(!openNotification)}>
+                <div className='size-[20px] flex items-center justify-center relative'>
+                  <Bell className='size-4 md:size-7'/>
+                  {notifications && <div className="absolute bg-primary size-[9px] rounded-full top-0 right-[2px]" />}
+                </div>
+              </button>
+              <ImageAvatar style='md:size-[56px] size-[40px]' image={userimage}/>
+            </div>
+          ) : 
+          (
+            <div className='flex items-center gap-2'>
+              <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] text-primary hover:text-primary'>Sign In</Button>
+              <Button className='font-semibold  w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px]'>Sign Up</Button>
+            </div>
+          )
+        }
       </div>
     </div>
   )
