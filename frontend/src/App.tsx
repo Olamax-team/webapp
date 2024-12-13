@@ -1,5 +1,5 @@
 import './App.css'
-import documentTitle from './lib/utils';
+import { documentTitle } from './lib/utils';
 import LandingPage from './pages/LandingPage';
 
 function App() {
