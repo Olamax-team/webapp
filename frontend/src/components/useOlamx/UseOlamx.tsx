@@ -35,25 +35,26 @@ const UseOlamax  = () => {
       </div>
 
       {/* Main Content Section */}
-      <div className="flex flex-col  sm:flex-row justify-between items-center  w-full p-3  max-w-[90%]">
+      <div className="flex flex-col  sm:flex-row justify-between items-center  w-full p-3 ">
         {/* Left Side: List of Items with Numbers */}
         <div className="w-full   sm:w-1/2  flex justify-start items-start h-[400px] relative "> 
+
          {/* Indicator */}
          <div
-                className="w-[4px]  bg-[#039AE4] rounded-l-full transition-all duration-500  hidden lg:block"
+                className="w-[4px] relative bg-[#039AE4] rounded-l-full transition-all duration-500  hidden lg:block"
                 style={{
                   height: '20%', 
-                  top: `step ${(activeStep - 1) * 20}%`,
+                  top: `${(activeStep - 1) * 30}%`,
                 }} 
               /> 
 
          
 
-          <ul className="w-full h-full">
+          <ul className="w-full h-full p-3">
             {/* Step 1 */}
             <li
               className={cn(
-                'justify-start items-start gap-3 flex p-3 mb-4 transition-all duration-500',
+                'justify-start items-start gap-3 flex mt-5  transition-all duration-500',
                 activeStep === 1 ? 'filter-none' : 'filter blur-sm'
               )}
               onClick={() => handleStepChange(1)} // Update active step on click
@@ -70,7 +71,7 @@ const UseOlamax  = () => {
             {/* Step 2 */}
             <li
               className={cn(
-                'justify-start items-start flex p-4 mb-4 gap-3 transition-all duration-500',
+                'justify-start items-start flex mt-14  gap-3 transition-all duration-500',
                 activeStep === 2 ? 'filter-none' : 'filter blur-sm'
               )}
               onClick={() => handleStepChange(2)} // Update active step on click
@@ -87,7 +88,7 @@ const UseOlamax  = () => {
             {/* Step 3 */}
             <li
               className={cn(
-                'justify-start items-start p-4 mb-4 transition-all duration-500 flex gap-3',
+                'justify-start items-start mt-16 transition-all duration-500 flex gap-3',
                 activeStep === 3 ? 'filter-none' : 'filter blur-sm'
               )}
               onClick={() => handleStepChange(3)} // Update active step on click
