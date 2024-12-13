@@ -19,8 +19,8 @@ const TopHeader = () => {
   }, []);
 
   return (
-    <div className="w-full bg-primary xl:h-[40px] h-[32px] flex items-center justify-center">
-      <div className="h-[16px] w-[380px] xl:h-[18px] xl:w-[1250px] relative overflow-hidden text-white font-DMSans">
+    <div className="w-full bg-primary md:h-[40px] h-[32px] flex items-center justify-center">
+      <div className="h-[16px] w-[380px] md:h-[18px] xl:w-[1250px] md:w-[85%] relative overflow-hidden text-white font-DMSans">
         <p
           className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
             textIndex === 0 ? 'translate-y-0' : 'translate-y-full'

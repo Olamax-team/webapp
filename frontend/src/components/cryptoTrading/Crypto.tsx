@@ -36,7 +36,7 @@ const Crypto = () => {
           <div className="pt-10">
 
             {/* H1: Absolute positioned, centered horizontally */}
-            <div className="whitespace-nowrap absolute hidden sm:block w-[120px] h-[120px] top-[162px] left-[131px] md:w-[792px] md:h-[90px] md:left-[81.5px] md:top-[132px] ">
+            <div className="border whitespace-nowrap absolute hidden sm:block w-[120px] h-[120px] top-[162px] left-[131px] md:w-[792px] md:h-[90px] md:left-[81.5px] md:top-[132px] ">
               <h1 className=" font-DMSans font-bold leading-tight text-center text-[80px]  text-[#121826]">
                 Crypto Trading <span className="text-white font-DMSans font-bold text-[80px] text-center leading-tight">Made Seamless</span>
               </h1>
