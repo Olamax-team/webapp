@@ -35,13 +35,13 @@ const TradeCrypto = () => {
       case "Buy & Sell Crypto":
         return (
           <>
-            <div className="space-y-4">
+            <div className="space-y-2 xl:space-y-3">
               {/* Sub-Tabs for Buy and Sell */}
-              <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
+              <div className="font-poppins flex items-start space-x-4 text-[16px] leading-[24px] text-textDark">
                 <Button
                   variant={subTab === "Buy" ? "default" : "ghost"}
                   onClick={() => setSubTab("Buy")}
-                  className={`p-5 ${
+                  className={`p-5 mt-6 ${
                     subTab === "Buy"
                       ? "bg-bg hover:bg-bg text-primary font-semibold"
                       : "text-[18px] leading-[27px] hover:none font-semibold"
@@ -52,7 +52,7 @@ const TradeCrypto = () => {
                 <Button
                   variant={subTab === "Sell" ? "default" : "ghost"}
                   onClick={() => setSubTab("Sell")}
-                  className={`pb-2 ${
+                  className={`pb-2 mt-6 ${
                     subTab === "Sell"
                       ? "bg-bg hover:bg-bg text-primary"
                       : "text-[18px] leading-[27px] hover:none font-semibold"
@@ -61,108 +61,109 @@ const TradeCrypto = () => {
                   SELL
                 </Button>
               </div>
-
-              {/* First prop Input */}
-              <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-                <div>
-                  <p className="leading-[21px] text-[14px]">
-                    You {subTab === "Buy" ? "Pay": "Sell"}
-                  </p>
-                  <Input
-                    placeholder="0.00"
-                    className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
-                  />
-                </div>
-                <div className="flex items-center justify-center gap-1">
-                <img
-                    src={`../../../src/assets/images/${
-                      subTab === "Buy" ? prop1 : prop2
-                    } Circular.png`}
-                    alt={`${
-                      subTab === "Buy" ? prop1 : prop2
-                    } logo`}
-                    className="w-[32px] h-[32px]"
-                  />
-                  <span className="text-sm leading-[24px] text-[16px] font-semibold">
-                    {subTab === "Buy" ? prop1 : prop2}
-                  </span>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>▼</DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Select</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {(subTab === "Buy" ? props1 : props2).map((prop) => (
-                        <DropdownMenuItem
-                          key={prop}
-                          onClick={() =>  subTab === "Buy" ? setprop1(prop) : setprop2(prop)}
-                        >
-                          {prop}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-
-              {/* Switch icon */}
-              <div className="flex justify-center font-bold text-primary my-0">
-                <p>⇅</p>
-              </div>
-
-              {/* Second prop Input */}
-              <div className="font-Inter flex items-center w-[440px] h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-                <div>
-                  <p className="text-sm">
-                    You {subTab === "Buy" ? "Receive" : "Pay"}
-                  </p>
-                  <Input
-                    placeholder="0.00"
-                    className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
-                  />
-                </div>
-                <div className="flex items-center justify-center gap-1">
+              <div className="mt-5 border-2">
+                {/* First prop Input */}
+                <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                  <div>
+                    <p className="leading-[21px] text-[14px]">
+                      You {subTab === "Buy" ? "Pay": "Sell"}
+                    </p>
+                    <Input
+                      placeholder="0.00"
+                      className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                    />
+                  </div>
+                  <div className="flex items-center justify-center gap-1">
                   <img
-                    src={`../../../src/assets/images/${
-                      subTab === "Buy" ? prop2 : prop1
-                    } Circular.png`}
-                    alt={`${
-                      subTab === "Buy" ? prop2 : prop1
-                    } logo`}
-                    className="w-[32px] h-[32px]"
-                  />
-                  <span className="text-sm leading-[24px] text-[16px] font-semibold">
-                    {subTab === "Buy" ? prop2 : prop1}
-                  </span>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>▼</DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Select</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {(subTab === "Buy" ? props2 : props1).map((prop) => (
-                        <DropdownMenuItem
-                          key={prop}
-                          onClick={() =>  subTab === "Buy" ? setprop2(prop) : setprop1(prop)}
-                        >
-                          {prop}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                      src={`../../../src/assets/images/${
+                        subTab === "Buy" ? prop1 : prop2
+                      } Circular.png`}
+                      alt={`${
+                        subTab === "Buy" ? prop1 : prop2
+                      } logo`}
+                      className="w-[32px] h-[32px]"
+                    />
+                    <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                      {subTab === "Buy" ? prop1 : prop2}
+                    </span>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Select</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {(subTab === "Buy" ? props1 : props2).map((prop) => (
+                          <DropdownMenuItem
+                            key={prop}
+                            onClick={() =>  subTab === "Buy" ? setprop1(prop) : setprop2(prop)}
+                          >
+                            {prop}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+
+                {/* Switch icon */}
+                <div className="flex justify-center font-bold text-primary my-0">
+                  <p>⇅</p>
+                </div>
+
+                {/* Second prop Input */}
+                <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                  <div>
+                    <p className="text-sm">
+                      You {subTab === "Buy" ? "Receive" : "Pay"}
+                    </p>
+                    <Input
+                      placeholder="0.00"
+                      className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                    />
+                  </div>
+                  <div className="flex items-center justify-center gap-1">
+                    <img
+                      src={`../../../src/assets/images/${
+                        subTab === "Buy" ? prop2 : prop1
+                      } Circular.png`}
+                      alt={`${
+                        subTab === "Buy" ? prop2 : prop1
+                      } logo`}
+                      className="w-[32px] h-[32px]"
+                    />
+                    <span className="text-sm leading-[24px] text-[16px] font-semibold">
+                      {subTab === "Buy" ? prop2 : prop1}
+                    </span>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Select</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {(subTab === "Buy" ? props2 : props1).map((prop) => (
+                          <DropdownMenuItem
+                            key={prop}
+                            onClick={() =>  subTab === "Buy" ? setprop2(prop) : setprop1(prop)}
+                          >
+                            {prop}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+                <div className="flex justify-center items-center">
+                  <Button className="py-3 my-6 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
+                    {subTab}
+                  </Button>
                 </div>
               </div>
-            </div>
-            <div className="flex justify-center items-center">
-              <Button className="py-3 mt-6 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
-                {subTab}
-              </Button>
-            </div>
 
-            <div className="flex font-Inter font-[500px]  mt-4 gap-1 justify-center items-center text-center text-[16px] leading-[26px] text-[#545454]">
-            <img
-                        src={`../../../src/assets/images/BTC Circular.png`}
-                        alt={`BTC logo`}
-                        className="w-[32px] h-[32px]"
-                        />1 BTC = 116,377,572 Naira
+              <div className="flex font-Inter font-[500px]  xl:mt-4 gap-1 justify-center items-center text-center text-[16px] leading-[26px] text-[#545454]">
+              <img
+                          src={`../../../src/assets/images/BTC Circular.png`}
+                          alt={`BTC logo`}
+                          className="w-[32px] h-[32px]"
+                          />1 BTC = 116,377,572 Naira
+              </div>
             </div>
           </>
         );
@@ -175,7 +176,7 @@ const TradeCrypto = () => {
                     <Button
                         variant={subTab === "CRYPTO" ? "default" : "ghost"}
                         onClick={() => setSubTab("CRYPTO")}
-                        className={`p-5 ${
+                        className={`p-5 mt-6 ${
                         subTab === "CRYPTO"
                             ? "bg-bg hover:bg-bg text-primary font-semibold"
                             : "text-[18px] leading-[27px] hover:none font-semibold"
@@ -186,7 +187,7 @@ const TradeCrypto = () => {
                     <Button
                         variant={subTab === "FIAT" ? "default" : "ghost"}
                         onClick={() => setSubTab("FIAT")}
-                        className={`pb-2 ${
+                        className={`pb-2 mt-6 ${
                         subTab === "FIAT"
                             ? "bg-bg hover:bg-bg text-primary"
                             : "text-[18px] leading-[27px] hover:none font-semibold"
@@ -313,7 +314,7 @@ const TradeCrypto = () => {
           <div className="space-y-4">
           {/* Sub-Tabs for Bills & Payment */}
               <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
-                <div className="font-Inter flex items-center w-[440px] h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
+                <div className="mt-6 font-Inter flex items-center w-[440px] h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
                   <p className="font-Inter font-[500] text-[16px] leading-[24px] text-textDark">Pay {cat} Bill</p>
                   <div className="flex ml-auto">
                       <div className="flex items-center justify-center gap-1">
@@ -413,12 +414,12 @@ const TradeCrypto = () => {
                   </DropdownMenu>
               </div>
               </div>
+              <div className="flex justify-center items-center">
+                <Button className="py-3 mt-6  bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
+                  Buy
+                </Button>
+              </div>
           </div>
-      <div className="flex justify-center items-center">
-          <Button className="py-3 mt-6  bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold sm:w-[150px] h-[54px]">
-          Buy
-          </Button>
-      </div>
     </>
         );
       default:
@@ -427,9 +428,9 @@ const TradeCrypto = () => {
   };
 
   return (
-    <section className="relative bg-bg overflow-hidden w-full h-screen mx-auto flex items-center justify-center">
-      <div className="absolute top-[80px] w-[1085px] h-[584px]">
-        <div className="flex space-x-4 relative h-[44px] w-[1085px] mx-auto justify-start">
+    <section className="relative bg-bg overflow-hidden w-full h-[550px] xl:h-[650px] mx-auto flex items-center justify-center">
+      <div className="absolute top-[80px] w-[390px] xl:w-[1085px] h-[456px] xl:h-full">
+        <div className="flex space-x-4 relative h-[32px] xl:h-[44px] w-[390px] xl:w-[1085px] mx-auto justify-start">
           <Button
             variant="ghost"
             className={`pb-2 font-poppins text-[16px] leading-[24px] ${
@@ -450,7 +451,7 @@ const TradeCrypto = () => {
           </Button>
           <Button
             variant="ghost"
-            className={`pb-2 font-poppins text-[16px] leading-[24px] ${
+            className={`pb-2 font-poppins text-[13px] xl:text-[16px] leading-[19.5px] xl:leading-[24px] ${
               activeTab === "Bills & Payment" ? "border-b-2" : ""
             }`}
             onClick={() => setActiveTab("Bills & Payment")}
@@ -458,17 +459,16 @@ const TradeCrypto = () => {
             Bills & Payment
           </Button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-20">
+        <div className="flex my-3 xl:grid xl:grid-cols-2 xl:gap-20">
           {/* Left Section */}
-          <div className="w-[520px] h-[500px]">
-            <Card className="rounded-lg">
-              <CardHeader></CardHeader>
+          <div className=" ">
+            <Card className="rounded-lg w-[356px] xl:w-[520px] h-[400px] xl:h-full mt-0">
               <CardContent>{renderContent()}</CardContent>
             </Card>
           </div>
           {/* Right Section: Crypto Market Today */}
-          <div className="flex space-x-4 relative my-auto">
-            <Card className="w-[413px] h-[388px] bg-bg">
+          <div className="flex hidden xl:block space-x-4 relative my-auto">
+            <Card className="xl:w-[413px] xl:h-[388px] bg-bg">
               <CardHeader>
                 <CardTitle className="font-DMSans text-[32px] leading-[48px]">
                   Crypto Market Today
