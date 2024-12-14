@@ -4,9 +4,37 @@ import rectangle0 from '../../assets/images/Rectangle (2).svg';
 import rectangle00 from '../../assets/images/Rectangle (3).svg';
 import { cn } from '../../lib/utils';
 
+const textList = [
+  {
+    num: 1,
+    title: "Create an Account",
+    content: "Sign up for a free account on our website or mobile apps"
+  },
+  {
+    num: 2,
+    title: "Complete Verification",
+    content: "Take a quick second to complete your verification (KYC)"
+  },
+  {
+    num: 3,
+    title: "Enjoy Trading",
+    content: "Experience limitless banking in Web3"
+  },
+];
+
+type textContentProps = {
+  num: number;
+  activeText?: boolean;
+  onClick?: () => void;
+  title: string;
+  content: string;
+}
+
 const UseOlamax  = () => {
   // State to track the active step
   const [activeStep, setActiveStep] = useState(1);
+  // array of images
+  const stepImages = [reactangl2, rectangle0, rectangle00];
 
   // Automatically change active step every 5 seconds
   useEffect(() => {
@@ -19,99 +47,66 @@ const UseOlamax  = () => {
   }, []);
 
   // Handle click to change active step
-  const handleStepChange = (step: any) => {
+  const handleStepChange = (step:number) => {
     setActiveStep(step);
   };
 
-  const stepImages = [reactangl2, rectangle0, rectangle00];
+  const DesktopTextComponent = ({activeText, onClick, title, content, num}:textContentProps) => {
+    return (
+      <div className={cn("w-full h-full border-l-[5px] border-l-white flex p-4 items-center gap-4 relative transition-all duration-500")} onClick={onClick}>
+        <div className="absolute h-full w-full -left-[4px] top-0 flex items-center">
+          <div className={cn("h-[45%] w-[5px]", activeText ? 'bg-primary': 'bg-white')}/>
+        </div>
+        <div className={cn('flex gap-4 items-center', activeText ? 'filter-none': 'filter blur-sm')}>
+          <div className="size-[40px] flex items-center justify-center bg-white rounded-full flex-none">
+            <p>{num}</p>
+          </div>
+          <div className="flex flex-col gap-3">
+            <h3 className='text-[23px] leading-normal font-semibold font-Inter'>{title}</h3>
+            <p className='text-base'>{content}</p>
+          </div>
+        </div>
+      </div>
+    )
+  };
+
+  const MobileTextComponent = ({title, content, num}:textContentProps) => {
+    return (
+      <div className={cn("w-full h-full flex p-3 items-center gap-4 relative transition-all duration-500")}>
+        <div className={cn('flex gap-4 items-center')}>
+          <div className="size-[40px] flex items-center justify-center bg-white rounded-full flex-none">
+            <p>{num}</p>
+          </div>
+          <div className="flex flex-col gap-3">
+            <h3 className='text-lg font-semibold font-Inter'>{title}</h3>
+            <p className='text-sm'>{content}</p>
+          </div>
+        </div>
+      </div>
+    )
+  };
 
   return (
-    <div className="h-auto bg-gray-100 flex flex-col items-center p-3">
+    <div className="bg-[#F8F9FA] flex flex-col items-center py-[40px] md:py-[65px] w-full">
       {/* Header Section */}
-      <div>
-        <h1 className="font-Inter text-[14px] lg:text-[32px] md:text-3xl font-bold lg:font-DMSans text-center lg:leading-tight">
+      <div className='flex flex-col gap-0 md:gap-10 w-[90%] md:w-[80%] mx-auto'>
+        <h1 className="mb-5 font-Inter text-[14px] lg:text-[32px] md:text-3xl font-bold lg:font-DMSans text-center lg:leading-tight">
           Using <span className="text-[#039AE4] lg:font-DMSans lg:text-[32px] leading-tight text-[14px] font-Inter md:text-[30px]">OLAMAX</span> is as Simple as These 3 Steps
         </h1>
-      </div>
-
-      {/* Main Content Section */}
-      <div className="flex flex-col  sm:flex-row justify-between items-center  w-full p-3 ">
-        {/* Left Side: List of Items with Numbers */}
-        <div className="w-full   sm:w-1/2  flex justify-start items-start h-[400px] relative "> 
-
-         {/* Indicator */}
-         <div
-                className="w-[4px] relative bg-[#039AE4] rounded-l-full transition-all duration-500  hidden lg:block"
-                style={{
-                  height: '20%', 
-                  top: `${(activeStep - 1) * 30}%`,
-                }} 
-              /> 
-
-         
-
-          <ul className="w-full h-full p-3">
-            {/* Step 1 */}
-            <li
-              className={cn(
-                'justify-start items-start gap-3 flex mt-5  transition-all duration-500',
-                activeStep === 1 ? 'filter-none' : 'filter blur-sm'
-              )}
-              onClick={() => handleStepChange(1)} // Update active step on click
-            >
-              <span className="flex items-center justify-center text-[16px] font-medium font-Inter text-[#000000] w-[30px] h-[30px] rounded-full bg-white ">
-                1
-              </span>
-              <p className="text-sm sm:text-sm">
-                <h3 className="text-lg lg:text-[23px] lg:leading-tight font-semibold font-Inter text-[#000000] mb-2">Create an Account</h3>
-                <span className="font-medium font-Inter text-sm lg:text[16px] lg:leading-6 text-[#121826]">Sign up for a free account on our website or mobile apps</span>
-              </p>
-            </li>
-
-            {/* Step 2 */}
-            <li
-              className={cn(
-                'justify-start items-start flex mt-14  gap-3 transition-all duration-500',
-                activeStep === 2 ? 'filter-none' : 'filter blur-sm'
-              )}
-              onClick={() => handleStepChange(2)} // Update active step on click
-            >
-              <span className="flex items-center justify-center text-[16px] font-medium font-Inter text-[#000000] w-[30px] h-[30px] rounded-full bg-white ">
-                2
-              </span>
-              <p className="text-sm sm:text-sm">
-                <h3 className="text-lg lg:text-[23px] lg:leading-tight font-semibold font-Inter text-[#000000]">Complete Verification</h3>
-                <span className="font-medium font-Inter lg:text[16px] lg:leading-6 text-sm text-[#121826]">Take a quick second to complete your verification (KYC)</span>
-              </p>
-            </li>
-
-            {/* Step 3 */}
-            <li
-              className={cn(
-                'justify-start items-start mt-16 transition-all duration-500 flex gap-3',
-                activeStep === 3 ? 'filter-none' : 'filter blur-sm'
-              )}
-              onClick={() => handleStepChange(3)} // Update active step on click
-            >
-              <span className="flex items-center justify-center text-[16px] font-medium font-Inter text-[#000000] w-[30px] h-[30px] rounded-full bg-white ">
-                3
-              </span>
-              <p className="text-sm sm:text-sm">
-                <h3 className="text-lg lg:text-[23px] lg:leading-tight font-semibold font-Inter text-[#000000]">Enjoy Trading</h3>
-                <span className="font-medium font-Inter text-sm lg:text[16px] lg:leading-6 text-[#121826]">Experience limitless banking in Web3</span>
-              </p>
-            </li>
-          </ul>
+        <div className="w-full h-[400px] gap-[120px] hidden lg:flex">
+          <div className="w-[38%] grid grid-rows-3">
+            {textList.map((item) => (
+              <DesktopTextComponent key={item.num} {...item} onClick={() =>handleStepChange(item.num)} activeText={activeStep === item.num}/>
+            ))}
+          </div>
+          <div className="w-[62%] h-full flex items-center justify-center">
+            <img src={stepImages[activeStep-1]} alt="step_photo" className='object-cover h-full'/>
+          </div>
         </div>
-
-        {/* Right Side: Image */}
-        <div className="w-full sm:w-1/2 flex justify-center items-center">
-          {/* Hide the image on mobile (sm) and display it from medium screens (md) onward */}
-          <img
-            src={stepImages[activeStep - 1]} // Display image based on active step
-            alt={`Step ${activeStep}`}
-            className={`w-full sm:w-96 h-full sm:h-96 object-cover transition-all duration-500 hidden sm:block`} // Hide on mobile and show on larger screens
-          />
+        <div className="w-full lg:hidden">
+          {textList.map((item) => (
+              <MobileTextComponent key={item.num} {...item} />
+          ))}
         </div>
       </div>
     </div>

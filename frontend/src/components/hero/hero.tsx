@@ -4,7 +4,7 @@ import FloatingTag from '../ui/floating-tag';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative bg-bgSurface overfl6ow-hidden w-full h-[650px] mx-auto">
+    <section className="relative bg-bgSurface overfl6ow-hidden w-full h-[650px] mx-auto mt-1">
 
       {/* Content */}
       <>
