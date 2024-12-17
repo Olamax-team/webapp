@@ -3,7 +3,7 @@ import TopHeader from "./TopHeader";
 import BottomHeader from "./BottomHeader";
 
 const Navigation = () => {
-  const userLoggedIn = true;
+  const userLoggedIn = false;
   const notifications = true;
 
   return (
