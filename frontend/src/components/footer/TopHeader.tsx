@@ -86,4 +86,4 @@ const TopHeader = () => {
   )
 }
 
-export default TopHeader
+export default TopHeader;

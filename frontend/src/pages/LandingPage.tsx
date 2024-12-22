@@ -4,6 +4,7 @@ import HeroSection from "../components/hero/hero";
 import Testimonial from "../components/testimonial/Testimonial";
 import TradeCrypto from "../components/tradeCrypto/tradeCrypto";
 import UseOlamax from "../components/useOlamx/UseOlamx";
+import TopHeader from "../components/footer/TopHeader";
 
 const LandingPage = () => {
   return (
@@ -13,6 +14,7 @@ const LandingPage = () => {
       <Crypto/>
       <UseOlamax/>
       <Testimonial/>
+      <TopHeader/>
     </React.Fragment>
   )
 }

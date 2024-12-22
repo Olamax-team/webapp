@@ -3,6 +3,8 @@ import image1 from '../../assets/images/avatar_1.png'
 import image2 from '../../assets/images/avatar_2.png'
 import image3 from '../../assets/images/avatar_3.png'
 import ImageAvatar from '../ui/image-avatar';
+import ratingBig from '../../assets/images/rating_big.png'
+import ratingSmall from '../../assets/images/rating_small.png'
 
 
 const testimonialList = [
@@ -50,6 +52,10 @@ const Testimonial = () => {
             <h3 className='md:text-base text-[13px] leading-normal font-Inter font-semibold'>{name}</h3>
             <p className='text-[10px] md:text-[13px] leading-normal font-Inter text-[#545454] group-hover:text-white'>{role}</p>
           </div>
+        </div>
+        <div>
+          <img src={ratingBig} className='hidden md:block'/>
+          <img src={ratingSmall} className='md:hidden'/>
         </div>
         <p className='md:text-base font-Inter leading-normal text-[12px]'>{testimony}</p>
       </div>
