@@ -3,6 +3,8 @@ import image1 from '../../assets/images/avatar_1.png'
 import image2 from '../../assets/images/avatar_2.png'
 import image3 from '../../assets/images/avatar_3.png'
 import ImageAvatar from '../ui/image-avatar';
+import ratingBig from '../../assets/images/rating_big.png'
+import ratingSmall from '../../assets/images/rating_small.png'
 
 
 const testimonialList = [
@@ -43,13 +45,17 @@ const Testimonial = () => {
 
   const TestimonialCard = ({name, role, testimony, image}:testimonialCard) => {
     return (
-      <div className="rounded-[10px] bg-[#f5f5f5] w-full lg:h-full md:p-6 p-4 flex flex-col gap-6">
+      <div className="rounded-[10px] bg-[#f5f5f5] w-full lg:h-full md:p-6 p-4 flex flex-col gap-6 group hover:bg-primary hover:text-white cursor-pointer">
         <div className='flex gap-5'>
-          <ImageAvatar image={image} style='md:size-[40px] size-[32px]'/>
+          <ImageAvatar image={image} style='md:size-[40px] size-[32px] group-hover:border group-hover:border-2 group-hover:border-white'/>
           <div className="flex flex-col">
             <h3 className='md:text-base text-[13px] leading-normal font-Inter font-semibold'>{name}</h3>
-            <p className='text-[10px] md:text-[13px] leading-normal font-Inter text-[#545454]'>{role}</p>
+            <p className='text-[10px] md:text-[13px] leading-normal font-Inter text-[#545454] group-hover:text-white'>{role}</p>
           </div>
+        </div>
+        <div>
+          <img src={ratingBig} className='hidden md:block'/>
+          <img src={ratingSmall} className='md:hidden'/>
         </div>
         <p className='md:text-base font-Inter leading-normal text-[12px]'>{testimony}</p>
       </div>

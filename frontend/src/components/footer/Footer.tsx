@@ -1,12 +1,11 @@
+import React from "react";
 import BottomSection from "./BottomSection";
-import TopHeader from "./TopHeader";
 
 const Footer = () => {
   return (
-    <>
-      <TopHeader/>
+    <React.Fragment>
       <BottomSection/>
-    </>
+    </React.Fragment>
   )
 }
 
