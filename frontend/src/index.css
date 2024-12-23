@@ -70,5 +70,45 @@
   animation: floatReverseDown 2s ease-in-out infinite;
 }
 
+.lines {
+  width: 100%;
+  height: 21px;
+  position: relative;
+}
+
+.lines::before, .lines::after {
+  content: '';
+  position: absolute;
+  width: 46%;
+  height: 2px;
+  background-color: #e5e7eb;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: auto;
+}
+
+.lines::before {
+  right: 0;
+}
+.lines::after {
+  left: 0;
+}
+
+.lines h2 {
+  height: 20px;
+  width: 20px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto auto;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
 
 
