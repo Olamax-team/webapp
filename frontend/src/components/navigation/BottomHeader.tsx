@@ -438,8 +438,12 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
           ) : 
           (
             <div className='flex items-center gap-2'>
-              <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] text-primary hover:text-primary'>Sign In</Button>
-              <Button className='font-semibold bg-primary hover:bg-secondary w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px]'>Sign Up</Button>
+              <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] text-primary hover:text-primary'>
+                <Link to={'/log-in'}>Sign In</Link>
+              </Button>
+              <Button className='font-semibold bg-primary hover:bg-secondary w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px]'>
+                <Link to={'/sign-up'}>Sign Up</Link>
+              </Button>
             </div>
           )
         }
