@@ -16,3 +16,9 @@ export const signupSchema = z.object({
 });
 
 export type signUpValues = z.infer<typeof signupSchema>;
+
+export const recoverySchema = z.object({
+  email: requiredString.email('Invalid email address'),
+});
+
+export type recoveryValues = z.infer<typeof recoverySchema>;

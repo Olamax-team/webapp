@@ -1,13 +1,14 @@
 import AuthLayout from '../components/layout/AuthLayout';
 import { AuthInput } from '../components/auth/AuthInput';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../components/ui/form';
-import { loginSchema, signUpValues } from '../lib/validation';
+import { signupSchema, signUpValues } from '../lib/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom';
-import { documentTitle } from '../lib/utils';
+import { api, documentTitle } from '../lib/utils';
 import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
+import axios from 'axios';
 
 const SignUpPage = () => {
   documentTitle('Registration');
@@ -21,7 +22,7 @@ const SignUpPage = () => {
   };
 
   const form = useForm<signUpValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(signupSchema),
     defaultValues: defaultSignUpValues
   });
 
@@ -30,7 +31,42 @@ const SignUpPage = () => {
   const watchedReferralCode = form.watch('referralCode')
 
   const onSubmitForm = (values:signUpValues) => {
-    console.log(values);
+    const { email, password, referralCode } = values;
+
+    const registerValues = {
+      view: 'register',
+      email: email,
+      password: password,
+      referrer: referralCode,
+    };
+    console.log(registerValues);
+
+    let data = JSON.stringify({
+      "view": "register",
+      "fname": "tt",
+      "lname": "ta",
+      "mname": "tt",
+      "email": "du@gmail.com",
+      "password": "pass"
+    });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://olamax.peacefarm.me/api/',
+      headers: { 
+        'Content-Type': 'application/json',
+      },
+      data : data
+    };
+
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   return (
