@@ -5,7 +5,7 @@ import Waves from '../ui/waves';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative bg-bgSurface overflow-hidden w-full h-[650px] mx-auto">
+    <section className="relative bg-bgSurface overflow-hidden w-full h-[650px] mx-auto mt-1">
 
       {/* Content */}
       <>
