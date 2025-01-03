@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import reactangl2 from '../../assets/images/Rectangle (1).svg';
 import rectangle0 from '../../assets/images/Rectangle (2).svg';
 import rectangle00 from '../../assets/images/Rectangle (3).svg';
