@@ -2,6 +2,7 @@ import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Navigation from '../navigation/Navigation';
 import Footer from '../footer/Footer';
+import ModalProvider from '../ui/modal-provider';
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -10,6 +11,7 @@ const Layout = () => {
 
   return (
     <React.Fragment>
+      <ModalProvider/>
       { isAuthRoutes ? '' : <Navigation/> }
       <Outlet/>
       { isAuthRoutes ? '' : <Footer/> }

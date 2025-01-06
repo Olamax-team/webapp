@@ -1,84 +1,77 @@
+import React from 'react';
 import AuthLayout from '../components/layout/AuthLayout';
 import { AuthInput } from '../components/auth/AuthInput';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../components/ui/form';
-import { signupSchema, signUpValues } from '../lib/validation';
+import { signupSchema, signUpValues, verficationSchema, verficationValues } from '../lib/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom';
-import { api, documentTitle } from '../lib/utils';
+import { documentTitle } from '../lib/utils';
 import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
 
 const SignUpPage = () => {
   documentTitle('Registration');
 
+  const [isSubmit, setIsSubmit] = React.useState(false);
+
   const navigate = useNavigate();
 
-  const defaultSignUpValues = {
-    email: '',
-    password: '',
-    referralCode: ''
-  };
-
-  const form = useForm<signUpValues>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: defaultSignUpValues
-  });
-
-  const watchedEmail = form.watch('email');
-  const watchedPassword = form.watch('password');
-  const watchedReferralCode = form.watch('referralCode')
-
-  const onSubmitForm = (values:signUpValues) => {
-    const { email, password, referralCode } = values;
-
-    const registerValues = {
-      view: 'register',
-      email: email,
-      password: password,
-      referrer: referralCode,
+  const SignUpForm = () => {
+    
+    const defaultSignUpValues = {
+      email: '',
+      password: '',
+      referralCode: ''
     };
-    console.log(registerValues);
-
-    let data = JSON.stringify({
-      "view": "register",
-      "fname": "tt",
-      "lname": "ta",
-      "mname": "tt",
-      "email": "du@gmail.com",
-      "password": "pass"
+  
+    const form = useForm<signUpValues>({
+      resolver: zodResolver(signupSchema),
+      defaultValues: defaultSignUpValues
     });
+  
+    const watchedEmail = form.watch('email');
+    const watchedPassword = form.watch('password');
+    const watchedReferralCode = form.watch('referralCode')
+  
+    const onSubmitForm = async (values:signUpValues) => {
+      const { email, password, referralCode } = values;
+  
+      const registerValues = {
+        view: 'register',
+        email: email,
+        password: password,
+        referrer: referralCode,
+      };
 
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://olamax.peacefarm.me/api/',
-      headers: { 
-        'Content-Type': 'application/json',
-      },
-      data : data
+      console.log(registerValues)
+  
+      let data = JSON.stringify({
+        "view": "register",
+        "fname": "tt",
+        "lname": "ta",
+        "mname": "tt",
+        "email": "dudumadan73@gmail.com",
+        "password": "pass",
+        "referrer": "f9d6f2765"
+      });
+
+      await axios.post('http://olamax.peacefarm.me/api/', data)
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
     };
 
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-
-  return (
-    <AuthLayout>
+    return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitForm)} className='flex flex-col gap-4 lg:w-[440px] md:w-[500px] w-[390px] mx-auto lg:mx-0'>
-          <div className='mb-4 flex items-center justify-between'>
+          <div className='mb-4 flex justify-between'>
             <div>
               <h2 className='text-[32px] leading-normal font-DMSans font-bold'>Create Account</h2>
               <p className='text-base'>Start trading with us today!</p>
             </div>
-            <button className='flex gap-4 items-center text-black/50 lg:hidden' onClick={() => navigate(-1)}>
+            <button className='flex gap-4 text-black/50 lg:hidden' onClick={() => navigate(-1)}>
               <div className="size-[20px]">
                 <img src={arrow} alt="arrow_icon"/>
               </div>
@@ -134,6 +127,77 @@ const SignUpPage = () => {
           </button>
         </form> 
       </Form>
+    );
+  };
+
+  const VerificationForm = () => {
+    
+    const defaultVerificationValues = {
+      verificationCode: ''
+    };
+  
+    const form = useForm<verficationValues>({
+      resolver: zodResolver(verficationSchema),
+      defaultValues: defaultVerificationValues
+    });
+  
+    const onSubmitForm = (values:verficationValues) => {
+      const { verificationCode } = values;
+  
+      const verifyValues = {
+        view: 'verification',
+        verficationCode: verificationCode
+      };
+
+      console.log(verifyValues);
+    };
+
+    return (
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmitForm)} className='flex flex-col gap-4 lg:w-[440px] md:w-[500px] w-[390px] mx-auto lg:mx-0'>
+          <div className='mb-4 flex justify-between'>
+            <div>
+              <h2 className='text-[32px] leading-normal font-DMSans font-bold'>Enter the 6-digit verification code we sent to your email address</h2>
+              <p className='text-base'>This helps verify you are the account owner.</p>
+            </div>
+            <button className='flex gap-4 text-black/50 lg:hidden' onClick={() => navigate(-1)}>
+              <div className="size-[20px]">
+                <img src={arrow} alt="arrow_icon"/>
+              </div>
+              Back
+            </button>
+          </div>
+          <FormField
+            control={form.control}
+            name='verificationCode'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputOTP maxLength={6} {...field}>
+                    <InputOTPGroup className='w-full lg:h-[70px] md:h-[70px] h-[62px] gap-2 md:gap-3 xl:gap-4 font-inter'>
+                      <InputOTPSlot index={0} className='h-full w-full rounded-md border border-solid text-[23px] leading-normal'/>
+                      <InputOTPSlot index={1} className='h-full w-full rounded-md border border-solid text-[23px] leading-normal' />
+                      <InputOTPSlot index={2} className='h-full w-full rounded-md border border-solid text-[23px] leading-normal' />
+                      <InputOTPSlot index={3} className='h-full w-full rounded-md border border-solid text-[23px] leading-normal' />
+                      <InputOTPSlot index={4} className='h-full w-full rounded-md border border-solid text-[23px] leading-normal' />
+                      <InputOTPSlot index={5} className='h-full w-full rounded-md border border-solid text-[23px] leading-normal' />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </FormControl>
+                <FormMessage/>
+              </FormItem>
+            )}
+          />
+          <button className='w-full h-[70px] rounded-md bg-primary text-white mt-8' type='submit'>Proceed</button>
+          <p className='w-full font-Inter'>Didn&apos;t receive an email ? <span className='font-semibold'>Request Code again</span></p>
+        </form> 
+      </Form>
+    );
+  };
+
+  return (
+    <AuthLayout>
+      { isSubmit ? <VerificationForm/> : <SignUpForm/> }
     </AuthLayout>
   )
 }

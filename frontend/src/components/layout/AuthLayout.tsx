@@ -32,7 +32,7 @@ const AuthLayout = ({children}: Props) => {
           </div>
           Back
         </button>
-        <div className='flex-1 lg:px-[64px] h-full lg:pt-[41px] flex lg:block items-center justify-center'>
+        <div className='flex-1 lg:px-[64px] h-full lg:pt-[41px] flex lg:block items-center justify-center px-6'>
           {children}
         </div>
       </div>
