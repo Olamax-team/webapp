@@ -82,7 +82,12 @@ const HeroSection: React.FC = () => {
         <img
           src="/src/assets/images/waves.png"
           alt="waves"
-          className="absolute bottom-0 w-full h-[200px]"
+          className="absolute bottom-0 hidden xl:block w-full h-[200px]"
+        />
+        <img
+          src="/src/assets/images/waves-mobile.png"
+          alt="waves"
+          className="absolute bottom-0 xl:hidden block w-full h-[222px]"
         />
       </>
     </section>

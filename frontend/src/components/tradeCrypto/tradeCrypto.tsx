@@ -180,7 +180,7 @@ const TradeCrypto = () => {
                 </div>
 
                 <div className="flex justify-center items-center">
-                  <Button className="py-3 mt-6 mb-1 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
+                  <Button className="py-3 mt-6 mb-1 bg-primary hover:bg-secondary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
                     {subTab}
                   </Button>
                 </div>
@@ -500,7 +500,7 @@ return (
           </Card>
         </div>
         {/* Right Section: Crypto Market Today */}
-        <div className="hidden xl:block space-x-4 relative mt-4">
+        <div className="hidden xl:block space-x-4 relative mt-8">
           <Card className="xl:w-[413px] xl:h-[388px] bg-bg">
             <CardHeader>
               <CardTitle className="font-DMSans text-[32px] leading-[48px]">
