@@ -1,6 +1,7 @@
 import React from "react"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import axios from "axios"
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -34,3 +35,8 @@ export const timelineCreator = (date:string) => {
 
   return displayDate;
 }
+
+export const api = axios.create({
+  baseURL: process.env.NODE_ENV === 'development' ? '/api' : 'https://olamax.peacefarm.me/api',
+  withCredentials: true,
+});

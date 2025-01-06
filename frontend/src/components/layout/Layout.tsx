@@ -5,7 +5,8 @@ import Footer from '../footer/Footer';
 
 const Layout = () => {
   const { pathname } = useLocation();
-  const isAuthRoutes = pathname === '/log-in' || pathname === '/sign-up';
+  const authRoutes = ['/log-in', '/sign-up', '/password-recovery']
+  const isAuthRoutes = authRoutes.includes(pathname)
 
   return (
     <React.Fragment>
