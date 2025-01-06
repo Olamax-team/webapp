@@ -42,19 +42,19 @@ const IndicatorButtonGroup: React.FC<ButtonGroupProps> = ({ buttons, onButtonCli
   };
 
   return (
-    <div className="flex relative h-[32px] xl:h-[44px] w-[1085px] mx-auto" ref={containerRef}>
+    <div className="flex relative h-[32px] xl:h-[44px] w-[1085px] gap-x-8 xl:gap-x-14" ref={containerRef}>
       {buttons.map((label, index) => (
         <Button
           key={index}
           variant="ghost"
-          className={`pb-2 font-Inter items-start justify-start xl:font-poppins text-[13px] xl:text-[16px] leading-[19.5px] xl:leading-[24px] text-textDark
+          className={`pl-0 pb-6 font-Inter xl:font-poppins text-[13px] xl:text-[16px] leading-[19.5px] xl:leading-[24px] text-textDark
           }`}
           onClick={() => handleButtonClick(index)}
         >
           {label}
         </Button>
       ))}
-      <div className="absolute bottom-0 bg-white h-[4px] w-full"></div>
+      <div className="absolute bottom-0 bg-white h-[4px] w-[390px] xl:w-full"></div>
         <div 
             className="absolute bottom-0 h-[4px] w-full"        
             style={indicatorStyle}
