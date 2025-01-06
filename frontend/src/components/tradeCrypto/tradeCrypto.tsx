@@ -495,7 +495,7 @@ return (
       <div className="flex my-3 xl:grid xl:grid-cols-2 xl:gap-20">
         {/* Left Section */}
         <div className="mx-auto my-auto items-center">
-          <Card className="rounded-lg w-[356px] xl:w-[520px] h-[400px] xl:h-[500px]">
+          <Card className="rounded-lg w-[390px] xl:w-[520px] h-[400px] xl:h-[500px]">
             <CardContent className="h-[400px] xl:h-[500px]">{renderContent()}</CardContent>
           </Card>
         </div>
