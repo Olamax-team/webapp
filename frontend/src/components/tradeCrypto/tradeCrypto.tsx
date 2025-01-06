@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import IndicatorButtonGroup from "./indicator";
+import { ChevronDown } from "lucide-react";
 
 
 const TradeCrypto = () => {
@@ -48,35 +49,38 @@ const TradeCrypto = () => {
       case "Buy & Sell Crypto":
         return (
           <>
-            <div className="space-y-6 xl:space-y-6">
+            <div className="space-y-6 xl:space-y-6 justify-center">
               {/* Sub-Tabs for Buy and Sell */}
-              <div className="font-poppins flex items-start space-x-4 text-[16px] leading-[24px] text-textDark">
-                <Button
-                  variant={subTab === "Buy" ? "default" : "ghost"}
-                  onClick={() => setSubTab("Buy")}
-                  className={`p-5 mt-6 ${
-                    subTab === "Buy"
-                      ? "bg-bg hover:bg-bg text-primary text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
-                      : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
-                  }`}
-                >
-                  BUY
-                </Button>
-                <Button
-                  variant={subTab === "Sell" ? "default" : "ghost"}
-                  onClick={() => setSubTab("Sell")}
-                  className={`pb-2 mt-6 ${
-                    subTab === "Sell"
-                      ? "bg-bg hover:bg-bg text-primarytext-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
-                      : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
-                  }`}
-                >
-                  SELL
-                </Button>
+              <div className="xl:ml-4">
+                <div className="font-poppins flex items-start space-x-4 text-[16px] leading-[24px] text-textDark">
+                  <Button
+                    variant={subTab === "Buy" ? "default" : "ghost"}
+                    onClick={() => setSubTab("Buy")}
+                    className={`p-5 mt-[30px] ${
+                      subTab === "Buy"
+                        ? "bg-bg hover:bg-bg text-primary text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
+                        : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
+                    }`}
+                  >
+                    BUY
+                  </Button>
+                  <Button
+                    variant={subTab === "Sell" ? "default" : "ghost"}
+                    onClick={() => setSubTab("Sell")}
+                    className={`pb-2 mt-[30px] ${
+                      subTab === "Sell"
+                        ? "bg-bg hover:bg-bg text-primary text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
+                        : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
+                    }`}
+                  >
+                    SELL
+                  </Button>
+                </div>                
               </div>
+
               <div className="mt-5">
                 {/* First prop Input */}
-                <div className="flex justify-start space-x-4">
+                <div className="flex justify-center space-x-4">
                   <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                     <div className="grid grid-cols-1">
                       <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
@@ -101,7 +105,7 @@ const TradeCrypto = () => {
                               {subTab === "Buy" ? prop1 : prop2}
                             </span>
                             <DropdownMenu>
-                              <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                              <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                               <DropdownMenuContent>
                                 <DropdownMenuLabel>Select</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
@@ -123,12 +127,12 @@ const TradeCrypto = () => {
 
 
                 {/* Switch icon */}
-                <div className="flex justify-center font-bold text-primary my-0">
+                <div className="flex justify-center font-bold text-primary my-2">
                   <p>⇅</p>
                 </div>
 
                 {/* Second prop Input */}
-                <div className="flex justify-start space-x-4">
+                <div className="flex justify-center space-x-4">
                   <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                     <div>
                       <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
@@ -153,7 +157,7 @@ const TradeCrypto = () => {
                             {subTab === "Buy" ? prop2 : prop1}
                           </span>
                           <DropdownMenu>
-                            <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                            <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                             <DropdownMenuContent>
                               <DropdownMenuLabel>Select</DropdownMenuLabel>
                               <DropdownMenuSeparator />
@@ -176,12 +180,12 @@ const TradeCrypto = () => {
                 </div>
 
                 <div className="flex justify-center items-center">
-                  <Button className="py-3 mt-6 mb-3 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
+                  <Button className="py-3 mt-6 mb-1 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
                     {subTab}
                   </Button>
                 </div>
               </div>
-              <div className="flex font-Inter font-[500px]  xl:mt-4 gap-1 justify-center items-center text-center text-[14px] leading-[21px] xl:text-[16px] xl:leading-[26px] text-[#545454]">
+              <div className="flex font-Inter font-[500px]  xl:mt-1 gap-1 justify-center items-center text-center text-[14px] leading-[21px] xl:text-[16px] xl:leading-[26px] text-[#545454]">
               <img
                           src={`../../../src/assets/images/BTC Circular.png`}
                           alt={`BTC logo`}
@@ -196,37 +200,39 @@ const TradeCrypto = () => {
             <>
               <div className="space-y-4">
               {/* Sub-Tabs for Airtime & Data */}
-                <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
-                <Button
-                    variant={subTab === "CRYPTO" ? "default" : "ghost"}
-                    onClick={() => setSubTab("CRYPTO")}
-                    className={`p-5 mt-6 ${
-                    subTab === "CRYPTO"
-                        ? "bg-bg hover:bg-bg text-primary text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
-                  : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
-                    }`}
-                >
-                    CRYPTO
-                </Button>
-                <Button
-                    variant={subTab === "FIAT" ? "default" : "ghost"}
-                    onClick={() => setSubTab("FIAT")}
-                    className={`pb-2 mt-6 ${
-                    subTab === "FIAT"
-                        ? "bg-bg hover:bg-bg text-primary text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
-                  : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
-                    }`}
-                >
-                    FIAT
-                </Button>
+                <div className="xl:ml-4">
+                  <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
+                  <Button
+                      variant={subTab === "CRYPTO" ? "default" : "ghost"}
+                      onClick={() => setSubTab("CRYPTO")}
+                      className={`p-5 mt-[30px] ${
+                      subTab === "CRYPTO"
+                          ? "bg-bg hover:bg-bg text-primary text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
+                    : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
+                      }`}
+                  >
+                      CRYPTO
+                  </Button>
+                  <Button
+                      variant={subTab === "FIAT" ? "default" : "ghost"}
+                      onClick={() => setSubTab("FIAT")}
+                      className={`pb-2 mt-[30px] ${
+                      subTab === "FIAT"
+                          ? "bg-bg hover:bg-bg text-primary text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] font-semibold"
+                    : "text-[14px] xl:text-[18px] leading-[21px] xl:leading-[27px] hover:none font-semibold"
+                      }`}
+                  >
+                      FIAT
+                  </Button>
+                  </div>                  
                 </div>
-                <div className="flex justify-start space-x-4">
+                <div className="flex justify-center space-x-4">
                   <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
                       <p className="leading-[18px] font-[500] text-[12px] xl:leading-[21px] xl:text-[14px]">{cat0}</p>
                       <div className="flex ml-auto">
                         <div className="flex font-Inter items-center justify-end gap-1">
                           <DropdownMenu>
-                          <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                          <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                           <DropdownMenuContent>
                               <DropdownMenuLabel>Select</DropdownMenuLabel>
                               <DropdownMenuSeparator />
@@ -247,7 +253,7 @@ const TradeCrypto = () => {
 
                 <div>
                   {/* First prop Input */}
-                  <div className="flex justify-start space-x-4">
+                  <div className="flex justify-center space-x-4">
                     <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                       <div>
                           <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
@@ -268,7 +274,7 @@ const TradeCrypto = () => {
                               {airtimeProp1}
                               </span>
                               <DropdownMenu>
-                              <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                              <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                               <DropdownMenuContent>
                                   <DropdownMenuLabel>Select</DropdownMenuLabel>
                                   <DropdownMenuSeparator />
@@ -289,11 +295,11 @@ const TradeCrypto = () => {
                   </div>
 
                   {/* Switch icon */}
-                  <div className="flex justify-center font-bold text-primary my-0">
+                  <div className="flex justify-center font-bold text-primary my-2">
                     <p>⇅</p>
                   </div>
                   {/* Second prop Input */}
-                  <div className="flex justify-start space-x-4">
+                  <div className="flex justify-center space-x-4">
                     <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                     <div>
                         <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
@@ -318,7 +324,7 @@ const TradeCrypto = () => {
                               {subTab === "CRYPTO" ? prop2 : prop1}
                             </span>
                               <DropdownMenu>
-                              <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                              <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                               <DropdownMenuContent>
                                   <DropdownMenuLabel>Select</DropdownMenuLabel>
                                   <DropdownMenuSeparator />
@@ -350,17 +356,17 @@ const TradeCrypto = () => {
     case "Bills & Payment":
       return (
         <>
-          <div className="space-y-4 border">       
+          <div className="space-y-4">       
             {/* Sub-Tabs for Bills & Payment */}
-            <div className="space-y-4">
-              <p className="mt-6 justify-start flex font-bold leading-[24px] text-[18px] xl:leading-[24px] xl:text-[16px]">Pay your bills with ease</p> 
-              <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
+            <div>
+              <p className="xl:ml-4 mt-6 justify-start flex font-bold leading-[24px] text-[18px] xl:leading-[24px] xl:text-[16px]">Pay your bills with ease</p> 
+              <div className="font-poppins flex justify-center space-x-4 text-[16px] leading-[24px] text-textDark">
                 <div className="mt-3 font-Inter flex items-center w-[440px] h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
                   <p className="leading-[18px] font-[500] text-[12px] xl:leading-[21px] xl:text-[14px]">Pay {cat} Bill</p>
                   <div className="flex ml-auto">
                     <div className="flex font-Inter items-center justify-end gap-1">
                       <DropdownMenu>
-                      <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                      <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                       <DropdownMenuContent>
                           <DropdownMenuLabel>Select</DropdownMenuLabel>
                           <DropdownMenuSeparator />
@@ -382,7 +388,7 @@ const TradeCrypto = () => {
 
             <div>
               {/* First prop Input */}
-              <div className="flex justify-start space-x-4">
+              <div className="flex justify-center space-x-4">
                 <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                   <div>
                     <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">Enter Amount</p>
@@ -401,7 +407,7 @@ const TradeCrypto = () => {
                         {billProp1}
                         </span>
                         <DropdownMenu>
-                        <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                        <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>Select</DropdownMenuLabel>
                             <DropdownMenuSeparator />
@@ -422,12 +428,12 @@ const TradeCrypto = () => {
               </div>
 
               {/* Switch icon */}
-              <div className="flex justify-center font-bold text-primary my-0">
+              <div className="flex justify-center font-bold text-primary my-2">
                 <p>⇅</p>
               </div>
 
               {/* Second prop Input */}
-              <div className="flex justify-start space-x-4">
+              <div className="flex justify-center space-x-4">
                 <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div>
                     <p className="text-sm">You Pay</p>
@@ -446,7 +452,7 @@ const TradeCrypto = () => {
                         {prop2}
                         </span>
                         <DropdownMenu>
-                        <DropdownMenuTrigger>▼</DropdownMenuTrigger>
+                        <DropdownMenuTrigger><ChevronDown/></DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>Select</DropdownMenuLabel>
                             <DropdownMenuSeparator />
@@ -480,21 +486,21 @@ const TradeCrypto = () => {
 };
 
 return (
-  <section className="relative bg-bg overflow-hidden w-full h-[550px] xl:h-[650px] mx-auto flex items-center justify-center">
-    <div className="absolute top-[40px] mx-auto xl:top-[80px] space-y-8 w-[390px] xl:w-[1085px] h-[456px] xl:h-full">
+  <section className="relative bg-bg overflow-hidden w-full h-[550px] xl:h-[710px] mx-auto my-auto flex items-center justify-center">
+    <div className="absolute top-[40px] mx-auto xl:top-[80px] space-y-8 w-[390px] xl:w-[1085px] h-[456px] xl:h-[584px]">
         <IndicatorButtonGroup
           buttons={tabs}
           onButtonClick={handleTabClick}
         />
       <div className="flex my-3 xl:grid xl:grid-cols-2 xl:gap-20">
         {/* Left Section */}
-        <div className="mx-auto">
-          <Card className="rounded-lg w-[356px] xl:w-[520px] h-[400px] xl:h-[470px]">
+        <div className="mx-auto my-auto items-center">
+          <Card className="rounded-lg w-[356px] xl:w-[520px] h-[400px] xl:h-[500px]">
             <CardContent className="h-[400px] xl:h-[500px]">{renderContent()}</CardContent>
           </Card>
         </div>
         {/* Right Section: Crypto Market Today */}
-        <div className="hidden xl:block space-x-4 relative my-auto">
+        <div className="hidden xl:block space-x-4 relative mt-4">
           <Card className="xl:w-[413px] xl:h-[388px] bg-bg">
             <CardHeader>
               <CardTitle className="font-DMSans text-[32px] leading-[48px]">
@@ -502,34 +508,34 @@ return (
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="font-Inter space-y-4">
+              <div className="font-Inter space-y-6">
                 {[
                   {
                     name: "Bitcoin",
                     ticker: "BTC",
                     price: "$2,051,913.71",
-                    change: "+0.05%",
+                    change: "0.05%",
                     logo:"../../../src/assets/images/BTC Circular.png",
                   },
                   {
                     name: "Ethereum",
                     ticker: "ETH",
                     price: "$2,051,913.71",
-                    change: "+0.05%",
+                    change: "0.05%",
                     logo:"../../../src/assets/images/ETH Circular.png",
                   },
                   {
                     name: "Tether",
                     ticker: "USDT",
                     price: "$2,051,913.71",
-                    change: "+0.05%",
+                    change: "0.05%",
                     logo:"../../../src/assets/images/USDT Circular.png",
                   },
                   {
                     name: "Solana",
                     ticker: "SOL",
                     price: "$2,051,913.71",
-                    change: "+0.05%",
+                    change: "0.05%",
                     logo:"../../../src/assets/images/SOL Circular.png",
                   },
                 ].map((crypto, index) => (
@@ -539,37 +545,48 @@ return (
                   > 
                   <div className="flex gap-5">
                     <span>
-                          <img
-                            src={crypto.logo}
-                            alt={`${prop2} logo`}
-                            className="w-[48px] h-[48px]"
-                          />
-                        </span>
-                      <div className="flex flex-col">
-                        <span className="font-Inter font-semibold text-lg">
-                          {crypto.name}
-                        </span>
-                        <span className="font-Inter block text-[16px] leading-[24px] text-[#545454]">
-                          {crypto.ticker}
-                        </span>
-                      </div>
-                  </div>
-
-                    <div>
-                      <span className="block text-right text-gray-500">
-                        {crypto.price}
+                      <img
+                        src={crypto.logo}
+                        alt={`${prop2} logo`}
+                        className="w-[48px] h-[48px]"
+                      />
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="font-Inter text-[18px] leading-[27px]  font-[500px] text-lg">
+                        {crypto.name}
                       </span>
-                      <span
-                        className={`block text-right ${
-                          crypto.change.startsWith("+")
-                            ? "text-green-500"
-                            : "text-red-500"
-                        }`}
-                      >
-                        {crypto.change}
+                      <span className="font-Inter block text-[16px] leading-[24px] text-[#545454]">
+                        {crypto.ticker}
                       </span>
                     </div>
                   </div>
+                  <div>
+                    <span className="block text-right font-[500px] text-textDark">
+                      {crypto.price}
+                    </span>
+                    <span 
+                    className={`block text-right ${
+                      crypto.change.startsWith("-") ? "text-red-500" : "text-green-500"
+                    }`}
+                  >
+                    {crypto.change && (
+                      <img 
+                        src="../../../src/assets/images/positive-graph.png" 
+                        alt="Upward Trend"
+                        className="inline-block w-[14px] h-[14px] m-2 justify-center"
+                      />
+                    )}
+                    {crypto.change.startsWith("-") && (
+                      <img 
+                        src="../../../src/assets/images/negative-graph.png" 
+                        alt="Downward Trend"
+                        className="inline-block w-[14px] h-[14px] m-2 "
+                      />
+                    )}
+                    {crypto.change}
+                    </span>
+                  </div>
+                </div>
                 ))}
               </div>
             </CardContent>

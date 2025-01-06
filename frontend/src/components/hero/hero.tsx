@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import FloatingTag from '../ui/floating-tag';
-import Waves from '../ui/waves';
 
 const HeroSection: React.FC = () => {
   return (
@@ -80,7 +79,11 @@ const HeroSection: React.FC = () => {
             </div>
           </div>
        </div>
-       <Waves/>
+        <img
+          src="/src/assets/images/waves.png"
+          alt="waves"
+          className="absolute bottom-0 w-full h-[200px]"
+        />
       </>
     </section>
   );
