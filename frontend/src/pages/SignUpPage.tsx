@@ -47,23 +47,35 @@ const SignUpPage = () => {
       };
 
       console.log(registerValues)
-  
-      let data = JSON.stringify({
+
+      const data = JSON.stringify({
         "view": "register",
         "fname": "tt",
         "lname": "ta",
         "mname": "tt",
-        "email": "dudumadan73@gmail.com",
-        "password": "pass",
-        "referrer": "f9d6f2765"
+        "email": "du@gmail.com",
+        "password": "pass"
       });
-
-      await axios.post('http://olamax.peacefarm.me/api/', data, {
-          headers: {'Content-Type': 'application/json'}
-        })
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+  
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://olamax.peacefarm.me/api',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        data : data
+      };
+  
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     };
+
 
     return (
       <Form {...form}>
@@ -73,7 +85,7 @@ const SignUpPage = () => {
               <h2 className='text-[32px] leading-normal font-DMSans font-bold'>Create Account</h2>
               <p className='text-base'>Start trading with us today!</p>
             </div>
-            <button className='flex gap-4 text-black/50 lg:hidden' onClick={() => navigate(-1)}>
+            <button className='flex gap-4 text-black/50 lg:hidden' onClick={() => navigate(-1)} type='button'>
               <div className="size-[20px]">
                 <img src={arrow} alt="arrow_icon"/>
               </div>
