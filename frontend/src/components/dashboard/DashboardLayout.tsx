@@ -124,7 +124,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
         ))}
       </div>
       <div className={navIsFixed}>
-        <div className='h-[68px] flex items-center px-5 justify-between shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)] border-t-2'>
+        <div className='h-[68px] flex items-center px-6 justify-between shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)] border-t-2'>
           <div className="flex gap-3 items-center w-full">
             <PlaceHolder {...navLinkList.find(item => item.path === pathname)}/>
           </div>
