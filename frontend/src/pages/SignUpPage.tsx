@@ -58,7 +58,9 @@ const SignUpPage = () => {
         "referrer": "f9d6f2765"
       });
 
-      await axios.post('http://olamax.peacefarm.me/api/', data)
+      await axios.post('http://olamax.peacefarm.me/api/', data, {
+          headers: {'Content-Type': 'application/json'}
+        })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
     };
