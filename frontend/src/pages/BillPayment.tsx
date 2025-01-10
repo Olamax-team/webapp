@@ -3,7 +3,7 @@ import DashboardLayout from "../components/dashboard/DashboardLayout";
 const BillPayment = () => {
   return (
     <DashboardLayout>
-      BillPayment
+      bill payment
     </DashboardLayout>
   )
 }
