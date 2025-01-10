@@ -29,7 +29,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "typeface-poppins": "^1.1.13",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -47,5 +48,6 @@
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.15.0",
     "vite": "^6.0.1"
-  }
+  },
+   "proxy": "https://olamax.peacefarm.me"
 }

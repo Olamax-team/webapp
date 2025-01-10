@@ -226,6 +226,48 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
     window.addEventListener('scroll', toggleNavbarState)
   }, [toggleNavbarState]);
 
+
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClickOutsideTrade = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpenTrade(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideTrade);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideTrade);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const handleClickOutsideSupport = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpenSupport(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideSupport);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideSupport);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const handleClickOutsideMore = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpenMore(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideMore);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideMore);
+    };
+  }, []);
+
 // single navbar menu item
   const MenuItem = ({image, title, description, path}:menuItemProps) => {
     return (
@@ -246,7 +288,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
   // full drop down menu that will hold the single values
   const DropDownMenu = ({menuList, style, isOpen}:dropDownMenuProps) => {
     return (
-      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col gap-3 shadow-lg absolute',style, isOpen ? 'flex': 'hidden')}>
+      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col gap-3 shadow-lg absolute',style, isOpen ? 'flex': 'hidden')} ref={ref}>
         {menuList.map((item:menuItemProps) => (
           <MenuItem key={item.title} {...item}/>
         ))}
@@ -257,7 +299,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
   // full drop down for menu list in grid
   const BigDropDownMenu = ({menuList, style, isOpen}:dropDownMenuProps) => {
     return (
-      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col xl:grid-cols-2 gap-3 shadow-lg absolute xl:min-w-[676px]',style, isOpen ? 'flex xl:grid': 'hidden')}>
+      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col xl:grid-cols-2 gap-3 shadow-lg absolute xl:min-w-[676px]',style, isOpen ? 'flex xl:grid': 'hidden')} ref={ref}>
         {menuList.map((item:menuItemProps) => (
           <MenuItem key={item.title} {...item}/>
         ))}
@@ -321,14 +363,14 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
 
         {/* other links for desktop */}
         <ul className='hidden xl:flex items-center gap-8 cursor-pointer h-full'>
-          <li className='flex items-center gap-2 h-full relative group' onClick={() => setOpenTrade(!openTrade)}>
-            <span className='group-hover:text-primary'>Trade Crypto</span>
-            <ChevronDown className='size-4 mt-1 group-hover:text-primary group-hover:rotate-180'/>
+          <li className='flex items-center gap-2 h-full relative group' onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+            <span className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')}>Trade Crypto</span>
+            <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
             <DropDownMenu 
               menuList={tradeCryptoList}
-              style='left-0 top-[108px] hidden group-hover:flex'
+              style='left-0 top-[108px]'
               isOpen={openTrade}
-          />
+            />
           </li>
           <li className='hover:text-primary'>
             <Link to={'/escrow-services'}>Escrow Services</Link>
@@ -336,21 +378,21 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
           <li className='hover:text-primary'>
             <Link to={'/escrow-services'}>OTC Desk</Link>
           </li>
-          <li className='h-full flex items-center gap-2 relative group' onClick={() => setOpenSupport(!openSupport)}>
-            <span className='group-hover:text-primary'>Support</span>
-            <ChevronDown className='size-4 mt-1 group-hover:text-primary group-hover:rotate-180'/>
+          <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenSupport(!openSupport); setOpenMore(false); setOpenTrade(false);}}>
+          <span className={cn('group-hover:text-primary', openSupport ? 'text-primary' : '')}>Support</span>
+            <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openSupport ? 'text-primary rotate-180': '')}/>
             <DropDownMenu 
               menuList={supportList}
-              style='-left-[120px] top-[108px] hidden group-hover:flex'
+              style='-left-[120px] top-[108px]'
               isOpen={openSupport}
             />
           </li>
-          <li className='h-full flex items-center gap-2 relative group' onClick={() => setOpenMore(!openMore)}>
-            <span className='group-hover:text-primary'>More</span>
-            <ChevronDown className='size-4 mt-1 group-hover:text-primary group-hover:rotate-180'/>
+          <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenMore(!openMore); setOpenTrade(false); setOpenSupport(false);}}>
+          <span className={cn('group-hover:text-primary', openMore ? 'text-primary' : '')}>More</span>
+          <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openMore ? 'text-primary rotate-180': '')}/>
             <BigDropDownMenu 
               menuList={moreList}
-              style='-left-[450px] top-[108px] hidden group-hover:grid'
+              style='-left-[450px] top-[108px]'
               isOpen={openMore}
             />
           </li>
@@ -367,14 +409,14 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
                 </div>
               </div>
               <ul className='flex flex-col gap-8 mt-8'>
-                <li className='flex items-center gap-2 h-full relative group' onClick={() => setOpenTrade(!openTrade)}>
-                  <span className='group-hover:text-primary'>Trade Crypto</span>
-                  <ChevronDown className='size-4 mt-1 group-hover:text-primary group-hover:rotate-180'/>
+                <li className='flex items-center gap-2 h-full relative group' onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+                  <span className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')}>Trade Crypto</span>
+                  <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
                   <DropDownMenu 
                     menuList={tradeCryptoList}
-                    style='-left-3 top-[30px] hidden group-hover:flex'
+                    style='-left-3 top-[30px]'
                     isOpen={openTrade}
-                />
+                  />
                 </li>
                 <li className='hover:text-primary'>
                   <Link to={'/escrow-services'}>Escrow Services</Link>
@@ -382,21 +424,21 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
                 <li className='hover:text-primary'>
                   <Link to={'/escrow-services'}>OTC Desk</Link>
                 </li>
-                <li className='h-full flex items-center gap-2 relative group' onClick={() => setOpenSupport(!openSupport)}>
-                  <span className='group-hover:text-primary'>Support</span>
-                  <ChevronDown className='size-4 mt-1 group-hover:text-primary group-hover:rotate-180'/>
+                <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenSupport(!openSupport); setOpenMore(false); setOpenTrade(false);}}>
+                  <span className={cn('group-hover:text-primary', openSupport ? 'text-primary' : '')}>Support</span>
+                  <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openSupport ? 'text-primary rotate-180': '')}/>
                   <DropDownMenu 
                     menuList={supportList}
-                    style='-left-3 top-[30px] hidden group-hover:flex'
+                    style='-left-3 top-[30px]'
                     isOpen={openSupport}
                   />
                 </li>
-                <li className='h-full flex items-center gap-2 relative group' onClick={() => setOpenMore(!openMore)}>
-                  <span className='group-hover:text-primary'>More</span>
-                  <ChevronDown className='size-4 mt-1 group-hover:text-primary group-hover:rotate-180'/>
+                <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenMore(!openMore); setOpenTrade(false); setOpenSupport(false);}}>
+                  <span className={cn('group-hover:text-primary', openMore ? 'text-primary' : '')}>More</span>
+                  <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openMore ? 'text-primary rotate-180': '')}/>
                   <BigDropDownMenu 
                     menuList={moreList}
-                    style='-left-3 -top-[100px] hidden xl:group-hover:grid group-hover:flex'
+                    style='-left-3 -top-[100px]'
                     isOpen={openMore}
                   />
                 </li>

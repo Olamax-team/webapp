@@ -1,7 +1,13 @@
 import React from "react"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import axios from "axios"
+import { create } from 'zustand';
+
+type modalProps = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -34,9 +40,10 @@ export const timelineCreator = (date:string) => {
   }
 
   return displayDate;
-}
+};
 
-export const api = axios.create({
-  baseURL: process.env.NODE_ENV === 'development' ? '/api' : 'https://olamax.peacefarm.me/api',
-  withCredentials: true,
-});
+export const useModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));

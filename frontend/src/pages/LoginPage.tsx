@@ -40,7 +40,7 @@ const LoginPage = () => {
               <h2 className='text-[32px] leading-normal font-DMSans font-bold'>Login</h2>
               <p className='text-base'>We're happy to see you again!</p>
             </div>
-            <button className='flex gap-4 items-center text-black/50 lg:hidden' onClick={() => navigate(-1)}>
+            <button className='flex gap-4 items-center text-black/50 lg:hidden' onClick={() => navigate(-1)} type='button'>
               <div className="size-[20px]">
                 <img src={arrow} alt="arrow_icon"/>
               </div>

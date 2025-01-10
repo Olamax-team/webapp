@@ -7,6 +7,12 @@ import Layout from './components/layout/Layout';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import PasswordRecovery from './pages/PasswordRecovery';
+import Dashboard from './pages/Dashboard';
+import BillPayment from './pages/BillPayment';
+import Transaction from './pages/Transaction';
+import IdentityVerification from './pages/IdentityVerification';
+import AccountManagement from './pages/AccountManagement';
+import MyReward from './pages/MyReward';
 
 
 const router = createBrowserRouter([
@@ -29,6 +35,31 @@ const router = createBrowserRouter([
         path: '/password-recovery',
         element: <PasswordRecovery/>
       },
+      {
+        path: '/dashboard',
+        element: <Dashboard/>
+      },
+      {
+        path: '/dashboard/bills_payment',
+        element: <BillPayment/>
+      },
+      {
+        path: '/dashboard/transaction',
+        element: <Transaction/>
+      },
+      {
+        path: '/dashboard/identity_verification',
+        element: <IdentityVerification/>
+      },
+      {
+        path: '/dashboard/account_management',
+        element: <AccountManagement/>
+      },
+      {
+        path: '/dashboard/my_rewards',
+        element: <MyReward/>
+      },
+
     ]
   }
 ]); 
