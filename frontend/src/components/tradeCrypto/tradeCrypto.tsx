@@ -402,7 +402,7 @@ const TradeCrypto = () => {
                         alt={`${billProp1} logo`}
                         className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                         />
-                        <span className="text-[13px] leading-[19.5px] xl:leading-[24px] xl:text-[16px] font-semibold">
+                        <span className="text-[13px] leading-[19.5px] xl:leading-[24px] xl:text-[16px] font-semibold ">
                         {billProp1}
                         </span>
                         <DropdownMenu>
