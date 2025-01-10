@@ -89,7 +89,7 @@ const TradeCrypto = () => {
                       <div className="grid grid-cols-2">
                         <Input
                           placeholder="0.00"
-                          className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                          className="h-[35px] pl-0 shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
                         />
                         <div className="flex items-center justify-end gap-1">
                           <img
@@ -141,7 +141,7 @@ const TradeCrypto = () => {
                       <div className="grid grid-cols-2">
                         <Input
                           placeholder="0.00"
-                          className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                          className="h-[35px] pl-0 shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
                             />                  
                         <div className="flex items-center justify-end gap-1">
                           <img
@@ -198,9 +198,9 @@ const TradeCrypto = () => {
       case "Airtime & Data":
         return (
             <>
-              <div className="space-y-4">
+              <div className="space-y-2">
               {/* Sub-Tabs for Airtime & Data */}
-                <div className="xl:ml-4">
+                <div className="mb-4 xl:ml-4">
                   <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
                   <Button
                       variant={subTab === "CRYPTO" ? "default" : "ghost"}
@@ -257,12 +257,12 @@ const TradeCrypto = () => {
                     <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                       <div>
                           <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
-                          You Receive
+                          Airtime Amount
                           </p>
                           <div className="grid grid-cols-2">
                             <Input
                             placeholder="0.00"
-                            className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                            className="h-[35px] pl-0 shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
                             />
                             <div className="flex items-center justify-end gap-1">
                               <img
@@ -308,7 +308,7 @@ const TradeCrypto = () => {
                         <div className="grid grid-cols-2">
                           <Input
                           placeholder="0.00"
-                          className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                          className="h-[35px] pl-0 shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
                           />  
                           <div className="flex items-center justify-end gap-1">
                             <img
@@ -345,7 +345,7 @@ const TradeCrypto = () => {
                   </div>
 
                   <div className="flex justify-center items-center">
-                  <Button className="py-3 mt-6 mb-3 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
+                  <Button className="py-3 mt-4 xl:mt-6 bg-primary hover:bg-secondary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
                     Buy
                   </Button>
                   </div>
@@ -356,12 +356,13 @@ const TradeCrypto = () => {
     case "Bills & Payment":
       return (
         <>
-          <div className="space-y-4">       
+          <div className=" border border-white space-y-2">       
             {/* Sub-Tabs for Bills & Payment */}
-            <div>
-              <p className="xl:ml-4 mt-6 justify-start flex font-bold leading-[24px] text-[18px] xl:leading-[24px] xl:text-[16px]">Pay your bills with ease</p> 
+              <div className="my-4 xl:ml-4 font-bold leading-[24px] text-[16px] xl:leading-[24px] xl:text-[16px]">
+                <p className="mt-[30px] mb-5">Pay your bills with ease</p> 
+              </div>
               <div className="font-poppins flex justify-center space-x-4 text-[16px] leading-[24px] text-textDark">
-                <div className="mt-3 font-Inter flex items-center w-[440px] h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
+                <div className="mt-3 font-Inter flex items-center w-[316px] xl:w-[440px] h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
                   <p className="leading-[18px] font-[500] text-[12px] xl:leading-[21px] xl:text-[14px]">Pay {cat} Bill</p>
                   <div className="flex ml-auto">
                     <div className="flex font-Inter items-center justify-end gap-1">
@@ -384,8 +385,6 @@ const TradeCrypto = () => {
                   </div>
                 </div>
               </div>              
-            </div>
-
             <div>
               {/* First prop Input */}
               <div className="flex justify-center space-x-4">
@@ -395,7 +394,7 @@ const TradeCrypto = () => {
                     <div className="grid grid-cols-2">
                       <Input
                       placeholder="0.00"
-                      className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                      className="h-[35px] pl-0 text-left shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
                       /> 
                       <div className="flex items-center justify-end xl:justify-end gap-1">
                         <img
@@ -403,7 +402,7 @@ const TradeCrypto = () => {
                         alt={`${billProp1} logo`}
                         className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                         />
-                        <span className="text-[13px] leading-[19.5px] xl:leading-[24px] xl:text-[16px] font-semibold">
+                        <span className="text-[13px] leading-[19.5px] xl:leading-[24px] xl:text-[16px] font-semibold ">
                         {billProp1}
                         </span>
                         <DropdownMenu>
@@ -436,11 +435,11 @@ const TradeCrypto = () => {
               <div className="flex justify-center space-x-4">
                 <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div>
-                    <p className="text-sm">You Pay</p>
+                    <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">You Pay</p>
                     <div className="grid grid-cols-2">
                       <Input
                       placeholder="0.00"
-                      className="h-[35px] shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
+                      className="h-[35px] pl-0 shadow-none bg-bg font-bold leading-[34.5px] text-[23px] border-none"
                       /> 
                       <div className="flex items-center justify-end xl:justify-end gap-1">
                         <img
@@ -472,7 +471,7 @@ const TradeCrypto = () => {
                 </div>                
               </div>
               <div className="flex justify-center items-center">
-                <Button className="py-3 mt-6 mb-3 bg-primary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
+                <Button className="py-3 mt-4 xl:mt-6 bg-primary hover:bg-secondary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
                   Buy
                 </Button>
               </div>             
@@ -500,7 +499,7 @@ return (
           </Card>
         </div>
         {/* Right Section: Crypto Market Today */}
-        <div className="hidden xl:block space-x-4 relative mt-8">
+        <div className="hidden xl:block space-x-4 relative mt-6">
           <Card className="xl:w-[413px] xl:h-[388px] bg-bg">
             <CardHeader>
               <CardTitle className="font-DMSans text-[32px] leading-[48px]">
