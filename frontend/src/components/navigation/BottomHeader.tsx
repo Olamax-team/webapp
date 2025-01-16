@@ -354,7 +354,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
         {/* home page link */}
         <div className="flex items-center gap-4">
           <Menu size={25} className='xl:hidden cursor-pointer' onClick={() => setOpenMobile(!openMobile)}/>
-          <Link to={'/about'}>
+          <Link to={'/'}>
             <div className='w-[110px] xl:w-[153px] h-[34px] xl:h-[48px]'>
               <img src="../../../src/assets/images/olamax_logo_2.png" alt="logo" className='object-cover'/>
             </div>
@@ -400,7 +400,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
 
         {/* other links for mobile */}
         {openMobile &&
-          <div className={cn('w-full h-screen fixed top-0 left-0 bg-black/10 xl:hidden z-[4000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
+          <div className={cn('w-full h-screen fixed top-0 left-0 bg-black/10 xl:hidden z-[40000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
             <div className="w-[80%] bg-bgSurface h-full px-8">
               <div className="border-b w-full h-[96px] flex place-items-end pb-1">
                 <div className="w-full flex items-center justify-between">

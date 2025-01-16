@@ -5,6 +5,9 @@ const BillPayment = () => {
   return (
     <DashboardLayout>
       <Bills />
+
+  
+
     </DashboardLayout>
   )
 }
