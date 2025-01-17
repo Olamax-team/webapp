@@ -52,12 +52,12 @@ const navLinkList = [
     icon: HiOutlineGift,
     path: '/dashboard/my_rewards'
   }
-]
+];
 
 const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
 
-    const navbar = "bg-white w-full md:hidden fixed top-[96px] z-[4000]"
-    const navbarFixed = "bg-white w-full md:hidden fixed top-[64px] z-[4000]"
+    const navbar = "bg-white w-full md:hidden fixed top-[96px] z-[400]"
+    const navbarFixed = "bg-white w-full md:hidden fixed top-[64px] z-[400]"
 
     const [showMenu, setShowMenu] = React.useState(false);
 
@@ -118,7 +118,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
 
   return (
     <div className={cn('w-full flex md:flex-row flex-col', className)}>
-      <div className="w-[33%] lg:w-[23%] xl:w-[22%] sticky md:top-[100px] h-full py-10 font-poppins hidden md:flex flex-col gap-8">
+      <div className="w-[33%] lg:w-[25%] xl:w-[22%] sticky md:top-[100px] h-full py-10 font-poppins hidden md:flex flex-col gap-8">
         { navLinkList.map((item) => (
           <DashboardNavLink {...item} key={item.path}/>
         ))}
@@ -137,7 +137,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
           </div>
         }
       </div>
-      <div className="w-full md:w-[67%] lg:w-[77%] xl:w-[78%] bg-[#f5f5f5] pt-[64px] md:pt-0 ">
+      <div className="w-full md:w-[67%] lg:w-[75%] xl:w-[78%] bg-[#f5f5f5] pt-[64px] md:pt-0 ">
         {children}
       </div>
     </div>

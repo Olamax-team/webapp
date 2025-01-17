@@ -24,7 +24,7 @@ const AuthLayout = ({children}: Props) => {
       </div>
       <div className='w-full lg:h-[calc(100vh_-_100px)] md:h-[calc(100vh_-_80px)] h-[calc(100vh_-_64px)] flex lg:flex-row flex-col relative'>
         <div className='h-full flex-none hidden lg:block'>
-          <img src={banner} alt="auth_banner" className='w-auto h-full object-cover'/>
+          <img src={banner} alt="auth_banner" className='w-full h-full object-cover'/>
         </div>
         <button className='absolute top-[68px] right-[80px] lg:flex gap-4 items-center text-black/50 hidden' onClick={() => navigate(-1)}>
           <div className="size-[20px]">
