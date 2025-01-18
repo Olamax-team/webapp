@@ -15,7 +15,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-ot
 const SignUpPage = () => {
   documentTitle('Registration');
 
-  const [isSubmit, setIsSubmit] = React.useState(true);
+  const [isSubmit, setIsSubmit] = React.useState(false);
 
   const navigate = useNavigate();
 
