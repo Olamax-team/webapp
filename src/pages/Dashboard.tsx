@@ -1,9 +1,11 @@
 import DashboardLayout from '../components/dashboard/DashboardLayout'
+import DashboardTab from '../components/dashboard/dashboardTabs'
+
 
 const Dashboard = () => {
   return (
     <DashboardLayout>
-      <p>dashboard</p>
+      <DashboardTab/>
     </DashboardLayout>
   )
 }
