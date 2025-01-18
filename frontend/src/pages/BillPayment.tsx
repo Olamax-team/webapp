@@ -1,9 +1,13 @@
 import DashboardLayout from "../components/dashboard/DashboardLayout";
+import Bills from "../components/dashboard/bills";
 
 const BillPayment = () => {
   return (
     <DashboardLayout>
-      bill payment
+      <Bills />
+
+  
+
     </DashboardLayout>
   )
 }

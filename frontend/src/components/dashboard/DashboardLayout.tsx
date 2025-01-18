@@ -23,7 +23,7 @@ type dashboardNavPlaceHolderProps = {
 
 const navLinkList = [
   {
-    label: 'Dasboard',
+    label: 'Dashboard',
     icon: HiOutlineChartPie,
     path: '/dashboard'
   },

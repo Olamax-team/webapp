@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -49,5 +50,5 @@
     "typescript-eslint": "^8.15.0",
     "vite": "^6.0.1"
   },
-   "proxy": "https://olamax.peacefarm.me"
+  "proxy": "https://olamax.peacefarm.me"
 }
