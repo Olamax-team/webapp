@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "Olamax Web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -51,5 +51,5 @@
     "typescript-eslint": "^8.15.0",
     "vite": "^6.0.1"
   },
-  "proxy": "https://olamax.peacefarm.me"
+  "proxy": "https://api.olamax.io"
 }
