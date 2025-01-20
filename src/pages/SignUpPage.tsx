@@ -40,40 +40,24 @@ const SignUpPage = () => {
       const { email, password, referralCode } = values;
   
       const registerValues = {
-        view: 'register',
         email: email,
         password: password,
-        referrer: referralCode,
-      };
+        referrer_code: referralCode,
+      }
 
-      console.log(registerValues)
-
-      const data = JSON.stringify({
-        "view": "register",
-        "fname": "tt",
-        "lname": "ta",
-        "mname": "tt",
-        "email": "du@gmail.com",
-        "password": "pass"
-      });
-  
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://olamax.peacefarm.me/api',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        data : data
-      };
-  
-      axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
+        url: 'https://api.olamax.io/api/register',
+        header: {'Content-Type':'application/json'},
+        data: registerValues,
+      }
+
+      axios.request(config).then((response) => {
+        if (response.data.status === 'success') {
+          setIsSubmit(true);
+        }
       })
-      .catch((error) => {
-        console.log(error);
-      });
     };
 
 
@@ -159,8 +143,7 @@ const SignUpPage = () => {
       const { verificationCode } = values;
   
       const verifyValues = {
-        view: 'verification',
-        verficationCode: verificationCode
+        verfication_code: verificationCode
       };
 
       console.log(verifyValues);

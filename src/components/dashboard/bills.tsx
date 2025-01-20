@@ -65,45 +65,35 @@ const Bills = () => {
  
 
   return (
-    <section className="flex w-full h-auto bg-[#f8f9fA]">
-      <div className="lg:flex lg:gap-10 gap-10 p-5">
-        <div>
-          <div className="top-[195px] lg:mt-[24px] text-[#121826]">
+    <section className="flex w-full items-center">
+      <div className="lg:flex lg:gap-10 gap-10 w-full">
+        <div className="lg:w-[50%] w-full lg:pt-6">
+          <div className="top-[195px] text-[#121826]">
             <h1 className="font-bold font-Inter lg:font-DMSans text-[20px] leading-[30px] lg:text-[24px] lg:leading-[39px] text-[#121826]">Hello, Tosin Adebayor</h1>
             <p className="font-medium font-Inter text-[14px] leading-[21px]">What bill would you be paying today?</p>
           </div>
 
-          <div>
+          <div className="w-full">
             <p className="mt-5 font-bold font-Inter text-[14px] lg:text-[18px] leading-[21px] lg:leading-[27px] text-[rgba(0,0,0,0.5)]">Select Bills Service</p>
 
-            <div className="grid grid-cols-4 sm:grid-cols-3 lg:grid-cols-3 lg:gap-5  justify-center mt-5">
+            <div className="grid grid-cols-4 sm:grid-cols-3 lg:grid-cols-3  w-full md:gap-x-4 2xl:gap-x-6 gap-y-0 gap-x-3 ">
               {bills.map((bill, index) => (
                 <BillsIink index={index} setActive={setActive} active={active} icon={bill.icon}  name={bill.name}  />
               ))}
             </div>
           </div>
         </div>
-
-        <div className="mt-[49px] bg-[#ffffff] rounded-sm">
-          <div className="p-5">
+        <div className="bg-[#ffffff] rounded-md lg:w-[50%] w-full lg:h-[520px] mt-10 lg:mt-0 h-[420px]">
+          <div className="px-8 py-6">
             <div className="flex gap-5 items-center">
               <button onClick={() => setActiveButton('crypto')} 
                className={`w-[60px] lg:w-[80px] lg:h-[44px] h-[32px] rounded-md font-poppins font-bold text-[12px] lg:text-[16px] leading-[18px] lg:leading-[24px] p-5 items-center justify-center flex ${activeButton === 'crypto' ?   '  bg-[#f5f5f5]   text-[#039AE4]' : 'bg-transparent text-[#121826]'  } `}>Crypto</button>
-             
               <button  onClick={() => setActiveButton('FIAT')} 
                className={`font-Inter font-bold text-[14px] lg:text-[18px] lg:leading-[27px] leading-[21px] rounded-md lg:w-[80px] lg:h-[44px] w-[60px] h-[32px]  ${activeButton === 'FIAT'? ' bg-[#f5f5f5]   text-[#039AE4]' : ' bg-transparent text-[#121826]'} `}>FIAT</button>
             </div>
-
-
-            <div className="">{renderBill() }   </div>
-
-
-                    
-                
-           
+            <div className="">{renderBill()}</div>
           </div>
-
-          <div  className='flex items-center  justify-center mb-3'> <button className='lg:w-[150px]  w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px]  font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[15px] lg:font-poppins lg:text-[16px] lg:leading-[24px] text-[#ffffff] bg-[#039AE4]   ' >Buy</button>  </div>
+          <div  className='flex items-center  justify-center mb-3'> <button className='lg:w-[150px]  w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px]  font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[15px] lg:font-poppins lg:text-[16px] lg:leading-[24px] text-[#ffffff] bg-[#039AE4]' >Buy</button>  </div>
         </div>
       </div>
     </section>

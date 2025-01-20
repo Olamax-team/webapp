@@ -84,7 +84,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
    const DashboardNavLink = ({label, icon:Icon, path}:dashboardNavLinkProps) => {
     
     return (
-      <Link to={path ? path : ''} className={cn("md:w-[250px] lg:w-[280px] xl:w-[290px] h-[60px] rounded-r-[30px] pl-[20px] lg:pl-[40px] xl:pl-[49px] flex item-center hover:bg-[#f5f5f5] group", pathname === path ? 'bg-[#f5f5f5]' : '')}>
+      <Link to={path ? path : ''} className={cn("md:w-[260px] lg:w-[250px] xl:w-[260px] 2xl:w-[290px] h-[60px] rounded-r-[30px] pl-0 lg:pl-[20px] xl:pl-[25px] 2xl:pl-[40px] flex item-center hover:bg-[#f5f5f5] group", pathname === path ? 'bg-[#f5f5f5]' : '')}>
         <div className={cn('my-auto flex items-center gap-3 group-hover:text-primary', pathname === path ? 'text-primary': '')}>
           {Icon && <Icon className='size-6'/>}
           <p className='font-medium'>{label && label}</p>
@@ -118,7 +118,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
 
   return (
     <div className={cn('w-full flex md:flex-row flex-col', className)}>
-      <div className="w-[33%] lg:w-[25%] xl:w-[22%] sticky md:top-[100px] h-full py-10 font-poppins hidden md:flex flex-col gap-8">
+      <div className="w-[33%] lg:w-[24%] xl:w-[21%] sticky md:top-[100px] h-full py-10 font-poppins hidden md:flex flex-col gap-8">
         { navLinkList.map((item) => (
           <DashboardNavLink {...item} key={item.path}/>
         ))}
@@ -137,7 +137,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
           </div>
         }
       </div>
-      <div className="w-full md:w-[67%] lg:w-[75%] xl:w-[78%] bg-[#f5f5f5] pt-[64px] md:pt-0 ">
+      <div className="w-full md:w-[67%] lg:w-[76%] xl:w-[79%] bg-[#f5f5f5] pt-[100px] md:pt-10 lg:pt-12 md:pb-10 lg:pb-12 px-5 md:px-10 xl:px-16 2xl:px-24 pb-6">
         {children}
       </div>
     </div>
