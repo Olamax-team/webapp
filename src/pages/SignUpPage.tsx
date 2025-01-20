@@ -40,31 +40,19 @@ const SignUpPage = () => {
       const { email, password, referralCode } = values;
   
       const registerValues = {
-        view: 'register',
         email: email,
         password: password,
         referrer: referralCode,
       };
-
-      console.log(registerValues)
-
-      const data = JSON.stringify({
-        "view": "register",
-        "fname": "tt",
-        "lname": "ta",
-        "mname": "tt",
-        "email": "du@gmail.com",
-        "password": "pass"
-      });
-  
+      
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://olamax.peacefarm.me/api',
+        url: 'https://api.olamax.io/api/register',
         headers: { 
           'Content-Type': 'application/json',
         },
-        data : data
+        data : registerValues
       };
   
       axios.request(config)
