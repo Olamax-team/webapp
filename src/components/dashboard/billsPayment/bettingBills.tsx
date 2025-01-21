@@ -68,8 +68,6 @@ const BettingBills = () => {
               </select>
             </div>
 
-
-
                     {/* betting  */}
                     <div className="w-[316px] h-[64px] rounded-sm bg-[#f5f5f5f5] mt-3 lg:w-[440px] lg:h-[96px] ">
               <label htmlFor="payment" className=" hidden lg:block font-Inter text-[#121826] lg:mt-[8px] lg:font-normal lg:text-[14px]  lg:ml-2 lg:p-3 lg:leading-[21px]"> Enter Amount </label>
