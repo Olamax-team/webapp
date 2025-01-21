@@ -8,9 +8,10 @@ type modalDialogProps = {
   isOpen: boolean;
   onClose: () => void;
   useCloseButton?: boolean;
+  modalSize?: string;
 };
 
-const Modal = ({title, children, isOpen, onClose, useCloseButton }:modalDialogProps) => {
+const Modal = ({title, children, isOpen, onClose, useCloseButton, modalSize }:modalDialogProps) => {
   const [showModal, setShowModal] = React.useState(isOpen);
 
   React.useEffect(() => {
@@ -29,7 +30,7 @@ const Modal = ({title, children, isOpen, onClose, useCloseButton }:modalDialogPr
     <React.Fragment>
       {isOpen && (
         <div className='fixed inset-0 overflow-x-hidden overflow-y-auto flex items-center justify-center outline-none focus:outline-none z-[80000] bg-neutral-800/50'>
-          <div className="w-[420px] p-4 h-auto">
+          <div className={cn("w-[420px] p-4 h-auto", modalSize)}>
             <div className={cn("translate duration-300 h-full", showModal ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full')}>
               <div className="p-5 xl:p-6 translate h-full lg:h-auto md:h-auto border-0 rounded-[20px] shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 <div className="flex justify-between w-full items-start">
