@@ -117,7 +117,7 @@ const DashboardTab: React.FC = () => {
 
   return (
     <div className="p-4 md:p-10 mx-auto my-auto">
-      <div className="px-20 grid grid-cols-1 xl:grid-cols-2 gap-6 justify-center xl:w-full">
+      <div className="mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 justify-center xl:w-[980px]">
         {/* Left Section */}
         <div className="my-auto w-[420px] h-[428px]">
           <UserInfoCard
@@ -132,7 +132,7 @@ const DashboardTab: React.FC = () => {
         </div>
         
         {/* Right Section */}
-        <div className="px-4 xl:p-4 w-[356px] h-[400px] xl:w-[500px] xl:h-[520px] bg-white rounded-lg ">
+        <div className="px-4 xl:p-4 w-[356px] h-[400px] xl:w-[500px] xl:h-[520px] bg-white rounded-md">
           <BuySell props1Currency={props1} props2Currency={props2currency}/>
         </div>
 
