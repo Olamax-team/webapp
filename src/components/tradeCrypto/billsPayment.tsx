@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import arrowIcon from '../../assets/images/arrowdown.svg';
 
 interface BillsPaymentProps {
 categories: string[]; // Categories to map for dropdown
@@ -87,7 +88,7 @@ return (
                 </div>
                 {/* Switch Icon */}
                 <div className="flex justify-center font-bold text-primary my-2">
-                    <p>⇅</p>
+                    <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] lg:w-[32px] lg:h-[32px]" />
                 </div>
                 {/* Currency and Payment Section */}
                 <div className="flex justify-center space-x-4">

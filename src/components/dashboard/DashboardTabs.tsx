@@ -2,6 +2,7 @@ import React from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
 import { ArrowRightCircle, ClipboardIcon, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
+import { HiDuplicate } from "react-icons/hi";
 
 interface UserInfoProps {
   name: string;
@@ -26,7 +27,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, location, uid,
           Last Login: {lastLogin} {location}
         </p>
       </div>
-      <div className="mt-[24px] flex items-center gap-16">
+      <div className="mt-[24px] flex items-center justify-between">
         <div className="grid grid-cols-1 items-start">
             <p className="mb-1 text-[13px] leading-[19.5px] font-normal font-Inter text-textDark">UID</p>
             <div className="flex space-x-1 justify-center">
@@ -37,11 +38,11 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, location, uid,
                 />
             </div>
         </div>
-        <div className="font-Inter space-x-2 w-[129px] h-[53px]">
+        <div className="font-Inter w-[129px] h-[53px]">
           {isVerified && (
             <>
                 <div className="grid grid-cols-1">
-                    <p className="mb-1 text-[14px] leading-[21px] font-normal font-Inter text-textDark">Identity Verification</p>
+                    <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">Identity Verification</p>
                     <div className="flex gap-3 items-start">
                         <ShieldCheck className="w-[24px] h-[24px] text-[#34A853]" />
                         <span className="text-[16px] leading-[24px] font-medium text-[#34A853]">Verified</span>
@@ -116,7 +117,7 @@ const DashboardTab: React.FC = () => {
 
   return (
     <div className="p-4 md:p-10 mx-auto my-auto">
-      <div className="mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 justify-center xl:w-[980px]">
+      <div className="px-20 grid grid-cols-1 xl:grid-cols-2 gap-6 justify-center xl:w-full">
         {/* Left Section */}
         <div className="my-auto w-[420px] h-[428px]">
           <UserInfoCard

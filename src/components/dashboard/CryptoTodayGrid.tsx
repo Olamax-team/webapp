@@ -130,7 +130,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
 
   return (
     <>
-        <h2 className="text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold mb-4">Crypto Market Today</h2>
+        <h2 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold mb-4">Crypto Market Today</h2>
         <div className="grid grid-cols-1 xl:grid-cols-6 gap-10 xl:gap-20 justify-start">
         {/* Trending Section */}
         <div className="xl:col-span-5 w-[356px] xl:w-[574px]">
@@ -227,9 +227,9 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                 </div>
               </div>
             </div>
-            <div className="w-[366px] font-Inter bg-white rounded-lg p-4">
+            <div className="w-[366px] font-Inter bg-white rounded-lg p-4 border">
                 <h2 className="font-Inter text-[18px] leading-[27px] font-bold mb-[16px]">Latest News</h2>
-                <div className="space-y-6 mb-2">
+                <div className="space-y-7 mb-2 xl:mb-0">
                 {news.map((item) => (
                     <div key={item.id} className="flex items-center space-x-4">
                       <img
