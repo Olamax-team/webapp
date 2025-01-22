@@ -6,7 +6,7 @@ import { signupSchema, signUpValues, verficationSchema, verficationValues } from
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom';
-import { documentTitle } from '../lib/utils';
+import { documentTitle, useModal } from '../lib/utils';
 import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
@@ -16,6 +16,7 @@ const SignUpPage = () => {
   documentTitle('Registration');
 
   const [isSubmit, setIsSubmit] = React.useState(false);
+  const [isGoogleSubmit, setIsGoogleSubmit] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -113,7 +114,7 @@ const SignUpPage = () => {
             )}
           />
           <p className='w-full font-Inter'>By creating an account you agree to the <span className='underline text-primary'>Privacy Policy</span> and <span className='underline text-primary'>Terms of Use</span></p>
-          <button className='w-full h-[70px] rounded-md bg-primary text-white mt-2' type='submit'>Create Account</button>
+          <button className='w-full h-[70px] rounded-md bg-primary text-white mt-8' type='submit'>Create Account</button>
           <div className='lines'>
             <h2>or</h2>
           </div>
@@ -129,6 +130,8 @@ const SignUpPage = () => {
   };
 
   const VerificationForm = () => {
+
+    const { onOpen } = useModal();
     
     const defaultVerificationValues = {
       verificationCode: ''
@@ -143,10 +146,23 @@ const SignUpPage = () => {
       const { verificationCode } = values;
   
       const verifyValues = {
-        verfication_code: verificationCode
+        verify_email: verificationCode
       };
 
-      console.log(verifyValues);
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/verify_email',
+        header: {'Content-Type':'application/json'},
+        data: verifyValues,
+      };
+
+      axios.request(config).then((response) => {
+        if (response.data.status === 'success') {
+          onOpen();
+          navigate('/login-in', { replace: true });
+        }
+      });
     };
 
     return (
@@ -194,7 +210,7 @@ const SignUpPage = () => {
 
   return (
     <AuthLayout>
-      { isSubmit ? <VerificationForm/> : <SignUpForm/> }
+      { isGoogleSubmit ? '' : isSubmit ? <VerificationForm/> : <SignUpForm/> }
     </AuthLayout>
   )
 }

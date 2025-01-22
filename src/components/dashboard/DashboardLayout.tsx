@@ -84,7 +84,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
    const DashboardNavLink = ({label, icon:Icon, path}:dashboardNavLinkProps) => {
     
     return (
-      <Link to={path ? path : ''} className={cn("md:w-[260px] lg:w-[250px] xl:w-[260px] 2xl:w-[290px] h-[60px] rounded-r-[30px] pl-0 lg:pl-[20px] xl:pl-[25px] 2xl:pl-[40px] flex item-center hover:bg-[#f5f5f5] group", pathname === path ? 'bg-[#f5f5f5]' : '')}>
+      <Link to={path ? path : ''} className={cn("md:w-[260px] lg:w-[250px] xl:w-[260px] 2xl:w-[290px] h-[60px] rounded-r-[30px] pl-[20px] xl:pl-[25px] 2xl:pl-[40px] flex item-center hover:bg-[#f5f5f5] group", pathname === path ? 'bg-[#f5f5f5]' : '')}>
         <div className={cn('my-auto flex items-center gap-3 group-hover:text-primary', pathname === path ? 'text-primary': '')}>
           {Icon && <Icon className='size-6'/>}
           <p className='font-medium'>{label && label}</p>
