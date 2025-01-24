@@ -16,7 +16,6 @@ const SignUpPage = () => {
   documentTitle('Registration');
 
   const [isSubmit, setIsSubmit] = React.useState(false);
-  const [isGoogleSubmit, setIsGoogleSubmit] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -59,6 +58,14 @@ const SignUpPage = () => {
           setIsSubmit(true);
         }
       })
+    };
+
+    const continueWithGoogle = async () => {
+      const config = {
+        method: 'get',
+        url: 'https://api.olamax.io/auth/google',
+      }
+      axios.request(config).then((response) => console.log(response))
     };
 
 
@@ -118,7 +125,7 @@ const SignUpPage = () => {
           <div className='lines'>
             <h2>or</h2>
           </div>
-          <button type='button' className='w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] gap-3'>
+          <button type='button' className='w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] gap-3' onClick={continueWithGoogle}>
             <h2 className='font-semibold'>Continue with Google</h2>
             <div className='w-[24px] h-[18px]'>
               <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
@@ -210,7 +217,7 @@ const SignUpPage = () => {
 
   return (
     <AuthLayout>
-      { isGoogleSubmit ? '' : isSubmit ? <VerificationForm/> : <SignUpForm/> }
+      { isSubmit ? <VerificationForm/> : <SignUpForm/> }
     </AuthLayout>
   )
 }
