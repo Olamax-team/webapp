@@ -1,5 +1,8 @@
 "use client";
 import {
+  Slot
+} from "./chunk-OQSQK4DA.js";
+import {
   RemoveScrollBar,
   __assign,
   __rest,
@@ -29,9 +32,6 @@ import {
   useSize,
   zeroRightClassName
 } from "./chunk-QW7VMICG.js";
-import {
-  Slot
-} from "./chunk-OQSQK4DA.js";
 import {
   require_jsx_runtime
 } from "./chunk-RZSASJON.js";
