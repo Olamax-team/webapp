@@ -20,7 +20,6 @@ const ElectricityBills = () => {
     setSelectedOption(event.target.value);
   };
 
-
   const handleSelectChange = (network: string) => {
     setSelectedNetwork(network);
     setIsNetworkDropdownOpen(false); // Close dropdown after selection
@@ -55,124 +54,116 @@ const ElectricityBills = () => {
 
   return (
     <div>
-      
-      <div className="flex bg-[#f5f5f5] w-[316px] lg:w-[440px] lg:-h-[60px] h-[48px] rounded-sm mt-5">
-              <select
-                value={selectedOption}
-                onChange={handleChange}
-                className="block w-[300px] lg:w-[400px] px-4 py-2 text-[12px] lg:text-[16px] lg:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-[#f5f5f5] border border-none rounded-sm shadow-sm focus:outline-none   focus:ring-[#f5f5f5]  focus:bg-[#f5f5f5]"
-              >
-                <option value="PAY ELECTRICITY BILL " className="bg-white">Pay Electricity Bill</option>
-                <option value="AIRTIME" className="bg-white">Airtime</option>
-              </select>
+      <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5">
+        <select
+          value={selectedOption}
+          onChange={handleChange}
+          className="block w-full px-1 py-2 text-[12px] xl:-text[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-[#f5f5f5] border border-none rounded-sm shadow-sm focus:outline-none focus:ring-[#f5f5f5] focus:bg-[#f5f5f5]"
+        >
+          <option value="PAY ELECTRICITY BILL" className="bg-white">Pay Electricity Bill</option>
+          <option value="AIRTIME" className="bg-white">Airtime</option>
+        </select>
+      </div>
+
+      {/* mtn */}
+      <div className="h-[64px] rounded-sm bg-[#f5f5f5] mt-3 w-full xl:h-[96px]">
+        <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:mt-[8px] xl:font-normal xl:text-[14px] xl:p-3 xl:leading-[21px]"> Enter Amount </label>
+        <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] p-2 leading-[18px]">You Pay</label>
+        <div className="flex justify-between px-3">
+          <input
+            type="text"
+            value={airtimeAmount}
+            onChange={handleAirtimeAmountChange}
+            placeholder="0.00"
+            className="xl:w-[143px] w-[100px] h-[25px] leading-[27px] mt-0 text-[16px] xl:h-[32px] xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
+          />
+
+          {/* Custom electricity Select */}
+          <div className="relative">
+            <div
+              className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[100px] h-[25px] xl:w-[115px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+              onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
+            >
+              <img
+                src={networkOptions.find(option => option.value === selectedNetwork)?.logo}
+                alt={selectedNetwork}
+                className="size-6 mr-1"
+              />
+              <span>{selectedNetwork}</span>
+              <img src={arrow} alt="Arrow" className="ml-2 xl:w-[16px] xl:h-[16px]" /> {/* Arrow for the select dropdown */}
             </div>
 
-
-
-                    {/* mtn  */}
-                    <div className="w-[316px] h-[64px] rounded-sm bg-[#f5f5f5f5] mt-3 lg:w-[440px] lg:h-[96px] ">
-              <label htmlFor="payment" className=" hidden lg:block font-Inter text-[#121826] lg:mt-[8px] lg:font-normal lg:text-[14px]  lg:ml-2 lg:p-3 lg:leading-[21px]"> Enter Amount </label>
-              <label htmlFor="payment" className=" block lg:hidden  text-[#121826] font-Inter text-[12px] mt-8 ml-2 p-2 leading-[18px]">You Pay</label>
-              <div className="flex justify-between  ">
-                <input
-                  type="text"
-                  value={airtimeAmount}
-                  onChange={handleAirtimeAmountChange}
-                  placeholder="0.00"
-                  className="lg:w-[143px] w-[143px]  h-[27px] leading-[27px] ml-4 mt-0 text-[18px]   lg:h-[35px] lg:ml-5 lg:text-[23px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter lg:leading-[34.5px]"
-                />
-
-                 
-
-                {/* Custom electricity Select */}
-                <div className="relative ">
+            {isNetworkDropdownOpen && (
+              <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                {networkOptions.map((network) => (
                   <div
-                    className="cursor-pointer  mr-4 bg-[#f5f5f5] lg:text-[16px] text-[13px] leading-[19.5px] text-[#212121]   w-[80px] h-[25px] lg:w-[97px] lg:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0  lg:ml-4 "
-                    onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
+                    key={network.value}
+                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSelectChange(network.value)}
                   >
-                    <img
-                      src={networkOptions.find(option => option.value === selectedNetwork)?.logo}
-                      alt={selectedNetwork}
-                      className="w-6 h-6 mr-1"
-                    />
-                    <span>{selectedNetwork}</span>
-                    <img src={arrow} alt="Arrow" className="ml-2 lg:w-[16px] lg:h-[16px] " /> {/* Arrow for the select dropdown */}
+                    <img src={network.logo} alt={network.value} className=" size-6 mr-2" />
+                    <span>{network.value}</span>
                   </div>
-
-                  {isNetworkDropdownOpen && (
-                    <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                      {networkOptions.map((network) => (
-                        <div
-                          key={network.value}
-                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSelectChange(network.value)}
-                        >
-                          <img src={network.logo} alt={network.value} className="w-6 h-6 mr-2" />
-                          <span>{network.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Last action arrow */}
+      <div className="flex justify-center items-center m-3">
+        <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px] text-[#039AE4] xl:w-[32px] xl:h-[32px]" />
+      </div>
+
+      {/* for ibedc payment option */}
+      <div className="h-[64px] rounded-sm bg-[#f5f5f5] w-full xl:h-[96px] mt-3">
+        <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5 xl:p-3 xl:leading-[21px]">You Pay</label>
+        <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] p-2 leading-[18px]">You Recieve</label>
+
+        <div className="flex justify-between px-3">
+          <input
+            type="text"
+            value={PaymentAmount}
+            onChange={handleYouPayAmountChange}
+            placeholder="0.00"
+            className="xl:w-[143px] w-[100px] h-[25px] text-[16px] xl:h-[32px] xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] xl:leading-[34.5px]"
+          />
+
+          {/* Custom ibedc Select */}
+          <div className="relative">
+            <div
+              className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
+              onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
+            >
+              <img
+                src={paymentOptions.find(option => option.value === selectPayment)?.logo}
+                alt={selectPayment}
+                className="size-6 mr-2"
+              />
+              <span>{selectPayment}</span>
+              <img src={arrow} alt="Arrow" className="ml-2 xl:w-[16px] xl:h-[16px]" /> {/* Arrow for the select dropdown */}
             </div>
 
-            {/* Last action arrow */}
-            <div className=" flex justify-center  items-center m-3 ">
-              <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] lg:w-[32px] lg:h-[32px]" />
-            </div>
-
-            {/* for ibedc payment option */}
-            <div className="w-[316px] h-[64px] rounded-sm bg-[#f5f5f5]  lg:w-[440px] lg:h-[96px] mt-3">
-              <label htmlFor="payment" className="hidden lg:block font-Inter text-[#121826] lg:font-normal lg:text-[14px] lg:mt-5 lg:ml-2 lg:p-3 lg:leading-[21px]">You Pay</label>
-              <label htmlFor="payment" className=" block lg:hidden  text-[#121826] font-Inter text-[12px]  ml-2 p-2 leading-[18px]">You Recieve</label>
-
-              <div className="flex justify-between   ">
-                <input
-                  type="text"
-                  value={PaymentAmount}
-                  onChange={handleYouPayAmountChange}
-                  placeholder="0.00"
-                  className="lg:w-[143px] w-[143px] h-[27px] text-[18px] ml-5 lg:h-[35px] lg:ml-5 lg:text-[23px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] lg:leading-[34.5px]"
-                />
-
-                {/* Custom ibedc Select */}
-                <div className="relative ">
+            {isPaymentDropdownOpen && (
+              <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                {paymentOptions.map((payment) => (
                   <div
-                    className="cursor-pointer  mr-4 bg-[#f5f5f5] lg:text-[16px] text-[13px] leading-[19.5px] text-[#212121]   w-[80px] h-[25px] lg:w-[97px] lg:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0  lg:ml-4 "
-                    onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
+                    key={payment.value}
+                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSelectedChange(payment.value)}
                   >
-                    <img
-                      src={paymentOptions.find(option => option.value === selectPayment)?.logo}
-                      alt={selectPayment}
-                      className="w-6 h-6 mr-2"
-                    />
-                    <span>{selectPayment}</span>
-                    <img src={arrow} alt="Arrow" className="ml-2 lg:w-[16px] lg:h-[16px]" /> {/* Arrow for the select dropdown */}
+                    <img src={payment.logo} alt={payment.value} className=" size-6 mr-2" />
+                    <span>{payment.value}</span>
                   </div>
-
-                  {isPaymentDropdownOpen && (
-                    <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                      {paymentOptions.map((payment) => (
-                        <div
-                          key={payment.value}
-                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSelectedChange(payment.value)}
-                        >
-                          <img src={payment.logo} alt={payment.value} className="w-6 h-6 mr-2" />
-                          <span>{payment.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
-            </div>
-
-
-
+            )}
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default ElectricityBills
+export default ElectricityBills;
