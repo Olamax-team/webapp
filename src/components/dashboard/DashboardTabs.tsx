@@ -27,7 +27,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
       const maskedLocalPart = localPart.length > 3 ? `${localPart.slice(0, 3)}***` : `${localPart.slice(0, 1)}***`;
 
       // Mask everything in the domain except the top-level domain
-      const [domainName, topLevelDomain] = domain.split(".");
+      const [ , topLevelDomain] = domain.split(".");
       const maskedDomain = "***." + topLevelDomain;
       return `${maskedLocalPart}@${maskedDomain}`;
     };
