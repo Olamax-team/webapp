@@ -1,14 +1,15 @@
 import Modal from '../ui/modal'
-import { useModal } from '../../lib/utils'
+import { useWhatNextModal } from '../../lib/utils'
 
 const WhatNextModal = () => {
-  const { isOpen, onClose } = useModal()
+  const { isOpen, onClose } = useWhatNextModal();
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
       useCloseButton
       title='What Next ?'
+      modalSize='w-[420px]'
     >
       <div className='flex flex-col gap-10'>
         <p>To enjoy the complete range of our products & Services, we recommend you complete the identity verification process.</p>
