@@ -1,6 +1,7 @@
-import { ClipboardIcon } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
+import { HiOutlineDuplicate } from "react-icons/hi";
+import IndicatorButtonGroup from "../tradeCrypto/indicator";
 // Define the type for a single crypto item
 interface Crypto {
     name: string;
@@ -127,6 +128,12 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     navigator.clipboard.writeText(userInvite);
     alert("Invite link copied to clipboard!");
   };
+  const tabs = ["Trending", "Favorite"]
+  const dynamicButtonClassName = (index: number, activeIndex: number) => {
+    return index === activeIndex
+      ? "text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-textDark"
+      : "px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]";
+  };
 
   return (
     <>
@@ -135,11 +142,14 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
         {/* Trending Section */}
         <div className="xl:col-span-5 w-[356px] xl:w-[574px]">
             <div className="bg-white rounded-lg p-4">
-                <div className="flex border-b mb-4">
-                <button className="py-2 border-b-4 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] border-textDark font-bold text-textDark">
-                    Trending
-                </button>
-                <button className="px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]">Favorite</button>
+                <div className="flex mb-4">
+                <IndicatorButtonGroup
+                  buttons={tabs}
+                  dynamicButtonClassName={dynamicButtonClassName}
+                  bgClassName="bg-[#F8F9FA]"
+                  indicatorColor="bg-textDark"
+                  indicatorSize="w-[39px]"
+                />
                 </div>
                 <div className={contentClassName}>
             {cryptos.map((crypto, index) => (
@@ -223,7 +233,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                   <span className="text-primary text-sm font-medium">
                     Copy Invite Link
                   </span>
-                  <ClipboardIcon className="w-5 h-5 text-primary" />
+                  <HiOutlineDuplicate className="w-5 h-5 text-primary" />
                 </div>
               </div>
             </div>

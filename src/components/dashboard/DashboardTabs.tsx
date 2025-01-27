@@ -1,11 +1,13 @@
 import React from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
-import { ArrowRightCircle, ClipboardIcon, ShieldCheck } from "lucide-react";
+import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
-import { HiDuplicate } from "react-icons/hi";
+import { HiOutlineDuplicate } from "react-icons/hi";
+
 
 interface UserInfoProps {
   name: string;
+  email: string;
   lastLogin: string;
   location: string;
   uid: string;
@@ -13,43 +15,78 @@ interface UserInfoProps {
   inviteLink: string;
 }
 
-const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, location, uid, isVerified }) => {
+const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, location, uid, isVerified }) => {
+  //clipboard copy function
   const copyToClipboard = () => {
     navigator.clipboard.writeText(uid);
     alert("copied!");
   };
+    // Mask email function
+    const maskEmail = (email: string) => {
+      const [localPart, domain] = email.split("@");
+      const maskedLocalPart = localPart.length > 3 ? `${localPart.slice(0, 3)}***` : `${localPart.slice(0, 1)}***`;
+
+      // Mask everything in the domain except the top-level domain
+      const [domainName, topLevelDomain] = domain.split(".");
+      const maskedDomain = "***." + topLevelDomain;
+      return `${maskedLocalPart}@${maskedDomain}`;
+    };
 
   return (
     <div className="w-[274px] h-[139px] xl:h-[136px] xl:w-[295px]">
-      <div>
-        <h1 className="text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {name}</h1>
-        <p className="text-[13px] xl:text-[14px] leading-[19.5px] xl:leading-[21px] font-medium font-Inter text-textDark">
-          Last Login: {lastLogin} {location}
-        </p>
-      </div>
-      <div className="mt-[24px] flex items-center justify-between">
-        <div className="grid grid-cols-1 items-start">
+      
+        <div>
+          {isVerified ? (
+            <h1 className="text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {name}</h1>
+          ):(
+              <h1 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {maskEmail(email)}</h1>
+          )}
+          <p className="text-[13px] xl:text-[14px] leading-[19.5px] xl:leading-[21px] font-medium font-Inter text-textDark">
+            Last Login: {lastLogin} {location}
+          </p>
+        </div>
+     
+        <div className="mt-[24px] flex items-center justify-between">
+          <div className="grid grid-cols-1 items-start">
             <p className="mb-1 text-[13px] leading-[19.5px] font-normal font-Inter text-textDark">UID</p>
             <div className="flex space-x-1 justify-center">
                 <span className="text-left text-[16px] leading-[24px] text-textDark font-Inter font-medium">{uid}</span>
-                <ClipboardIcon
+                <HiOutlineDuplicate
                 className="w-[24px] h-[24px] text-textDark cursor-pointer"
                 onClick={copyToClipboard}
                 />
             </div>
         </div>
         <div className="font-Inter w-[129px] h-[53px]">
-          {isVerified && (
-            <>
-                <div className="grid grid-cols-1">
-                    <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">Identity Verification</p>
-                    <div className="flex gap-3 items-start">
-                        <ShieldCheck className="w-[24px] h-[24px] text-[#34A853]" />
-                        <span className="text-[16px] leading-[24px] font-medium text-[#34A853]">Verified</span>
-                    </div>
-                </div>
-            </>
-          )}
+        {isVerified ? (
+          <>
+            <div className="grid grid-cols-1">
+              <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">
+                Identity Verification
+              </p>
+              <div className="flex gap-1 items-start">
+                <ShieldCheck className="w-[24px] h-[24px] text-[#34A853]" />
+                <span className="text-[16px] leading-[24px] font-medium text-[#34A853]">
+                  Verified
+                </span>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="grid grid-cols-1">
+              <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">
+                Identity Verification
+              </p>
+              <div className="flex gap-1 items-start">
+                <ShieldCheck className="w-[24px] h-[24px] text-[#FF9C00]" />
+                <span className="text-[16px] leading-[24px] font-medium text-[#FF9C00]">
+                  Unverified
+                </span>
+              </div>
+            </div>
+          </>
+        )}
         </div>
       </div>
     </div>
@@ -70,7 +107,7 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
       {services.map((service, index) => (
         <div
           key={index}
-          className="flex items-center justify-between rounded-lg mb-8"
+          className="flex items-center justify-between rounded-lg mb-8 cursor-pointer"
         >
           <div className="flex text-[16px] leading-[24px] items-center space-x-4">
             {service.icon}
@@ -89,10 +126,11 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 const DashboardTab: React.FC = () => {
   const user = {
     name: "Tosin Adebayor",
+    email: "Tosin@gmail.com",
     lastLogin: "21/11/2024, 16:03",
     location: "Lagos, Nigeria",
     uid: "20921123",
-    isVerified: true,
+    isVerified: false,
     inviteLink: "https://olamax.io/"
   };
 
@@ -117,11 +155,12 @@ const DashboardTab: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 justify-center xl:w-[980px]">
+      <div className="mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 justify-center w-full">
         {/* Left Section */}
         <div className="my-auto w-[420px] h-[428px]">
           <UserInfoCard
             name={user.name}
+            email={user.email}
             lastLogin={user.lastLogin}
             location={user.location}
             uid={user.uid}
