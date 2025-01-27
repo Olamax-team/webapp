@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
+import arrowIcon from '../../../assets/images/arrowdown.svg';
 
 interface BuySellProps {
   props1Currency: string[];
@@ -90,7 +91,7 @@ const BuySell: React.FC<BuySellProps> = ({
 
         {/* Icon */}
         <div className="flex justify-center font-bold text-primary my-2">
-          <p>⇅</p>
+          <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] lg:w-[32px] lg:h-[32px]" />
         </div>
 
         {/* Second prop Input */}

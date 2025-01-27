@@ -1,6 +1,7 @@
-import { ClipboardIcon } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
+import { HiOutlineDuplicate } from "react-icons/hi";
+import IndicatorButtonGroup from "../tradeCrypto/indicator";
 // Define the type for a single crypto item
 interface Crypto {
     name: string;
@@ -127,19 +128,28 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     navigator.clipboard.writeText(userInvite);
     alert("Invite link copied to clipboard!");
   };
+  const tabs = ["Trending", "Favorite"]
+  const dynamicButtonClassName = (index: number, activeIndex: number) => {
+    return index === activeIndex
+      ? "text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-textDark"
+      : "px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]";
+  };
 
   return (
     <>
-        <h2 className="text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold mb-4">Crypto Market Today</h2>
+        <h2 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold mb-4">Crypto Market Today</h2>
         <div className="grid grid-cols-1 xl:grid-cols-6 gap-10 xl:gap-20 justify-start">
         {/* Trending Section */}
         <div className="xl:col-span-5 w-[356px] xl:w-[574px]">
             <div className="bg-white rounded-lg p-4">
-                <div className="flex border-b mb-4">
-                <button className="py-2 border-b-4 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] border-textDark font-bold text-textDark">
-                    Trending
-                </button>
-                <button className="px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]">Favorite</button>
+                <div className="flex mb-4">
+                <IndicatorButtonGroup
+                  buttons={tabs}
+                  dynamicButtonClassName={dynamicButtonClassName}
+                  bgClassName="bg-[#F8F9FA]"
+                  indicatorColor="bg-textDark"
+                  indicatorSize="w-[39px]"
+                />
                 </div>
                 <div className={contentClassName}>
             {cryptos.map((crypto, index) => (
@@ -223,13 +233,13 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                   <span className="text-primary text-sm font-medium">
                     Copy Invite Link
                   </span>
-                  <ClipboardIcon className="w-5 h-5 text-primary" />
+                  <HiOutlineDuplicate className="w-5 h-5 text-primary" />
                 </div>
               </div>
             </div>
-            <div className="w-[366px] font-Inter bg-white rounded-lg p-4">
+            <div className="w-[366px] font-Inter bg-white rounded-lg p-4 border">
                 <h2 className="font-Inter text-[18px] leading-[27px] font-bold mb-[16px]">Latest News</h2>
-                <div className="space-y-6 mb-2">
+                <div className="space-y-7 mb-2 xl:mb-0">
                 {news.map((item) => (
                     <div key={item.id} className="flex items-center space-x-4">
                       <img
