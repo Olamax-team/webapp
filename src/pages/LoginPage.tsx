@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
 import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
+import axios from 'axios';
 
 const LoginPage = () => {
   documentTitle('Login');
@@ -28,7 +29,26 @@ const LoginPage = () => {
   const watchedPassword = form.watch('password');
 
   const onSubmitForm = (values:loginValues) => {
-    console.log(values);
+    const { email, password } = values;
+  
+    const loginValues = {
+      email: email,
+      password: password,
+    }
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.olamax.io/api/login',
+      header: {'Content-Type':'application/json'},
+      data: loginValues,
+    }
+
+    axios.request(config).then((response) => {
+      if (response.data.status === 'success') {
+        console.log('logged in')
+      }
+    })
   }
 
   return (

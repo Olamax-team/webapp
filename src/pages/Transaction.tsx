@@ -13,7 +13,7 @@ type dateComponentProps = {
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   placeholder: string;
-}
+};
 
 type transactionItem = {
   id: number;
@@ -25,7 +25,7 @@ type transactionItem = {
   amount: number;
   status: string;
   fees: string;
-}
+};
 
 type mobileTransactionProps = {
   open: boolean;
@@ -278,9 +278,10 @@ const Transaction = () => {
     return (
       <React.Fragment>
         {transactionList.map((item:transactionItem, index:number) => (
-          <MobileTransactionItem 
+          <MobileTransactionItem
+            key={index} 
             open={index === currentIndex} 
-            toggleTable={() => toggleTranscationItem(index)} key={index} 
+            toggleTable={() => toggleTranscationItem(index)} 
             transaction={item}
           />
         ))}
@@ -290,27 +291,25 @@ const Transaction = () => {
 
   return (
     <DashboardLayout>
-      <div className="">
-        <h2 className="font-DMSans font-bold text-[26px] leading-normal">Transaction</h2>
-        <p className="font-Inter text-sm">Track, manage, and secure your trades effortlessly with a complete transaction history</p>
-        <div className="mt-4 hidden lg:flex items-center gap-6">
+      <h2 className="font-DMSans font-bold lg:text-[26px] leading-normal text-[20px]">Transaction</h2>
+      <p className="font-Inter text-sm">Track, manage, and secure your trades effortlessly with a complete transaction history</p>
+      <div className="mt-6 hidden lg:flex items-center gap-5">
+        <DateComponent date={fromDate} setDate={setFromDate} placeholder="From"/>
+        <DateComponent date={toDate} setDate={setToDate} placeholder="To"/>
+        <SearchComponent/>
+      </div>
+      <div className="mt-4 flex gap-4 flex-col lg:hidden">
+        <div className="grid grid-cols-2 gap-4">
           <DateComponent date={fromDate} setDate={setFromDate} placeholder="From"/>
           <DateComponent date={toDate} setDate={setToDate} placeholder="To"/>
-          <SearchComponent/>
         </div>
-        <div className="mt-4 flex gap-4 flex-col lg:hidden">
-          <div className="grid grid-cols-2 gap-4">
-            <DateComponent date={fromDate} setDate={setFromDate} placeholder="From"/>
-            <DateComponent date={toDate} setDate={setToDate} placeholder="To"/>
-          </div>
-          <SearchComponent/>
-        </div>
-        <div className="mt-8 hidden lg:block">
-          <DesktopTransactionTable/>
-        </div>
-        <div className="mt-4 lg:hidden">
-          <MobileTransactionTable/>
-        </div>
+        <SearchComponent/>
+      </div>
+      <div className="mt-8 hidden lg:block">
+        <DesktopTransactionTable/>
+      </div>
+      <div className="mt-4 lg:hidden">
+        <MobileTransactionTable/>
       </div>
     </DashboardLayout>
   )

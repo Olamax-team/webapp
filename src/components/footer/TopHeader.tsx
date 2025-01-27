@@ -66,7 +66,7 @@ const TopHeader = () => {
               <p className='md:w-[407px] md:h-[48p] md:text-base md:leading-[24px] text-[13px] leading-[19.5px] text-center mt-2 font-Inter'>Stay in touch with the latest news, releases exclusive deals and promotions</p>
               <div className="flex items-center justify-center gap-6 mt-8">
                 {mediaList.map((item) => (
-                  <a href={item.path} target="_blank" rel="noopener noreferrer" className='size-[32px] flex items-center justify-center'>
+                  <a href={item.path} target="_blank" rel="noopener noreferrer" className='size-[32px] flex items-center justify-center' key={item.name}>
                     <img src={item.image} alt={item.name} className='object-cover'/>
                   </a>
                 ))}

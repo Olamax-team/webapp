@@ -42,8 +42,14 @@ export const timelineCreator = (date:string) => {
   return displayDate;
 };
 
-export const useModal = create<modalProps>((set) => ({
+export const useWhatNextModal = create<modalProps>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
+
+export const useUploadDocumentModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}))
