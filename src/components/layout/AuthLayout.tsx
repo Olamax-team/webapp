@@ -22,7 +22,7 @@ const AuthLayout = ({children}: Props) => {
           <img src={icon} alt="question_mark" className='object-cover'/>
         </button>
       </div>
-      <div className='w-full lg:h-[calc(100vh_-_100px)] md:h-[calc(100vh_-_80px)] h-[calc(100vh_-_64px)] flex lg:flex-row flex-col relative'>
+      <div className='w-full lg:h-full md:h-[calc(100vh_-_80px)] h-[calc(100vh_-_64px)] flex lg:flex-row flex-col relative'>
         <div className='h-full flex-none hidden lg:block'>
           <img src={banner} alt="auth_banner" className='w-full h-full object-cover'/>
         </div>
