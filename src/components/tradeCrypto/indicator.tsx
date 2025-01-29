@@ -72,9 +72,9 @@ const IndicatorButtonGroup: React.FC<ButtonGroupProps> = ({
           className="absolute bottom-0 h-[4px] w-full"        
           style={indicatorStyle}
         >
-          <div className={`relative bottom-0 h-1 ${indicatorSize} ${indicatorColor} mx-auto`}></div>
-        </div>
+        <div className={`relative bottom-0 h-1 ${indicatorSize} ${indicatorColor} mx-auto`}></div>
       </div>
+    </div>
   );
 };
 

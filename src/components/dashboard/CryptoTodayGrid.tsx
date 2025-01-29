@@ -137,7 +137,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
 
   return (
     <>
-      <h2 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold mb-4">Crypto Market Today</h2>
+      <h2 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold my-2 xl:mb-4">Crypto Market Today</h2>
       <div className="flex flex-col xl:flex-row gap-10 xl:gap-8 justify-start w-full">
         {/* Trending Section */}
         <div className="xl:col-span-5 w-full xl:w-[65%]">
@@ -215,14 +215,14 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
           </div>  
         </div>
         {/* Invite and Latest News Section */}
-        <div className="flex flex-col w-full xl:w-[35%] space-y-10 gap-10">
+        <div className="flex flex-col w-full xl:w-[35%] space-y-6">
             {/* Invites section */}
-            <div className="w-full h-auto mx-auto bg-white rounded-lg">
+            <div className="w-full h-auto mx-auto bg-white rounded-xl">
               <img      
               src="../../../src/assets/images/invites.png"
               alt="invites photo"
               className="w-full h-auto"/>
-              <div className="font-Inter w-full h-[137px] xl:h-[66px] mt-2 items-center justify-center my-auto mx-auto space-y-3">
+              <div className="font-Inter w-full h-auto my-4 p-4 items-center justify-center mx-auto space-y-3">
                 <h2 className="text-wrap text-left text-[16px] xl:text-[] leading-[24px] xl:leading-[] font-bold text-textDark">Invite Friends</h2>
                 <p className="text-wrap text-[14] xl:text-[] leading-[22.5px] xl:leading-[] font-medium text-textDark">Help grow our community by inviting your friends to join! Share the link and let others enjoy all the benefits we have to offer.</p>
                 <div
