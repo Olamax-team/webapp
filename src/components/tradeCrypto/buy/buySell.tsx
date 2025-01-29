@@ -20,7 +20,7 @@ const BuySell: React.FC<BuySellProps> = ({
   return (
     <div className= {`space-y-6 xl:space-y-6 justify-center ${className || ""}`}>
       {/* Sub-Tabs for Buy and Sell */}
-      <div className="xl:ml-4">
+      <div className="ml-2 xl:ml-4">
         <div className="font-poppins flex items-start space-x-4 text-[16px] leading-[24px] text-textDark">
           <Button
             variant={subTab === "Buy" ? "default" : "ghost"}
@@ -47,11 +47,11 @@ const BuySell: React.FC<BuySellProps> = ({
         </div>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-5 mx-2 xl:mx-4">
         {/* First prop Input */}
         <div className="flex justify-center space-x-4">
-          <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-            <div className="grid grid-cols-1">
+          <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+            <div className="flex flex-col w-full">
               <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
                 You {subTab === "Buy" ? "Pay" : "Sell"}
               </p>
@@ -96,8 +96,8 @@ const BuySell: React.FC<BuySellProps> = ({
 
         {/* Second prop Input */}
         <div className="flex justify-center space-x-4">
-          <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-            <div>
+          <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+            <div className="w-full">
               <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
                 You Receive
               </p>

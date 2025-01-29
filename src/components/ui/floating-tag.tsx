@@ -48,7 +48,7 @@ const FloatingTag: React.FC<FloatingTagProps> = ({
   return (
     <span
       style={tagStyle}
-      className={`flex items-center justify-center rounded-md border-2 ${borderColor} ${textColor} text-sm font-semibold ${animate}`}
+      className={`flex w-full items-center justify-center rounded-md border-2 ${borderColor} ${textColor} text-sm font-semibold ${animate}`}
     >
       {text}
       <div
