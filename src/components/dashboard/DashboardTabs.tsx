@@ -154,7 +154,7 @@ const DashboardTab: React.FC = () => {
   const props2currency = ["BTC","ETH", "USDT", "SOL" ];
 
   return (
-    <section className="flex flex-col w-full items-center h-[650px] space-y-2 overflow-scroll">
+    <section className="flex flex-col w-full items-center h-auto space-y-2">
       <div className="flex w-full flex-col xl:flex-row gap-10 items-center">
         {/* Left Section */}
         <div className="my-auto w-full xl:w-[50%] h-auto">
