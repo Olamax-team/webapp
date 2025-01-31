@@ -59,6 +59,7 @@ const router = createBrowserRouter([
         path: '/dashboard/my_rewards',
         element: <MyReward/>
       },
+     
 
     ]
   }
