@@ -33,7 +33,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
     };
 
   return (
-    <div className="w-[274px] h-[139px] xl:h-[136px] xl:w-[295px]">
+    <div className="flex flex-col w-full h-auto">
       
         <div>
           {isVerified ? (
@@ -46,8 +46,8 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
           </p>
         </div>
      
-        <div className="mt-[24px] flex items-center justify-between">
-          <div className="grid grid-cols-1 items-start">
+        <div className="mt-[24px] flex items-center gap-16">
+          <div className="flex flex-col items-start">
             <p className="mb-1 text-[13px] leading-[19.5px] font-normal font-Inter text-textDark">UID</p>
             <div className="flex space-x-1 justify-center">
                 <span className="text-left text-[16px] leading-[24px] text-textDark font-Inter font-medium">{uid}</span>
@@ -57,10 +57,10 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
                 />
             </div>
         </div>
-        <div className="font-Inter w-[129px] h-[53px]">
+        <div className="font-Inter w-full h-auto">
         {isVerified ? (
           <>
-            <div className="grid grid-cols-1">
+            <div className="flex flex-col">
               <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">
                 Identity Verification
               </p>
@@ -74,7 +74,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
           </>
         ) : (
           <>
-            <div className="grid grid-cols-1">
+            <div className="flex flex-col">
               <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">
                 Identity Verification
               </p>
@@ -99,7 +99,7 @@ interface ServicesProps {
 
 const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
   return (
-    <div className="p-6 justify-center w-[356px] xl:w-[420px] h-[232px] xl:h-[260px] bg-primary bg-opacity-20 rounded-lg mt-6 font-Inter">
+    <div className="p-6 justify-center flex flex-col w-full h-auto bg-primary bg-opacity-20 rounded-lg mt-6 font-Inter">
       <div className="mb-6">
         <h2 className="mb-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-textDark">Our Services</h2>
         <p className="text-[13px] leading-[19.5px] xl:text-[14px] xl:leading-[21px] font-medium text-textDark mb-4">Explore the range of our services</p>
@@ -154,10 +154,10 @@ const DashboardTab: React.FC = () => {
   const props2currency = ["BTC","ETH", "USDT", "SOL" ];
 
   return (
-    <div className="w-full">
-      <div className="mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 justify-center w-full">
+    <section className="flex flex-col w-full items-center h-[650px] space-y-2 overflow-scroll">
+      <div className="flex w-full flex-col xl:flex-row gap-10 items-center">
         {/* Left Section */}
-        <div className="my-auto w-[420px] h-[428px]">
+        <div className="my-auto w-full xl:w-[50%] h-auto">
           <UserInfoCard
             name={user.name}
             email={user.email}
@@ -171,17 +171,16 @@ const DashboardTab: React.FC = () => {
         </div>
         
         {/* Right Section */}
-        <div className="px-4 xl:p-4 w-[356px] h-[400px] xl:w-[500px] xl:h-[520px] bg-white rounded-md">
-          <BuySell props1Currency={props1} props2Currency={props2currency}/>
-        </div>
-
-        <div className="xl:col-span-4 grid grid-cols-3">
-        <   div className="rounded-lg xl:col-span-2">
-                <CryptoTodayGrid userInvite={user.inviteLink}/>
-            </div>
+        <div className="w-full xl:w-[50%] h-auto px-4 xl:p-4 bg-white rounded-md">
+          <BuySell props1Currency={props1} props2Currency={props2currency} className="mb-4 xl:mb-0"/>
         </div>
       </div>
-    </div>
+      <div className="flex justify-center w-full">
+          <div className="rounded-lg flex-grow w-full">
+            <CryptoTodayGrid userInvite={user.inviteLink}/>
+          </div>
+      </div>
+    </section>
   );
 };
 

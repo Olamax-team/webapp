@@ -30,7 +30,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     return (
       <Popover>
         <PopoverTrigger asChild className='focus:border-primary focus:border-2'>
-          <button className={cn("w-full lg:h-[70px] h-[48px] flex items-center justify-between px-4 rounded-md border focus:border-primary focus:border-2", dateOfBirth ? "pt-5" :"")}>
+          <button className={cn("w-full lg:h-[60px] h-[48px] flex items-center justify-between px-4 rounded-md border focus:border-primary focus:border-2", dateOfBirth ? "pt-5" :"")}>
             { dateOfBirth ? format(dateOfBirth, 'dd/MM/yyyy') : <span className='text-black font-semibold text-base'>Date of Birth</span> }
             <HiOutlineCalendar className="ml-auto size-5" />
           </button>
@@ -84,39 +84,39 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   return (
     <div className='flex flex-col lg:gap-1 gap-2'>
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Bio-Data</h2>
-      <div className="grid grid-cols-2 lg:gap-3 gap-2 lg:p-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-3 gap-2 lg:p-2">
         <AuthInput
           inputValue={lname}
           onChange={(e) => setLName(e.target.value)}
           label='Last Name'
-          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[70px] h-[48px] lg:text-base text-sm'
+          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
         />
         <AuthInput
           inputValue={fname}
           onChange={(e) => setFName(e.target.value)}
           label='First Name'
-          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[70px] h-[48px] lg:text-base text-sm'
+          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
         />
         <div className="relative">
           {dateOfBirth && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Date of Birth</label>}
           <DateComponent/>
         </div>
-        <div className="w-full lg:h-[70px] h-[48px] relative">
+        <div className="w-full lg:h-[60px] h-[48px] relative">
           {gender && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Gender</label>}
           <GenderSelect/>
         </div>
-        <div className="w-full lg:h-[70px] h-[48px] relative">
+        <div className="w-full lg:h-[60px] h-[48px] relative">
           {nationality && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Nationality</label>}
           <NationalitySelect/>
         </div>
       </div>
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Contact Information</h2>
-      <div className="grid grid-cols-2 lg:gap-3 gap-2 lg:p-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-3 gap-2 lg:p-2">
         <AuthInput
           inputValue={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           label='Phone Number'
-          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[70px] h-[48px] lg:text-base text-sm'
+          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
         />
       </div>
       <div className='lg:p-2 lg:mt-2 mt-5'>

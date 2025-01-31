@@ -56,7 +56,7 @@ const IndicatorButtonGroup: React.FC<ButtonGroupProps> = ({
   };
 
   return (
-    <div className="flex relative h-[32px] xl:h-[44px] w-[1085px] gap-x-8 xl:gap-x-14" ref={containerRef}>
+    <div className="flex relative h-[32px] xl:h-[44px] w-full gap-x-8 xl:gap-x-14" ref={containerRef}>
       {buttons.map((label, index) => (
         <Button
           key={index}
@@ -67,14 +67,14 @@ const IndicatorButtonGroup: React.FC<ButtonGroupProps> = ({
           {label}
         </Button>
       ))}
-      <div className={`absolute bottom-0 ${bgClassName} h-[4px] w-[390px] xl:w-full`}></div>
+      <div className={`absolute bottom-0 ${bgClassName} h-[4px] w-full`}></div>
         <div 
           className="absolute bottom-0 h-[4px] w-full"        
           style={indicatorStyle}
         >
-          <div className={`relative bottom-0 h-1 ${indicatorSize} ${indicatorColor} mx-auto`}></div>
-        </div>
+        <div className={`relative bottom-0 h-1 ${indicatorSize} ${indicatorColor} mx-auto`}></div>
       </div>
+    </div>
   );
 };
 
