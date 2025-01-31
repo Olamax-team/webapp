@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
 import arrow from '../assets/images/arrow-left.png'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
+import axios from 'axios';
 
 
 const PasswordRecovery = () => {
@@ -32,7 +33,25 @@ const PasswordRecovery = () => {
     const watchedEmail = form.watch('email');
   
     const onSubmitForm = (values:recoveryValues) => {
-      console.log(values);
+      const { email } = values;
+  
+      const recoveryData = {
+        email: email,
+      }
+
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/recover-account',
+        header: {'Content-Type':'application/json'},
+        data: recoveryData,
+      }
+
+      axios.request(config).then((response) => {
+        if (response.data.status === 'success') {
+          setIsSubmit(true);
+        }
+      })
     };
 
     return (
@@ -70,7 +89,8 @@ const PasswordRecovery = () => {
   };
 
   const VerificationForm = () => {
-    
+    const navigate = useNavigate();
+
     const defaultVerificationValues = {
       verificationCode: ''
     };
@@ -83,12 +103,23 @@ const PasswordRecovery = () => {
     const onSubmitForm = (values:verficationValues) => {
       const { verificationCode } = values;
   
-      const verifyValues = {
-        view: 'verification',
-        verficationCode: verificationCode
+      const verifyData = {
+        verify_email: verificationCode,
       };
 
-      console.log(verifyValues);
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/verify-email',
+        header: {'Content-Type':'application/json'},
+        data: verifyData,
+      };
+
+      axios.request(config).then((response) => {
+        if (response.data.status === 'success') {
+          navigate('/login');
+        }
+      })
     };
 
     return (

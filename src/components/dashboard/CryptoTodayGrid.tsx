@@ -1,6 +1,7 @@
-import { ClipboardIcon } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
+import { HiOutlineDuplicate } from "react-icons/hi";
+import IndicatorButtonGroup from "../tradeCrypto/indicator";
 // Define the type for a single crypto item
 interface Crypto {
     name: string;
@@ -127,95 +128,103 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     navigator.clipboard.writeText(userInvite);
     alert("Invite link copied to clipboard!");
   };
+  const tabs = ["Trending", "Favorite"]
+  const dynamicButtonClassName = (index: number, activeIndex: number) => {
+    return index === activeIndex
+      ? "text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-textDark"
+      : "px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]";
+  };
 
   return (
     <>
-        <h2 className="text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold mb-4">Crypto Market Today</h2>
-        <div className="grid grid-cols-1 xl:grid-cols-6 gap-10 xl:gap-20 justify-start">
+      <h2 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold my-2 xl:mb-4">Crypto Market Today</h2>
+      <div className="flex flex-col xl:flex-row gap-10 xl:gap-8 justify-start w-full">
         {/* Trending Section */}
-        <div className="xl:col-span-5 w-[356px] xl:w-[574px]">
-            <div className="bg-white rounded-lg p-4">
-                <div className="flex border-b mb-4">
-                <button className="py-2 border-b-4 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] border-textDark font-bold text-textDark">
-                    Trending
-                </button>
-                <button className="px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]">Favorite</button>
-                </div>
-                <div className={contentClassName}>
+        <div className="xl:col-span-5 w-full xl:w-[65%]">
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex mb-4">
+            <IndicatorButtonGroup
+              buttons={tabs}
+              dynamicButtonClassName={dynamicButtonClassName}
+              bgClassName="bg-[#F8F9FA]"
+              indicatorColor="bg-textDark"
+              indicatorSize="w-[39px]"
+            />
+            </div>
+            <div className={contentClassName}>
             {cryptos.map((crypto, index) => (
-              <div key={index} className={itemClassName}>
-                {/* Crypto Info */}
-                <div className="flex gap-5">
-                  <span>
-                    <img
-                      src={crypto.logo}
-                      alt={`${crypto.name} logo`}
-                      className="w-[32px] xl:w-[48px] h-[32px] xl:h-[48px]"
-                    />
-                  </span>
-                  <div className="flex flex-col">
-                    <span className="font-Inter text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-[500]">
-                      {crypto.name}
-                    </span>
-                    <span className="font-Inter block text-[13px] leading-[19.5px] xl:text-[16px] xl:leading-[24px] text-[#545454]">
-                      {crypto.ticker}
-                    </span>
-                  </div>
-                </div>
-                {/* Crypto Price and Change */}
-                <div className="flex space-x-6 items-center justify-center">
-                <div>
-                  <span className="font-Inter block text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-textDark">
-                    {crypto.price}
-                  </span>
-                  <span
-                    className={`block text-right text-[14px] leading-[21px] ${
-                      crypto.change.startsWith("-")
-                        ? "text-red-500"
-                        : "text-green-500"
-                    }`}
-                  >
-                    {!crypto.change.startsWith("-") && (
-                      <img
-                        src="../../../src/assets/images/positive-graph.png"
-                        alt="Upward Trend"
-                        className="inline-block w-[14px] h-[14px] m-2 justify-center"
-                      />
-                    )}
-                    {crypto.change.startsWith("-") && (
-                      <img
-                        src="../../../src/assets/images/negative-graph.png"
-                        alt="Downward Trend"
-                        className="inline-block w-[14px] h-[14px]"
-                      />
-                    )}
-                    {crypto.change}
-                  </span>
-                </div>
-                <Button 
-                  className="text-secondary hover:bg-white hover:text-secondary"
-                  variant={"ghost"}
-                  >
-                    Trade
-                </Button>
-                </div>
+          <div key={index} className={itemClassName}>
+            {/* Crypto Info */}
+            <div className="p-4 flex gap-5">
+              <span>
+                <img
+                  src={crypto.logo}
+                  alt={`${crypto.name} logo`}
+                  className="w-[32px] xl:w-[48px] h-[32px] xl:h-[48px]"
+                />
+              </span>
+              <div className="flex flex-col">
+                <span className="font-Inter text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-[500]">
+                  {crypto.name}
+                </span>
+                <span className="font-Inter block text-[13px] leading-[19.5px] xl:text-[16px] xl:leading-[24px] text-[#545454]">
+                  {crypto.ticker}
+                </span>
               </div>
-            ))}
-                </div>
-            </div>  
+            </div>
+            {/* Crypto Price and Change */}
+            <div className="flex space-x-6 items-center justify-center">
+            <div>
+              <span className="font-Inter block text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-textDark">
+                {crypto.price}
+              </span>
+              <span
+                className={`block text-right text-[14px] leading-[21px] ${
+                  crypto.change.startsWith("-")
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                {!crypto.change.startsWith("-") && (
+                  <img
+                    src="../../../src/assets/images/positive-graph.png"
+                    alt="Upward Trend"
+                    className="inline-block w-[14px] h-[14px] m-2 justify-center"
+                  />
+                )}
+                {crypto.change.startsWith("-") && (
+                  <img
+                    src="../../../src/assets/images/negative-graph.png"
+                    alt="Downward Trend"
+                    className="inline-block w-[14px] h-[14px]"
+                  />
+                )}
+                {crypto.change}
+              </span>
+            </div>
+            <Button 
+              className="text-secondary hover:bg-white hover:text-secondary"
+              variant={"ghost"}
+              >
+                Trade
+            </Button>
+            </div>
+          </div>
+          ))}
+            </div>
+          </div>  
         </div>
-
-
         {/* Invite and Latest News Section */}
-        <div className="grid grid-cols-1 gap-10">
-            <div className="w-[356px] xl:w-[366px] h-[370px] mx-auto bg-white rounded-lg">
+        <div className="flex flex-col w-full xl:w-[35%] space-y-6">
+            {/* Invites section */}
+            <div className="w-full h-auto mx-auto bg-white rounded-xl">
               <img      
               src="../../../src/assets/images/invites.png"
               alt="invites photo"
-              className="w-full h-[190px] xl:h-[190px]"/>
-              <div className="font-Inter w-[332.46px] xl:w-[330px] h-[137px] xl:h-[66px] mt-2 items-center justify-center my-auto mx-auto space-y-3">
-                <h2 className="text-[16px] xl:text-[] leading-[24px] xl:leading-[] font-bold text-textDark">Invite Friends</h2>
-                <p className="text-[14] xl:text-[] leading-[22.5px] xl:leading-[] font-medium text-textDark">Help grow our community by inviting your friends to join! Share the link and let others enjoy all the benefits we have to offer.</p>
+              className="w-full h-auto"/>
+              <div className="font-Inter w-full h-auto my-4 p-4 items-center justify-center mx-auto space-y-3">
+                <h2 className="text-wrap text-left text-[16px] xl:text-[] leading-[24px] xl:leading-[] font-bold text-textDark">Invite Friends</h2>
+                <p className="text-wrap text-[14] xl:text-[] leading-[22.5px] xl:leading-[] font-medium text-textDark">Help grow our community by inviting your friends to join! Share the link and let others enjoy all the benefits we have to offer.</p>
                 <div
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={copyToClipboard}
@@ -223,29 +232,29 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                   <span className="text-primary text-sm font-medium">
                     Copy Invite Link
                   </span>
-                  <ClipboardIcon className="w-5 h-5 text-primary" />
+                  <HiOutlineDuplicate className="w-5 h-5 text-primary" />
                 </div>
               </div>
             </div>
-            <div className="w-[366px] font-Inter bg-white rounded-lg p-4">
+            <div className="w-full font-Inter bg-white rounded-lg p-4">
                 <h2 className="font-Inter text-[18px] leading-[27px] font-bold mb-[16px]">Latest News</h2>
-                <div className="space-y-6 mb-2">
+                <div className="space-y-7 mb-2 xl:mb-0">
                 {news.map((item) => (
                     <div key={item.id} className="flex items-center space-x-4">
                       <img
                           src={item.imageUrl}
                           alt={"photo"}
-                          className="w-[132px] h-[116px] rounded-sm object-cover"
+                          className="w-auto h-auto rounded-sm object-fit"
                       />
                       <div>
-                          <h3 className="text-[14px] leading-[21px] font-medium">{item.title}</h3>
+                          <h3 className="text-wrap text-[14px] leading-[21px] font-medium">{item.title}</h3>
                       </div>
                     </div>
                 ))}
                 </div>
             </div>
         </div>
-        </div>
+      </div>
     </>
   );
 };
