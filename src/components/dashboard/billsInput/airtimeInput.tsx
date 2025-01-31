@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useAirtimeStore from "../../../stores/airtimeStore";
 
 const AirtimeInput = () => {
     const[phoneNumber, setPhoneNumber] = useState('');
@@ -7,6 +8,8 @@ const AirtimeInput = () => {
     const handlePhoneNumber = (event: any) => {
         setPhoneNumber(event.target.value)
       }
+
+      const airtimeData = useAirtimeStore();
 
   return (
     <div className='xl:flex h-auto gap-10 w-full'>
@@ -50,7 +53,13 @@ const AirtimeInput = () => {
                 <img src='' alt=''/>
                 <span>MTN</span>
             </div>
-
+            <div>
+                {airtimeData.item?.PaymentAmount}
+                {airtimeData.item?.airtimeAmount}
+                {airtimeData.item?.selectPayment}
+                {airtimeData.item?.selectedNetwork}
+                {airtimeData.item?.selectedOption}
+            </div>
 
             </div>
         </div>    

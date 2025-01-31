@@ -12,7 +12,7 @@ const auth = z.object({
   currentPassword: requiredString,
   newPassword: requiredString,
   confirmPassword: requiredString,
-})
+});
 
 export const loginSchema = auth.pick({ email: true, password: true });
 export type loginValues = z.infer<typeof loginSchema>;
