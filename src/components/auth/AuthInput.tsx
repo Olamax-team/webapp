@@ -18,7 +18,7 @@ const AuthInput = React.forwardRef<HTMLInputElement, AuthInputProps>(({ inputVal
           ref={ref}
           {...props}
         />
-        <label className={cn("mb-1 font-Inter font-semibold absolute left-4 top-[50%] -translate-y-[50%] peer-focus:text-[13px] leading-normal peer-focus:top-2 peer-focus:-translate-y-[5%] peer-focus:text-black/50 text-sm lg:text-base", inputValue && inputValue.length > 0 && '-translate-y-[5%] text-black/50 top-2 text-[13px]')}>{label}</label>
+        <label className={cn("mb-1 font-Inter font-semibold absolute left-4 top-[50%] -translate-y-[50%] peer-focus:text-[13px] leading-normal peer-focus:top-2 peer-focus:-translate-y-[5%] peer-focus:text-black/50 text-sm lg:text-base", inputValue && inputValue.length > 0 && '-translate-y-[5%] text-black/50 top-2 text-[13px] lg:text-[13px]')}>{label}</label>
       </div>
     )
   }
