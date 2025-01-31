@@ -21,7 +21,7 @@ interface CryptoMarketTodayProps {
 
 const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
   containerClassName = "hidden xl:block space-x-4 relative mt-6",
-  cardClassName = "xl:w-[413px] xl:h-[388px] bg-bg",
+  cardClassName = "xl:w-full xl:h-auto bg-bg",
   headerClassName = "font-DMSans text-[32px] leading-[48px]",
   contentClassName = "font-Inter space-y-6",
   itemClassName = "flex justify-between items-center",

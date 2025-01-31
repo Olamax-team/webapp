@@ -48,7 +48,7 @@ const TradeCrypto = () => {
 
 return (
   <section className="relative bg-bg overflow-hidden w-full h-[550px] xl:h-[710px] mx-auto my-auto flex items-center justify-center">
-    <div className="absolute top-[40px] mx-auto xl:top-[80px] space-y-8 w-[390px] xl:w-[1085px] h-[456px] xl:h-[584px]">
+    <div className="absolute px-20 mx-auto xl:px-40 space-y-8 w-full h-auto">
         <IndicatorButtonGroup
           buttons={tabs}
           onButtonClick={handleTabClick}
@@ -56,9 +56,9 @@ return (
         />
       <div className="flex my-3 xl:grid xl:grid-cols-2 xl:gap-20">
         {/* Left Section */}
-        <div className="mx-auto my-auto items-center">
-          <Card className="rounded-lg w-[356px] xl:w-[520px] h-[400px] xl:h-[500px]">
-            <CardContent className="h-[400px] xl:h-[500px]">{renderContent()}</CardContent>
+        <div className="mx-auto my-auto items-center w-full">
+          <Card className="rounded-lg w-full h-auto">
+            <CardContent className="h-auto">{renderContent()}</CardContent>
           </Card>
         </div>
         {/* Right Section: Crypto Market Today */}
