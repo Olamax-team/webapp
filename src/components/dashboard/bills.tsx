@@ -22,8 +22,8 @@ interface Bill {
 const Bills = () => {
   const [activeButton, setActiveButton] = useState('crypto');
   const [active, setActive] = useState(0);
-  const [showTransactionDetail, setShowTransactionDetail] = useState(true);
-  const [selectedBill, setSelectedBill] = useState<string>('airtime'  );  
+  const [showTransactionDetail, setShowTransactionDetail] = useState(false);
+  const [selectedBill, setSelectedBill] = useState<string>('');  
 
   const renderBill = () => {
     switch (active) {

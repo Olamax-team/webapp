@@ -13,7 +13,7 @@ type cableProps = {
   setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CableTv = ({setShowTransactionDetail}:cableProps) => {
+const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
   const [selectedOption, setSelectedOption] = useState('Cable Tv Recharge');
   const [selectedNetwork, setSelectedNetwork] = useState('DSTV');
   const [selectPayment, setSelectPayment] = useState('BTC');
@@ -60,9 +60,9 @@ const CableTv = ({setShowTransactionDetail}:cableProps) => {
 
   const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-   setShowTransactionDetail(true); 
-
-};
+    setShowTransactionDetail(true); 
+    setSelectedBill('betting')
+  };
 
   return (
     <form onSubmit={handleBuyClick}>

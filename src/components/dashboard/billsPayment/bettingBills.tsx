@@ -12,7 +12,7 @@ type bettingProps = {
   setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const BettingBills = ({setShowTransactionDetail}:bettingProps) => {
+const BettingBills = ({setShowTransactionDetail, setSelectedBill}:bettingProps) => {
   const [selectedOption, setSelectedOption] = useState('Fund Betting Account');
   const [selectedNetwork, setSelectedNetwork] = useState('SportBet');
   const [selectPayment, setSelectPayment] = useState('BTC');
@@ -56,11 +56,13 @@ const BettingBills = ({setShowTransactionDetail}:bettingProps) => {
     { value: 'USDT', logo: USDTLogo },
     { value: 'SOL', logo: SOLLogo },
   ];
+
+  
   const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
-             event.preventDefault()
-            setShowTransactionDetail(true); 
-    
-      };
+    event.preventDefault()
+    setShowTransactionDetail(true); 
+    setSelectedBill('betting')
+  };
 
   return (
     <form onSubmit={handleBuyClick}>
