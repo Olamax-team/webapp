@@ -6,7 +6,7 @@ import { signupSchema, signUpValues, verficationSchema, verficationValues } from
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom';
-import { documentTitle, useModal } from '../lib/utils';
+import { documentTitle, useWhatNextPasswordModal } from '../lib/utils';
 import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
@@ -138,7 +138,7 @@ const SignUpPage = () => {
 
   const VerificationForm = () => {
 
-    const { onOpen } = useModal();
+    const { onOpen } = useWhatNextPasswordModal();
     
     const defaultVerificationValues = {
       verificationCode: ''

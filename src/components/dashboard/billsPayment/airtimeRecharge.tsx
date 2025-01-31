@@ -1,17 +1,24 @@
-import { useState } from "react";
+import {  FormEvent, useState } from "react";
 import arrow from '../../../assets/images/arrows.svg'; 
 import arrowIcon from '../../../assets/images/arrowdown.svg'; 
 import mtnLogo from '../../../assets/images/MTN Circular.png'; // MTN logo
 import gloLogo from '../../../assets/images/MTN Circular.png'; // GLO logo
 import airtelLogo from '../../../assets/images/MTN Circular.png'; // Airtel logo
 import nineMobileLogo from '../../../assets/images/MTN Circular.png'; // 9Mobile logo
-// Arrow for the last div action
 import btcLogo from '../../../assets/images/BTC Circular.png'
 import ETHLogo from '../../../assets/images/ETH Circular.png'
 import USDTLogo from '../../../assets/images/USDT Circular.png'
 import SOLLogo from '../../../assets/images/SOL Circular.png'
+import useAirtimeStore from "../../../stores/airtimeStore";
 
-const AirtimeRecharge = () => {
+type airtimeProps = {
+  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
+  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+
+const AirtimeRecharge = ({setShowTransactionDetail, setSelectedBill}:airtimeProps) => {
+
   const [selectedOption, setSelectedOption] = useState('Airtime');
   const [selectedNetwork, setSelectedNetwork] = useState('MTN');
   const [selectPayment, setSelectPayment] = useState('BTC');
@@ -19,6 +26,9 @@ const AirtimeRecharge = () => {
   const [PaymentAmount, setPaymentAmount] = useState('');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
+
+  const airtimeDetails = useAirtimeStore();
+   
 
   const handleChange = (event: any) => {
     setSelectedOption(event.target.value);
@@ -55,10 +65,27 @@ const AirtimeRecharge = () => {
     { value: 'USDT', logo: USDTLogo },
     { value: 'SOL', logo: SOLLogo },
   ];
+    
+  const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const rechargeData = {
+      selectPayment: selectPayment,
+      selectedNetwork: selectedNetwork,
+      selectedOption: selectedOption, 
+      airtimeAmount: airtimeAmount,
+      PaymentAmount: PaymentAmount,
+    };
+
+    setShowTransactionDetail(true);
+    setSelectedBill('airtime');
+    airtimeDetails.setItem(rechargeData);
+  };
+
+
 
   return (
-    <div>
-      
+    <form  onSubmit={handleBuyClick} >
       <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5">
         <select
           value={selectedOption}
@@ -168,7 +195,16 @@ const AirtimeRecharge = () => {
           </div>
         </div>
       </div>
-    </div>
+
+      <div className="flex items-center justify-center mt-7">
+              <button type="submit"
+                
+                className="xl:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
+              >
+                Buy
+              </button>
+            </div>
+    </form>
   )
 }
 
