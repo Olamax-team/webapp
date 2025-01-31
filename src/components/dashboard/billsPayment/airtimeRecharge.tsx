@@ -9,6 +9,7 @@ import btcLogo from '../../../assets/images/BTC Circular.png'
 import ETHLogo from '../../../assets/images/ETH Circular.png'
 import USDTLogo from '../../../assets/images/USDT Circular.png'
 import SOLLogo from '../../../assets/images/SOL Circular.png'
+import useAirtimeStore from "../../../stores/airtimeStore";
 
 type airtimeProps = {
   setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
@@ -16,8 +17,7 @@ type airtimeProps = {
 }
 
 
-const AirtimeRecharge = ({setShowTransactionDetail}:airtimeProps
-) => {
+const AirtimeRecharge = ({setShowTransactionDetail, setSelectedBill}:airtimeProps) => {
 
   const [selectedOption, setSelectedOption] = useState('Airtime');
   const [selectedNetwork, setSelectedNetwork] = useState('MTN');
@@ -27,7 +27,7 @@ const AirtimeRecharge = ({setShowTransactionDetail}:airtimeProps
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
 
-  // console.log(selectPayment,selectedNetwork,selectedOption, airtimeAmount,PaymentAmount)
+  const airtimeDetails = useAirtimeStore();
    
 
   const handleChange = (event: any) => {
@@ -66,13 +66,20 @@ const AirtimeRecharge = ({setShowTransactionDetail}:airtimeProps
     { value: 'SOL', logo: SOLLogo },
   ];
     
-  // const handleSubmitOption = (event: FormEvent<HTMLFormElement> ) => {
-
-  // }
   const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
-         event.preventDefault()
-        setShowTransactionDetail(true); 
+    event.preventDefault();
 
+    const rechargeData = {
+      selectPayment: selectPayment,
+      selectedNetwork: selectedNetwork,
+      selectedOption: selectedOption, 
+      airtimeAmount: airtimeAmount,
+      PaymentAmount: PaymentAmount,
+    };
+
+    setShowTransactionDetail(true);
+    setSelectedBill('airtime');
+    airtimeDetails.setItem(rechargeData);
   };
 
 
