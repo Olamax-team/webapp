@@ -18,7 +18,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/webapp/",  // Replace with your actual repository name
+  // base: "/webapp/",  // Replace with your actual repository name
   plugins: [react()],
   resolve: {
     alias: {
