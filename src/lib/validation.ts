@@ -7,7 +7,12 @@ const auth = z.object({
   password: requiredString,
   referralCode: z.string().optional().or(z.literal('')),
   verificationCode: requiredString,
-})
+  emailAuth: requiredString,
+  newAuthApp: requiredString,
+  currentPassword: requiredString,
+  newPassword: requiredString,
+  confirmPassword: requiredString,
+});
 
 export const loginSchema = auth.pick({ email: true, password: true });
 export type loginValues = z.infer<typeof loginSchema>;
@@ -20,3 +25,9 @@ export type recoveryValues = z.infer<typeof recoverySchema>;
 
 export const verficationSchema = auth.pick({ verificationCode: true });
 export type verficationValues = z.infer<typeof verficationSchema>;
+
+export const securityAuthSchema = auth.pick({ emailAuth: true, newAuthApp: true});
+export type securityAuthValues = z.infer<typeof securityAuthSchema>;
+
+export const changePasswordSchema = auth.pick({currentPassword: true, newPassword: true, confirmPassword: true});
+export type changePasswordValues = z.infer<typeof changePasswordSchema>;

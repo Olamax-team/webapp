@@ -102,7 +102,7 @@ const LoginPage = () => {
               <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
             </div>
           </button>
-          <p className='font-poppins'>Don’t have an account ? <Link to={'/sign-up'} className='font-semibold'>Register</Link></p>
+          <p className='font-poppins'>Don&apos;t have an account ? <Link to={'/sign-up'} className='font-semibold'>Register</Link></p>
         </form> 
       </Form>
     </AuthLayout>

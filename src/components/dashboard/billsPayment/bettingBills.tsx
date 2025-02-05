@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import arrow from '../../../assets/images/arrows.svg'; 
 import arrowIcon from '../../../assets/images/arrowdown.svg'; 
 import btcLogo from '../../../assets/images/BTC Circular.png'
@@ -7,7 +7,12 @@ import USDTLogo from '../../../assets/images/USDT Circular.png'
 import SOLLogo from '../../../assets/images/SOL Circular.png'
 import IBEDC from '../../../assets/images/IBEDC Circular.png'
 
-const BettingBills = () => {
+type bettingProps = {
+  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
+  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const BettingBills = ({setShowTransactionDetail, setSelectedBill}:bettingProps) => {
   const [selectedOption, setSelectedOption] = useState('Fund Betting Account');
   const [selectedNetwork, setSelectedNetwork] = useState('SportBet');
   const [selectPayment, setSelectPayment] = useState('BTC');
@@ -52,8 +57,15 @@ const BettingBills = () => {
     { value: 'SOL', logo: SOLLogo },
   ];
 
+  
+  const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setShowTransactionDetail(true); 
+    setSelectedBill('betting')
+  };
+
   return (
-    <div>
+    <form onSubmit={handleBuyClick}>
       
             <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5">
               <select
@@ -164,7 +176,15 @@ const BettingBills = () => {
                 </div>
               </div>
             </div>
-    </div>
+            <div className="flex items-center justify-center mt-7">
+              <button type="submit"
+                
+                className="xl:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
+              >
+                Buy
+              </button>
+            </div>
+    </form>
   )
 }
 
