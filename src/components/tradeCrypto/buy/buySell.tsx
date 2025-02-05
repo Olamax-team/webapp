@@ -18,7 +18,7 @@ const BuySell: React.FC<BuySellProps> = ({
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
   return (
-    <div className= {`space-y-6 xl:space-y-6 justify-center ${className || ""}`}>
+    <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>
       {/* Sub-Tabs for Buy and Sell */}
       <div className="ml-2 xl:ml-4">
         <div className="font-poppins flex items-start space-x-4 text-[16px] leading-[24px] text-textDark">

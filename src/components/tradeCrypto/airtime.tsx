@@ -28,9 +28,9 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     const [amount2, setAmount2] = useState<string>("");
 
   return (
-    <div className={`space-y-2 ${className || ""}`}>
+    <div className={`space-y-2 w-full ${className || ""}`}>
       {/* Sub-Tabs */}
-      <div className="mb-4 xl:ml-4">
+      <div className="mb-4">
         <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
           <Button
             variant={subTab === "CRYPTO" ? "default" : "ghost"}
@@ -59,7 +59,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
 
       {/* Airtime Dropdown */}
       <div className="flex justify-center space-x-4">
-        <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
+        <div className="font-Inter flex items-center w-full h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
           <p className="leading-[18px] font-[500] text-[12px] xl:leading-[21px] xl:text-[14px]">
             {cat0}
           </p>
@@ -79,8 +79,8 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         <div>
             {/* Airtime Input */}
             <div className="flex justify-center space-x-4">
-                <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-                <div>
+                <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                <div className="w-full">
                     <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
                         {cat0 === "Data" ? "Select Plan" : "Airtime Amount"}
                     </p>
@@ -100,7 +100,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                             <select
                             value={airtimeProp1}
                             onChange={(e) => setAirtimeProp1(e.target.value)}
-                            className="text-[13px] leading-[19.5px] xl:leading-[24px] xl:text-[16px] font-semibold rounded-md bg-bg px-2 py-1"
+                            className="rounded-md bg-bg px-2 py-1"
                             >
                             {airtimeProps1.map((prop) => (
                             <option key={prop} value={prop}>
@@ -121,8 +121,8 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
 
             {/* Payment Input */}
             <div className="flex justify-center space-x-4">
-                <div className="font-Inter flex items-center w-[316px] xl:w-[440px] h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-                <div>
+                <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                <div className="w-full">
                     <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
                     You Pay
                     </p>
@@ -150,7 +150,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                                 ? setprop2(e.target.value)
                                 : setprop1(e.target.value)
                             }
-                            className="text-[13px] leading-[19.5px] xl:leading-[24px] xl:text-[16px] font-semibold rounded-md bg-bg  px-2 py-1"
+                            className="rounded-md bg-bg px-2 py-1"
                         >
                             {(subTab === "CRYPTO" ? props2currency : props1).map((prop) => (
                             <option key={prop} value={prop}>
