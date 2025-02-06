@@ -4,11 +4,22 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/lib/*": ["src/lib/*"]
+  
+    "compilerOptions": {
+      "baseUrl": ".", // Base path is the root of the project
+      "paths": {
+        "@/*": ["src/*"], // General alias for all src files
+        "@/lib/*": ["src/lib/*"] // Specific alias for lib folder
+      },
+      "target": "esnext",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "jsx": "react-jsx",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true
     }
-  }
+  
+  
 }
