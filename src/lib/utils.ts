@@ -132,10 +132,3 @@ export const useSecurityAuthModal = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
-
-
-
-
-
-
-
