@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
 import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDuplicate } from "react-icons/hi";
+import TradeDetails from "./tradeDetails";
 
 
 interface UserInfoProps {
@@ -152,34 +153,45 @@ const DashboardTab: React.FC = () => {
   ];
   const props1 = ["NGN", "USD", "EUR", "GBP"];
   const props2currency = ["BTC","ETH", "USDT", "SOL" ];
-
+  const [showTransactionDetail, setShowTransactionDetail] = useState(false);
+  const [tradeType, setTradeType] = useState<string>('');  
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">
-      <div className="flex w-full flex-col xl:flex-row gap-10 items-center">
-        {/* Left Section */}
-        <div className="my-auto w-full xl:w-[50%] h-auto">
-          <UserInfoCard
-            name={user.name}
-            email={user.email}
-            lastLogin={user.lastLogin}
-            location={user.location}
-            uid={user.uid}
-            isVerified={user.isVerified}
-            inviteLink={user.inviteLink}
-          />
-          <ServicesCard services={services} />
-        </div>
-        
-        {/* Right Section */}
-        <div className="w-full xl:w-[50%] h-auto px-4 xl:p-4 bg-white rounded-md">
-          <BuySell props1Currency={props1} props2Currency={props2currency} className="mb-4 xl:mb-0"/>
-        </div>
-      </div>
-      <div className="flex justify-center w-full">
-          <div className="rounded-lg flex-grow w-full">
-            <CryptoTodayGrid userInvite={user.inviteLink}/>
+      {!showTransactionDetail ? (
+        <>
+          <div className="flex w-full flex-col xl:flex-row gap-10 items-center">
+            {/* Left Section */}
+            <div className="my-auto w-full xl:w-[50%] h-auto">
+              <UserInfoCard
+                name={user.name}
+                email={user.email}
+                lastLogin={user.lastLogin}
+                location={user.location}
+                uid={user.uid}
+                isVerified={user.isVerified}
+                inviteLink={user.inviteLink}
+              />
+              <ServicesCard services={services} />
+            </div>
+            
+            {/* Right Section */}
+            <div className="w-full xl:w-[50%] h-auto px-4 xl:p-4 bg-white rounded-md">
+              <BuySell props1Currency={props1} props2Currency={props2currency} setTradeType={setTradeType} setShowTransactionDetail={setShowTransactionDetail} className="mb-4 xl:mb-0"/>
+            </div>
           </div>
-      </div>
+          <div className="flex justify-center w-full">
+              <div className="rounded-lg flex-grow w-full">
+                <CryptoTodayGrid userInvite={user.inviteLink}/>
+              </div>
+          </div>
+        </>
+      ) : (
+        <TradeDetails
+          activeInput={tradeType}
+          setShowTransactionDetail={setShowTransactionDetail}
+          />
+
+      )}
     </section>
   );
 };

@@ -14,6 +14,11 @@ import ChangePasswordModal from '../modals/ChangePasswordModal'
 import ConfirmChangePasswordModal from '../modals/ConfirmChangePassword'
 import VerifyPasswordChangeModal from '../modals/VerifyPasswordChangeModal'
 import PasswordChangeCompleteModal from '../modals/PasswordChangeCompleteModal'
+import VerifyCodeModal from '../dashboard/tradeModals/VerifyCodeModal'
+import ConfirmCompleteTransaction from '../dashboard/tradeModals/ConfirmCompleteTransactionModal'
+import TransactionCompletedModal from '../dashboard/tradeModals/TransactionCompletedModal'
+import PaymentConfirmationModal from '../dashboard/tradeModals/PaymentConfirmationModal'
+import FiatPaymentDetailsModal from '../dashboard/tradeModals/FiatPaymentDetailsModal'
 
 const ModalProvider = () => {
   return (
@@ -33,6 +38,11 @@ const ModalProvider = () => {
       <ConfirmChangePasswordModal/>
       <VerifyPasswordChangeModal/>
       <PasswordChangeCompleteModal/>
+      <VerifyCodeModal/>
+      <ConfirmCompleteTransaction/>
+      <TransactionCompletedModal/>
+      <FiatPaymentDetailsModal/>
+      <PaymentConfirmationModal/>
     </React.Fragment>
   )
 }
