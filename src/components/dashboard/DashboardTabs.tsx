@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
 import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
-
 
 interface UserInfoProps {
   name: string;
@@ -35,6 +34,14 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
       return `${maskedLocalPart}@${maskedDomain}`;
     };
 
+    const hasOpenedRef = useRef(false);
+
+    useEffect(() => {
+      if (!isVerified && !hasOpenedRef.current) {
+        openConfirmVerification.onOpen();
+        hasOpenedRef.current = true; 
+      }
+    }, [isVerified, openConfirmVerification]);
   return (
     <div className="flex flex-col w-full h-auto">
       
@@ -138,7 +145,7 @@ const DashboardTab: React.FC = () => {
     isVerified: false,
     inviteLink: "https://olamax.io/"
   };
-
+  
   const services = [
     {
       title: "Buy Airtime & Data",
