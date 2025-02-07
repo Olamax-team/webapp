@@ -77,7 +77,6 @@ const CableInput = () => {
 
 
                 <div className="mt-5">
-                    {/* Display transaction details */}
                   <div className="text-sm text-[#212121]  p-4 space-y-4">
                         <div className="space-y-2 border-b border-[#0000001A] mt-3">
                             <p className="font-medium text-[16px] leading-[24px]">{cableTvData.item?.selectedNetwork}</p>
