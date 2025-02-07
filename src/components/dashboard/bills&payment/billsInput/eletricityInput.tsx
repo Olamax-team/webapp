@@ -104,7 +104,7 @@ const ElectricityInput = () => {
 
                     <div className="mt-12 flex item-center">
                         <img src= {exclamation}   className="size-6" />
-                        <p className="w-full  font-small text-[14px] xl:text-[18px] leading-[24px]">
+                        <p className="w-full  font-small text-[14px] xl:text-[16px] leading-[24px]">
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
                         </p>
                     </div>

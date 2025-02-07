@@ -1,5 +1,5 @@
 import Modal from '../../../ui/modal'
-import { useOpenActiveOtpModals, useQRModals } from '../../../../lib/utils'
+import { useOpenActiveOtpModals, useActiveQRModals } from '../../../../lib/utils'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../../../ui/input-otp';
 import { useForm } from 'react-hook-form';
@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const OtpModals = () => {
   const { isOpen, onClose } = useOpenActiveOtpModals();
-  const openQrModals = useQRModals();
+  const openActiveQrModals = useActiveQRModals();
 
   const defaultVerificationValues = {
     verificationCode: ''
@@ -68,7 +68,7 @@ const OtpModals = () => {
           </Form>
         </div>
         <div>
-          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {openQrModals.onOpen(); onClose()}}>
+          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {openActiveQrModals.onOpen(); onClose()}}>
             Proceed
           </button>
           <p className='text-center mt-3 font-Inter'>Didn&apos;t receive an email ? <button className='font-bold'>Request Code again</button></p>
