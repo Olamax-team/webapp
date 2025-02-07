@@ -48,7 +48,7 @@ const TradeCrypto = () => {
 
 return (
   <section className="relative bg-bg overflow-hidden w-full h-[550px] xl:h-[710px] mx-auto my-auto flex items-center justify-center">
-    <div className="absolute px-20 mx-auto xl:px-40 space-y-8 w-full h-auto">
+    <div className="absolute px-10 mx-auto md:px-30 space-y-8 w-full h-auto">
         <IndicatorButtonGroup
           buttons={tabs}
           onButtonClick={handleTabClick}
