@@ -2,6 +2,7 @@ import React, { FormEvent, useState } from "react";
 import useTradeStore from "../../../stores/tradeStore";
 import { Info } from "lucide-react";
 import { Button } from "../../ui/button";
+import { useSellConfirmCompleteTransaction } from "../../../lib/utils";
 
 const SellInput: React.FC = () => {
     const [accountNumber, setAccountNumber] = useState("");
@@ -9,7 +10,7 @@ const SellInput: React.FC = () => {
     const [bankName, setBankName] = useState("Your Bank");
     const [phoneNumber, setPhoneNumber] = useState("");
     
-    
+    const openSellConfirmCompleteTransaction = useSellConfirmCompleteTransaction();
     const bankNames = ["UBA", "GTB", "First Bank", "Kuda MFB"]
     const tradeData = useTradeStore();
 
@@ -88,6 +89,7 @@ const SellInput: React.FC = () => {
                         <div className="flex items-center justify-center ">
                         <Button 
                         type="submit"
+                        onClick={() => {openSellConfirmCompleteTransaction.onOpen();}}
                         className="xl:w-[150px] w-[96px] h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg">
                             Proceed
                         </Button>
@@ -101,19 +103,21 @@ const SellInput: React.FC = () => {
           <h2 className="xl:text-[18px] xl:leading-[27px] font-bold">Transaction Summary</h2>
           <div>
             <div className="mt-4 flex items-center space-x-2">
-              <img src='' alt="NGN" className="w-6 h-6" />
+              <img src={`../../../src/assets/images/${
+                tradeData.item?.fiatType
+                      } Circular.png`} alt="NGN" className="w-10 h-10" />
               <p className="font-semibold xl:text-[18px] xl:leading-[27px]">Naira</p>
             </div>
 
             <div className="mt-4 font-medium xl:text-[16px] xl:leading-[24px] space-y-3 text-textDark">
               <div className="flex justify-between border-t-2 py-6">
                 <span>You Receive</span>
-                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {tradeData.item?.fiatAmount}</span>
+                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">{tradeData.item?.fiatType} {tradeData.item?.fiatAmount}</span>
               </div>
               <div className="border-t-2 py-6 space-y-4">
                 <div className="flex justify-between">
                   <span>Price</span>
-                  <span className="font-semibold xl:text-[18px] xl:leading-[27px]">BTC {tradeData.item?.cryptoAmount}</span>
+                  <span className="font-semibold xl:text-[18px] xl:leading-[27px]">{tradeData.item?.cryptoType} {tradeData.item?.cryptoAmount}</span>
                 </div>
                 <div className="flex justify-between">
                   <div className="flex items-center justify-center space-x-2">
@@ -125,7 +129,7 @@ const SellInput: React.FC = () => {
               </div>
               <div className="flex justify-between text-lg border-t-2 py-6">
                 <span>Total</span>
-                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {(Number(tradeData.item?.fiatAmount) || 0) + fee}</span>
+                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">{tradeData.item?.cryptoType} {(Number(tradeData.item?.cryptoAmount) || 0) + fee}</span>
               </div>
             </div>
           </div>

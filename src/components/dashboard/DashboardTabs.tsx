@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
 import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
-
+import { useConfirmVerificationModal } from "../../lib/utils";
 
 interface UserInfoProps {
   name: string;
@@ -22,6 +22,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
     navigator.clipboard.writeText(uid);
     alert("copied!");
   };
+  const openConfirmVerification = useConfirmVerificationModal();
     // Mask email function
     const maskEmail = (email: string) => {
       const [localPart, domain] = email.split("@");
@@ -33,6 +34,14 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
       return `${maskedLocalPart}@${maskedDomain}`;
     };
 
+    const hasOpenedRef = useRef(false);
+
+    useEffect(() => {
+      if (!isVerified && !hasOpenedRef.current) {
+        openConfirmVerification.onOpen();
+        hasOpenedRef.current = true; 
+      }
+    }, [isVerified, openConfirmVerification]);
   return (
     <div className="flex flex-col w-full h-auto">
       
@@ -81,7 +90,9 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
               </p>
               <div className="flex gap-1 items-start">
                 <ShieldCheck className="w-[24px] h-[24px] text-[#FF9C00]" />
-                <span className="text-[16px] leading-[24px] font-medium text-[#FF9C00]">
+                <span 
+                onClick={() => {openConfirmVerification.onOpen();}}
+                className="text-[16px] leading-[24px] font-medium text-[#FF9C00] cursor-pointer">
                   Unverified
                 </span>
               </div>
@@ -134,7 +145,7 @@ const DashboardTab: React.FC = () => {
     isVerified: false,
     inviteLink: "https://olamax.io/"
   };
-
+  
   const services = [
     {
       title: "Buy Airtime & Data",

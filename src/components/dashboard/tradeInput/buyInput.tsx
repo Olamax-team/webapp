@@ -114,7 +114,9 @@ const BuyInput: React.FC = () => {
           <h2 className="xl:text-[18px] xl:leading-[27px] font-bold">Transaction Summary</h2>
           <div>
             <div className="mt-4 flex items-center space-x-2">
-              <img src='' alt="Btc" className="w-6 h-6" />
+              <img src={`../../../src/assets/images/${
+                tradeData.item?.cryptoType
+                      } Circular.png`} alt="Btc" className="w-10 h-10" />
               <p className="font-semibold xl:text-[18px] xl:leading-[27px]">{tradeData.item?.cryptoType}</p>
             </div>
 
