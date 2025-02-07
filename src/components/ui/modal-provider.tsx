@@ -14,6 +14,9 @@ import ChangePasswordModal from '../modals/ChangePasswordModal'
 import ConfirmChangePasswordModal from '../modals/ConfirmChangePassword'
 import VerifyPasswordChangeModal from '../modals/VerifyPasswordChangeModal'
 import PasswordChangeCompleteModal from '../modals/PasswordChangeCompleteModal'
+import ConfirmModal from '../dashboard/bills&payment/billModal/confirmModal'
+import QRModals from '../dashboard/bills&payment/billModal/qrcodeModal'
+import OtpModals from '../dashboard/bills&payment/billModal/otpModal'
 
 const ModalProvider = () => {
   return (
@@ -33,6 +36,9 @@ const ModalProvider = () => {
       <ConfirmChangePasswordModal/>
       <VerifyPasswordChangeModal/>
       <PasswordChangeCompleteModal/>
+      <ConfirmModal />
+      <QRModals  />
+      <OtpModals/>
     </React.Fragment>
   )
 }

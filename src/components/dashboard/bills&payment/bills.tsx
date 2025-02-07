@@ -56,20 +56,14 @@ const Bills = () => {
     { name: 'Cowry Card', icon: FiCreditCard },
   ];
 
-  // Added function to set the selected bill when clicked
-  // const handleBillSelect = (index: number, billName: string) => {
-  //   setActive(index);
-  //   setSelectedBill(billName );  
-  // };
+  
 
     
 
   return (
     <section className="flex flex-col w-full items-center">
-      {/* Conditionally render Bills or BillsDetails based on showTransactionDetail */}
       {!showTransactionDetail ? (
         <div className="xl:flex gap-10 w-full">
-          {/* Bills Section */}
           <div className="xl:w-[50%] w-full xl:pt-6">
             <div className="top-[195px] text-[#121826]">
               <h1 className="font-bold font-Inter xl:font-DMSans text-[20px] leading-[30px] xl:text-[24px] xl:leading-[39px] text-[#121826]">
@@ -100,7 +94,7 @@ const Bills = () => {
             </div>
           </div>
 
-          <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[520px] mt-10 xl:mt-0 h-[420px]">
+          <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[auto] mt-10 xl:mt-0 h-[420px]">
             <div className="px-8 py-6">
               <div className="flex gap-5 items-center">
                 <button
