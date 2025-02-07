@@ -42,7 +42,7 @@ const HeroSection: React.FC = () => {
               <FloatingTag 
                 position={{
                   top: '0',
-                  left: '1053px',
+                  right: '12.55px',
                 }}
                 rotation={-15}
                 text={'24/7 Support'}
@@ -55,7 +55,7 @@ const HeroSection: React.FC = () => {
               <FloatingTag 
                 position={{
                   bottom: '0',
-                  left: '1065.55px',
+                  right: '12.55px',
                 }} 
                 rotation={-15} 
                 text={'Secure Platform'}
@@ -64,22 +64,15 @@ const HeroSection: React.FC = () => {
                 animate='float-up'
                 boxPosition={{bottom:'-5px', left:'-2px'}} />
             </div>
-            <div className='relative top-10 mx-auto text-center justify-center w-[430px] xl:w-[802px] h-[230px]'>
+            <div className='relative xl:p-[80px] mx-auto text-center items-center justify-center w-full'>
               {/* Content */}
-              <h1 className="hidden xl:block font-DMSans text-[18px] leading-[27px] xl:text-[32px] font-bold xl:leading-[48px] text-textDark mt-4 mb-4">
+              <h1 className="text-wrap font-DMSans text-[18px] leading-[27px] xl:text-[32px] font-bold xl:leading-[48px] text-textDark mt-4 mb-4">
               Your all-in-one crypto platform to buy, sell & trade, cryptocurrencies
-              </h1>
-              <h1 className="block xl:hidden font-DMSans text-[18px] leading-[27px] xl:text-[32px] font-bold xl:leading-[48px] text-textDark mt-4 mb-4">
-              Your all-in-one crypto platform to buy,<br/> sell & trade, cryptocurrencies
-              </h1>              
-              <p className="hidden xl:block font-Inter text-textDark text-[14px] leading-[21px] xl:text-[16px] font-medium xl:leading-[24px] mb-6">
+              </h1>           
+              <p className="text-wrap font-Inter text-textDark text-[14px] leading-[21px] xl:text-[16px] font-medium xl:leading-[24px] mb-6">
                 OLAMAX is a highly-secure crypto platform to buy, sell or trade Bitcoin, Ethereum, 
                 Tether <br/>(USDT), Celo, Stellar, USDC, and other cryptocurrencies at the best rates.
-              </p>
-              <p className="font-Inter block xl:hidden text-textDark text-[14px] leading-[21px] xl:text-[16px] font-medium xl:leading-[24px] mb-6">
-                OLAMAX is a highly-secure crypto platform to buy,<br/> sell or trade Bitcoin, Ethereum, 
-                Tether (USDT), Celo,<br/> Stellar, USDC, and other cryptocurrencies at the<br/> best rates.
-              </p>              
+              </p>           
               <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary">
                 Trade Now !
               </Button>

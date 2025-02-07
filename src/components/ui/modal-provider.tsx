@@ -14,9 +14,14 @@ import ChangePasswordModal from '../modals/ChangePasswordModal'
 import ConfirmChangePasswordModal from '../modals/ConfirmChangePassword'
 import VerifyPasswordChangeModal from '../modals/VerifyPasswordChangeModal'
 import PasswordChangeCompleteModal from '../modals/PasswordChangeCompleteModal'
-import ConfirmModal from '../dashboard/bills&payment/billModal/confirmModal'
-import QRModals from '../dashboard/bills&payment/billModal/qrcodeModal'
-import OtpModals from '../dashboard/bills&payment/billModal/otpModal'
+import VerifyCodeModal from '../dashboard/tradeModals/VerifyCodeModal'
+import ConfirmCompleteTransaction from '../dashboard/tradeModals/ConfirmCompleteTransactionModal'
+import TransactionCompletedModal from '../dashboard/tradeModals/TransactionCompletedModal'
+import PaymentConfirmationModal from '../dashboard/tradeModals/PaymentConfirmationModal'
+import FiatPaymentDetailsModal from '../dashboard/tradeModals/FiatPaymentDetailsModal'
+import SellConfirmCompleteTransaction from '../dashboard/tradeModals/SellConfirmCompleteTransactionModal'
+import TwoFactorModal from '../dashboard/tradeModals/TwoFactorModal'
+import ConfirmVerificationModal from '../dashboard/dashboardModals/ConfirmVerification'
 
 const ModalProvider = () => {
   return (
@@ -36,9 +41,14 @@ const ModalProvider = () => {
       <ConfirmChangePasswordModal/>
       <VerifyPasswordChangeModal/>
       <PasswordChangeCompleteModal/>
-      <ConfirmModal />
-      <QRModals  />
-      <OtpModals/>
+      <VerifyCodeModal/>
+      <ConfirmCompleteTransaction/>
+      <TransactionCompletedModal/>
+      <PaymentConfirmationModal/>
+      <FiatPaymentDetailsModal/>
+      <SellConfirmCompleteTransaction/>
+      <TwoFactorModal/>
+      <ConfirmVerificationModal/>
     </React.Fragment>
   )
 }
