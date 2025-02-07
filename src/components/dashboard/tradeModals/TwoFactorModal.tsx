@@ -39,7 +39,7 @@ const TwoFactorModal = () => {
       modalSize='md:max-w-[540px] w-full'
       modalStyle='rounded p-6 xl:p-7'
     >
-      <div className='flex flex-col gap-10'>
+      <div className='flex flex-col gap-10 font-Inter'>
         <div>
           <p className='text-sm lg:text-base'>Kindly Input your secret 6-digit code to complete this transaction</p>
           <Form {...form}>

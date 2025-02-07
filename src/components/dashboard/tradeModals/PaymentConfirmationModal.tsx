@@ -26,7 +26,7 @@ const PaymentConfirmationModal = () => {
         modalSize='w-[420px]'
         modalStyle='px-6 xl:px-10'
       >
-        <div className="flex flex-col gap-10 items-center justify-center">
+        <div className="flex flex-col gap-10 items-center justify-center font-Inter">
             <div className="text-center font-Inter">
                 {/* Loading Spinner */}
                 <div className="flex justify-center mb-4">

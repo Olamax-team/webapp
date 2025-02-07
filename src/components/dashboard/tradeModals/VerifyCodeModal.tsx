@@ -39,7 +39,7 @@ const VerifyCodeModal = () => {
       modalSize='md:max-w-[540px] w-full'
       modalStyle='rounded p-6 xl:p-7'
     >
-      <div className='flex flex-col gap-10'>
+      <div className='flex flex-col gap-10 font-Inter'>
         <div>
           <p className='text-sm lg:text-base'>We just have to make sure it&apos;s really you. Kindly Input the 6-digit code from your authenticator.</p>
           <Form {...form}>

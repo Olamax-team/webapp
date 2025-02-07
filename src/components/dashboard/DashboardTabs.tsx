@@ -83,7 +83,9 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
               </p>
               <div className="flex gap-1 items-start">
                 <ShieldCheck className="w-[24px] h-[24px] text-[#FF9C00]" />
-                <span className="text-[16px] leading-[24px] font-medium text-[#FF9C00]">
+                <span 
+                onClick={() => {openConfirmVerification.onOpen();}}
+                className="text-[16px] leading-[24px] font-medium text-[#FF9C00] cursor-pointer">
                   Unverified
                 </span>
               </div>
