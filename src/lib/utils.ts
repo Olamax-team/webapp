@@ -174,6 +174,18 @@ export const useCryptoPaymentDetailsModal = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+export const useSellConfirmCompleteTransaction = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+export const useConfirmVerificationModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
 
 
 

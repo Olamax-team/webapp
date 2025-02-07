@@ -35,7 +35,7 @@ const VerifyCodeModal = () => {
       isOpen={isOpen} 
       onClose={onClose}
       useCloseButton={false}
-      title='Enter 2-FA Code'
+      title='Verification Code'
       modalSize='md:max-w-[540px] w-full'
       modalStyle='rounded p-6 xl:p-7'
     >

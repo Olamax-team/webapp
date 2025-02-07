@@ -30,14 +30,14 @@ const BuySell: React.FC<BuySellProps> = ({
 
     const tradeData = {
       tradeType: subTab, 
-      fiatType:subTab === "Buy" ? prop1 : prop2,
-      cryptoType: subTab === "Buy" ? prop2 : prop1,
+      fiatType: prop1,
+      cryptoType: prop2,
       fiatAmount: subTab === "Buy" ? amount1 : amount2,
       cryptoAmount: subTab === "Buy" ? amount2 : amount1,
     };
     setShowTransactionDetail?.(true);
     setTradeType?.(subTab);
-    tradeDetails.setItem(tradeData);
+    tradeDetails.setItem(tradeData);  
 
 
   }

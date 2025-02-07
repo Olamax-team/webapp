@@ -4,6 +4,7 @@ import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
+import { useConfirmVerificationModal } from "../../lib/utils";
 
 
 interface UserInfoProps {
@@ -22,6 +23,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
     navigator.clipboard.writeText(uid);
     alert("copied!");
   };
+  const openConfirmVerification = useConfirmVerificationModal();
     // Mask email function
     const maskEmail = (email: string) => {
       const [localPart, domain] = email.split("@");
