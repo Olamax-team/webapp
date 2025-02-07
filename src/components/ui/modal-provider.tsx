@@ -19,9 +19,9 @@ import ConfirmCompleteTransaction from '../dashboard/tradeModals/ConfirmComplete
 import TransactionCompletedModal from '../dashboard/tradeModals/TransactionCompletedModal'
 import PaymentConfirmationModal from '../dashboard/tradeModals/PaymentConfirmationModal'
 import FiatPaymentDetailsModal from '../dashboard/tradeModals/FiatPaymentDetailsModal'
-import SellConfirmCompleteTransaction from '../dashboard/tradeModals/SellConfirmCompleteTransactionModal'
 import TwoFactorModal from '../dashboard/tradeModals/TwoFactorModal'
 import ConfirmVerificationModal from '../dashboard/dashboardModals/ConfirmVerification'
+import CryptoPaymentDetailsModal from '../dashboard/tradeModals/CryptoPaymentDetailsModal'
 
 const ModalProvider = () => {
   return (
@@ -46,9 +46,9 @@ const ModalProvider = () => {
       <TransactionCompletedModal/>
       <FiatPaymentDetailsModal/>
       <PaymentConfirmationModal/>
-      <SellConfirmCompleteTransaction/>
       <TwoFactorModal/>
       <ConfirmVerificationModal/>
+      <CryptoPaymentDetailsModal/>
     </React.Fragment>
   )
 }

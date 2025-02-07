@@ -82,6 +82,7 @@ const BuySell: React.FC<BuySellProps> = ({
                   <div className="grid grid-cols-2">
                     <Input
                       value={amount1}
+                      required
                       onChange={(e) => setAmount1(e.target.value)}
                       placeholder="0.00"
                       className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
@@ -96,6 +97,7 @@ const BuySell: React.FC<BuySellProps> = ({
                       />
                       <select
                         value={subTab === "Buy" ? prop1 : prop2}
+                        required
                         onChange={(e) =>
                           subTab === "Buy"
                             ? setProp1(e.target.value)
@@ -130,6 +132,7 @@ const BuySell: React.FC<BuySellProps> = ({
                   <div className="grid grid-cols-2">
                     <Input
                       value={amount2}
+                      required
                       onChange={(e) => setAmount2(e.target.value)}
                       placeholder="0.00"
                       className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
