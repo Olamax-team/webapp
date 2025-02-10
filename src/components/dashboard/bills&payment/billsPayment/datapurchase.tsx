@@ -1,54 +1,65 @@
-import { FormEvent, useState } from "react";
-import arrow from '../../../assets/images/arrows.svg'; 
-import arrowIcon from '../../../assets/images/arrowdown.svg'; 
-import btcLogo from '../../../assets/images/BTC Circular.png'
-import ETHLogo from '../../../assets/images/ETH Circular.png'
-import USDTLogo from '../../../assets/images/USDT Circular.png'
-import SOLLogo from '../../../assets/images/SOL Circular.png'
-import IBEDC from '../../../assets/images/IBEDC Circular.png'
+import {useState,  } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { formValidationSchema } from "../../../formValidation/formValidation";
+import arrow from '../../../../assets/images/arrows.svg'; 
+import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
+import mtnLogo from '../../../../assets/images/MTN Circular.png'; // MTN logo
+import gloLogo from '../../../../assets/images/MTN Circular.png'; // GLO logo
+import airtelLogo from '../../../../assets/images/MTN Circular.png'; // Airtel logo
+import nineMobileLogo from '../../../../assets/images/MTN Circular.png'; // 9Mobile logo
+import btcLogo from '../../../../assets/images/BTC Circular.png'
+import ETHLogo from '../../../../assets/images/ETH Circular.png'
+import USDTLogo from '../../../../assets/images/USDT Circular.png'
+import SOLLogo from '../../../../assets/images/SOL Circular.png'
+import useBillsStore from "../../../../stores/billsStore";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+type Inputs = {
+  inputAmount: string;
+  paymentAmount: string;
+  selectedPayment: string;
+  selectedNetwork:string;
+};
 
-type cableProps = {
+type dataProps = {
   setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
   setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
-  const [selectedOption, setSelectedOption] = useState('Cable Tv Recharge');
-  const [selectedNetwork, setSelectedNetwork] = useState('DSTV');
+
+
+const Datapurchase = ({setShowTransactionDetail,setSelectedBill}:dataProps) => {
+  const { register, handleSubmit, formState: { errors }} = useForm<Inputs>({
+    resolver: zodResolver(formValidationSchema), 
+    defaultValues: {
+      inputAmount: "",
+      paymentAmount: "",
+    }
+  }); 
+  const [selectedNetwork, setSelectedNetwork] = useState('MTN');
   const [selectPayment, setSelectPayment] = useState('BTC');
-  const [airtimeAmount, setAirtimeAmount] = useState('');
-  const [PaymentAmount, setPaymentAmount] = useState('');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
+  const dataDetails = useBillsStore();
 
-  const handleChange = (event: any) => {
-    setSelectedOption(event.target.value);
-  };
 
+  
   const handleSelectChange = (network: string) => {
     setSelectedNetwork(network);
-    setIsNetworkDropdownOpen(false); // Close dropdown after selection
+    setIsNetworkDropdownOpen(false); 
   };
 
   const handleSelectedChange = (payment: string) => {
     setSelectPayment(payment);
-    setIsPaymentDropdownOpen(false); // Close dropdown after selection
+    setIsPaymentDropdownOpen(false); 
   };
 
-  const handleAirtimeAmountChange = (event: any) => {
-    setAirtimeAmount(event.target.value);
-  };
-
-  const handleYouPayAmountChange = (event: any) => {
-    setPaymentAmount(event.target.value);
-  };
 
   const networkOptions = [
-    { value: 'DSTv', logo: IBEDC },
-    { value: 'GoTv', logo: IBEDC },
-    { value: 'Startime', logo: IBEDC },
-    { value: 'IBEDC', logo: IBEDC },
+    { value: 'MTN', logo: mtnLogo },
+    { value: 'GLO', logo: gloLogo },
+    { value: 'Airtel', logo: airtelLogo },
+    { value: '9Mobile', logo: nineMobileLogo },
   ];
 
   const paymentOptions = [
@@ -58,53 +69,47 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
     { value: 'SOL', logo: SOLLogo },
   ];
 
-  const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setShowTransactionDetail(true); 
-    setSelectedBill('betting')
-  };
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+
+
+    const regdata = {...data, selectPayment: selectPayment, selectedNetwork: selectedNetwork}
+ 
+          setShowTransactionDetail(true); 
+          setSelectedBill('data')
+          dataDetails.setItem(regdata);
+    };
 
   return (
-    <form onSubmit={handleBuyClick}>
+    <form onSubmit={handleSubmit(onSubmit)} >
       
-        <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5">
-           <select
-                value={selectedOption}
-                onChange={handleChange}
-                className="block w-full px-1 py-2 text-[12px] xl:-text[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-[#f5f5f5] border border-none rounded-sm shadow-sm focus:outline-none focus:ring-[#f5f5f5] focus:bg-[#f5f5f5]"
-                >
-                <option value="CABLE TV RECHARGE " className="bg-white"> Cable Tv Recharge</option>
-                <option value="AIRTIME" className="bg-white">Airtime</option>
-              </select>
-            </div>
+      <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5">
+         <h3 className="px-3 py-2" >Data</h3>
+      </div>
 
-                    {/* cable */}
-                    <div className=" h-[64px] rounded-sm bg-[#f5f5f5] mt-3 w-full xl:h-[96px]  ">
-                    <label htmlFor="payment" className=" hidden xl:block font-Inter text-[#121826] xl:mt-[8px] xl:font-normal xl:text-[14px]  xl:p-3 xl:leading-[21px]"> Enter Amount </label>
-                    <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]   p-2 leading-[18px]">You Pay</label>
-                    <div className="flex justify-between px-3 ">
-              <input
+            <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5] mt-3  xl:h-[96px] ">
+                    <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">Select plan</label>
+                    <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]    px-3 py-2 leading-[18px]">You Pay</label>
+                    <div className="flex justify-between px-3  ">
+                <input
+                  {...register("inputAmount")}
                   type="text"
-                  value={airtimeAmount}
-                  onChange={handleAirtimeAmountChange}
-                  placeholder="0.00"
+                  placeholder="500 MB-1Day"
                   className="xl:w-[143px] w-[100px]  h-[25px] leading-[27px]  mt-0 text-[16px]   xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
                   />
 
 
-                {/* Custom electricity Select */}
                 <div className="relative ">
                   <div
-                    className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826]   w-[100px] h-[25px] xl:w-[115px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0  xl:ml-4 "
+                    className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121]   w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0   "
                     onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
                   >
                     <img
                       src={networkOptions.find(option => option.value === selectedNetwork)?.logo}
                       alt={selectedNetwork}
-                      className=" size-6 mr-2"
+                      className="size-6 mr-2"
                     />
                     <span>{selectedNetwork}</span>
-                    <img src={arrow} alt="Arrow" className="ml-2 xl:w-[16px] xl:h-[16px]" /> {/* Arrow for the select dropdown */}
+                    <img src={arrow} alt="Arrow" className="ml-2 xl:w-[16px] xl:h-[16px] " /> {/* Arrow for the select dropdown */}
                   </div>
 
                   {isNetworkDropdownOpen && (
@@ -124,27 +129,25 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
                 </div>
               </div>
             </div>
+            {errors.inputAmount && <p className="text-red-500 text-xs">{errors.inputAmount?.message}</p>}
 
-            {/* Last action arrow */}
-            <div className=" flex justify-center  items-center m-3 ">
+
+            <div className=" flex justify-center  items-center m-5 ">
               <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] xl:w-[32px] xl:h-[32px]" />
             </div>
 
-            {/* for ibedc payment option */}
-            <div className=" h-[64px] rounded-sm bg-[#f5f5f5]  w-full xl:h-[96px] mt-3">
+          <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5]   xl:h-[96px] mt-5">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
-            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]   p-2 leading-[18px]">You Recieve</label>
+            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]  px-3 leading-[18px]">You Recieve</label>
 
-              <div className="flex justify-between px-3   ">
-                <input
+              <div className="flex justify-between px-3">
+              <input
+                 {...register("paymentAmount")}
                   type="text"
-                  value={PaymentAmount}
-                  onChange={handleYouPayAmountChange}
-                  placeholder="0.00"
-                  className="xl:w-[143px] w-[100px] h-[25px] text-[16px]  xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] xl:leading-[34.5px]"
-                />
+                  placeholder="0.00000078"
+                  className="xl:w-[143px] w-[100px]  h-[25px] leading-[27px]  mt-0 text-[16px]   xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
+                  />
 
-                {/* Custom ibedc Select */}
                 <div className="relative ">
                   <div
                     className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121]   w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0   "
@@ -153,7 +156,7 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
                     <img
                       src={paymentOptions.find(option => option.value === selectPayment)?.logo}
                       alt={selectPayment}
-                      className=" size-6 mr-2"
+                      className="size-6 mr-2"
                     />
                     <span>{selectPayment}</span>
                     <img src={arrow} alt="Arrow" className="ml-2 xl:w-[16px] xl:h-[16px]" /> {/* Arrow for the select dropdown */}
@@ -176,7 +179,9 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-center mt-7">
+            {errors.paymentAmount && <p className="text-red-500 text-xs">{errors.paymentAmount?.message}</p>}
+       
+            <div className="flex items-center justify-center mt-10">
               <button type="submit"
                 
                 className="xl:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
@@ -184,9 +189,8 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
                 Buy
               </button>
             </div>
-
     </form>
   )
 }
 
-export default CableTv
+export default Datapurchase;
