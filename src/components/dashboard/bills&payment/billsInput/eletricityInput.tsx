@@ -2,23 +2,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { billsSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
-import exclamation from '../../../../assets/images/exclamation-circle.svg'
-import { useState } from "react";
 import { useConfirmModal } from "../../../../lib/utils";
+import { Info } from "lucide-react";
   
 
 
 
 const ElectricityInput = () => {
     const electricityData = useBillsStore();
-    const [billType, setBillType] = useState("prepaid");
     const {onOpen}  = useConfirmModal()
 
-  const handleChange = (e:any) => {
-    setBillType(e.target.value);
-  };
-
-   
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(billsSchema)
@@ -29,9 +22,12 @@ const ElectricityInput = () => {
             selectedNetwork:data.selectedNetwork,
             inputAmount:data.inputAmount, 
             selectPayment:data.selectPayment,
-             paymentAmount:data.paymentAmount
+             paymentAmount:data.paymentAmount,
+             fiatPayment:data.fiatPayment
+
             }
             electricityData.setItem(upDatedData);
+            onOpen();
 
         
         };    
@@ -54,10 +50,7 @@ const ElectricityInput = () => {
                 <div className="w-full xl:h-[60px] h-[48px] rounded-sm mt-5 bg-[#f5f5f5]">
                         <select
                           id="electricity-bill"
-                          // name="electricity-bill"
                           {...register("billType")} 
-                          value={billType}
-                          onChange={handleChange}
                           className="w-full bg-white h-[60px] text-[#121826] border border-none rounded-sm shadow-sm focus:ring-white focus:border-white"
                         >
                           <option value="">Select bill type</option> 
@@ -103,7 +96,7 @@ const ElectricityInput = () => {
 
 
                     <div className="mt-12 flex item-center">
-                        <img src= {exclamation}   className="size-6" />
+                        <Info  className="size-6" />
                         <p className="w-full  font-small text-[14px] xl:text-[16px] leading-[24px]">
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
                         </p>
@@ -113,7 +106,6 @@ const ElectricityInput = () => {
                         <button
                             type="submit"
                             className="lg:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
-                            onClick={() =>onOpen()}
                         >
                             Proceed
                         </button>
@@ -128,28 +120,28 @@ const ElectricityInput = () => {
 
                 <div className="mt-5">
                   <div className="text-sm text-[#212121]  p-4 space-y-4">
-                        <div className="space-y-2 border-b border-[#0000001A] mt-3">
+                        <div className="space-y-2  mt-3">
                             <p className="font-medium text-[16px] leading-[24px]">{electricityData.item?.selectedNetwork}</p>
                         </div>
 
-                        <div className="flex justify-between w-full  font-Inter  border-b border-[#0000001A] mt-3 py-5">
+                        <div className="flex justify-between w-full  font-Inter  border-t-2 border-[#0000001A] mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">You Recieve</p>
                             <strong>{electricityData.item?.inputAmount}</strong>
                         </div>
-                      <div className="border-b border-[#0000001A] mt-3">
+                      <div className="border-t-2 border-[#0000001A] mt-3">
                                 <div className="flex justify-between w-full font-Inter py-5">
                                     <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Price</p>
-                                    <strong>{electricityData.item?.selectPayment} {electricityData.item?.paymentAmount}</strong>
+                                    <strong>{electricityData.item?.selectPayment || electricityData.item?.fiatPayment} {electricityData.item?.paymentAmount}</strong>
                                 </div>
 
                                 <div className="flex justify-between w-full font-Inter py-5">
-                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <img src= {exclamation}   className="size-6" />
+                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info className="size-6" />
                                     </p>
                                         <p><img src='' alt="" className="size-6" /></p>
                                 </div>
                         </div>
 
-                        <div className="flex justify-between w-full font-Inter mt-3 py-5">
+                        <div className="border-t-2 border-[#0000001A] flex justify-between w-full font-Inter mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
                             <strong>{electricityData.item?.inputAmount}</strong>
                         </div>

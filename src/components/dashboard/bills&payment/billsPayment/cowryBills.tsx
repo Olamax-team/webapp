@@ -1,7 +1,6 @@
 import {useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
-import arrow from '../../../../assets/images/arrows.svg'; 
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
 import btcLogo from '../../../../assets/images/BTC Circular.png'
 import ETHLogo from '../../../../assets/images/ETH Circular.png'
@@ -10,6 +9,10 @@ import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import IBEDC from '../../../../assets/images/IBEDC Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HiChevronDown } from "react-icons/hi";
+import ngnlogo from '../../../../assets/images/NGN Circular.png';
+
+
    
 
 type Inputs = {
@@ -17,6 +20,8 @@ type Inputs = {
   paymentAmount: string;
   selectedPayment: string;
   selectedNetwork:string;
+  fiatPayment:string;
+
 };
 
 type cowryProps = {
@@ -37,10 +42,16 @@ const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
   const cowryDetails = useBillsStore();
+  const [fiatPayment, setFiaPayment] = useState('NGN');
+  const [activeButton, setActiveButton] = useState('crypto');
 
 
-  
 
+
+  const handleChange = (payment: string) => {
+    setFiaPayment(payment);
+    setIsPaymentDropdownOpen(false);
+  };
 
   const handleSelectChange = (network: string) => {
     setSelectedNetwork(network);
@@ -51,6 +62,14 @@ const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
     setSelectPayment(payment);
     setIsPaymentDropdownOpen(false); 
   };
+
+
+  const fiatPaymentOptions = [
+    { value: 'NGN', logo: ngnlogo },
+    { value: 'USD', logo: ngnlogo },
+    { value: 'EUR', logo: ngnlogo },
+    { value: 'GBP', logo: ngnlogo },
+  ];
 
 
   const networkOptions = [
@@ -69,7 +88,9 @@ const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
 
   const onSubmit: SubmitHandler<Inputs> = data => {
 
-   const regdata = {...data, selectPayment:selectPayment, selectedNetwork:selectedNetwork}
+   const regdata = {...data,
+    selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
+    selectedNetwork:selectedNetwork}
   
    setShowTransactionDetail(true); 
    setSelectedBill('cowry')
@@ -78,6 +99,21 @@ const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} >
+
+<div className="flex gap-5 items-center">
+        <button
+          onClick={() => setActiveButton('crypto')}
+          className={`w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-semibold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex ${activeButton === 'crypto' ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
+        >
+          CRYPTO
+        </button>
+        <button
+          onClick={() => setActiveButton('fiat')}
+          className={`font-Inter font-medium text-[14px] xl:text-[18px] xl:leading-[27px] leading-[21px] rounded-md xl:w-[80px] xl:h-[44px] w-[60px] h-[32px] ${activeButton === 'fiat' ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
+        >
+          FIAT
+        </button>
+      </div>
       
       <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5">
          <h3 className="px-3 py-2" >Cowry Card</h3>
@@ -109,8 +145,8 @@ const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
                       className="size-6 mr-1"
                     />
                     <span>{selectedNetwork}</span>
-                    <img src={arrow} alt="Arrow" className="size-3 ml-2" /> {/* Arrow for the select dropdown */}
-                  </div>
+                    <HiChevronDown   className="ml-2 size-6"/>               
+                     </div>
 
                   {isNetworkDropdownOpen && (
                     <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
@@ -148,35 +184,61 @@ const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
                   className="xl:w-[143px] w-[100px] h-[25px] text-[16px]  xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] xl:leading-[34.5px]"
                 />
 
-                <div className="relative ">
-                  <div
-                    className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121]   w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0   "
-                    onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
-                  >
-                    <img
-                      src={paymentOptions.find(option => option.value === selectPayment)?.logo}
-                      alt={selectPayment}
-                      className=" size-6 mr-2"
-                    />
-                    <span>{selectPayment}</span>
-                    <img src={arrow} alt="Arrow" className="ml-2 xl:w-[16px] xl:h-[16px]" /> {/* Arrow for the select dropdown */}
-                  </div>
+         <div className="relative">
+            <div
+              className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
+              onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
+            >
+              {activeButton === 'crypto' ? (
+                <>
+                  <img
+                    src={paymentOptions.find(option => option.value === selectPayment)?.logo}
+                    alt={selectPayment}
+                    className="size-6 mr-2"
+                  />
+                  <span>{selectPayment}</span>
+                </>
+              ) : (
+                <>
+                  <img
+                    src={fiatPaymentOptions.find(option => option.value === fiatPayment)?.logo}
+                    alt={fiatPayment}
+                    className="size-6 mr-2"
+                  />
+                  <span>{fiatPayment}</span>
+                </>
+              )}
+              <HiChevronDown className="ml-2 size-6" />
+            </div>
 
-                  {isPaymentDropdownOpen && (
-                    <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                      {paymentOptions.map((payment) => (
-                        <div
-                          key={payment.value}
-                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSelectedChange(payment.value)}
-                        >
-                          <img src={payment.logo} alt={payment.value} className=" size-6 mr-2" />
-                          <span>{payment.value}</span>
-                        </div>
-                      ))}
+            {isPaymentDropdownOpen && (
+              <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                {activeButton === 'crypto' ? (
+                  paymentOptions.map((payment) => (
+                    <div
+                      key={payment.value}
+                      className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSelectedChange(payment.value)}
+                    >
+                      <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
+                      <span>{payment.value}</span>
                     </div>
-                  )}
-                </div>
+                  ))
+                ) : (
+                  fiatPaymentOptions.map((payment) => (
+                    <div
+                      key={payment.value}
+                      className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleChange(payment.value)}
+                    >
+                      <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
+                      <span>{payment.value}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
               </div>
             </div>
             {errors.paymentAmount && <p className="text-red-500 text-xs">{errors.paymentAmount?.message}</p>}

@@ -7,6 +7,8 @@ interface billsProps {
     selectPayment: string; 
     inputAmount: string;  
     paymentAmount: string; 
+    fiatPayment:string;
+
 
 }
 interface billsState {
