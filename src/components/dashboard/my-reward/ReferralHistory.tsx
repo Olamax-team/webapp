@@ -1,239 +1,109 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { format } from "date-fns";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../../ui/dropdown-menu";
-import { HiEllipsisVertical } from "react-icons/hi2";
 import { cn } from "../../../lib/utils";
+
 
 type transactionItem = {
   id: number;
   date: string;
-  transaction_id: string;
-  type: string;
-  coins: string;
-  payment_method: string;
-  amount: number;
-  status: string;
-  fees: string;
-};
-
-type mobileTransactionItem = {
-  id: number;
-  date: string;
-  name: string;
-  amount: number;
+  referred_user: string;
+  commission_amount: number;
   amount_traded: number;
+  trading_status: string;
   status: string;
+  action: string;
 };
 
 type mobileTransactionProps = {
   open: boolean;
   toggleTable: () => void;
-  transaction: mobileTransactionItem;
+  transaction: transactionItem;
 }
 
-
-const transactionList = [
+const referralsList = [
   {
     id: 1,
     date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Airtime',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Pending',
-    fees: '0.5'
-  },
-  {
-    id: 2,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Data',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.5'
-  },
-  {
-    id: 3,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Buy',
-    coins: 'BTC',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Cancelled',
-    fees: '0.005'
-  },
-  {
-    id: 4,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Sell',
-    coins: 'BTC',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.005'
-  },
-  {
-    id: 5,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Buy',
-    coins: 'ETH',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.005'
-  },
-  {
-    id: 6,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Data',
-    coins: 'SOL',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.005'
-  },
-  {
-    id: 7,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Airtime',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.05'
-  },
-  {
-    id: 8,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Buy',
-    coins: 'ETH',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Cancelled',
-    fees: '0.05'
-  },
-  {
-    id: 9,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Airtime',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Pending',
-    fees: '0.5'
-  },
-];
-
-const mobileList = [
-  {
-    id: 1,
-    date: '2025-01-09T23:00:00.000Z',
-    name: 'Samuel Sunday',
-    amount: 1000,
+    referred_user: 'Samuel Sunday',
+    trading_status: 'Traded',
+    commission_amount: 1000,
     amount_traded: 10000,
     status: 'Verified',
+    action: 'Remind Admin'
   },
   {
     id: 2,
     date: '2025-01-09T23:00:00.000Z',
-    name: 'Samuel Sunday',
-    amount: 0,
-    amount_traded: 10000,
+    referred_user: 'Samuel Sunday',
+    trading_status: 'Not Traded',
+    commission_amount: 0,
+    amount_traded: 0,
     status: 'Not Verified',
+    action: 'Remind Admin'
   },
   {
     id: 3,
     date: '2025-01-09T23:00:00.000Z',
-    name: 'Samuel Sunday',
-    amount: 1000,
-    amount_traded: 10000,
-    status: 'Verified',
+    referred_user: 'Samuel Sunday',
+    trading_status: 'Not Traded',
+    commission_amount: 0,
+    amount_traded: 0,
+    status: 'Not Verified',
+    action: 'Remind Admin'
   },
   {
     id: 4,
     date: '2025-01-09T23:00:00.000Z',
-    name: 'Samuel Sunday',
-    amount: 1000,
-    amount_traded: 10000,
-    status: 'Verified',
+    referred_user: 'Samuel Sunday',
+    trading_status: 'Not Traded',
+    commission_amount: 0,
+    amount_traded: 0,
+    status: 'Not Verified',
+    action: 'Remind Admin'
   },
   {
     id: 5,
     date: '2025-01-09T23:00:00.000Z',
-    name: 'Samuel Sunday',
-    amount: 1000,
+    referred_user: 'Samuel Sunday',
+    trading_status: 'Traded',
+    commission_amount: 1000,
     amount_traded: 10000,
     status: 'Verified',
+    action: 'Remind Admin'
   },
 ];
 
 const ReferralHistory = () => {
 
   const DesktopReferralHistoryTable = () => {
-    const [pendingMenu, setPendingMenu] = React.useState('view');
-    const [completedMenu, setCompletedMenu] = React.useState('save');
 
     return (
       <Table>
         <TableHeader className="rounded-lg h-[60px] [&_tr]:border-b-0">
           <TableRow className="bg-white hover:bg-white border-b-0 font-Inter">
-            <TableHead className="text-center font-bold">Date</TableHead>
-            <TableHead className="text-center font-bold">Transaction ID</TableHead>
-            <TableHead className="text-center font-bold">Type</TableHead>
-            <TableHead className="text-center font-bold">Coins</TableHead>
-            <TableHead className="text-center font-bold">Payment Method</TableHead>
-            <TableHead className="text-center font-bold">Amount</TableHead>
+            <TableHead className="text-center font-bold">S/N</TableHead>
+            <TableHead className="text-center font-bold">Referred User</TableHead>
             <TableHead className="text-center font-bold">Status</TableHead>
-            <TableHead className="text-center font-bold">Fees</TableHead>
+            <TableHead className="text-center font-bold">Trading Status</TableHead>
+            <TableHead className="text-center font-bold">Amount</TableHead>
+            <TableHead className="text-center font-bold">Commision</TableHead>
+            <TableHead className="text-center font-bold">Date</TableHead>
             <TableHead className="text-center font-bold">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactionList.map((item) => (
-            <TableRow className="border-b-0 h-[60px] even:bg-white font-Inter even:hover:bg-white odd:bg-[#f5f5f5]">
+          {referralsList.map((item:transactionItem, index:number) => (
+            <TableRow className="border-b-0 h-[60px] even:bg-white font-Inter even:hover:bg-white odd:bg-[#f5f5f5]" key={item.id}>
+              <TableCell className="text-center">{index+1}</TableCell>
+              <TableCell className="text-center">{item.referred_user}</TableCell>
+              <TableCell className={cn("text-center font-medium text-sm", item.status === 'Verified' ? 'text-[#1faf38]': 'text-[#ff9c00]')}>{item.status}</TableCell>
+              <TableCell className="text-center">{item.trading_status}</TableCell>
+              <TableCell className="text-center">{item.amount_traded > 0 ? 'NGN': ''}{item.amount_traded > 0 ? item.amount_traded.toLocaleString() : "---" }</TableCell>
+              <TableCell className="text-center">{item.commission_amount > 0 ? 'NGN': ''}{item.commission_amount > 0 ? item.commission_amount.toLocaleString() : "---" }</TableCell>
               <TableCell className="text-center">{format(new Date(item.date), 'dd/MM/yyyy')}</TableCell>
-              <TableCell className="text-center">{item.transaction_id}</TableCell>
-              <TableCell className="text-center">{item.type}</TableCell>
-              <TableCell className="text-center">{item.coins}</TableCell>
-              <TableCell className="text-center">{item.payment_method}</TableCell>
-              <TableCell className="text-center">NGN{item.amount.toLocaleString()}</TableCell>
-              <TableCell className={cn("text-center font-medium", item.status === 'Pending' ? 'text-[#ff9c00]': item.status === 'Completed' ? 'text-[#1faf38]': 'text-[#e41d03]')}>{item.status}</TableCell>
-              <TableCell className="text-center">{item.fees} {item.coins}</TableCell>
-              <TableCell className="flex items-center justify-center mt-1.5">
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger className="outline-none">
-                    <button type="button" className="flex items-center justify-center h-full w-full">
-                      <HiEllipsisVertical className="size-7"/>
-                    </button>
-                  </DropdownMenuTrigger>
-                  { item.status === 'Pending' ?
-                    <DropdownMenuContent className="rounded-xl">
-                      <DropdownMenuRadioGroup value={pendingMenu} onValueChange={setPendingMenu}>
-                        <DropdownMenuRadioItem value="view" className="rounded-lg">View</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="cancel" className="rounded-lg">Cancel</DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent> :
-                    item.status === 'Completed' ?
-                    <DropdownMenuContent className="rounded-xl">
-                      <DropdownMenuRadioGroup value={completedMenu} onValueChange={setCompletedMenu}>
-                        <DropdownMenuRadioItem value="save" className="rounded-lg">Save</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="report" className="rounded-lg">Report</DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent> :
-                    ''}
-                </DropdownMenu>
+              <TableCell className="flex items-center justify-center">
+                <button className="text-sm border-b border-primary text-primary mt-2">{item.action}</button>
               </TableCell>
             </TableRow>
           ))}
@@ -247,8 +117,8 @@ const ReferralHistory = () => {
     return (
       <div className={cn("font-Inter w-full odd:bg-white even:bg-inherit h-[68px] md:h-[72px] overflow-hidden p-3 md:p-4 cursor-pointer transition-all duration-300", open ? 'h-auto md:h-auto': '')} onClick={toggleTable}>
         <div className="flex items-center justify-between">
-          <p className="text-sm">{transaction.name}</p>
-          <p className="text-sm">{transaction.amount > 0 ? 'NGN': ''}{transaction.amount > 0 ? transaction.amount.toLocaleString() : "---" }</p>
+          <p className="text-sm">{transaction.referred_user}</p>
+          <p className="text-sm">{transaction.commission_amount > 0 ? 'NGN': ''}{transaction.commission_amount > 0 ? transaction.commission_amount.toLocaleString() : "---" }</p>
         </div>
         <div className="flex items-center justify-between mt-1">
           <p className={cn("text-center font-medium text-sm", transaction.status === 'Verified' ? 'text-[#1faf38]': 'text-[#ff9c00]')}>{transaction.status}</p>
@@ -257,13 +127,11 @@ const ReferralHistory = () => {
         <div className="border-b my-3"/>
         <div className="flex items-center justify-between">
           <p className="text-sm">Amount Traded:</p>
-          <p className="text-sm">NGN{transaction.amount_traded.toLocaleString()}</p>
+          <p className="text-sm">{transaction.amount_traded > 0 ? 'NGN': ''}{transaction.amount_traded > 0 ? transaction.amount_traded.toLocaleString() : "---" }</p>
         </div>
-        {transaction.status === 'Verified' &&
-          <div className="pt-2">
-            <button className="text-sm border-b border-primary text-primary">Contact admin</button>
-          </div>
-        }
+        <div className="pt-2">
+          <button className="text-sm border-b border-primary text-primary">{transaction.action}</button>
+        </div>
       </div>
     )
   };
@@ -277,7 +145,7 @@ const ReferralHistory = () => {
 
     return (
       <React.Fragment>
-        {mobileList.map((item:mobileTransactionItem, index:number) => (
+        {referralsList.map((item:transactionItem, index:number) => (
           <MobileReferralHistoryItem
             key={index} 
             open={index === currentIndex} 
@@ -292,6 +160,9 @@ const ReferralHistory = () => {
   return (
     <div className="flex flex-col gap-12">
       <p className="text-[20px] leading-normal font-bold text-center lg:text-left">Referral History</p>
+      <div className="hidden lg:block">
+        <DesktopReferralHistoryTable/>
+      </div>
       <div className="lg:hidden">
         <MobileReferralHistoryTable/>
       </div>

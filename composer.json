@@ -1,0 +1,15 @@
+{
+    "name": "hp/web-app",
+    "autoload": {
+        "psr-4": {
+            "Hp\\WebApp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "olamax-team",
+            "email": "info@olamax.io"
+        }
+    ],
+    "require": {}
+}
