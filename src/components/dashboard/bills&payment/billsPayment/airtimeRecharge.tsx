@@ -117,6 +117,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
 
       <div className="w-full rounded-sm bg-[#f5f5f5f5] mt-3 xl:h-[96px]">
         <label htmlFor="airtimeAmount" className="hidden xl:block font-Inter text-[#121826] xl:mt-[8px] xl:font-normal xl:text-[14px] xl:p-3 xl:leading-[21px]">Airtime Amount</label>
+        <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]    px-3 py-2 leading-[18px]">You Pay</label>
         <div className="flex justify-between p-3">
           <input
             {...register("inputAmount")}
@@ -136,7 +137,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
                 className="size-5 mr-1"
               />
               <span>{selectedNetwork}</span>
-              <HiChevronDown   className="ml-2 size-6"/>            
+              <HiChevronDown   className="size-6"/>            
               </div>
             {isNetworkDropdownOpen && (
               <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
@@ -162,8 +163,8 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
               <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] xl:w-[32px] xl:h-[32px]" />
             </div>
 
-      <div className="w-full rounded-sm bg-[#f5f5f5] xl:h-[96px] mt-5">
-          <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]   p-2 leading-[18px]">You Recieve</label>
+      <div className="w-full h[64px] rounded-sm bg-[#f5f5f5] xl:h-[96px] mt-5">
+          <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]  px-3 py-2  leading-[18px]">You Recieve</label>
         <label htmlFor="paymentAmount" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5 xl:p-3 xl:leading-[21px]">You Pay</label>
         <div className="flex justify-between px-3">
           <input
@@ -199,7 +200,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
                   <span>{fiatPayment}</span>
                 </>
               )}
-              <HiChevronDown className="ml-2 size-6" />
+              <HiChevronDown className="size-6" />
             </div>
 
             {isPaymentDropdownOpen && (

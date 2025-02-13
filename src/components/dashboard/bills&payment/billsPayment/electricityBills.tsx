@@ -116,7 +116,7 @@ const ElectricityBills = ({setShowTransactionDetail,setSelectedBill}:electricity
         </div>
       <div className="h-[64px] rounded-sm bg-[#f5f5f5] mt-3 w-full xl:h-[96px]">
         <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:mt-[8px] xl:font-normal xl:text-[14px] xl:p-3 xl:leading-[21px]"> Enter Amount </label>
-        <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] p-2 leading-[18px]">You Pay</label>
+        <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Pay</label>
         <div className="flex justify-between px-3">
           <input
             {...register("inputAmount")}
@@ -136,7 +136,7 @@ const ElectricityBills = ({setShowTransactionDetail,setSelectedBill}:electricity
                 className="size-6 mr-1"
               />
               <span>{selectedNetwork}</span>
-              <HiChevronDown   className="ml-2 size-6"/>           
+              <HiChevronDown   className="size-6"/>           
                </div>
 
             {isNetworkDropdownOpen && (
@@ -198,7 +198,7 @@ const ElectricityBills = ({setShowTransactionDetail,setSelectedBill}:electricity
                   <span>{fiatPayment}</span>
                 </>
               )}
-              <HiChevronDown className="ml-2 size-6" />
+              <HiChevronDown className="size-6" />
             </div>
 
             {isPaymentDropdownOpen && (

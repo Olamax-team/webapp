@@ -93,7 +93,7 @@ const Bills = () => {
             </div>
           </div>
 
-          <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[auto] mt-10 xl:mt-0 h-[420px]">
+          <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[auto] mt-10 xl:mt-0 h-auto">
             <div className="px-8 py-6">
               
               <div className="">{renderBill()}</div>

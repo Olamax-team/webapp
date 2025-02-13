@@ -136,10 +136,11 @@ const BettingBills = ({setShowTransactionDetail, setSelectedBill}:bettingProps) 
                     <img
                       src={networkOptions.find(option => option.value === selectedNetwork)?.logo}
                       alt={selectedNetwork}
-                      className="size-6 mr-2"
+                      className="size-6 mr-1"
                     />
                     <span>{selectedNetwork}</span>
-                    <HiChevronDown   className="ml-2 size-6"/>                  </div>
+                    <HiChevronDown   className="size-6"/>                
+                     </div>
 
                   {isNetworkDropdownOpen && (
                     <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
@@ -166,7 +167,7 @@ const BettingBills = ({setShowTransactionDetail, setSelectedBill}:bettingProps) 
 
             <div className=" h-[64px] rounded-sm bg-[#f5f5f5]  w-full xl:h-[96px] mt-5">
               <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
-              <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]   p-2 leading-[18px]">You Recieve</label>
+              <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]   px-3 py-2  leading-[18px]">You Recieve</label>
 
               <div className="flex justify-between px-3">
                 <input
@@ -200,7 +201,7 @@ const BettingBills = ({setShowTransactionDetail, setSelectedBill}:bettingProps) 
                   <span>{fiatPayment}</span>
                 </>
               )}
-              <HiChevronDown className="ml-2 size-6" />
+              <HiChevronDown className="size-6" />
             </div>
 
             {isPaymentDropdownOpen && (

@@ -59,7 +59,7 @@ const AirtimeInput = () => {
 
                     <div className="mt-8 flex item-center">
                     <span className="flex justify-start"><Info size={24} /></span>
-                    <p className="text-[#121826] font-normal font-Inter xl:text-[16px] xl:leading-[24px]">Please verify the wallet address before proceeding, we would not be held responsible if the details provided are incorrect.</p>
+                    <p className="text-[#121826] font-normal text-[14px] font-Inter xl:text-[16px] xl:leading-[24px]">Please verify the wallet address before proceeding, we would not be held responsible if the details provided are incorrect.</p>
                     </div>
 
                <div className="mt-16 flex items-center justify-center">

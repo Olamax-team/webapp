@@ -56,7 +56,7 @@ const BettingInput = () => {
             <span className="flex justify-start">
               <Info size={24} />
             </span>
-            <p className="text-[#121826] font-normal font-Inter xl:text-[16px] xl:leading-[24px]">
+            <p className="text-[#121826] font-normal text-[14px] font-Inter xl:text-[16px] xl:leading-[24px]">
               Please verify the wallet address before proceeding, we would not
               be held responsible if the details provided are incorrect.
             </p>

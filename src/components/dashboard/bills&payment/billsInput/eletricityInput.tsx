@@ -64,7 +64,7 @@ const ElectricityInput = () => {
                    </div>
 
 
-                <div className="w-full xl:-h-[60px] h-[48px]  rounded-sm mt-8 bg-[#f5f5f5] ">
+                <div className="w-full xl:-h-[60px] h-[48px] mt-16 rounded-sm xl-mt-8 bg-[#f5f5f5] ">
                     <input
                         type="text"
                         placeholder="12349876522"
@@ -78,7 +78,7 @@ const ElectricityInput = () => {
                     )}
                     </div>
 
-                  <div className="mt-10 font-poppins text-[#000000] text-[16px] leading-[24px]"><h3>Tosin Adebayor</h3> </div>
+                  <div className="mt-12 xl:mt-10 font-poppins text-[#000000] text-[16px] leading-[24px]"><h3>Tosin Adebayor</h3> </div>
 
                   <div className="w-full xl:h-[60px] h-[48px] rounded-sm mt-10 bg-[#f5f5f5]">
                           <input
@@ -95,7 +95,7 @@ const ElectricityInput = () => {
                     </div>
 
 
-                    <div className="mt-12 flex item-center">
+                    <div className="mt-12 xl:mt12 flex item-center">
                         <Info  className="size-6" />
                         <p className="w-full  font-small text-[14px] xl:text-[16px] leading-[24px]">
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
