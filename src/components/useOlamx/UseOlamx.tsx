@@ -31,22 +31,17 @@ type textContentProps = {
 }
 
 const UseOlamax  = () => {
-  // State to track the active step
   const [activeStep, setActiveStep] = useState(1);
-  // array of images
   const stepImages = [reactangl2, rectangle0, rectangle00];
 
-  // Automatically change active step every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveStep((prevStep) => (prevStep % 3) + 1); // Cycles through 1, 2, 3
     }, 5000);
 
-    // Clear the timer when the component is unmounted
     return () => clearInterval(timer);
   }, []);
 
-  // Handle click to change active step
   const handleStepChange = (step:number) => {
     setActiveStep(step);
   };
@@ -88,7 +83,6 @@ const UseOlamax  = () => {
 
   return (
     <div className="bg-[#F8F9FA] flex flex-col items-center py-[40px] md:py-[65px] w-full">
-      {/* Header Section */}
       <div className='flex flex-col gap-0 md:gap-10 w-[90%] md:w-[80%] mx-auto'>
         <h1 className="mb-5 font-Inter text-[14px] lg:text-[32px] md:text-3xl font-bold lg:font-DMSans text-center lg:leading-tight">
           Using <span className="text-[#039AE4] lg:font-DMSans lg:text-[32px] leading-tight text-[14px] font-Inter md:text-[30px]">OLAMAX</span> is as Simple as These 3 Steps

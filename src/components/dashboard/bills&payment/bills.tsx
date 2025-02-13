@@ -20,7 +20,6 @@ interface Bill {
 }
 
 const Bills = () => {
-  const [activeButton, setActiveButton] = useState('crypto');
   const [active, setActive] = useState(0);
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);
   const [selectedBill, setSelectedBill] = useState<string>('');  
@@ -94,22 +93,9 @@ const Bills = () => {
             </div>
           </div>
 
-          <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[auto] mt-10 xl:mt-0 h-[420px]">
+          <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[auto] mt-10 xl:mt-0 h-auto">
             <div className="px-8 py-6">
-              <div className="flex gap-5 items-center">
-                <button
-                  onClick={() => setActiveButton('crypto')}
-                  className={`w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-bold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex ${activeButton === 'crypto' ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
-                >
-                  Crypto
-                </button>
-                <button
-                  onClick={() => setActiveButton('FIAT')}
-                  className={`font-Inter font-bold text-[14px] xl:text-[18px] xl:leading-[27px] leading-[21px] rounded-md xl:w-[80px] xl:h-[44px] w-[60px] h-[32px]  ${activeButton === 'FIAT' ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
-                >
-                  FIAT
-                </button>
-              </div>
+              
               <div className="">{renderBill()}</div>
             </div>
 

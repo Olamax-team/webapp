@@ -14,26 +14,37 @@ export const formValidationSchema = z.object({
 
    
 });
+
+
     export const billsSchema = z.object({
       billType: z
         .string()
-        .refine(val => ['prepaid', 'postpaid'].includes(val), {
+         .refine(val => ['prepaid', 'postpaid'].includes(val), {
           message: 'Invalid selection, please choose either Prepaid or Postpaid',
         }),
-
-
-        phoneNumber: z
-        .string()
-        .regex(/^[0-9]+$/, 'Required field')
-        .max(15, 'Phone number cannot exceed 15 digits')
-        .min(10, 'Phone number cannot be less than 10 digits'),
-
+        
 
         meterNumber: z
         .string()
         .regex(/^[0-9]+$/, 'Required field') 
         .max(11, 'Meter number cannot exceed 11 digits')
-        .min(10, 'Meter number cannot be less than 10 digits')
+        .min(10, 'Meter number cannot be less than 10 digits'),
+
+        phoneNumber: z
+      .string()
+      .regex(/^[0-9]+$/, 'Required field')
+      .max(15, 'Phone number cannot exceed 15 digits')
+      .min(10, 'Phone number cannot be less than 10 digits'),
+
+    })
+
+
+    export const numberSchema = z.object({
+      phoneNumber: z
+      .string()
+      .regex(/^[0-9]+$/, 'Required field')
+      .max(15, 'Phone number cannot exceed 15 digits')
+      .min(10, 'Phone number cannot be less than 10 digits'),
 
     })
 

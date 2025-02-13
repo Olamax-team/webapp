@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formValidationSchema } from "../../../formValidation/formValidation"; // Ensure correct import path
+import { numberSchema } from "../../../formValidation/formValidation"; // Ensure correct import path
 import useBillsStore from "../../../../stores/billsStore";
-import exclamation from '../../../../assets/images/exclamation-circle.svg'
 import { useConfirmModal } from "../../../../lib/utils";
+import { Info } from "lucide-react";
 
   
 
@@ -15,7 +15,7 @@ const WaterInput = () => {
 
 
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: zodResolver(formValidationSchema)
+        resolver: zodResolver(numberSchema)
     });
 
     const onSubmit = (data: any) => {
@@ -23,12 +23,17 @@ const WaterInput = () => {
             selectedNetwork:data.selectedNetwork,
             inputAmount:data.inputAmount, 
             selectPayment:data.selectPayment,
-             paymentAmount:data.paymentAmount
+             paymentAmount:data.paymentAmount,
+             fiatPayment:data.fiatPayment
             }
-            waterData.setItem(upDatedData);    };
+            waterData.setItem(upDatedData);  
+        onOpen();
+      };
 
     return (
-        <div className="xl:flex h-auto gap-10 w-full">
+        <form onSubmit={handleSubmit(onSubmit)}>
+
+            <div className="xl:flex h-auto gap-10 w-full">
             <div className="xl:w-[50%] w-full p-5 xl:pt-6">
                 <div className="mt-2">
                     <h2 className="font-bold font-Inter xl:font-DMSans text-[18px] leading-[30px] xl:text-[22px] xl:leading-[39px] text-[#121826]">
@@ -39,7 +44,6 @@ const WaterInput = () => {
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
                     <input
                         type="text"
                         placeholder="Your Phone Number"
@@ -48,11 +52,12 @@ const WaterInput = () => {
                         className="bg-white h-[60px] w-full px-3 py-2 font-medium text-[16px] leading-[24px] text-[#121826] border-none rounded-sm focus:outline-none mt-5"
                         {...register("phoneNumber")}
                     />
+
                        {errors.phoneNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.phoneNumber as { message: string }).message} </p>
                     )}
 
                     <div className="mt-8 flex item-center">
-                        <img src= {exclamation}   className="size-6" />
+                        <Info  className="size-6" />
                         <p className="w-full  font-small text-[14px] xl:text-[16px] leading-[24px]">
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
                         </p>
@@ -62,12 +67,10 @@ const WaterInput = () => {
                         <button
                             type="submit"
                             className="lg:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
-                            onClick={() =>onOpen()}
                         >
                             Proceed
                         </button>
                     </div>
-                </form>
             </div>
 
             <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[520px] h-auto mt-10 xl:mt-0 p-5 flex flex-col ">
@@ -78,28 +81,28 @@ const WaterInput = () => {
 
                 <div className="mt-5">
                   <div className="text-sm text-[#212121]  p-4 space-y-4">
-                        <div className="space-y-2 border-b border-[#0000001A] mt-3">
+                        <div className="space-y-2  mt-3">
                             <p className="font-medium text-[16px] leading-[24px]">{waterData.item?.selectedNetwork}</p>
                         </div>
 
-                        <div className="flex justify-between w-full  font-Inter  border-b border-[#0000001A] mt-3 py-5">
+                        <div className="flex justify-between w-full  font-Inter  border-t-2 border-[#0000001A] mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">You Recieve</p>
                             <strong>{waterData.item?.inputAmount}</strong>
                         </div>
-                      <div className="border-b border-[#0000001A] mt-3">
+                      <div className="border-t-2 border-[#0000001A] mt-3">
                                 <div className="flex justify-between w-full font-Inter py-5">
                                     <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Price</p>
-                                    <strong>{waterData.item?.selectPayment} {waterData.item?.paymentAmount}</strong>
+                                    <strong>{waterData.item?.selectPayment || waterData.item?.fiatPayment} {waterData.item?.paymentAmount}</strong>
                                 </div>
 
                                 <div className="flex justify-between w-full font-Inter py-5">
-                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <img src= {exclamation}   className="size-6" />
+                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info className="size-6" />
                                     </p>
                                         <p><img src='' alt="" className="size-6" /></p>
                                 </div>
                         </div>
 
-                        <div className="flex justify-between w-full font-Inter mt-3 py-5">
+                        <div className="border-t-2 border-[#0000001A] flex justify-between w-full font-Inter mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
                             <strong>{waterData.item?.inputAmount}</strong>
                         </div>
@@ -109,6 +112,8 @@ const WaterInput = () => {
             </div>
 
           </div>
+          </form>
+ 
     );
 };
 
