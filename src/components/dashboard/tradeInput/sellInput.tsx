@@ -50,7 +50,7 @@ const SellInput: React.FC = () => {
                         {/* Account Number Input */}
                         <div className="flex px-4 justify-between bg-white rounded-md">
                         <input
-                            type="text"
+                            type="number"
                             required
                             placeholder="Bank Account Number"
                             value={accountNumber}

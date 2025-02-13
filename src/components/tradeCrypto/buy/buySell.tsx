@@ -169,7 +169,7 @@ const BuySell: React.FC<BuySellProps> = ({
             <div className="flex justify-center items-center">
               <Button 
               type="submit"
-              className="py-3 mt-6 mb-1 bg-primary hover:bg-secondary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
+              className="font-Inter xl:font-poppins py-3 mt-6 mb-1 bg-primary hover:bg-secondary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
                 {subTab}
               </Button>
             </div>
