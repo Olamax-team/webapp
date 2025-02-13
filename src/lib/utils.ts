@@ -132,6 +132,38 @@ export const useSecurityAuthModal = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+
+
+export const useConfirmModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+export const useActiveQRModals = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+export const useOpenActiveOtpModals = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+export const useActivePaymentModals = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+export const useActiveCompleteTransactionModals = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+
+
 export const useConfirmCompleteTransaction = create<modalProps>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),

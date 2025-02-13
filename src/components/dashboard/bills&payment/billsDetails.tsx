@@ -1,18 +1,18 @@
-import AirtimeInput from './billsInput/airtimeInput';
-import DataInput from './billsInput/dataInput';
-import arrow from '../../assets/images/arrow-left.png'
+import AirtimeInput from '../bills&payment/billsInput/airtimeInput';
+import DataInput from '../bills&payment/billsInput/dataInput';
+import arrow from '../../../assets/images/arrow-left.png'
 import ElectricityInput from './billsInput/eletricityInput';
-import CableTvInput from './billsInput/cableTvInput';
-import BettingInput from './billsInput/bettingInput';
-import WaterInput from './billsInput/waterInput';
-import CoweryInput from './billsInput/coweryInput';
+import CableTvInput from '../bills&payment/billsInput/cableTvInput';
+import BettingInput from '../bills&payment/billsInput/bettingInput';
+import WaterInput from '../bills&payment/billsInput/waterInput';
+import CoweryInput from '../bills&payment/billsInput/coweryInput';
 
 type billsDetailsProps = {
   setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>;
   activeInput: string;
 };
 
-const BillsDetails = ({ setShowTransactionDetail, activeInput }: billsDetailsProps) => {
+const BillsDetails = ({setShowTransactionDetail, activeInput }: billsDetailsProps) => {
   const renderInput = () => {
     switch (activeInput) {
       case 'airtime':

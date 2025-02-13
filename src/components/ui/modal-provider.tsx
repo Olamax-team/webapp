@@ -22,6 +22,12 @@ import FiatPaymentDetailsModal from '../dashboard/tradeModals/FiatPaymentDetails
 import TwoFactorModal from '../dashboard/tradeModals/TwoFactorModal'
 import ConfirmVerificationModal from '../dashboard/dashboardModals/ConfirmVerification'
 import CryptoPaymentDetailsModal from '../dashboard/tradeModals/CryptoPaymentDetailsModal'
+import ConfirmModal from '../dashboard/bills&payment/billModal/confirmModal'
+import OtpModals from '../dashboard/bills&payment/billModal/otpModal'
+import QRModals from '../dashboard/bills&payment/billModal/qrcodeModal'
+import CompleteTransactionModals from '../dashboard/bills&payment/billModal/completeTransactionModal'
+import PaymentModals from '../dashboard/bills&payment/billModal/paymentModal'
+
 
 const ModalProvider = () => {
   return (
@@ -44,11 +50,19 @@ const ModalProvider = () => {
       <VerifyCodeModal/>
       <ConfirmCompleteTransaction/>
       <TransactionCompletedModal/>
-      <FiatPaymentDetailsModal/>
       <PaymentConfirmationModal/>
       <TwoFactorModal/>
       <ConfirmVerificationModal/>
       <CryptoPaymentDetailsModal/>
+      <FiatPaymentDetailsModal/>
+      <ConfirmCompleteTransaction/>
+      <TwoFactorModal/>
+      <ConfirmVerificationModal/>
+      <ConfirmModal/>
+      <OtpModals/>
+      <QRModals/>
+      <CompleteTransactionModals/>
+      <PaymentModals/>
     </React.Fragment>
   )
 }
