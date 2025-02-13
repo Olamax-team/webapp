@@ -1,3 +1,4 @@
+
 import OurValues from "./ourValues";
 
 const AboutUs = () => {
@@ -51,7 +52,8 @@ const AboutUs = () => {
             </div>
         </div>
 
-        <div> <OurValues/> </div> 
+        {/* <div> <OurValues/> </div>  */}
+        <div> <OurValues/> </div>
     </section>
   )
 }
