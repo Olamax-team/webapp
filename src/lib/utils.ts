@@ -7,7 +7,7 @@ type modalProps = {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-}
+};
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -133,7 +133,6 @@ export const useSecurityAuthModal = create<modalProps>((set) => ({
 }));
 
 
-
 export const useConfirmModal = create<modalProps>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
@@ -161,7 +160,6 @@ export const useActiveCompleteTransactionModals = create<modalProps>((set) => ({
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
-
 
 
 export const useConfirmCompleteTransaction = create<modalProps>((set) => ({
@@ -217,5 +215,7 @@ export const useConfirmVerificationModal = create<modalProps>((set) => ({
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
+
+
 
 

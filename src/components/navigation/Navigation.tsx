@@ -1,15 +1,16 @@
 import React from "react";
 import TopHeader from "./TopHeader";
 import BottomHeader from "./BottomHeader";
+import useUserDetails from "../../stores/userStore";
 
 const Navigation = () => {
-  const userLoggedIn = false;
+  const { isLoggedIn } = useUserDetails();
   const notifications = true;
 
   return (
     <React.Fragment>
       <TopHeader/>
-      <BottomHeader userLoggedIn ={userLoggedIn} notifications={notifications}/>
+      <BottomHeader userLoggedIn ={isLoggedIn} notifications={notifications}/>
     </React.Fragment>
   )
 }

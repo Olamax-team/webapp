@@ -3,20 +3,11 @@ import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
 import { cn, timelineCreator } from '../../lib/utils';
-import fastTrade from '../../assets/images/eva--swap-fill 1.png';
-import airtimeData from '../../assets/images/device-mobile.png';
-import billPayment from '../../assets/images/healthicons_electricity.png';
-import helpCenter from '../../assets/images/fluent_person-support-28-filled.png';
-import chatUs from '../../assets/images/bxs_chat.png';
-import faq from '../../assets/images/mdi_faq.png';
-import aboutUs from '../../assets/images/zondicons_badge.png'
-import building from '../../assets/images/md-library.png'
-import news from '../../assets/images/mingcute_news-2-fill.png'
-import education from '../../assets/images/game-icons_graduate-cap.png'
-import money from '../../assets/images/cash.png'
 import userimage from '../../assets/images/avatar_1.png'
 import ImageAvatar from '../ui/image-avatar';
+import olamaxLogo from '../../assets/images/olamax_logo_2.png'
 import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
+import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
 
 type menuItemProps = {
   image: string;
@@ -47,134 +38,6 @@ type notificationCardProps = {
   notifications: notification[]
 }
 
-const tradeCryptoList = [
-  {
-    path: '/fast-trade',
-    image: fastTrade,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Fast Trade'
-  },
-  {
-    path: '/airtime-data',
-    image: airtimeData,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Airtime & Data'
-  },
-  {
-    path: '/bill-payment',
-    image: billPayment,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Bills & Payment'
-  },
-];
-
-const supportList = [
-  {
-    path: '/help-center',
-    image: helpCenter,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Help Center'
-  },
-  {
-    path: '/chat-us',
-    image: chatUs,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Chat Us'
-  },
-  {
-    path: '/frequently-asked-questions',
-    image: faq,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Frequently Asked Questions'
-  },
-];
-
-const moreList = [
-  {
-    path: '/about-us',
-    image: aboutUs,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'About Us'
-  },
-  {
-    path: '/olamax-foundation',
-    image: building,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Olamax Foundation'
-  },
-  {
-    path: '/news-and-announcement',
-    image: news,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'News And Announcement'
-  },
-  {
-    path: '/educational-center',
-    image: education,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Educational Center'
-  },
-  {
-    path: '/referral-program',
-    image: money,
-    description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
-    title: 'Referral Program'
-  },
-];
-
-
-const notificationList = [
-  {
-    date: '2024-12-12T06:41:18.421Z',
-    notifications: [
-      {
-        title: 'Transaction Successful',
-        content: "Your crypto has been converted to Naira. Check your wallet for the updated balance.",
-        alertType: 'transaction-alert'
-      },
-      {
-        title: 'New Feature Alert!',
-        content: "We’ve added a quick-buy option for USDT. Access faster transactions directly from your dashboard.",
-        alertType: 'feature-update'
-      },
-    ],
-  },
-  {
-    date: '2024-12-11T07:38:18.421Z',
-    notifications: [
-      {
-        title: 'Security Update Required',
-        content: "Please verify your email address and enable two-factor authentication to keep your account secure.",
-        alertType: 'security-update'
-      },
-      {
-        title: 'Referral Program Ending Soon!',
-        content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
-        alertType: 'referral-update'
-      },
-      {
-        title: 'Transaction Successful',
-        content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
-        alertType: 'transaction-alert'
-      },
-    ]
-  },
-  {
-    date: '2024-12-10T11:31:18.421Z',
-    notifications: [
-      {
-        title: 'Transaction Successful',
-        content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
-        alertType: 'transaction-alert'
-      },
-      {
-        title: 'Referral Program Ending Soon!',
-        content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
-        alertType: 'referral-update'
-      },
-    ]
-  }
-];
 
 const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
   const [openTrade, setOpenTrade] = React.useState(false);
@@ -356,7 +219,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
           <Menu size={25} className='xl:hidden cursor-pointer' onClick={() => setOpenMobile(!openMobile)}/>
           <Link to={'/'}>
             <div className='w-[110px] xl:w-[153px] h-[34px] xl:h-[48px]'>
-              <img src="../../../src/assets/images/olamax_logo_2.png" alt="logo" className='object-cover'/>
+              <img src={olamaxLogo} alt="logo" className='object-cover'/>
             </div>
           </Link>
         </div>
