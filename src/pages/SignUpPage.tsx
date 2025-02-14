@@ -54,10 +54,10 @@ const SignUpPage = () => {
       }
 
       axios.request(config).then((response) => {
-        if (response.data.status === 'success') {
+        if (response.status === 200) {
           setIsSubmit(true);
         }
-      })
+      });
     };
 
     const continueWithGoogle = async () => {
@@ -165,7 +165,7 @@ const SignUpPage = () => {
       };
 
       axios.request(config).then((response) => {
-        if (response.data.status === 'success') {
+        if (response.status === 200) {
           onOpen();
           navigate('/login-in', { replace: true });
         }
