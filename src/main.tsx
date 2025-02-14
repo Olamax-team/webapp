@@ -13,6 +13,7 @@ import Transaction from './pages/Transaction';
 import IdentityVerification from './pages/IdentityVerification';
 import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 
 
 const router = createBrowserRouter([
@@ -36,31 +37,34 @@ const router = createBrowserRouter([
         element: <PasswordRecovery/>
       },
       {
-        path: '/dashboard',
-        element: <Dashboard/>
-      },
-      {
-        path: '/dashboard/bills_payment',
-        element: <BillPayment/>
-      },
-      {
-        path: '/dashboard/transaction',
-        element: <Transaction/>
-      },
-      {
-        path: '/dashboard/identity_verification',
-        element: <IdentityVerification/>
-      },
-      {
-        path: '/dashboard/account_management',
-        element: <AccountManagement/>
-      },
-      {
-        path: '/dashboard/my_rewards',
-        element: <MyReward/>
-      },
-     
-
+        element: <ProtectedRoute/>,
+        children: [
+          {
+            path: '/dashboard',
+            element: <Dashboard/>
+          },
+          {
+            path: '/dashboard/bills_payment',
+            element: <BillPayment/>
+          },
+          {
+            path: '/dashboard/transaction',
+            element: <Transaction/>
+          },
+          {
+            path: '/dashboard/identity_verification',
+            element: <IdentityVerification/>
+          },
+          {
+            path: '/dashboard/account_management',
+            element: <AccountManagement/>
+          },
+          {
+            path: '/dashboard/my_rewards',
+            element: <MyReward/>
+          },
+        ]
+      }
     ]
   }
 ]); 

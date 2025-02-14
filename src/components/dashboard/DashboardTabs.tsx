@@ -5,18 +5,18 @@ import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
+import useUserDetails from "../../stores/userStore";
 
 interface UserInfoProps {
   name: string;
-  email: string;
+  email?: string;
   lastLogin: string;
-  location: string;
   uid: string;
-  isVerified: boolean;
+  isVerified: string;
   inviteLink: string;
 }
 
-const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, location, uid, isVerified }) => {
+const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerified, email }) => {
   //clipboard copy function
   const copyToClipboard = () => {
     navigator.clipboard.writeText(uid);
@@ -24,20 +24,20 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
   };
   const openConfirmVerification = useConfirmVerificationModal();
     // Mask email function
-    const maskEmail = (email: string) => {
-      const [localPart, domain] = email.split("@");
-      const maskedLocalPart = localPart.length > 3 ? `${localPart.slice(0, 3)}***` : `${localPart.slice(0, 1)}***`;
+    // const maskEmail = (email: string) => {
+    //   const [localPart, domain] = email.split("@");
+    //   const maskedLocalPart = localPart.length > 3 ? `${localPart.slice(0, 3)}***` : `${localPart.slice(0, 1)}***`;
 
-      // Mask everything in the domain except the top-level domain
-      const [ , topLevelDomain] = domain.split(".");
-      const maskedDomain = "***." + topLevelDomain;
-      return `${maskedLocalPart}@${maskedDomain}`;
-    };
+    //   // Mask everything in the domain except the top-level domain
+    //   const [ , topLevelDomain] = domain.split(".");
+    //   const maskedDomain = "***." + topLevelDomain;
+    //   return `${maskedLocalPart}@${maskedDomain}`;
+    // };
 
     const hasOpenedRef = useRef(false);
 
     useEffect(() => {
-      if (!isVerified && !hasOpenedRef.current) {
+      if (isVerified === 'Unverified' && !hasOpenedRef.current) {
         openConfirmVerification.onOpen();
         hasOpenedRef.current = true; 
       }
@@ -46,13 +46,13 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
     <div className="flex flex-col w-full h-auto">
       
         <div>
-          {isVerified ? (
+          {isVerified === 'Verified' ? (
             <h1 className="text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {name}</h1>
           ):(
-              <h1 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {maskEmail(email)}</h1>
+              <h1 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {email}</h1>
           )}
           <p className="text-[13px] xl:text-[14px] leading-[19.5px] xl:leading-[21px] font-medium font-Inter text-textDark">
-            Last Login: {lastLogin} {location}
+            Last Login: {lastLogin}
           </p>
         </div>
      
@@ -68,7 +68,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, email, lastLogin, locatio
             </div>
         </div>
         <div className="font-Inter w-full h-auto">
-        {isVerified ? (
+        {isVerified === 'Verified' ? (
           <>
             <div className="flex flex-col">
               <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">
@@ -136,13 +136,14 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
+  const { userDetail } = useUserDetails();
+
   const user = {
     name: "Tosin Adebayor",
-    email: "Tosin@gmail.com",
-    lastLogin: "21/11/2024, 16:03",
-    location: "Lagos, Nigeria",
-    uid: "20921123",
-    isVerified: false,
+    email: userDetail?.email,
+    lastLogin: userDetail?.last_login_location || '',
+    uid: userDetail?.UID || '',
+    isVerified: userDetail?.account_status || 'Unverified',
     inviteLink: "https://olamax.io/"
   };
   
@@ -177,7 +178,6 @@ const DashboardTab: React.FC = () => {
                 name={user.name}
                 email={user.email}
                 lastLogin={user.lastLogin}
-                location={user.location}
                 uid={user.uid}
                 isVerified={user.isVerified}
                 inviteLink={user.inviteLink}
