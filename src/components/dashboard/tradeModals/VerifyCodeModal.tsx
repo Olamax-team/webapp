@@ -1,15 +1,17 @@
 import Modal from '../../ui/modal';
-import { useVerifyCodeModal, useFiatPaymentDetailsModal } from '../../../lib/utils'
+import { useVerifyCodeModal, useFiatPaymentDetailsModal, useCryptoPaymentDetailsModal } from '../../../lib/utils'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../ui/form';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../../ui/input-otp';
 import { useForm } from 'react-hook-form';
 import { verficationSchema, verficationValues } from '../../../lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import useTradeStore from '../../../stores/tradeStore';
 
 
 const VerifyCodeModal = () => {
   const { isOpen, onClose } = useVerifyCodeModal();
-  const openPaymentDetailsModal = useFiatPaymentDetailsModal();
+  const tradeData = useTradeStore();
+  const openPaymentDetailsModal = tradeData.item?.tradeType === "Buy" ? useFiatPaymentDetailsModal(): useCryptoPaymentDetailsModal();
 
   const defaultVerificationValues = {
     verificationCode: ''
