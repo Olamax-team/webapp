@@ -2,7 +2,11 @@ import React, { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import arrowIcon from '../../assets/images/arrowdown.svg';
-
+import BTC from "../../assets/images/BTC Circular.png";
+import ETH from "../../assets/images/ETH Circular.png";
+import USDT from "../../assets/images/USDT Circular.png";
+import SOL from "../../assets/images/SOL Circular.png";
+import IBEDC from "../../assets/images/IBEDC Circular.png";
 interface BillsPaymentProps {
 categories: string[]; // Categories to map for dropdown
 billProps1: string[]; // Options for billProp1 dropdown
@@ -23,8 +27,14 @@ const [amount1, setAmount1] = useState<string>("");
 const [amount2, setAmount2] = useState<string>("");
 const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
 }
+  const logoMap: Record<string, string> = {
+    BTC,
+    ETH,
+    SOL,
+    USDT,
+    IBEDC,
+  };
 
 return (
     <>
@@ -69,16 +79,16 @@ return (
                                 placeholder="0.00"
                                 className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                                 />
-                                <div className="flex items-center justify-end xl:justify-end">
+                                <div className="flex items-center justify-end xl:justify-end font-Inter">
                                 <img
-                                    src={`../../../src/assets/images/${billProp1} Circular.png`}
+                                    src={logoMap[billProp1 as keyof typeof logoMap]}
                                     alt={`${billProp1} logo`}
                                     className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                                 />
                                 <select
                                     value={billProp1}
                                     onChange={(e) => setBillProp1(e.target.value)}
-                                    className="rounded-md bg-bg px-2 py-1"
+                                    className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
                                 >
                                     {billProps1.map((bill) => (
                                     <option key={bill} value={bill}>
@@ -107,16 +117,16 @@ return (
                                     placeholder="0.00"
                                     className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                                     />
-                                    <div className="flex items-center justify-end gap-1">
+                                    <div className="flex items-center justify-end gap-1 font-Inter">
                                         <img
-                                            src={`../../../src/assets/images/${currency} Circular.png`}
+                                            src={logoMap[currency as keyof typeof logoMap]}
                                             alt={`${currency} logo`}
                                             className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                                         />
                                         <select
                                             value={currency}
                                             onChange={(e) => setCurrency(e.target.value)}
-                                            className="rounded-md bg-bg px-2 py-1"
+                                            className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
                                         >
                                             {props2currency.map((curr) => (
                                             <option key={curr} value={curr}>

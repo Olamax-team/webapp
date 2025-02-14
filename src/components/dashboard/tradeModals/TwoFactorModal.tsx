@@ -72,7 +72,7 @@ const TwoFactorModal = () => {
           <button className='w-full font-poppins h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() =>{onClose(); openVerifyCodeModal.onOpen();}}>
             Proceed
           </button>
-          <p className='text-center mt-3 font-Inter'>Didn&apos;t receive an email ? <button className='font-bold'>Request Code again</button></p>
+          <p className='text-center mt-3 font-Inter'>Forgot Password? <button className='font-bold'>Contact Support</button></p>
         </div>
       </div>
     </Modal>
