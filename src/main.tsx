@@ -14,6 +14,7 @@ import IdentityVerification from './pages/IdentityVerification';
 import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import AboutUs from './components/aboutUs/aboutUs';
 
 
 const router = createBrowserRouter([
