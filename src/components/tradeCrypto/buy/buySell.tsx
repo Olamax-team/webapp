@@ -3,6 +3,11 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import arrowIcon from '../../../assets/images/arrowdown.svg';
 import useTradeStore from "../../../stores/tradeStore";
+import BTC from "../../../assets/images/BTC Circular.png";
+import ETH from "../../../assets/images/ETH Circular.png";
+import USDT from "../../../assets/images/USDT Circular.png";
+import SOL from "../../../assets/images/SOL Circular.png";
+import NGN from "../../../assets/images/NGN Circular.png";
 
 interface BuySellProps {
   props1Currency: string[];
@@ -25,6 +30,13 @@ const BuySell: React.FC<BuySellProps> = ({
   const [amount1, setAmount1] = useState<string>("");
   const [amount2, setAmount2] = useState<string>("");
   const tradeDetails = useTradeStore();
+  const logoMap: Record<string, string> = {
+    BTC,
+    ETH,
+    SOL,
+    USDT,
+    NGN,
+  };
   const handleBuySell = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -87,14 +99,12 @@ const BuySell: React.FC<BuySellProps> = ({
                       placeholder="0.00"
                       className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                     />
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-1 font-Inter">
                     <img
-                      src={`../../../src/assets/images/${
-                        subTab === "Buy" ? prop1 : prop2
-                      } Circular.png`}
+                      src={logoMap[(subTab === "Buy" ? prop1 : prop2) as keyof typeof logoMap]}
                       alt={`${subTab === "Buy" ? prop1 : prop2} logo`}
                       className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
-                      />
+                    />
                       <select
                         value={subTab === "Buy" ? prop1 : prop2}
                         required
@@ -103,7 +113,7 @@ const BuySell: React.FC<BuySellProps> = ({
                             ? setProp1(e.target.value)
                             : setProp2(e.target.value)
                         }
-                        className="rounded-md bg-bg px-2 py-1"
+                        className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
                       >
                         {(subTab === "Buy" ? props1Currency : props2Currency).map((prop) => (
                           <option key={prop} value={prop}>
@@ -137,11 +147,9 @@ const BuySell: React.FC<BuySellProps> = ({
                       placeholder="0.00"
                       className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                     />
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-1 font-Inter">
                     <img
-                      src={`../../../src/assets/images/${
-                        subTab === "Buy" ? prop2 : prop1
-                      } Circular.png`}
+                      src={logoMap[(subTab === "Buy" ? prop2 : prop1) as keyof typeof logoMap]}
                       alt={`${subTab === "Buy" ? prop2 : prop1} logo`}
                       className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                     />
@@ -152,7 +160,7 @@ const BuySell: React.FC<BuySellProps> = ({
                           ? setProp2(e.target.value)
                           : setProp1(e.target.value)
                       }
-                      className="rounded-md bg-bg px-2 py-1"
+                      className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
                     >
                       {(subTab === "Buy" ? props2Currency : props1Currency).map((prop) => (
                         <option key={prop} value={prop}>
@@ -176,7 +184,7 @@ const BuySell: React.FC<BuySellProps> = ({
           </div>
           <div className="flex font-Inter font-[500px] xl:mt-1 gap-1 justify-center items-center text-center text-[14px] leading-[21px] xl:text-[16px] xl:leading-[26px] text-[#545454]">
             <img
-              src={`../../../src/assets/images/BTC Circular.png`}
+              src={BTC}
               alt={`BTC logo`}
               className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
             />

@@ -2,6 +2,12 @@ import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import arrowIcon from '../../assets/images/arrowdown.svg';
+import BTC from "../../assets/images/BTC Circular.png";
+import ETH from "../../assets/images/ETH Circular.png";
+import USDT from "../../assets/images/USDT Circular.png";
+import SOL from "../../assets/images/SOL Circular.png";
+import NGN from "../../assets/images/NGN Circular.png";
+import MTN from "../../assets/images/MTN Circular.png"
 
 interface airtimePaymentProps {
   className?: string; // Editable className prop
@@ -29,6 +35,14 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
     }
+    const logoMap: Record<string, string> = {
+      BTC,
+      ETH,
+      SOL,
+      USDT,
+      NGN,
+      MTN,
+    };
 
   return (
     <form  onSubmit={handleBuyClick} >
@@ -95,16 +109,16 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                           placeholder="0.00"
                           className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                           />
-                          <div className="flex items-center justify-end xl:justify-end">
+                          <div className="flex items-center justify-end xl:justify-end font-Inter">
                               <img
-                              src={`../../../src/assets/images/${airtimeProp1} Circular.png`}
+                              src={logoMap[airtimeProp1 as keyof typeof logoMap]}
                               alt={`${airtimeProp1} logo`}
                               className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                               />
                               <select
                               value={airtimeProp1}
                               onChange={(e) => setAirtimeProp1(e.target.value)}
-                              className="rounded-md bg-bg px-2 py-1"
+                              className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
                               >
                               {airtimeProps1.map((prop) => (
                               <option key={prop} value={prop}>
@@ -137,11 +151,9 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                           placeholder="0.00"
                           className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                           />
-                          <div className="flex items-center justify-end">
+                          <div className="flex items-center justify-end font-Inter">
                           <img
-                              src={`../../../src/assets/images/${
-                              subTab === "CRYPTO" ? prop2 : prop1
-                              } Circular.png`}
+                              src={logoMap[(subTab === "CRYPTO" ? prop2 : prop1) as keyof typeof logoMap]}
                               alt={`${
                               subTab === "CRYPTO" ? prop2 : prop1
                               } logo`}
@@ -154,7 +166,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                                   ? setprop2(e.target.value)
                                   : setprop1(e.target.value)
                               }
-                              className="rounded-md bg-bg px-2 py-1"
+                              className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
                           >
                               {(subTab === "CRYPTO" ? props2currency : props1).map((prop) => (
                               <option key={prop} value={prop}>
