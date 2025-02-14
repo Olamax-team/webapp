@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import FloatingTag from '../ui/floating-tag';
+import waves from "../../assets/images/waves.png"
+import wavesMobile from "../../assets/images/waves-mobile.png"
 
 const HeroSection: React.FC = () => {
   return (
@@ -80,12 +82,12 @@ const HeroSection: React.FC = () => {
           </div>
        </div>
         <img
-          src="/src/assets/images/waves.png"
+          src={waves}
           alt="waves"
           className="absolute bottom-0 hidden xl:block w-full h-[200px]"
         />
         <img
-          src="/src/assets/images/waves-mobile.png"
+          src={wavesMobile}
           alt="waves"
           className="absolute bottom-0 xl:hidden block w-full h-[222px]"
         />

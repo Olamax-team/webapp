@@ -13,8 +13,9 @@ import Transaction from './pages/Transaction';
 import IdentityVerification from './pages/IdentityVerification';
 import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
-import ProtectedRoute from './components/layout/ProtectedRoute';
+import NewsAnnouncement from './pages/NewsAnnouncement';
 import AboutUs from './components/aboutUs/aboutUs';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 
 
 const router = createBrowserRouter([
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: '/password-recovery',
         element: <PasswordRecovery/>
+      },
+      {
+        path: '/new-announcement',
+        element: <NewsAnnouncement/>
       },
       {
         element: <ProtectedRoute/>,

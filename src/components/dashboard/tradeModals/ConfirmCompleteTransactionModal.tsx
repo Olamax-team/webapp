@@ -1,15 +1,17 @@
 import Modal from '../../ui/modal'
-import { useConfirmCompleteTransaction, useVerifyCodeModal } from '../../../lib/utils'
+import { useConfirmCompleteTransaction, useTwoFactorModal, useVerifyCodeModal } from '../../../lib/utils'
+import useTradeStore from '../../../stores/tradeStore';
 
 const ConfirmCompleteTransaction = () => {
   const { isOpen, onClose } = useConfirmCompleteTransaction();
-  const verifyCodeModal = useVerifyCodeModal();
+  const tradeData = useTradeStore();
+  const verifyCodeModal = tradeData.item?.tradeType === "Buy" ? useVerifyCodeModal(): useTwoFactorModal();
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
       useCloseButton={false}
-      title='Change Password'
+      title='Complete Transaction'
       modalSize='w-[420px]'
     >
       <div className='flex font-Inter flex-col gap-10'>

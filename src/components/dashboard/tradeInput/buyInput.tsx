@@ -19,6 +19,7 @@ const BuyInput: React.FC = () => {
     };
     const handleBuyInput= (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      openConfirmCompleteTransaction.onOpen();
     }
     
     const networks = ["Bitcoin", "Ethereum", "Binance Smart Chain"]
@@ -54,6 +55,7 @@ const BuyInput: React.FC = () => {
               <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
                 <select
                 value={network}
+                required
                 onChange={(e) => setNetwork(e.target.value)}
                 className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white"
               >
@@ -68,6 +70,7 @@ const BuyInput: React.FC = () => {
               {/* Phone Number Input */}
               <input
                 type="tel"
+                required
                 placeholder="Your Phone Number"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -80,6 +83,7 @@ const BuyInput: React.FC = () => {
                 <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
                   <select
                     value={paymentMethod}
+                    required
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="w-full mt-3 bg-white font-medium xl:text-[16px] xl:leading-[24px]"
                   >
@@ -99,7 +103,7 @@ const BuyInput: React.FC = () => {
               <div className="flex items-center justify-center ">
                 <Button 
                 type="submit"
-                onClick={() => {openConfirmCompleteTransaction.onOpen();}}
+                onClick={() => {}}
                 className="xl:w-[150px] w-[96px] h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg">
                   Proceed
                 </Button>

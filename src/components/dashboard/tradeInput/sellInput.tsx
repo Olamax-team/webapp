@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from "react";
 import useTradeStore from "../../../stores/tradeStore";
 import { Info } from "lucide-react";
 import { Button } from "../../ui/button";
-import { useSellConfirmCompleteTransaction } from "../../../lib/utils";
+import { useConfirmCompleteTransaction } from "../../../lib/utils";
 
 const SellInput: React.FC = () => {
     const [accountNumber, setAccountNumber] = useState("");
@@ -10,19 +10,20 @@ const SellInput: React.FC = () => {
     const [bankName, setBankName] = useState("Your Bank");
     const [phoneNumber, setPhoneNumber] = useState("");
     
-    const openSellConfirmCompleteTransaction = useSellConfirmCompleteTransaction();
+    const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
     const bankNames = ["UBA", "GTB", "First Bank", "Kuda MFB"]
     const tradeData = useTradeStore();
 
     const handleSellInput= (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        openConfirmCompleteTransaction.onOpen();
     }
 
     var fee= 0;
     return(
       <div className="p-5 xl:py-6 flex flex-col xl:flex-row gap-10 h-auto w-full my-auto space-y-6 font-Inter">
         {/* Left Section - Transaction Form */}
-            <div className="px-5 xl:px-6 xl:w-[50%]">
+            <div className="xl:order-1 order-2 px-5 xl:px-6 xl:w-[50%]">
                 <form  onSubmit={handleSellInput}>
                     <div className="mb-8 space-y-1">
                         <h2 className="font-bold xl:text-[26px] xl:leading-[39px] font-DMSans">Provide Transaction Details</h2>
@@ -34,6 +35,7 @@ const SellInput: React.FC = () => {
                         <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
                         <select
                         value={bankName}
+                        required
                         onChange={(e) => setBankName(e.target.value)}
                         className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white"
                         >
@@ -48,7 +50,8 @@ const SellInput: React.FC = () => {
                         {/* Account Number Input */}
                         <div className="flex px-4 justify-between bg-white rounded-md">
                         <input
-                            type="text"
+                            type="number"
+                            required
                             placeholder="Bank Account Number"
                             value={accountNumber}
                             onChange={(e) => setAccountNumber(e.target.value)}
@@ -60,6 +63,7 @@ const SellInput: React.FC = () => {
                         <div className="flex px-4 justify-between bg-white rounded-md">
                         <input
                             type="text"
+                            required
                             placeholder="Account Name"
                             value={accountName}
                             onChange={(e) => setAccountName(e.target.value)}
@@ -71,6 +75,7 @@ const SellInput: React.FC = () => {
                         <div className="flex px-4 justify-between bg-white rounded-md">
                             <input
                             type="tel"
+                            required
                             placeholder="Your Phone Number"
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
@@ -89,7 +94,6 @@ const SellInput: React.FC = () => {
                         <div className="flex items-center justify-center ">
                         <Button 
                         type="submit"
-                        onClick={() => {openSellConfirmCompleteTransaction.onOpen();}}
                         className="xl:w-[150px] w-[96px] h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg">
                             Proceed
                         </Button>
@@ -99,7 +103,7 @@ const SellInput: React.FC = () => {
             </div>
 
         {/* Right Section - Transaction Summary */}
-        <div className="bg-white p-8 rounded-md w-full xl:w-[50%] h-fit font-Inter">
+        <div className="xl:order-2 order-1 bg-white p-8 rounded-md w-full xl:w-[50%] h-fit font-Inter">
           <h2 className="xl:text-[18px] xl:leading-[27px] font-bold">Transaction Summary</h2>
           <div>
             <div className="mt-4 flex items-center space-x-2">

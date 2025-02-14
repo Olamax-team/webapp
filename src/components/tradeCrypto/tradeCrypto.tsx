@@ -11,7 +11,7 @@ const TradeCrypto = () => {
   const [activeTab, setActiveTab] = useState("Buy & Sell Crypto");
   const categories = ["Electricity", "CableTV"];
   const props1 = ["NGN", "USD", "EUR", "GBP"];
-  const props2currency = ["BTC","ETH", "USDT", "SOL" ];
+  const props2currency = ["BTC","ETH", "USDT", "SOL", "(Tron TRC20)" ];
   const billProps1 = ["IBEDC","Cable"];
   const airtimeProps1 = ["MTN","Airtel", "GLO", "9Mobile"];
   const tabs = ["Buy & Sell Crypto", "Airtime & Data", "Bills & Payment"];
