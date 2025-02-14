@@ -9,11 +9,13 @@ import { documentTitle } from '../lib/utils';
 import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
+import useUserDetails from '../stores/userStore';
 
 const LoginPage = () => {
   documentTitle('Login');
 
   const navigate = useNavigate();
+  const { setUser } = useUserDetails();
 
   const defaultLoginValues = {
     email: '',
@@ -45,8 +47,17 @@ const LoginPage = () => {
     }
 
     axios.request(config).then((response) => {
-      if (response.data.status === 'success') {
-        console.log('logged in')
+      if (response.status === 200) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userDetail', JSON.stringify(response.data.data.user));
+        localStorage.setItem('isLoggedIn', JSON.stringify(true));
+        setUser(response.data.data.user, response.data.token, true);
+        navigate('/dashboard');
+      };
+
+      if (response.status === 422) {
+        console.log('error logging in!');
+        alert(response.data.message)
       }
     })
   }
