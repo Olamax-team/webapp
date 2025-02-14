@@ -1,6 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-
+import BTC from "../../assets/images/BTC Circular.png"
+import ETH from "../../assets/images/ETH Circular.png"
+import USDT from "../../assets/images/USDT Circular.png"
+import SOL from "../../assets/images/SOL Circular.png"
+import graphUp from "../../assets/images/positive-graph.png"
 // Define the type for a single crypto item
 interface Crypto {
   name: string;
@@ -32,28 +36,28 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
       ticker: "BTC",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: "../../../src/assets/images/BTC Circular.png",
+      logo: BTC,
     },
     {
       name: "Ethereum",
       ticker: "ETH",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: "../../../src/assets/images/ETH Circular.png",
+      logo: ETH,
     },
     {
       name: "Tether",
       ticker: "USDT",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: "../../../src/assets/images/USDT Circular.png",
+      logo: USDT,
     },
     {
       name: "Solana",
       ticker: "SOL",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: "../../../src/assets/images/SOL Circular.png",
+      logo: SOL,
     },
   ];
 
@@ -99,14 +103,14 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
                   >
                     {!crypto.change.startsWith("-") && (
                       <img
-                        src="../../../src/assets/images/positive-graph.png"
+                        src={graphUp}
                         alt="Upward Trend"
                         className="inline-block w-[14px] h-[14px] m-2 justify-center"
                       />
                     )}
                     {crypto.change.startsWith("-") && (
                       <img
-                        src="../../../src/assets/images/negative-graph.png"
+                        src=""
                         alt="Downward Trend"
                         className="inline-block w-[14px] h-[14px]"
                       />

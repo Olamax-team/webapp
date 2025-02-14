@@ -2,6 +2,16 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
+import BTC from "../../assets/images/BTC Circular.png"
+import ETH from "../../assets/images/ETH Circular.png"
+import USDT from "../../assets/images/USDT Circular.png"
+import SOL from "../../assets/images/SOL Circular.png"
+import news1 from "../../assets/images/news1.png"
+import news2 from "../../assets/images/news2.png"
+import news3 from "../../assets/images/news3.png"
+import graphUp from "../../assets/images/positive-graph.png"
+// import graphDown from "../../assets/images/negative-graph.png"
+import invites from "../../assets/images/invites.png"
 // Define the type for a single crypto item
 interface Crypto {
     name: string;
@@ -33,95 +43,96 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
           ticker: "BTC",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/BTC Circular.png",
+          logo: BTC,
         },
         {
           name: "Ethereum",
           ticker: "ETH",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/ETH Circular.png",
+          logo: ETH,
         },
         {
           name: "Tether",
           ticker: "USDT",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/USDT Circular.png",
+          logo: USDT,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: "../../../src/assets/images/SOL Circular.png",
+          logo: SOL,
         },
       ];
+
   // Static data for the "Latest News" section
   const news: News[] = [
     {
       id: 1,
       title: "Olamax Launches New Escrow Service",
-      imageUrl: "../../../src/assets/images/news1.png",
+      imageUrl: news1,
     },
     {
       id: 2,
       title: "Olamax Now Supports Over 20 Cryptocurrencies, Expanding Your Options",
-      imageUrl: "../../../src/assets/images/news2.png",
+      imageUrl: news2,
     },
     {
       id: 3,
       title: "Olamax Partners with Top Nigerian Banks to Streamline Crypto-to-Naira Conversions",
-      imageUrl: "../../../src/assets/images/news3.png",
+      imageUrl: news3,
     },
   ];
   const copyToClipboard = () => {
@@ -143,13 +154,13 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
         <div className="xl:col-span-5 w-full xl:w-[65%]">
           <div className="bg-white rounded-lg p-4">
             <div className="flex mb-4">
-            <IndicatorButtonGroup
-              buttons={tabs}
-              dynamicButtonClassName={dynamicButtonClassName}
-              bgClassName="bg-[#F8F9FA]"
-              indicatorColor="bg-textDark"
-              indicatorSize="w-[39px]"
-            />
+              <IndicatorButtonGroup
+                buttons={tabs}
+                dynamicButtonClassName={dynamicButtonClassName}
+                bgClassName="bg-[#F8F9FA]"
+                indicatorColor="bg-textDark"
+                indicatorSize="w-[39px]"
+              />
             </div>
             <div className={contentClassName}>
             {cryptos.map((crypto, index) => (
@@ -187,14 +198,14 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
               >
                 {!crypto.change.startsWith("-") && (
                   <img
-                    src="../../../src/assets/images/positive-graph.png"
+                    src= {graphUp}
                     alt="Upward Trend"
                     className="inline-block w-[14px] h-[14px] m-2 justify-center"
                   />
                 )}
                 {crypto.change.startsWith("-") && (
                   <img
-                    src="../../../src/assets/images/negative-graph.png"
+                    src=''
                     alt="Downward Trend"
                     className="inline-block w-[14px] h-[14px]"
                   />
@@ -219,7 +230,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
             {/* Invites section */}
             <div className="w-full h-auto mx-auto bg-white rounded-xl">
               <img      
-              src="../../../src/assets/images/invites.png"
+              src={invites}
               alt="invites photo"
               className="w-full h-auto"/>
               <div className="font-Inter w-full h-auto my-4 p-4 items-center justify-center mx-auto space-y-3">
@@ -243,7 +254,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                     <div key={item.id} className="flex items-center space-x-4">
                       <img
                           src={item.imageUrl}
-                          alt={"photo"}
+                          alt="photo"
                           className="w-auto h-auto rounded-sm object-fit"
                       />
                       <div>
