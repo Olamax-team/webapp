@@ -17,7 +17,7 @@ const NewsAnnounce = () => {
       const dynamicButtonClassName = (index: number, activeIndex: number) => {
         return index === activeIndex
           ? "text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-primary hover:text-primary"
-          : "px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-textDark";
+          : "text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-textDark";
       };
 
     const renderContent = () => {
@@ -57,7 +57,6 @@ const NewsAnnounce = () => {
                   Stay Updated with the Latest at OLAMAX EXCHANGE
                 </div> */}
             </div>
-            <div className=" bg-gray-50">
                 <div className="px-[20px] xl:px-20 flex h-[64px] bg-white w-full items-center font-Inter">
                     {tabs.map((label, index) => (
                         <Button
@@ -70,10 +69,9 @@ const NewsAnnounce = () => {
                         </Button>
                     ))}
                 </div>
-                <div className="px-[20px] xl:px-20 pt-10 pb-[20px] xl:pb-20 my-auto mx-auto">
+                <div className="px-[20px] xl:px-20 pt-0 xl:pt-10 pb-[20px] xl:pb-20 my-auto mx-auto">
                     {renderContent()}
                 </div>
-            </div>
         </section>
     );
 };

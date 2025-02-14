@@ -85,10 +85,9 @@ const News: React.FC<NewsProps> = ({
       ];
       
     return (
-        <div className="flex xl:flex-row space-y-7 mb-2 xl:mb-0">
-            <div className="flex flex-row flex-wrap mx-auto">
+        <div className="flex flex-row flex-wrap w-full mx-auto">
             {news.map((item) => (
-                <div key={item.id} className="w-full md:w-1/3 space-y-4 text-textDark p-4 rounded-lg justify-end">
+                <div key={item.id} className="w-full md:w-1/3 space-y-4 p-5 text-textDark rounded-lg justify-end">
                     <img
                         src={item.imageUrl}
                         alt="photo"
@@ -97,11 +96,10 @@ const News: React.FC<NewsProps> = ({
                     <div className="text-wrap font-Inter space-y-2">
                         <h3 className="font-bold xl:text-[18px] xl:leading-[27px]">{item.title}</h3>
                         <p className="font-normal xl:text-[16px] xl:leading-[24px]">{item.description}</p>
-                        <span className="text-textDark text-base block item-end mt-2">{item.date}</span>
+                        <span className="text-textDark text-base block item-end">{item.date}</span>
                     </div>
                 </div>
             ))}
-            </div>
         </div>
     );
 };
