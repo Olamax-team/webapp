@@ -11,7 +11,7 @@ const AboutUs = () => {
 
   
   return (
-    <section className="w-full h-auto p-2 lg:p-10 flex items-center justify-center flex-col text-center   ">
+    <section className="w-full h-auto p-4 lg:p-10 flex items-center justify-center flex-col text-center   ">
         <div className="lg:w-[60%] w-full text-center ">
             <h2 className="font-Inter font-bold text-[18px] leading-[27px] text-center text-[#121826] xl:font-DMSans xl:font-bold xl:text-[32px] xl:leading-[48px] ">We see no reason why buying & selling crypto should be so hard</h2>
             <p className="mt-5 font-Inter font-medium  text-[14px] text-center  text-[#121826] leading-[21px] xl:font-Inter xl:font-medium xl:leading-[27px] xl:text-[18px]"> 
@@ -26,9 +26,9 @@ const AboutUs = () => {
 
         <div>
           <div className=" lg:flex  justify-between  w-full h-auto  mt-10 gap-10 ">
-                <h2 className="xl:w-[50%] w-full font-DMSans font-bold text-[18px] leading-[27px] xl:text-left xl:px-5 text-center ">At <span className="text-[#039AE4] font-DMSans font-bold text-[18px] leading-[27px] items-center ">OLAMAX EXCHANGE</span>, we are the place where people reach their goals with cryptocurrencies and blockchain technology. 
+                <h2 className="xl:w-[50%]  w-full font-DMSans font-bold text-[18px] leading-[27px] xl:text-left  text-center ">At <span className="text-[#039AE4] font-DMSans font-bold text-[18px] leading-[27px] items-center ">OLAMAX EXCHANGE</span>, we are the place where people reach their goals with cryptocurrencies and blockchain technology. 
                 We do that by offering a full scope of secure solutions to buy, sell, and earn digital assets. </h2>
-                <p className="xl:w-[50%] w-full mt-10 xl:mt-0 font-Inter font-medium text-[14px] xl:text-left leading-[21px] xl:px-5 text-center ">Olamax.io is a product of Olamax associate  incorporated in Nigeria. We provide Cryptocurrency to Fiat exchange services for Bitcoin, Ethereum, Doge, Steem and Sbd to NAIRA. Our exchange provides you a marketplace
+                <p className="xl:w-[50%]  w-full mt-10 xl:mt-0 font-Inter font-medium text-[14px] xl:text-left leading-[21px] text-center ">Olamax.io is a product of Olamax associate  incorporated in Nigeria. We provide Cryptocurrency to Fiat exchange services for Bitcoin, Ethereum, Doge, Steem and Sbd to NAIRA. Our exchange provides you a marketplace
                   where you can buy and sell Cryptocurrencies easily and safely with notable simple UI, friendly online customer support 24/7 and lowest 
                   fees at the best rate you can't find anywhere else.
                   Our team comprises of professionals with extensive experience in financial products, E-currencies, 
@@ -52,7 +52,6 @@ const AboutUs = () => {
             </div>
         </div>
 
-        {/* <div> <OurValues/> </div>  */}
         <div> <OurValues/> </div>
     </section>
   )
