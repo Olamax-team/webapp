@@ -14,6 +14,8 @@ import IdentityVerification from './pages/IdentityVerification';
 import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
 import NewsAnnouncement from './pages/NewsAnnouncement';
+import AboutUs from './components/aboutUs/aboutUs';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 
 
 const router = createBrowserRouter([
@@ -41,34 +43,38 @@ const router = createBrowserRouter([
         element: <PasswordRecovery/>
       },
       {
-        path: '/dashboard',
-        element: <Dashboard/>
-      },
-      {
-        path: '/dashboard/bills_payment',
-        element: <BillPayment/>
-      },
-      {
-        path: '/dashboard/transaction',
-        element: <Transaction/>
-      },
-      {
-        path: '/dashboard/identity_verification',
-        element: <IdentityVerification/>
-      },
-      {
-        path: '/dashboard/account_management',
-        element: <AccountManagement/>
-      },
-      {
-        path: '/dashboard/my_rewards',
-        element: <MyReward/>
-      },
-      {
-        path: '/new-announcement',
-        element: <NewsAnnouncement/>
-      },
-
+        element: <ProtectedRoute/>,
+        children: [
+          {
+            path: '/dashboard',
+            element: <Dashboard/>
+          },
+          {
+            path: '/dashboard/bills_payment',
+            element: <BillPayment/>
+          },
+          {
+            path: '/dashboard/transaction',
+            element: <Transaction/>
+          },
+          {
+            path: '/dashboard/identity_verification',
+            element: <IdentityVerification/>
+          },
+          {
+            path: '/dashboard/account_management',
+            element: <AccountManagement/>
+          },
+          {
+            path: '/dashboard/my_rewards',
+            element: <MyReward/>
+          },
+          {
+            path: '/new-announcement',
+            element: <NewsAnnouncement/>
+          },
+        ]
+      }
     ]
   }
 ]); 
