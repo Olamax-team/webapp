@@ -43,6 +43,10 @@ const router = createBrowserRouter([
         element: <PasswordRecovery/>
       },
       {
+        path: '/new-announcement',
+        element: <NewsAnnouncement/>
+      },
+      {
         element: <ProtectedRoute/>,
         children: [
           {
@@ -68,10 +72,6 @@ const router = createBrowserRouter([
           {
             path: '/dashboard/my_rewards',
             element: <MyReward/>
-          },
-          {
-            path: '/new-announcement',
-            element: <NewsAnnouncement/>
           },
         ]
       }
