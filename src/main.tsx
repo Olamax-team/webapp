@@ -13,6 +13,7 @@ import Transaction from './pages/Transaction';
 import IdentityVerification from './pages/IdentityVerification';
 import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
+import NewsAnnouncement from './pages/NewsAnnouncement';
 
 
 const router = createBrowserRouter([
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: '/dashboard/my_rewards',
         element: <MyReward/>
+      },
+      {
+        path: '/new-announcement',
+        element: <NewsAnnouncement/>
       },
      
 
