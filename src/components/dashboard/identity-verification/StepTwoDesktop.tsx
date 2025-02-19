@@ -6,6 +6,7 @@ import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
+import { useLocalStorage } from '../../../hooks/use-localstorage';
 
 const StepTwoDesktop = () => {
   const [documentType, setDocumentType] = React.useState('');
@@ -21,6 +22,8 @@ const StepTwoDesktop = () => {
   const formData = new FormData();
 
   const { toast } = useToast();
+  const { getItem } = useLocalStorage();
+  const token = getItem('token');
 
   const DocumentSelect = () => {
 
@@ -102,7 +105,7 @@ const StepTwoDesktop = () => {
     if (documentType === 'bvn') {
 
       const kycData = {
-        method: 'bvn',
+        method: documentType == 'bvn' ? 'bvn' : 'nin',
         identityNumber: bvn
       };
 
@@ -110,7 +113,7 @@ const StepTwoDesktop = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/start-kyc-verification',
-        header: {'Content-Type':'application/json'},
+        header: {'Authorization': `Bearer ${token}`},
         data: kycData,
       };
 
@@ -225,7 +228,7 @@ const StepTwoDesktop = () => {
           {documentType && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Identity Type</label>}
           <DocumentSelect/>
         </div>
-        { documentType === 'bvn' ?
+        { documentType === 'bvn' || documentType === 'nin' ?
           <React.Fragment>
             <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud.</h2>
             <AuthInput
@@ -293,10 +296,10 @@ const StepTwoDesktop = () => {
             </div>
           </React.Fragment>
         }
-        { documentType === 'bvn' ?
+        { documentType === 'bvn' || documentType === 'nin' ?
           <div className='lg:p-2 lg:mt-2 mt-5'>
             <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? 'Verifying BVN...' : 'Proceed'}
+            {isLoading ? `${documentType === 'bvn' ? 'Verifying BVN...' : 'Verifying NIN...'}` : 'Proceed'}
               {isLoading && <Loader2 className='animate-spin'/>}
             </button>
           </div> :
