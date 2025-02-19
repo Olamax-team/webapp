@@ -3,7 +3,9 @@ import { useUploadDocumentModal } from '../../../lib/utils'
 import UploadModal from '../../ui/upload-modal'
 import SideInformation from './SideInformation'
 import { ChevronDown, ChevronUp, X } from 'lucide-react'
-import MultiStepForm from './MultiStepForm'
+import StepOne from './StepOne'
+import StepTwoDesktop from './StepTwoDesktop'
+import StepTwoMobile from './StepTwoMobile'
 
 const headers = ['Personal Information', 'Documents Identification ', 'Liveness Check']
 
@@ -23,16 +25,9 @@ const DocumentUploadModal = () => {
     }, 300)
   }, [onClose]);
 
-  
-  return (
-    <UploadModal 
-      isOpen={isOpen}
-      modalSize='lg:max-w-[1000px] w-full max-w-[520px]'
-      modalStyle='rounded-md'
-      setShowModal={setShowModal}
-      showModal={showModal}
-    >
-      <div className="flex overflow-hidden flex-col lg:flex-row">
+  const Desktop = () => {
+    return (
+      <React.Fragment>
         <div className="hidden lg:block lg:w-[32%] bg-[#121826] text-white p-6 lg:p-7">
           <SideInformation open={open} currentStep={currentStep}/>
         </div>
@@ -52,8 +47,18 @@ const DocumentUploadModal = () => {
               <X className='lg:size-6 size-5'/>
             </button>
           </div>
-          <MultiStepForm currentStep={currentStep} setCurrentStep={setCurrentStep}/>
+          <div className='mt-5'>
+            { currentStep === 0 && <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
+            { currentStep === 1 && <StepTwoDesktop/> }
+          </div>
         </div>
+      </React.Fragment>
+    )
+  };
+
+  const Mobile = () => {
+    return (
+      <React.Fragment>
         { open ? 
           <React.Fragment>
             <div className="lg:hidden w-full bg-[#121826] text-white p-6 lg:p-7">
@@ -72,22 +77,43 @@ const DocumentUploadModal = () => {
                 </button>
               </div>
             </div>
-          </React.Fragment>:
-          <div className='lg:hidden lg:w-full p-5 lg:p-7'>
-            <div className="flex items-center">
-              <div className='flex-1 flex items-center gap-4'>
-                <div className="border border-black size-6 rounded-full flex items-center justify-center">
-                  <div className="rounded-full size-4 bg-black"/>
+          </React.Fragment> :
+          <React.Fragment>
+            <div className='lg:hidden lg:w-full p-5 lg:p-7'>
+              <div className="flex items-center">
+                <div className='flex-1 flex items-center gap-4'>
+                  <div className="border border-black size-6 rounded-full flex items-center justify-center">
+                    <div className="rounded-full size-4 bg-black"/>
+                  </div>
+                  <h2 className='font-bold lg:text-lg'>{headers[currentStep]}</h2>
                 </div>
-                <h2 className='font-bold lg:text-lg'>{headers[currentStep]}</h2>
+                <button className='size-8 lg:size-9 rounded-full flex items-center justify-center bg-gray-200 flex-none' onClick={closeModal}>
+                  <X className='lg:size-6 size-5'/>
+                </button>
               </div>
-              <button className='size-8 lg:size-9 rounded-full flex items-center justify-center bg-gray-200 flex-none' onClick={closeModal}>
-                <X className='lg:size-6 size-5'/>
-              </button>
+              <div className='mt-5'>
+                { currentStep === 0 && <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
+                { currentStep === 1 && <StepTwoMobile/> }
+              </div>
             </div>
-            <MultiStepForm currentStep={currentStep} setCurrentStep={setCurrentStep}/>
-          </div>
+          </React.Fragment>
         }
+      </React.Fragment>
+    )
+  };
+
+  
+  return (
+    <UploadModal 
+      isOpen={isOpen}
+      modalSize='lg:max-w-[1000px] w-full max-w-[520px]'
+      modalStyle='rounded-md'
+      setShowModal={setShowModal}
+      showModal={showModal}
+    >
+      <div className="flex overflow-hidden flex-col lg:flex-row">
+        <Desktop/>
+        <Mobile/>
       </div>
     </UploadModal>
   )
