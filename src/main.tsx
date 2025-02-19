@@ -16,6 +16,7 @@ import MyReward from './pages/MyReward';
 import NewsAnnouncement from './pages/NewsAnnouncement';
 import AboutUs from './components/aboutUs/aboutUs';
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import OlamaxFoundationPage from './pages/OlamaxFoundationPage';
 
 
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: '/new-announcement',
         element: <NewsAnnouncement/>
+      },
+      {
+        path: '/olamax-foundation',
+        element: <OlamaxFoundationPage/>
       },
       {
         element: <ProtectedRoute/>,
