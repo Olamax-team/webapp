@@ -38,9 +38,9 @@ const Announcement =() => {
         },
       ];
     return (
-        <div className="flex flex-col xl:flex-row gap-4 mx-auto my-7 xl:my-auto">
+        <div className="w-full xl:relative flex flex-col xl:flex-row flex-wrap gap-4 mx-auto my-7 xl:my-auto">
             {announcement.map((item) => (
-                <div key={item.id} className="w-full md:w-1/3 text-textDark p-3 bg-white rounded-lg font-Inter space-y-6">
+                <div key={item.id} className="w-full text-textDark p-3 bg-white rounded-lg font-Inter space-y-6">
                     <h3 className="xl:text-sm font-normal">{item.text} FOR MORE INFO, <a href={item.link} className="text-primary underline cursor-pointer">CLICK HERE</a></h3>
                     <span className="flex gap-3 p-4 pl-0 items-center">
                         <img
