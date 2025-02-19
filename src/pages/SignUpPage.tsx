@@ -11,6 +11,8 @@ import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
+import { useToast } from '../hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 const SignUpPage = () => {
   documentTitle('Registration');
@@ -18,8 +20,11 @@ const SignUpPage = () => {
   const [isSubmit, setIsSubmit] = React.useState(false);
 
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const SignUpForm = () => {
+    const [loading, setLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
     
     const defaultSignUpValues = {
       email: '',
@@ -51,12 +56,38 @@ const SignUpPage = () => {
         url: 'https://api.olamax.io/api/register',
         header: {'Content-Type':'application/json'},
         data: registerValues,
-      }
+      };
 
-      axios.request(config).then((response) => {
+      setLoading(true);
+      axios.request(config)
+      .then((response) => {
         if (response.data.status === 'success') {
+          toast({
+            title: 'Success',
+            description: response.data.message,
+             variant: 'success'
+          });
+          setLoading(false);
           setIsSubmit(true);
         }
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          toast({
+            title: 'Error',
+            description: error.response?.data.message,
+            variant: 'destructive'
+          });
+          setLoading(false);
+          console.error("Error fetching data:", error.response?.data || error.message);        
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Something went wrong!! Try again later',
+            variant: 'destructive'
+          });
+          setLoading(false);
+          console.error("Unexpected error:", error);
+        };
       })
     };
 
@@ -64,10 +95,41 @@ const SignUpPage = () => {
       const config = {
         method: 'get',
         url: 'https://api.olamax.io/auth/google',
-      }
-      axios.request(config).then((response) => console.log(response))
-    };
+      };
 
+      setIsLoading(true);
+
+      axios.request(config)
+      .then((response) => {
+        console.log(response);
+        if (response.data.status === 'success') {
+          toast({
+            title: 'Success',
+            description: 'Registration was successful',
+             variant: 'success'
+          });
+          setIsLoading(false);
+        }
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          toast({
+            title: 'Error',
+            description: error.response?.data.message,
+            variant: 'destructive'
+          });
+          setIsLoading(false);
+          console.error("Error fetching data:", error.response?.data || error.message);        
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Something went wrong, try again later',
+            variant: 'destructive'
+          });
+          setIsLoading(false);
+          console.error("Unexpected error:", error);
+        };
+      })
+    };
 
     return (
       <Form {...form}>
@@ -90,7 +152,7 @@ const SignUpPage = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <AuthInput {...field} inputValue={watchedEmail} label='Email Address' type='email'/>
+                  <AuthInput {...field} inputValue={watchedEmail} label='Email Address' type='email' name='email' id='email'/>
                 </FormControl>
                 <FormMessage/>
               </FormItem>
@@ -102,7 +164,7 @@ const SignUpPage = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <AuthInput {...field} inputValue={watchedPassword} label='Create Password' type='password'/>
+                  <AuthInput {...field} inputValue={watchedPassword} label='Create Password' type='password' name='password' id='password'/>
                 </FormControl>
                 <FormMessage/>
               </FormItem>
@@ -114,22 +176,27 @@ const SignUpPage = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <AuthInput {...field} inputValue={watchedReferralCode ? watchedReferralCode : ''} label='Referral Code (Optional)' type='text'/>
+                  <AuthInput {...field} inputValue={watchedReferralCode ? watchedReferralCode : ''} label='Referral Code (Optional)' type='text' name='referralCode' id='referralCode'/>
                 </FormControl>
                 <FormMessage/>
               </FormItem>
             )}
           />
           <p className='w-full font-Inter'>By creating an account you agree to the <span className='underline text-primary'>Privacy Policy</span> and <span className='underline text-primary'>Terms of Use</span></p>
-          <button className='w-full h-[70px] rounded-md bg-primary text-white mt-8' type='submit'>Create Account</button>
+          <button className='font-semibold w-full h-[70px] rounded-md bg-primary text-white mt-8 flex items-center gap-3 justify-center disabled:bg-primary/50' type='submit' disabled={loading}>
+            {loading ? 'Creating account...' : 'Create Account'}
+            {loading && <Loader2 className='animate-spin'/>}
+          </button>
           <div className='lines'>
             <h2>or</h2>
           </div>
-          <button type='button' className='w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] gap-3' onClick={continueWithGoogle}>
-            <h2 className='font-semibold'>Continue with Google</h2>
-            <div className='w-[24px] h-[18px]'>
-              <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
-            </div>
+          <button type='button' className='font-semibold w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] gap-3 disabled:bg-gray-300' onClick={continueWithGoogle} disabled={isLoading}>
+            { isLoading ? 'Creating account...' : 'Continue with Google' }
+            {isLoading ? <Loader2 className='animate-spin'/> :
+              <div className='w-[24px] h-[18px]'>
+                <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
+              </div>
+            }
           </button>
         </form> 
       </Form>
@@ -137,6 +204,7 @@ const SignUpPage = () => {
   };
 
   const VerificationForm = () => {
+    const [isLoading, setIsLoading] = React.useState(false);
 
     const { onOpen } = useWhatNextPasswordModal();
     
@@ -164,12 +232,22 @@ const SignUpPage = () => {
         data: verifyValues,
       };
 
+      setIsLoading(true);
       axios.request(config).then((response) => {
-        if (response.data.status === 'success') {
+        if (response.status === 200) {
+          setIsLoading(false);
           onOpen();
-          navigate('/login-in', { replace: true });
+          navigate('/log-in', { replace: true });
         }
-      });
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          setIsLoading(false);
+          console.error("Error fetching data:", error.response?.data || error.message);        
+        } else {
+          setIsLoading(false);
+          console.error("Unexpected error:", error);
+        };
+      })
     };
 
     return (
@@ -208,7 +286,10 @@ const SignUpPage = () => {
               </FormItem>
             )}
           />
-          <button className='w-full h-[70px] rounded-md bg-primary text-white mt-8' type='submit'>Proceed</button>
+          <button className='w-full h-[70px] rounded-md bg-primary text-white mt-8 flex items-center gap-3 justify-center disabled:bg-primary/50' type='submit' disabled={isLoading}>
+            {isLoading ? 'Proceeding...' : 'Proceed'}
+            {isLoading && <Loader2 className='animate-spin'/>}
+          </button>
           <p className='w-full font-Inter'>Didn&apos;t receive an email ? <span className='font-semibold'>Request Code again</span></p>
         </form> 
       </Form>

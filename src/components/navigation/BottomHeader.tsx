@@ -8,6 +8,8 @@ import ImageAvatar from '../ui/image-avatar';
 import olamaxLogo from '../../assets/images/olamax_logo_2.png'
 import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
 import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
+import useUserDetails from '../../stores/userStore';
+import { useLocalStorage } from '../../hooks/use-localstorage';
 
 type menuItemProps = {
   image: string;
@@ -23,7 +25,6 @@ type dropDownMenuProps = {
 };
 
 type bottomProps = {
-  userLoggedIn: boolean;
   notifications: boolean;
 }
 
@@ -39,12 +40,25 @@ type notificationCardProps = {
 }
 
 
-const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
+const BottomHeader = ({notifications}:bottomProps) => {
+
   const [openTrade, setOpenTrade] = React.useState(false);
   const [openSupport, setOpenSupport] = React.useState(false);
   const [openMore, setOpenMore] = React.useState(false);
   const [openMobile, setOpenMobile] = React.useState(false);
   const [openNotification, setOpenNotification] = React.useState(false);
+
+  const { user, setUser } = useUserDetails();
+
+    const { getItem } = useLocalStorage();
+  const storedUser = getItem('user');
+  const storedToken = getItem('token');
+
+  React.useEffect(() => {
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser), storedToken)
+    }
+  }, [storedUser, storedToken]);
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -89,59 +103,17 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
     window.addEventListener('scroll', toggleNavbarState)
   }, [toggleNavbarState]);
 
-
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const handleClickOutsideTrade = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpenTrade(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutsideTrade);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideTrade);
-    };
-  }, []);
-
-  React.useEffect(() => {
-    const handleClickOutsideSupport = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpenSupport(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutsideSupport);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideSupport);
-    };
-  }, []);
-
-  React.useEffect(() => {
-    const handleClickOutsideMore = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpenMore(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutsideMore);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideMore);
-    };
-  }, []);
-
 // single navbar menu item
   const MenuItem = ({image, title, description, path}:menuItemProps) => {
     return (
-      <Link to={path} className='w-[320px] h-[80px] rounded-md p-[11px] hover:bg-[#0073AD1A]' onClick={closeMenu}>
-        <div className="h-full w-[272px] flex gap-6">
+      <Link to={path} className='lg:w-[320px] lg:h-[80px] rounded-md p-[11px] hover:bg-[#0073AD1A] w-fit' onClick={closeMenu}>
+        <div className="lg:h-full lg:w-[272px] w-[230px] flex lg:gap-6 gap-4 items-center lg:items-stretch">
           <div className="size-[32px] flex-none">
             <img src={image} alt='icon' className='object-cover'/>
           </div>
-          <div className="h-full ">
+          <div className="lg:h-full h-auto">
             <h2 className='font-semibold text-[14px] leading-[21px] '>{title}</h2>
-            <p className='text-[12px] leading-[18px] font-light'>{description}</p>
+            <p className='text-[12px] leading-[18px] font-light hidden lg:block'>{description}</p>
           </div>
         </div>
       </Link>
@@ -151,7 +123,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
   // full drop down menu that will hold the single values
   const DropDownMenu = ({menuList, style, isOpen}:dropDownMenuProps) => {
     return (
-      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col gap-3 shadow-lg absolute',style, isOpen ? 'flex': 'hidden')} ref={ref}>
+      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col gap-3 shadow-lg absolute',style, isOpen ? 'flex': 'hidden')}>
         {menuList.map((item:menuItemProps) => (
           <MenuItem key={item.title} {...item}/>
         ))}
@@ -162,7 +134,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
   // full drop down for menu list in grid
   const BigDropDownMenu = ({menuList, style, isOpen}:dropDownMenuProps) => {
     return (
-      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col xl:grid-cols-2 gap-3 shadow-lg absolute xl:min-w-[676px]',style, isOpen ? 'flex xl:grid': 'hidden')} ref={ref}>
+      <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col xl:grid-cols-2 gap-3 shadow-lg absolute xl:min-w-[676px]',style, isOpen ? 'flex xl:grid': 'hidden')}>
         {menuList.map((item:menuItemProps) => (
           <MenuItem key={item.title} {...item}/>
         ))}
@@ -181,7 +153,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
     } else {
       return <HiGift className='size-[16px] lg:size-[20px]'/>
     }
-  }
+  };
 
   // for each notification item
   const NotificationCard = ({date, notifications}:notificationCardProps) => {
@@ -226,8 +198,10 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
 
         {/* other links for desktop */}
         <ul className='hidden xl:flex items-center gap-8 cursor-pointer h-full'>
-          <li className='flex items-center gap-2 h-full relative group' onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
-            <span className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')}>Trade Crypto</span>
+          <li className='flex items-center gap-2 h-full relative group'>
+            <button className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')} onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+              Trade Crypto
+            </button>
             <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
             <DropDownMenu 
               menuList={tradeCryptoList}
@@ -242,7 +216,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
             <Link to={'/escrow-services'}>OTC Desk</Link>
           </li>
           <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenSupport(!openSupport); setOpenMore(false); setOpenTrade(false);}}>
-          <span className={cn('group-hover:text-primary', openSupport ? 'text-primary' : '')}>Support</span>
+            <span className={cn('group-hover:text-primary', openSupport ? 'text-primary' : '')}>Support</span>
             <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openSupport ? 'text-primary rotate-180': '')}/>
             <DropDownMenu 
               menuList={supportList}
@@ -251,8 +225,8 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
             />
           </li>
           <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenMore(!openMore); setOpenTrade(false); setOpenSupport(false);}}>
-          <span className={cn('group-hover:text-primary', openMore ? 'text-primary' : '')}>More</span>
-          <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openMore ? 'text-primary rotate-180': '')}/>
+            <span className={cn('group-hover:text-primary', openMore ? 'text-primary' : '')}>More</span>
+            <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openMore ? 'text-primary rotate-180': '')}/>
             <BigDropDownMenu 
               menuList={moreList}
               style='-left-[450px] top-[108px]'
@@ -277,7 +251,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
                   <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
                   <DropDownMenu 
                     menuList={tradeCryptoList}
-                    style='-left-3 top-[30px]'
+                    style='-left-3 lg:top-[30px] top-10'
                     isOpen={openTrade}
                   />
                 </li>
@@ -292,7 +266,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
                   <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openSupport ? 'text-primary rotate-180': '')}/>
                   <DropDownMenu 
                     menuList={supportList}
-                    style='-left-3 top-[30px]'
+                    style='-left-3 lg:top-[30px] top-10'
                     isOpen={openSupport}
                   />
                 </li>
@@ -301,7 +275,7 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
                   <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openMore ? 'text-primary rotate-180': '')}/>
                   <BigDropDownMenu 
                     menuList={moreList}
-                    style='-left-3 -top-[100px]'
+                    style='-left-3 lg:-top-[100px] top-10'
                     isOpen={openMore}
                   />
                 </li>
@@ -328,10 +302,12 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
         }
 
         {/* if user is logged in he will see either his notifications and profile picture else login and sign in */}
-        { userLoggedIn ? 
+        { user ? 
           (
             <div className='flex items-center gap-4'>
-              <span className='text-primary hidden md:block'>My Account</span>
+              <Link to={'/dashboard'}>
+                <span className='text-primary text-sm md:text-base'>My Account</span>
+              </Link>
               <button className='size-[32px] md:size-[40px] bg-bg rounded-full flex items-center justify-center' onClick={() =>setOpenNotification(!openNotification)}>
                 <div className='size-[20px] flex items-center justify-center relative'>
                   <Bell className='size-4 md:size-7'/>
@@ -357,4 +333,4 @@ const BottomHeader = ({userLoggedIn, notifications}:bottomProps) => {
   )
 }
 
-export default BottomHeader
+export default BottomHeader;

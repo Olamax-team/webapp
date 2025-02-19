@@ -1,32 +1,32 @@
 import React from 'react'
 import {  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { cn } from '../../../lib/utils';
-import { Paperclip, X } from 'lucide-react';
+import { cn, useUploadDocumentModal } from '../../../lib/utils';
+import { Loader2, Paperclip, X } from 'lucide-react';
 import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
+import { useToast } from '../../../hooks/use-toast';
+import axios from 'axios';
 
-
-const StepTwo = () => {
+const StepTwoDesktop = () => {
   const [documentType, setDocumentType] = React.useState('');
-  const [formdata, setFormdata] = React.useState<any[]>([]);
   const [frontImage, setFrontImage] = React.useState<File | null>(null);
   const [backImage, setBackImage] = React.useState<File | null>(null);
   const [holdingImage, setHoldingImage] = React.useState<File | null>(null);
-  const [bvn, setBvn] = React.useState('')
+  const [bvn, setBvn] = React.useState('');
+
+  const { onClose } = useUploadDocumentModal();
+
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const formData = new FormData();
+
+  const { toast } = useToast();
 
   const DocumentSelect = () => {
 
     const handleDocumentSelect = (value:string) => {
       setDocumentType(value);
-
-      const documentData = {
-        key: "method",
-        value: value,
-        type: "text"
-      };
-
-      setFormdata((prevData) => [...prevData, documentData])
-    }
+    };
 
     return (
       <Select onValueChange={(value) => handleDocumentSelect(value)} defaultValue={documentType}>
@@ -50,36 +50,12 @@ const StepTwo = () => {
 
     if (file) { 
       if (key === 'front') {
-        setFrontImage(file)
+        setFrontImage(file);
       } else if (key === 'back') {
-        setBackImage(file)
+        setBackImage(file);
       } else {
         setHoldingImage(file);
-      }
-      
-      
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        const imageData = {
-          key: key,
-          src: reader.result as string,
-          type: 'file'
-        };
-
-        setFormdata((prevData) => {
-          const existingIndex = prevData.findIndex(item => item.key === key);
-
-          if (existingIndex !== -1) {
-            const newData = [...prevData];
-            newData[existingIndex] = imageData;
-            return newData
-          } else {
-            return [...prevData, imageData]
-          }
-        });
-      };
-      reader.readAsDataURL(file);
+      } 
     }
   };
 
@@ -100,42 +76,166 @@ const StepTwo = () => {
   const cancelImage = ( type:string) => {
 
     if (type === 'front') {
-      const newData = formdata.filter((item) => item.key !== type);
       setFrontImage(null);
-      setFormdata(newData);
     } else if (type === 'back') {
-      setBackImage(null)
+      setBackImage(null);
     } else {
-      setHoldingImage(null)
+      setHoldingImage(null);
     }
   };
 
-  console.log(formdata);
-  console.log('frontImage:', frontImage);
-  console.log('backImage:', backImage);
-  console.log('holdingImage:', holdingImage);
-  console.log(formatImageSize(frontImage?.size));
+  const isNumeric = (str:string) => {
+    if (typeof str !== 'string' || str.length === 0) {
+      return false;
+    }
+    for (let i = 0; i < str.length; i++) {
+      const charCode = str.charCodeAt(i);
+      if (charCode === 32) continue;
+      if (isNaN(Number(str[i])) || !Number.isFinite(Number(str[i]))) {
+        return false;
+      }
+    }
+    return true;
+  }
 
+  const handleSubmit = () => {
+    if (documentType === 'bvn') {
+
+      const kycData = {
+        method: 'bvn',
+        identityNumber: bvn
+      };
+
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/start-kyc-verification',
+        header: {'Content-Type':'application/json'},
+        data: kycData,
+      };
+
+      if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn)) {
+        toast({
+          title: 'Error',
+          description: 'Invalid BVN number!!!',
+          variant: 'destructive'
+        });
+        return;
+      } else {
+        setIsLoading(true);
+        axios.request(config)
+        .then((response) => {
+          if (response.status === 200) {
+            toast({
+              title: 'Success',
+              description: response.data.message,
+              variant: 'success'
+            });
+            setIsLoading(false);
+            onClose();
+          };
+        }).catch((error) => {
+          if (axios.isAxiosError(error)) {
+            toast({
+              title: 'Error',
+              description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+              variant: 'destructive'
+            });
+            setIsLoading(false);
+            console.error("Error fetching data message:", error.response?.data.message || error.message);        
+          } else {
+            toast({
+              title: 'Error',
+              description: 'Something went wrong!! Try again later',
+              variant: 'destructive'
+            });
+            setIsLoading(false);
+            console.error("Unexpected error:", error);
+          };
+        });
+      }
+    } else {
+
+      formData.append('method', documentType);
+      if (frontImage) {
+        formData.append('front', frontImage, frontImage.name)
+      };
+      if (backImage) {
+        formData.append('back', backImage, backImage.name)
+      };
+      if (holdingImage) {
+        formData.append('holding', holdingImage, holdingImage.name)
+      };
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/upload-document',
+        header: {'Content-Type':'multipart/form-data'},
+        data: formData,
+      };
+
+      if (documentType === '' || backImage === null || frontImage === null || holdingImage === null) {
+        toast({
+          title: 'Error',
+          description: 'All fields are required!!!',
+          variant: 'destructive'
+        });
+        return;
+      } else {
+        setIsLoading(true);
+        axios.request(config)
+        .then((response) => {
+          if (response.status === 200) {
+            toast({
+              title: 'Success',
+              description: response.data.message,
+              variant: 'success'
+            });
+            setIsLoading(false);
+            onClose();
+          };
+        }).catch((error) => {
+          if (axios.isAxiosError(error)) {
+            toast({
+              title: 'Error',
+              description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+              variant: 'destructive'
+            });
+            setIsLoading(false);
+            console.error("Error fetching data message:", error.response?.data.message || error.message);        
+          } else {
+            toast({
+              title: 'Error',
+              description: 'Something went wrong!! Try again later',
+              variant: 'destructive'
+            });
+            setIsLoading(false);
+            console.error("Unexpected error:", error);
+          };
+        });
+      };
+    };
+  };
 
   return (
-    <div className='lg:w-[75%] w-full'>
+    <div className='lg:w-75% hidden lg:block'>
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Select Document Type</h2>
       <div className="mt-3 flex flex-col gap-3">
         <div className="w-full lg:h-[60px] h-[48px] relative mb-2">
           {documentType && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Identity Type</label>}
           <DocumentSelect/>
         </div>
-        {documentType === 'bvn' ?
-        <React.Fragment>
-          <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud.</h2>
-          <AuthInput
-            inputValue={bvn}
-            onChange={(e) => setBvn(e.target.value)} 
-            label='BVN'
-            inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
-          />
-        </React.Fragment>
-         : 
+        { documentType === 'bvn' ?
+          <React.Fragment>
+            <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud.</h2>
+            <AuthInput
+              inputValue={bvn}
+              onChange={(e) => setBvn(e.target.value)} 
+              label='BVN'
+              inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+            />
+          </React.Fragment>
+        : 
           <React.Fragment>
             <div className='flex flex-col gap-2'>
               <h2 className='text-sm'>Document Front Side</h2>
@@ -181,7 +281,7 @@ const StepTwo = () => {
                   <X className='size-6 absolute right-4 top-1/2 -translate-y-1/2 text-red-500' onClick={() =>cancelImage('holding')}/> : 
                   <Paperclip className='size-6 absolute right-4 top-1/2 -translate-y-1/2'/>
                 }
-                {holdingImage ?
+                { holdingImage ?
                   <div className='flex flex-col'>
                     <span className='text-sm line-clamp-1'>{holdingImage.name}</span>
                     <span className='text-sm'>{formatImageSize(holdingImage.size)}</span>
@@ -193,12 +293,23 @@ const StepTwo = () => {
             </div>
           </React.Fragment>
         }
-        <div className='lg:p-2 lg:mt-2 mt-5'>
-          <button className='py-2 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px]'>Proceed</button>
-        </div>
+        { documentType === 'bvn' ?
+          <div className='lg:p-2 lg:mt-2 mt-5'>
+            <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
+              {isLoading ? 'Verifying BVN...' : 'Proceed'}
+              {isLoading && <Loader2 className='animate-spin'/>}
+            </button>
+          </div> :
+          <div className='lg:p-2 lg:mt-2 mt-5'>
+            <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
+              {isLoading ? 'Uploading documents...' : 'Proceed'}
+              {isLoading && <Loader2 className='animate-spin'/>}
+            </button>
+          </div>
+        }
       </div>
     </div>
   )
 }
 
-export default StepTwo
+export default StepTwoDesktop
