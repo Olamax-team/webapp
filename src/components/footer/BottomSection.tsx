@@ -64,17 +64,17 @@ const links = {
   contact: [
     {
       label: 'support@olamax.io',
-      path: '/contact-us',
+      path: '/support-us',
       image: email,
     },
     {
       label: 'Call Us',
-      path: '/contact-us',
+      path: '/call-us',
       image: call,
     },
     {
       label: 'Message Us',
-      path: '/cotact-us',
+      path: '/message-us',
       image: whatsapp,
     }
   ],  

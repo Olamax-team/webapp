@@ -13,7 +13,7 @@ const StepTwoMobile = () => {
   const [frontImage, setFrontImage] = React.useState<File | null>(null);
   const [backImage, setBackImage] = React.useState<File | null>(null);
   const [holdingImage, setHoldingImage] = React.useState<File | null>(null);
-  const [bvn, setBvn] = React.useState('')
+  const [bvn, setBvn] = React.useState('');
 
   const formData = new FormData();
 
@@ -21,7 +21,7 @@ const StepTwoMobile = () => {
 
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const DocumentSelect = () => {
 
@@ -36,10 +36,10 @@ const StepTwoMobile = () => {
         </SelectTrigger>
         <SelectContent className='z-[300000]'>
           <SelectGroup>
-            <SelectItem value="national_id">National Identity Card</SelectItem>
-            <SelectItem value="passport">International Passport</SelectItem> 
-            <SelectItem value="license">Driver License</SelectItem> 
-            <SelectItem value="bvn">Bank Verification Number</SelectItem> 
+            <SelectItem value="nin">NIN</SelectItem>
+            <SelectItem value="passport">INTERNATIONAL PASSPORT</SelectItem> 
+            <SelectItem value="nid">NATIONAL IDENTITY CARD</SelectItem> 
+            <SelectItem value="bvn">BVN</SelectItem> 
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -100,10 +100,10 @@ const StepTwoMobile = () => {
   }
 
   const handleSubmit = () => {
-    if (documentType === 'bvn') {
+    if (documentType === 'bvn' || documentType === 'nin') {
 
       const kycData = {
-        method: 'bvn',
+        method: documentType == 'bvn' ? 'bvn' : 'nin',
         identityNumber: bvn
       };
 
@@ -226,13 +226,13 @@ const StepTwoMobile = () => {
           {documentType && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Identity Type</label>}
           <DocumentSelect/>
         </div>
-        {documentType === 'bvn' ?
+        {documentType === 'bvn' || documentType === 'nin' ?
           <React.Fragment>
-            <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud.</h2>
+            <h2 className='text-sm'>{documentType === 'bvn' ? 'Confirming your BVN helps us verify your identity and protect your account from fraud.': 'Confirming your NIN helps us verify your identity and protect your account from fraud.'}</h2>
             <AuthInput
               inputValue={bvn}
               onChange={(e) => setBvn(e.target.value)} 
-              label='BVN'
+              label={documentType === 'bvn' ? 'BVN': 'NIN'}
               inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
             />
           </React.Fragment>
@@ -294,10 +294,10 @@ const StepTwoMobile = () => {
             </div>
           </React.Fragment>
         }
-        { documentType === 'bvn' ?
+        { documentType === 'bvn' || documentType === 'nin' ?
           <div className='lg:p-2 lg:mt-2 mt-5'>
             <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? 'Verifying BVN...' : 'Proceed'}
+              {isLoading ? `${documentType === 'bvn' ? 'Verifying BVN...' : 'Verifying NIN...'}` : 'Proceed'}
               {isLoading && <Loader2 className='animate-spin'/>}
             </button>
           </div> :

@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         element: <PasswordRecovery/>
       },
       {
-        path: '/new-announcement',
+        path: '/news-and-announcement',
         element: <NewsAnnouncement/>
       },
       {

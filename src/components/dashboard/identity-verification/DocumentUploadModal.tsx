@@ -13,7 +13,7 @@ const DocumentUploadModal = () => {
   const { isOpen, onClose} = useUploadDocumentModal();
   const [showModal, setShowModal] = React.useState(isOpen);
 
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const [currentStep, setCurrentStep] = React.useState(1);
 
   const [open, setOpen] = React.useState(false)
 
