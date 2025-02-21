@@ -2,8 +2,8 @@ import { useState } from "react";
 import News from "./News";
 import Announcement from "./Announcement";
 import { Button } from "../ui/button";
-import news from "../../assets/images/newshero.svg"
-import newsMobile from "../../assets/images/newsheromobile.svg"
+import news from "../../app-assets/images/newshero.svg"
+import newsMobile from "../../app-assets/images/newsheromobile.svg"
 
 const NewsAnnounce = () => {
     const [activeTab, setActiveTab] = useState("News");

@@ -3,11 +3,11 @@ import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
 import { cn, timelineCreator } from '../../lib/utils';
-import userimage from '../../assets/images/avatar_1.png'
+import userimage from '../../app-assets/images/avatar_1.png'
 import ImageAvatar from '../ui/image-avatar';
-import olamaxLogo from '../../assets/images/olamax_logo_2.png'
+import olamaxLogo from '../../app-assets/images/olamax_logo_2.png'
 import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
-import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
+import { moreList, notificationList, supportList, tradeCryptoList } from '../../app-assets/constants';
 import useUserDetails from '../../stores/userStore';
 import { useLocalStorage } from '../../hooks/use-localstorage';
 

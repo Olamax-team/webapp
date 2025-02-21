@@ -1,14 +1,14 @@
-import olamaxFoundation from "../../assets/images/olamaxFoundation.svg";
-import olamaxFoundationMobile from "../../assets/images/olamaxFoundationMobile.svg";
+import olamaxFoundation from "../../app-assets/images/olamaxFoundation.svg";
+import olamaxFoundationMobile from "../../app-assets/images/olamaxFoundationMobile.svg";
 import Donate from "./Donate";
-import goal1 from "../../assets/images/goal 1.svg";
-import goal2 from "../../assets/images/goal 2.svg";
-import goal3 from "../../assets/images/goal 3.svg";
-import goal4 from "../../assets/images/goal 4.svg";
-import thumbnail1 from "../../assets/images/thumbnail1.svg";
-import thumbnail2 from "../../assets/images/thumbnail2.svg";
-import thumbnail3 from "../../assets/images/thumbnail3.svg";
-import youtube from "../../assets/images/YouTube.svg"
+import goal1 from "../../app-assets/images/goal-1.svg";
+import goal2 from "../../app-assets/images/goal-2.svg";
+import goal3 from "../../app-assets/images/goal-3.svg";
+import goal4 from "../../app-assets/images/goal-4.svg";
+import thumbnail1 from "../../app-assets/images/thumbnail1.svg";
+import thumbnail2 from "../../app-assets/images/thumbnail2.svg";
+import thumbnail3 from "../../app-assets/images/thumbnail3.svg";
+import youtube from "../../app-assets/images/YouTube.svg"
 import CompPlan from "./ComprehensivePlan";
 import { Button } from "../ui/button";
 

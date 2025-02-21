@@ -1,7 +1,7 @@
 import { Calendar } from "lucide-react";
-import phase1 from "../../assets/images/phase1.svg";
-import phase2 from "../../assets/images/phase2.svg";
-import phase3 from "../../assets/images/phase3.svg";
+import phase1 from "../../app-assets/images/phase1.svg";
+import phase2 from "../../app-assets/images/phase2.svg";
+import phase3 from "../../app-assets/images/phase3.svg";
 const CompPlan = () => {
 
     interface Phases{

@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
-import gmailIcon from '../assets/images/logos_google-gmail.png'
-import arrow from '../assets/images/arrow-left.png'
+import gmailIcon from '../app-assets/images/logos_google-gmail.png'
+import arrow from '../app-assets/images/arrow-left.png'
 import axios from 'axios';
 import useUserDetails from '../stores/userStore';
 import { useToast } from '../hooks/use-toast';

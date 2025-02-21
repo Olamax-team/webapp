@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
-import { transactionList } from "../assets/constants";
+import { transactionList } from "../app-assets/constants";
 
 type dateComponentProps = {
   date: Date | undefined;

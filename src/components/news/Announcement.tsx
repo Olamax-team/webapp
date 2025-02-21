@@ -1,5 +1,5 @@
-import avatar from "../../assets/images/posterAvatar.svg"
-import avatar1 from "../../assets/images/posterAvatar1.svg"
+import avatar from "../../app-assets/images/posterAvatar.svg"
+import avatar1 from "../../app-assets/images/posterAvatar1.svg"
 interface Announce {
     id: number;
     text: string;

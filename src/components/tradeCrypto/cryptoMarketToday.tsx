@@ -1,10 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import BTC from "../../assets/images/BTC Circular.png"
-import ETH from "../../assets/images/ETH Circular.png"
-import USDT from "../../assets/images/USDT Circular.png"
-import SOL from "../../assets/images/SOL Circular.png"
-import graphUp from "../../assets/images/positive-graph.png"
+import BTC from "../../app-assets/images/BTC-Circular.png"
+import ETH from "../../app-assets/images/ETH-Circular.png"
+import USDT from "../../app-assets/images/USDT-Circular.png"
+import SOL from "../../app-assets/images/SOL-Circular.png"
+import graphUp from "../../app-assets/images/positive-graph.png"
 // Define the type for a single crypto item
 interface Crypto {
   name: string;

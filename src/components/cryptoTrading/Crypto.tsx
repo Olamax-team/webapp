@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
-import rectangle18 from '../../assets/images/Rectangle 18.png';
-import strokes from '../../assets/images/strokes-removebg-preview.png';
-import strokesmall from '../../assets/images/strokessmall.svg'
+import rectangle18 from '../../app-assets/images/Rectangle-18.png';
+import strokes from '../../app-assets/images/strokes-removebg-preview.png';
+import strokesmall from '../../app-assets/images/strokessmall.svg'
 
 const Crypto = () => {
   return (
