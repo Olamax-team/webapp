@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
+import { transactionList } from "../assets/constants";
 
 type dateComponentProps = {
   date: Date | undefined;
@@ -31,110 +32,7 @@ type mobileTransactionProps = {
   open: boolean;
   toggleTable: () => void;
   transaction: transactionItem;
-}
-
-
-const transactionList = [
-  {
-    id: 1,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Airtime',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Pending',
-    fees: '0.5'
-  },
-  {
-    id: 2,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Data',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.5'
-  },
-  {
-    id: 3,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Buy',
-    coins: 'BTC',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Cancelled',
-    fees: '0.005'
-  },
-  {
-    id: 4,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Sell',
-    coins: 'BTC',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.005'
-  },
-  {
-    id: 5,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Buy',
-    coins: 'ETH',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.005'
-  },
-  {
-    id: 6,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Data',
-    coins: 'SOL',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.005'
-  },
-  {
-    id: 7,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Airtime',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Completed',
-    fees: '0.05'
-  },
-  {
-    id: 8,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Buy',
-    coins: 'ETH',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Cancelled',
-    fees: '0.05'
-  },
-  {
-    id: 9,
-    date: '2025-01-09T23:00:00.000Z',
-    transaction_id: 'TX12345ABC',
-    type: 'Airtime',
-    coins: 'USDT',
-    payment_method: 'Bank Transfer',
-    amount: 100000,
-    status: 'Pending',
-    fees: '0.5'
-  },
-];
+};
 
 const Transaction = () => {
   documentTitle('Transaction');

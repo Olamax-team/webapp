@@ -2,12 +2,15 @@
 import React from "react";
 import TopHeader from "../footer/TopHeader";
 import OurValues from "./ourValues";
+import { documentTitle } from "../../lib/utils";
 import imageA from '../../assets/images/imageA.svg'
 import imageB from '../../assets/images/imageB.svg'
 import imageC from '../../assets/images/imagec.svg'
 
 
 const AboutUs = () => {
+  documentTitle('About Us');
+
   const cryptoData = [
     { value: '1 Million +' , label: 'Users have an account with us.' },
     { value: '5', label: 'Countries available in' },
