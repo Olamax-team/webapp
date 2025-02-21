@@ -16,4 +16,4 @@ const MyRewardContent = () => {
   )
 }
 
-export default MyRewardContent
+export default MyRewardContent;

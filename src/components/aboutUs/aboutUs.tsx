@@ -2,8 +2,11 @@
 import React from "react";
 import TopHeader from "../footer/TopHeader";
 import OurValues from "./ourValues";
+import { documentTitle } from "../../lib/utils";
 
 const AboutUs = () => {
+  documentTitle('About Us');
+
   const cryptoData = [
     { value: '1 Million +' , label: 'Users have an account with us.' },
     { value: '5', label: 'Countries available in' },
