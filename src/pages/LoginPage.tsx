@@ -10,12 +10,17 @@ import gmailIcon from '../assets/images/logos_google-gmail.png'
 import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import useUserDetails from '../stores/userStore';
+import { useToast } from '../hooks/use-toast';
+import { Loader2 } from 'lucide-react';
+import { useLocalStorage } from '../hooks/use-localstorage';
 
 const LoginPage = () => {
   documentTitle('Login');
 
   const navigate = useNavigate();
-  const { setUser } = useUserDetails();
+  const { setUser, setLoading, loading } = useUserDetails();
+  const { setItem } = useLocalStorage();
+  const { toast } = useToast();
 
   const defaultLoginValues = {
     email: '',
@@ -30,13 +35,13 @@ const LoginPage = () => {
   const watchedEmail = form.watch('email');
   const watchedPassword = form.watch('password');
 
-  const onSubmitForm = (values:loginValues) => {
+  const onSubmitForm = async (values:loginValues) => {
     const { email, password } = values;
   
     const loginValues = {
       email: email,
       password: password,
-    }
+    };
 
     const config = {
       method: 'post',
@@ -44,22 +49,42 @@ const LoginPage = () => {
       url: 'https://api.olamax.io/api/login',
       header: {'Content-Type':'application/json'},
       data: loginValues,
-    }
+    };
 
-    axios.request(config).then((response) => {
+    setLoading(true);
+    axios.request(config)
+    .then((response) => {
       if (response.status === 200) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('userDetail', JSON.stringify(response.data.data.user));
-        localStorage.setItem('isLoggedIn', JSON.stringify(true));
-        setUser(response.data.data.user, response.data.token, true);
+        setItem('token', response.data.token);
+        setItem('user', JSON.stringify(response.data.data.user));
+        setUser(response.data.data.user, response.data.token );
+        toast({
+          title: 'Success',
+          description: 'Login was successful, welcome!',
+          variant: 'success'
+        });
+        setLoading(false);
         navigate('/dashboard');
       };
-
-      if (response.status === 422) {
-        console.log('error logging in!');
-        alert(response.data.message)
-      }
-    })
+    }).catch((error) => {
+      if (axios.isAxiosError(error)) {
+        toast({
+          title: 'Error',
+          description: error.response?.data.message,
+          variant: 'destructive'
+        });
+        setLoading(false);
+        console.error("Error fetching data message:", error.response?.data.message || error.message);        
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Something went wrong!! Try again later',
+          variant: 'destructive'
+        });
+        setLoading(false);
+        console.error("Unexpected error:", error);
+      };
+    });
   }
 
   return (
@@ -84,7 +109,7 @@ const LoginPage = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <AuthInput {...field} inputValue={watchedEmail} label='Email Address' type='email'/>
+                  <AuthInput {...field} inputValue={watchedEmail} label='Email Address' type='email' name='email' id='email'/>
                 </FormControl>
                 <FormMessage/>
               </FormItem>
@@ -96,14 +121,17 @@ const LoginPage = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <AuthInput {...field} inputValue={watchedPassword} label='Enter Password' type='password'/>
+                  <AuthInput {...field} inputValue={watchedPassword} label='Enter Password' type='password' name='password' id='password'/>
                 </FormControl>
                 <FormMessage/>
               </FormItem>
             )}
           />
           <Link to={'/password-recovery'} className="font-poppins font-semibold">Forgot Password?</Link>
-          <button className='w-full h-[70px] rounded-md bg-primary text-white' type='submit'>Login</button>
+          <button className='w-full h-[70px] rounded-md bg-primary text-white flex items-center gap-3 disabled:bg-primary/50 justify-center' type='submit' disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+            {loading && <Loader2 className='animate-spin'/>}
+          </button>
           <div className='lines'>
             <h2>or</h2>
           </div>

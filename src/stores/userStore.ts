@@ -8,20 +8,22 @@ export type userProps = {
 };
 
 export type userDetailProps = {
-  userDetail: userProps | null;
+  user: userProps | null;
   token: string | null;
-  isLoggedIn: boolean;
-  setUser: (userDetail: userProps, token:string, isLoggedIn:boolean) => void;
+  setUser: (user: userProps, token:string ) => void;
   clearUser: () => void;
+  loading: boolean;
+  setLoading: (loading:boolean) => void;
 };
 
 
 const useUserDetails = create<userDetailProps>((set) => ({
-  userDetail: null,
+  user: null,
   token: null,
-  isLoggedIn: false,
-  setUser: (userDetail, token, isLoggedIn) => set({ userDetail, token, isLoggedIn}),
-  clearUser: () => set({ userDetail: null, token: null, isLoggedIn: false }),
+  loading: false,
+  setLoading: (loading) => set({ loading }),
+  setUser: (user, token) => set({ user, token}),
+  clearUser: () => set({ user: null, token: null }),
 }));
 
 export default useUserDetails;

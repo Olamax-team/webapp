@@ -1,33 +1,37 @@
 import React from 'react';
-import { Outlet, Navigate, useNavigate } from 'react-router-dom';
-import useUserDetails, { userProps } from '../../stores/userStore';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useUserDetails from '../../stores/userStore';
+import { useLocalStorage } from '../../hooks/use-localstorage';
 
 const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-    const { isLoggedIn, setUser } = useUserDetails();
-    const navigate = useNavigate();
 
-      React.useEffect(() => {
-          const storedToken = localStorage.getItem('token');
-          const storedUserDetail = localStorage.getItem('userDetail');
-          const storedUserLoginStatus = localStorage.getItem('isLoggedIn');
-    
-          console.log(storedUserLoginStatus)
-    
-          if (storedToken && storedUserDetail && storedUserLoginStatus) {
-              try {
-                  const parsedUserDetail:userProps = JSON.parse(storedUserDetail);
-                  const isLoggedIn:boolean = storedUserLoginStatus ? JSON.parse(storedUserLoginStatus) : false;
-                  setUser(parsedUserDetail, storedToken, isLoggedIn);
-              } catch (error) {
-                  console.error("Error parsing user data:", error);
-                  localStorage.clear();
-              }
-          } else {
-              navigate('/');
-          }
-      }, [navigate, setUser]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, token, setUser } = useUserDetails();
 
-    return isLoggedIn ? children || <Outlet /> : <Navigate to="/" replace />;
+  const { getItem } = useLocalStorage();
+  const storedUser = getItem('user');
+  const storedToken = getItem('token');
+
+
+  React.useEffect(() => {
+    if (storedUser && storedToken && !user && !token) {
+      setUser(JSON.parse(storedUser), storedToken);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (!user || !token) {
+      localStorage.setItem('intendedRoute', location.pathname);
+      navigate('/');
+    }
+  }, [user, token, navigate, location.pathname]);
+
+  if (user && token) {
+    return children;
+  }
+  
+  return null;
 };
 
 export default ProtectedRoute;

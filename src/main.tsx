@@ -15,7 +15,9 @@ import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
 import NewsAnnouncement from './pages/NewsAnnouncement';
 import AboutUs from './components/aboutUs/aboutUs';
+
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import Education from './components/educationalCenter/education';
 import OlamaxFoundationPage from './pages/OlamaxFoundationPage';
 
 
@@ -36,6 +38,10 @@ const router = createBrowserRouter([
         element: <AboutUs/>
       },
       {
+        path: '/educational-center',
+        element: <Education/>
+      },
+      {
         path: '/sign-up',
         element: <SignUpPage/>
       },
@@ -44,42 +50,37 @@ const router = createBrowserRouter([
         element: <PasswordRecovery/>
       },
       {
-        path: '/new-announcement',
+        path: '/news-and-announcement',
         element: <NewsAnnouncement/>
+      },
+      {
+        path: '/dashboard',
+        element: <ProtectedRoute><Dashboard/></ProtectedRoute>
+      },
+      {
+        path: '/dashboard/bills_payment',
+        element: <ProtectedRoute><BillPayment/></ProtectedRoute>
+      },
+      {
+        path: '/dashboard/transaction',
+        element: <ProtectedRoute><Transaction/></ProtectedRoute>
+      },
+      {
+        path: '/dashboard/identity_verification',
+        element: <ProtectedRoute><IdentityVerification/></ProtectedRoute>
+      },
+      {
+        path: '/dashboard/account_management',
+        element: <ProtectedRoute><AccountManagement/></ProtectedRoute>
+      },
+      {
+        path: '/dashboard/my_rewards',
+        element: <ProtectedRoute><MyReward/></ProtectedRoute>
       },
       {
         path: '/olamax-foundation',
         element: <OlamaxFoundationPage/>
       },
-      {
-        element: <ProtectedRoute/>,
-        children: [
-          {
-            path: '/dashboard',
-            element: <Dashboard/>
-          },
-          {
-            path: '/dashboard/bills_payment',
-            element: <BillPayment/>
-          },
-          {
-            path: '/dashboard/transaction',
-            element: <Transaction/>
-          },
-          {
-            path: '/dashboard/identity_verification',
-            element: <IdentityVerification/>
-          },
-          {
-            path: '/dashboard/account_management',
-            element: <AccountManagement/>
-          },
-          {
-            path: '/dashboard/my_rewards',
-            element: <MyReward/>
-          },
-        ]
-      }
     ]
   }
 ]); 
