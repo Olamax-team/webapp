@@ -15,7 +15,9 @@ import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
 import NewsAnnouncement from './pages/NewsAnnouncement';
 import AboutUs from './components/aboutUs/aboutUs';
+
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import Education from './components/educationalCenter/education';
 import OlamaxFoundationPage from './pages/OlamaxFoundationPage';
 
 
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: '/about-us',
         element: <AboutUs/>
+      },
+      {
+        path: '/educational-center',
+        element: <Education/>
       },
       {
         path: '/sign-up',
