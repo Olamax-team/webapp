@@ -1,6 +1,6 @@
-import news1 from "../../app-assets/images/news1.svg"
-import news2 from "../../app-assets/images/news2.svg"
-import news3 from "../../app-assets/images/news3.svg"
+import news1 from "../../assets/images/news1.svg"
+import news2 from "../../assets/images/news2.svg"
+import news3 from "../../assets/images/news3.svg"
 
 
 interface News {

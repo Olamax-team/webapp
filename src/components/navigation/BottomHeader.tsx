@@ -3,11 +3,11 @@ import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
 import { cn, timelineCreator } from '../../lib/utils';
-import userimage from '../../app-assets/images/avatar_1.png'
+import userimage from '../../assets/images/avatar_1.png'
 import ImageAvatar from '../ui/image-avatar';
-import olamaxLogo from '../../app-assets/images/olamax_logo_2.png'
+import olamaxLogo from '../../assets/images/olamax_logo_2.png'
 import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
-import { moreList, notificationList, supportList, tradeCryptoList } from '../../app-assets/constants';
+import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
 import useUserDetails from '../../stores/userStore';
 import { useLocalStorage } from '../../hooks/use-localstorage';
 
@@ -50,7 +50,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
   const { user, setUser } = useUserDetails();
 
-  const { getItem } = useLocalStorage();
+    const { getItem } = useLocalStorage();
   const storedUser = getItem('user');
   const storedToken = getItem('token');
 
@@ -112,7 +112,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 // single navbar menu item
   const MenuItem = ({image, title, description, path}:menuItemProps) => {
     return (
-      <Link to={path} className='lg:w-[320px] lg:h-[80px] rounded-md p-[11px] hover:bg-[#0073AD1A] w-fit' onClick={closeMenu}>
+      <Link to={user ? path : '/log-in'} className='lg:w-[320px] lg:h-[80px] rounded-md p-[11px] hover:bg-[#0073AD1A] w-fit' onClick={closeMenu}>
         <div className="lg:h-full lg:w-[272px] w-[230px] flex lg:gap-6 gap-4 items-center lg:items-stretch">
           <div className="size-[32px] flex-none">
             <img src={image} alt='icon' className='object-cover'/>
@@ -190,7 +190,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
   return (
     <div className={navIsFixed}>
-      <div className="mx-auto h-full px-[25px] xl:px-[95px] flex items-center justify-between font-poppins">
+      <div className="mx-auto h-full px-[15px] xl:px-[95px] flex items-center justify-between font-poppins">
         
         {/* home page link */}
         <div className="flex items-center gap-4">
@@ -204,19 +204,17 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
         {/* other links for desktop */}
         <ul className='hidden xl:flex items-center gap-8 cursor-pointer h-full'>
-          { user &&
-            <li className='flex items-center gap-2 h-full relative group'>
-              <button className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')} onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
-                Trade Crypto
-              </button>
-              <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
-              <DropDownMenu 
-                menuList={tradeCryptoList}
-                style='left-0 top-[108px]'
-                isOpen={openTrade}
-              />
-            </li>
-          }
+        <li className='flex items-center gap-2 h-full relative group'>
+          <button className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')} onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+            Trade Crypto
+          </button>
+          <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
+          <DropDownMenu 
+            menuList={tradeCryptoList}
+            style='left-0 top-[108px]'
+            isOpen={openTrade}
+          />
+        </li>
           <li className='hover:text-primary'>
             <Link to={'/escrow-services'}>Escrow Services</Link>
           </li>
@@ -254,17 +252,15 @@ const BottomHeader = ({notifications}:bottomProps) => {
                 </div>
               </div>
               <ul className='flex flex-col gap-8 mt-8'>
-                { user &&
-                  <li className='flex items-center gap-2 h-full relative group' onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
-                    <span className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')}>Trade Crypto</span>
-                    <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
-                    <DropDownMenu 
-                      menuList={tradeCryptoList}
-                      style='-left-3 lg:top-[30px] top-10'
-                      isOpen={openTrade}
-                    />
-                  </li>
-                }
+                <li className='flex items-center gap-2 h-full relative group' onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+                  <span className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')}>Trade Crypto</span>
+                  <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
+                  <DropDownMenu 
+                    menuList={tradeCryptoList}
+                    style='-left-3 lg:top-[30px] top-10'
+                    isOpen={openTrade}
+                  />
+                </li>
                 <li className='hover:text-primary'>
                   <Link to={'/escrow-services'}>Escrow Services</Link>
                 </li>
@@ -329,10 +325,10 @@ const BottomHeader = ({notifications}:bottomProps) => {
           ) : 
           (
             <div className='flex items-center gap-2'>
-              <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] text-primary hover:text-primary'>
+              <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] md:text-primary md:hover:text-primary bg-primary text-white hover:text-white md:bg-white'>
                 <Link to={'/log-in'}>Sign In</Link>
               </Button>
-              <Button className='font-semibold bg-primary hover:bg-secondary w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px]'>
+              <Button className='font-semibold bg-primary hover:bg-secondary w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] hidden md:block'>
                 <Link to={'/sign-up'}>Sign Up</Link>
               </Button>
             </div>

@@ -6,19 +6,21 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
-import gmailIcon from '../app-assets/images/logos_google-gmail.png'
-import arrow from '../app-assets/images/arrow-left.png'
+import gmailIcon from '../assets/images/logos_google-gmail.png'
+import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import useUserDetails from '../stores/userStore';
 import { useToast } from '../hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useLocalStorage } from '../hooks/use-localstorage';
+import React from 'react';
 
 const LoginPage = () => {
   documentTitle('Login');
 
   const navigate = useNavigate();
   const { setUser, setLoading, loading } = useUserDetails();
+  const [isLoading, setIsLoading] = React.useState(false);
   const { setItem } = useLocalStorage();
   const { toast } = useToast();
 
@@ -85,7 +87,47 @@ const LoginPage = () => {
         console.error("Unexpected error:", error);
       };
     });
-  }
+  };
+
+  const continueWithGoogle = async () => {
+
+    const config = {
+      method: 'get',
+      url: 'https://api.olamax.io/auth/google',
+    };
+
+    setIsLoading(true);
+    axios.request(config)
+    .then((response) => {
+      console.log(response);
+      if (response.data.status === 'success') {
+        toast({
+          title: 'Success',
+          description: 'Registration was successful',
+           variant: 'success'
+        });
+        setIsLoading(false);
+      }
+    }).catch((error) => {
+      if (axios.isAxiosError(error)) {
+        toast({
+          title: 'Error',
+          description: error.response?.data.message,
+          variant: 'destructive'
+        });
+        setIsLoading(false);
+        console.error("Error fetching data:", error.response?.data || error.message);        
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Something went wrong, try again later',
+          variant: 'destructive'
+        });
+        setIsLoading(false);
+        console.error("Unexpected error:", error);
+      };
+    })
+  };
 
   return (
     <AuthLayout>
@@ -135,8 +177,9 @@ const LoginPage = () => {
           <div className='lines'>
             <h2>or</h2>
           </div>
-          <button type='button' className='w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] gap-3'>
-            <h2 className='font-semibold'>Continue with Google</h2>
+          <button type='button' className='w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] disabled:bg-gray-300 gap-3' onClick={continueWithGoogle} disabled={isLoading}>
+            <h2 className='font-semibold'>{isLoading ? 'Logging in...' : 'Continue with Google'}</h2>
+            {isLoading && <Loader2 className='animate-spin'/>}
             <div className='w-[24px] h-[18px]'>
               <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
             </div>

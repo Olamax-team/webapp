@@ -1,10 +1,10 @@
-import image4 from '../../app-assets/images/avatar_4.png'
-import image1 from '../../app-assets/images/avatar_1.png'
-import image2 from '../../app-assets/images/avatar_2.png'
-import image3 from '../../app-assets/images/avatar_3.png'
+import image4 from '../../assets/images/avatar_4.png'
+import image1 from '../../assets/images/avatar_1.png'
+import image2 from '../../assets/images/avatar_2.png'
+import image3 from '../../assets/images/avatar_3.png'
 import ImageAvatar from '../ui/image-avatar';
-import ratingBig from '../../app-assets/images/rating_big.png'
-import ratingSmall from '../../app-assets/images/rating_small.png'
+import ratingBig from '../../assets/images/rating_big.png'
+import ratingSmall from '../../assets/images/rating_small.png'
 
 
 const testimonialList = [

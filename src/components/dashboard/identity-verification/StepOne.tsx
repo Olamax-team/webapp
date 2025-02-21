@@ -20,14 +20,14 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const [nationality, setNationality] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
 
+  const { getItem } = useLocalStorage();
+  const token = getItem('token');
+
   const [isLoading, setIsLoading] = React.useState(false);
 
   const { toast } = useToast();
 
   const nationalities = nationalitiesJson;
-
-  const { getItem } = useLocalStorage();
-  const storedToken = getItem('token');
 
   const onNext = () => {
     if (currentStep === 2) {
@@ -58,10 +58,12 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       url: 'https://api.olamax.io/api/add-biodata',
       header: {
         'Content-Type':'application/json',
-        'Authorization': `Bearer ${storedToken}`
+        'Authorization': `Bearer ${token}`
       },
       data: stepOneData,
     };
+
+    console.log(config.header);
 
     setIsLoading(true);
     axios.request(config)

@@ -1,12 +1,12 @@
 import React, { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import arrowIcon from '../../app-assets/images/arrowdown.svg';
-import BTC from "../../app-assets/images/BTC-Circular.png";
-import ETH from "../../app-assets/images/ETH-Circular.png";
-import USDT from "../../app-assets/images/USDT-Circular.png";
-import SOL from "../../app-assets/images/SOL-Circular.png";
-import IBEDC from "../../app-assets/images/IBEDC-Circular.png";
+import arrowIcon from '../../assets/images/arrowdown.svg';
+import BTC from "../../assets/images/BTC Circular.png";
+import ETH from "../../assets/images/ETH Circular.png";
+import USDT from "../../assets/images/USDT Circular.png";
+import SOL from "../../assets/images/SOL Circular.png";
+import IBEDC from "../../assets/images/IBEDC Circular.png";
 interface BillsPaymentProps {
 categories: string[]; // Categories to map for dropdown
 billProps1: string[]; // Options for billProp1 dropdown

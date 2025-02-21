@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
-import arrow from '../app-assets/images/arrow-left.png'
+import arrow from '../assets/images/arrow-left.png'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
 import axios from 'axios';
 

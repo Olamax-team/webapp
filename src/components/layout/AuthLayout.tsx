@@ -1,8 +1,8 @@
 import React from 'react'
-import banner from '../../app-assets/images/signIn_banner.png'
-import logo from '../../app-assets/images/olamax_logo_2.png'
-import icon from '../../app-assets/images/icon.png'
-import arrow from '../../app-assets/images/arrow-left.png'
+import banner from '../../assets/images/signIn_banner.png'
+import logo from '../../assets/images/olamax_logo_2.png'
+import icon from '../../assets/images/icon.png'
+import arrow from '../../assets/images/arrow-left.png'
 import { Link, useNavigate } from 'react-router-dom'
 
 type Props = {

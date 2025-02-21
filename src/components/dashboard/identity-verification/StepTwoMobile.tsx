@@ -21,11 +21,11 @@ const StepTwoMobile = () => {
   const { onClose } = useUploadDocumentModal();
 
   const { toast } = useToast();
-    const { getItem } = useLocalStorage();
-    const token = getItem('token');
 
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const { getItem } = useLocalStorage();
+  const token = getItem('token');
+ 
   const DocumentSelect = () => {
 
     const handleDocumentSelect = (value:string) => {
@@ -116,7 +116,7 @@ const StepTwoMobile = () => {
         url: 'https://api.olamax.io/api/start-kyc-verification',
         header: {
           'Content-Type':'application/json',
-          'Authorization' : `Bearer ${token}`
+          'Authorization': `Bearer ${token}`
         },
         data: kycData,
       };
