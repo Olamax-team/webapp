@@ -24,6 +24,8 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
     navigator.clipboard.writeText(uid);
     alert("copied!");
   };
+
+  const { user } = useUserDetails();
   const openConfirmVerification = useConfirmVerificationModal();
     // Mask email function
     // const maskEmail = (email: string) => {
@@ -70,7 +72,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
             </div>
         </div>
         <div className="font-Inter w-full h-auto">
-        {isVerified === 'Verified' ? (
+        {user && user.account_status === 'Verified' ? (
           <>
             <div className="flex flex-col">
               <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">
@@ -79,7 +81,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
               <div className="flex gap-1 items-start">
                 <ShieldCheck className="w-[24px] h-[24px] text-[#34A853]" />
                 <span className="text-[16px] leading-[24px] font-medium text-[#34A853]">
-                  Verified
+                  {user.account_status}
                 </span>
               </div>
             </div>
@@ -95,7 +97,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
                 <span 
                 onClick={() => {openConfirmVerification.onOpen();}}
                 className="text-[16px] leading-[24px] font-medium text-[#FF9C00] cursor-pointer">
-                  Unverified
+                  {user && user.account_status}
                 </span>
               </div>
             </div>
@@ -138,7 +140,7 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
-  const { userDetail } = useUserDetails();
+  const { user:userDetail } = useUserDetails();
 
   const user = {
     name: "Tosin Adebayor",
@@ -178,10 +180,10 @@ const DashboardTab: React.FC = () => {
             <div className="my-auto w-full xl:w-[50%] h-auto">
               <UserInfoCard
                 name={user.name}
-                email={user.email}
-                lastLogin={user.lastLogin}
-                uid={user.uid}
-                isVerified={user.isVerified}
+                email={userDetail?.email}
+                lastLogin={userDetail?.last_login_location || ''}
+                uid={userDetail?.UID || ''}
+                isVerified={userDetail?.account_status || 'Unverified'}
                 inviteLink={user.inviteLink}
               />
               <ServicesCard services={services} />

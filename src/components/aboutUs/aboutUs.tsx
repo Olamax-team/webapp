@@ -38,7 +38,6 @@ const AboutUs = () => {
                         
            
           </div>
-        
 
           <div>
             <div className=" lg:flex  justify-between  w-full h-auto  mt-10 gap-10 ">

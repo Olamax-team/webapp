@@ -14,15 +14,11 @@ function App() {
   React.useEffect(() => {
       const storedToken = localStorage.getItem('token');
       const storedUserDetail = localStorage.getItem('userDetail');
-      const storedUserLoginStatus = localStorage.getItem('isLoggedIn');
 
-      console.log(storedUserLoginStatus)
-
-      if (storedToken && storedUserDetail && storedUserLoginStatus) {
+      if (storedToken && storedUserDetail) {
           try {
               const parsedUserDetail:userProps = JSON.parse(storedUserDetail);
-              const isLoggedIn:boolean = storedUserLoginStatus ? JSON.parse(storedUserLoginStatus) : false;
-              setUser(parsedUserDetail, storedToken, isLoggedIn);
+              setUser(parsedUserDetail, storedToken);
           } catch (error) {
               console.error("Error parsing user data:", error);
               localStorage.clear();

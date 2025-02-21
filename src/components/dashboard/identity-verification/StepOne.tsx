@@ -7,6 +7,9 @@ import { format } from "date-fns";
 import { cn } from '../../../lib/utils';
 import {  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import nationalitiesJson from './nationalities.json'
+import { useToast } from '../../../hooks/use-toast';
+import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
   const [lname, setLName] = React.useState('');
@@ -16,6 +19,10 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const [nationality, setNationality] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const { toast } = useToast();
+
   const nationalities = nationalitiesJson;
 
   const onNext = () => {
@@ -23,7 +30,63 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       return;
     };
 
-    setCurrentStep((prevNum) => prevNum + 1)
+    if (!lname || !fname || !dateOfBirth || !gender || !nationality || !phoneNumber) {
+      toast({
+        title: 'Error',
+        description: 'Make sure all fields are completely filled inorder to proceed!',
+        variant: 'destructive'
+      });
+      return;
+    };
+
+    const stepOneData = {
+      lname: lname,
+      fname: fname,
+      dateOfBirth: dateOfBirth.toISOString(),
+      gender: gender,
+      nationality: nationality,
+      phone_number: phoneNumber,
+    };
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.olamax.io/api/add-biodata',
+      header: {'Content-Type':'application/json'},
+      data: stepOneData,
+    };
+
+    setIsLoading(true);
+    axios.request(config)
+    .then((response) => {
+      if (response.status === 200) {
+        toast({
+          title: 'Success',
+          description: response.data.message,
+          variant: 'success'
+        });
+        setIsLoading(false);
+        setCurrentStep((prevNum) => prevNum + 1)
+      };
+    }).catch((error) => {
+      if (axios.isAxiosError(error)) {
+        toast({
+          title: 'Error',
+          description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+          variant: 'destructive'
+        });
+        setIsLoading(false);
+        console.error("Error fetching data message:", error.response?.data.message || error.message);        
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Something went wrong!! Try again later',
+          variant: 'destructive'
+        });
+        setIsLoading(false);
+        console.error("Unexpected error:", error);
+      };
+    });
   }
 
   const DateComponent = () => {
@@ -90,12 +153,16 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           onChange={(e) => setLName(e.target.value)}
           label='Last Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+          name='lname'
+          id='lname'
         />
         <AuthInput
           inputValue={fname}
           onChange={(e) => setFName(e.target.value)}
           label='First Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+          name='fname'
+          id='fname'
         />
         <div className="relative">
           {dateOfBirth && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Date of Birth</label>}
@@ -117,13 +184,18 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           onChange={(e) => setPhoneNumber(e.target.value)}
           label='Phone Number'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+          name='phoneNumber'
+          id='phoneNumber'
         />
       </div>
       <div className='lg:p-2 lg:mt-2 mt-5'>
-        <button className='py-2 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px]' onClick={onNext}>Proceed</button>
+        <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center gap-3' onClick={onNext} disabled={isLoading}>
+          {isLoading ? 'Updating bio-data' : 'Proceed'}
+          {isLoading && <Loader2 className='animate-spin'/>}
+        </button>
       </div>
     </div>
   )
 };
 
-export default StepOne
+export default StepOne;
