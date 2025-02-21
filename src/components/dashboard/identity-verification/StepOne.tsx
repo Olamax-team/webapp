@@ -10,6 +10,7 @@ import nationalitiesJson from './nationalities.json'
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
+import { useLocalStorage } from '../../../hooks/use-localstorage';
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
   const [lname, setLName] = React.useState('');
@@ -24,6 +25,9 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const { toast } = useToast();
 
   const nationalities = nationalitiesJson;
+
+  const { getItem } = useLocalStorage();
+  const storedToken = getItem('token');
 
   const onNext = () => {
     if (currentStep === 2) {
@@ -52,7 +56,10 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://api.olamax.io/api/add-biodata',
-      header: {'Content-Type':'application/json'},
+      header: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${storedToken}`
+      },
       data: stepOneData,
     };
 
