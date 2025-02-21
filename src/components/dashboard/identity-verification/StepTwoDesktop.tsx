@@ -115,7 +115,7 @@ const StepTwoDesktop = () => {
         url: 'https://api.olamax.io/api/start-kyc-verification',
         header: {
           'Content-Type':'application/json',
-          'Authorization' : `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
         },
         data: kycData,
       };
@@ -177,7 +177,7 @@ const StepTwoDesktop = () => {
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/upload-document',
         header: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type':'multipart/form-data',
           'Authorization': `Bearer ${token}`
         },
         data: formData,

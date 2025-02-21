@@ -92,13 +92,13 @@ const SignUpPage = () => {
     };
 
     const continueWithGoogle = async () => {
+
       const config = {
         method: 'get',
         url: 'https://api.olamax.io/auth/google',
       };
 
       setIsLoading(true);
-
       axios.request(config)
       .then((response) => {
         console.log(response);
@@ -192,11 +192,10 @@ const SignUpPage = () => {
           </div>
           <button type='button' className='font-semibold w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] gap-3 disabled:bg-gray-300' onClick={continueWithGoogle} disabled={isLoading}>
             { isLoading ? 'Creating account...' : 'Continue with Google' }
-            {isLoading ? <Loader2 className='animate-spin'/> :
-              <div className='w-[24px] h-[18px]'>
-                <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
-              </div>
-            }
+            {isLoading && <Loader2 className='animate-spin'/>}
+            <div className='w-[24px] h-[18px]'>
+              <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
+            </div>
           </button>
         </form> 
       </Form>
