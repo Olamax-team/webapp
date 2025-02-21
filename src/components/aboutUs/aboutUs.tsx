@@ -3,10 +3,7 @@ import React from "react";
 import TopHeader from "../footer/TopHeader";
 import OurValues from "./ourValues";
 import { documentTitle } from "../../lib/utils";
-import imageA from '../../assets/images/imageA.svg'
-import imageB from '../../assets/images/imageB.svg'
-import imageC from '../../assets/images/imagec.svg'
-
+import './style.css'
 
 const AboutUs = () => {
   documentTitle('About Us');
@@ -27,19 +24,9 @@ const AboutUs = () => {
               <p className="mt-5 font-Inter font-medium  text-[14px] text-center  text-[#121826] leading-[21px] xl:font-Inter xl:font-medium xl:leading-[27px] xl:text-[18px]"> 
                 OLAMAX EXCHANGE is a financial technology company that builds payments infrastructure for crypto. Our on-and-off-ramp suite of products provides a seamless experience for converting between fiat currencies and cryptocurrencies using all major payment methods including debit and credit card and local bank transfers. </p>
               <p className="mt-4 text-center font-Inter text-[14px]  text-[#121826] font-medium  xl:text-[18px] xl:leading-[27px] "> We are active in more than 5 countries and is trusted by over a million + users</p> 
-            
-              <div className="relative h-auto w-full mt-10 xl:p-5 text-center flex justify-center "> 
-                  <div className="flex  items-center justify-center xl:w-full xl:h-auto h-[105px] w-[308px] relative  ">
-                    <img src= {imageA} alt="" className="object-cover w-[95px] h-[76px] xl:w-[225px] xl:h-[120px] z-[1]" />
-                    <img src= {imageB} alt="" className="object-cover w-[95px] h-[76px] xl:w-[225px] xl:h-[120px] z-[1]" />
-                    <img src= {imageC} alt="" className="object-cover w-[95px] h-[76px] xl:w-[225px] xl:h-[120px] z-[1]" />
-                    <h1 className="text-white font-bold xl:font-DMSans text-[70px] xl:text-[165px]  absolute text-center uppercase leading-10 xl:leading-[14] z-[2] after:content-['OLAMAX'] after:absolute after:w-full after:h-full  after:left-0 after:top-0  ">
-                      OLAMAX
-                    </h1>
-                  </div>
-                </div>  
-                        
-           
+                <div className="flex  items-center justify-center xl:w-full xl:h-auto h-[105px] w-[308px] ">
+                  <div className="text-with-image-outline font-bold xl:font-DMSans text-[70px] xl:text-[165px] leading-normal">OLAMAX</div>
+                </div>
           </div>
 
           <div>
