@@ -6,6 +6,7 @@ import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
+import { useLocalStorage } from '../../../hooks/use-localstorage';
 
 const StepTwoMobile = () => {
 
@@ -20,6 +21,8 @@ const StepTwoMobile = () => {
   const { onClose } = useUploadDocumentModal();
 
   const { toast } = useToast();
+    const { getItem } = useLocalStorage();
+    const token = getItem('token');
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -111,7 +114,10 @@ const StepTwoMobile = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/start-kyc-verification',
-        header: {'Content-Type':'application/json'},
+        header: {
+          'Content-Type':'application/json',
+          'Authorization' : `Bearer ${token}`
+        },
         data: kycData,
       };
 
@@ -171,7 +177,10 @@ const StepTwoMobile = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/upload-document',
-        header: {'Content-Type':'multipart/form-data'},
+        header: {
+          'Content-Type':'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        },
         data: formData,
       };
 
