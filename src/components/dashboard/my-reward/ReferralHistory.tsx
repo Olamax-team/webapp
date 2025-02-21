@@ -2,6 +2,7 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { format } from "date-fns";
 import { cn } from "../../../lib/utils";
+import { referralsList } from "../../../assets/constants";
 
 
 type transactionItem = {
@@ -19,60 +20,7 @@ type mobileTransactionProps = {
   open: boolean;
   toggleTable: () => void;
   transaction: transactionItem;
-}
-
-const referralsList = [
-  {
-    id: 1,
-    date: '2025-01-09T23:00:00.000Z',
-    referred_user: 'Samuel Sunday',
-    trading_status: 'Traded',
-    commission_amount: 1000,
-    amount_traded: 10000,
-    status: 'Verified',
-    action: 'Remind Admin'
-  },
-  {
-    id: 2,
-    date: '2025-01-09T23:00:00.000Z',
-    referred_user: 'Samuel Sunday',
-    trading_status: 'Not Traded',
-    commission_amount: 0,
-    amount_traded: 0,
-    status: 'Not Verified',
-    action: 'Remind Admin'
-  },
-  {
-    id: 3,
-    date: '2025-01-09T23:00:00.000Z',
-    referred_user: 'Samuel Sunday',
-    trading_status: 'Not Traded',
-    commission_amount: 0,
-    amount_traded: 0,
-    status: 'Not Verified',
-    action: 'Remind Admin'
-  },
-  {
-    id: 4,
-    date: '2025-01-09T23:00:00.000Z',
-    referred_user: 'Samuel Sunday',
-    trading_status: 'Not Traded',
-    commission_amount: 0,
-    amount_traded: 0,
-    status: 'Not Verified',
-    action: 'Remind Admin'
-  },
-  {
-    id: 5,
-    date: '2025-01-09T23:00:00.000Z',
-    referred_user: 'Samuel Sunday',
-    trading_status: 'Traded',
-    commission_amount: 1000,
-    amount_traded: 10000,
-    status: 'Verified',
-    action: 'Remind Admin'
-  },
-];
+};
 
 const ReferralHistory = () => {
 
