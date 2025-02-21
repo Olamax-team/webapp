@@ -73,16 +73,19 @@ const BottomHeader = ({notifications}:bottomProps) => {
     if (openTrade) {
       setOpenSupport(false);
       setOpenMore(false);
+      setOpenMobile(false);
     }
 
     if (openSupport) {
       setOpenSupport(false);
-      setOpenMore(false)
+      setOpenMore(false);
+      setOpenMobile(false);
     }
 
     if (openMore) {
       setOpenSupport(false);
-      setOpenTrade(false)
+      setOpenTrade(false);
+      setOpenMobile(false);
     }
   };
 
