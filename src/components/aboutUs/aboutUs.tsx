@@ -3,6 +3,10 @@ import React from "react";
 import TopHeader from "../footer/TopHeader";
 import OurValues from "./ourValues";
 import { documentTitle } from "../../lib/utils";
+import imageA from '../../assets/images/imageA.svg'
+import imageB from '../../assets/images/imageB.svg'
+import imageC from '../../assets/images/imagec.svg'
+
 
 const AboutUs = () => {
   documentTitle('About Us');
@@ -24,16 +28,25 @@ const AboutUs = () => {
                 OLAMAX EXCHANGE is a financial technology company that builds payments infrastructure for crypto. Our on-and-off-ramp suite of products provides a seamless experience for converting between fiat currencies and cryptocurrencies using all major payment methods including debit and credit card and local bank transfers. </p>
               <p className="mt-4 text-center font-Inter text-[14px]  text-[#121826] font-medium  xl:text-[18px] xl:leading-[27px] "> We are active in more than 5 countries and is trusted by over a million + users</p> 
             
-              <div>
-                  <h1 className="w-full font-Inter  font-bold mt-10 text-center ">OLAMAX</h1>
-              </div>
+              <div className="relative h-auto w-full mt-10 xl:p-5 text-center flex justify-center "> 
+                  <div className="flex  items-center justify-center xl:w-full xl:h-auto h-[105px] w-[308px] relative  ">
+                    <img src= {imageA} alt="" className="object-cover w-[95px] h-[76px] xl:w-[225px] xl:h-[120px] z-[1]" />
+                    <img src= {imageB} alt="" className="object-cover w-[95px] h-[76px] xl:w-[225px] xl:h-[120px] z-[1]" />
+                    <img src= {imageC} alt="" className="object-cover w-[95px] h-[76px] xl:w-[225px] xl:h-[120px] z-[1]" />
+                    <h1 className="text-white font-bold xl:font-DMSans text-[70px] xl:text-[165px]  absolute text-center uppercase leading-10 xl:leading-[14] z-[2] after:content-['OLAMAX'] after:absolute after:w-full after:h-full  after:left-0 after:top-0  ">
+                      OLAMAX
+                    </h1>
+                  </div>
+                </div>  
+                        
+           
           </div>
 
           <div>
             <div className=" lg:flex  justify-between  w-full h-auto  mt-10 gap-10 ">
-                  <h2 className="xl:w-[50%]  w-full font-DMSans font-bold text-[18px] leading-[27px] xl:text-left  text-center ">At <span className="text-[#039AE4] font-DMSans font-bold text-[18px] leading-[27px] items-center ">OLAMAX EXCHANGE</span>, we are the place where people reach their goals with cryptocurrencies and blockchain technology. 
+                  <h2 className="xl:w-[50%]  w-full font-DMSans font-bold text-[18px] leading-[27px] xl:text-left  text-center px-3">At <span className="text-[#039AE4] font-DMSans font-bold text-[18px] leading-[27px] items-center ">OLAMAX EXCHANGE</span>, we are the place where people reach their goals with cryptocurrencies and blockchain technology. 
                   We do that by offering a full scope of secure solutions to buy, sell, and earn digital assets. </h2>
-                  <p className="xl:w-[50%]  w-full mt-10 xl:mt-0 font-Inter font-medium text-[14px] xl:text-left leading-[21px] text-center ">Olamax.io is a product of Olamax associate  incorporated in Nigeria. We provide Cryptocurrency to Fiat exchange services for Bitcoin, Ethereum, Doge, Steem and Sbd to NAIRA. Our exchange provides you a marketplace
+                  <p className="xl:w-[50%]  w-full mt-10 xl:mt-0 font-Inter font-medium text-[14px] xl:text-left leading-[21px] text-center px-3 ">Olamax.io is a product of Olamax associate  incorporated in Nigeria. We provide Cryptocurrency to Fiat exchange services for Bitcoin, Ethereum, Doge, Steem and Sbd to NAIRA. Our exchange provides you a marketplace
                     where you can buy and sell Cryptocurrencies easily and safely with notable simple UI, friendly online customer support 24/7 and lowest 
                     fees at the best rate you can't find anywhere else.
                     Our team comprises of professionals with extensive experience in financial products, E-currencies, 
