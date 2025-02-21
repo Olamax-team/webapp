@@ -50,7 +50,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
   const { user, setUser } = useUserDetails();
 
-    const { getItem } = useLocalStorage();
+  const { getItem } = useLocalStorage();
   const storedUser = getItem('user');
   const storedToken = getItem('token');
 
