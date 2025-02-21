@@ -71,6 +71,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 // for closing menu when links are clicked on
   const closeMenu = () => {
     if (openTrade) {
+      setOpenTrade(false);
       setOpenSupport(false);
       setOpenMore(false);
       setOpenMobile(false);
@@ -78,11 +79,13 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
     if (openSupport) {
       setOpenSupport(false);
+      setOpenTrade(false);
       setOpenMore(false);
       setOpenMobile(false);
     }
 
     if (openMore) {
+      setOpenMore(false);
       setOpenSupport(false);
       setOpenTrade(false);
       setOpenMobile(false);
@@ -201,17 +204,19 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
         {/* other links for desktop */}
         <ul className='hidden xl:flex items-center gap-8 cursor-pointer h-full'>
-          <li className='flex items-center gap-2 h-full relative group'>
-            <button className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')} onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
-              Trade Crypto
-            </button>
-            <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
-            <DropDownMenu 
-              menuList={tradeCryptoList}
-              style='left-0 top-[108px]'
-              isOpen={openTrade}
-            />
-          </li>
+          { user &&
+            <li className='flex items-center gap-2 h-full relative group'>
+              <button className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')} onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+                Trade Crypto
+              </button>
+              <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
+              <DropDownMenu 
+                menuList={tradeCryptoList}
+                style='left-0 top-[108px]'
+                isOpen={openTrade}
+              />
+            </li>
+          }
           <li className='hover:text-primary'>
             <Link to={'/escrow-services'}>Escrow Services</Link>
           </li>
@@ -249,15 +254,17 @@ const BottomHeader = ({notifications}:bottomProps) => {
                 </div>
               </div>
               <ul className='flex flex-col gap-8 mt-8'>
-                <li className='flex items-center gap-2 h-full relative group' onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
-                  <span className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')}>Trade Crypto</span>
-                  <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
-                  <DropDownMenu 
-                    menuList={tradeCryptoList}
-                    style='-left-3 lg:top-[30px] top-10'
-                    isOpen={openTrade}
-                  />
-                </li>
+                { user &&
+                  <li className='flex items-center gap-2 h-full relative group' onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+                    <span className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')}>Trade Crypto</span>
+                    <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
+                    <DropDownMenu 
+                      menuList={tradeCryptoList}
+                      style='-left-3 lg:top-[30px] top-10'
+                      isOpen={openTrade}
+                    />
+                  </li>
+                }
                 <li className='hover:text-primary'>
                   <Link to={'/escrow-services'}>Escrow Services</Link>
                 </li>
