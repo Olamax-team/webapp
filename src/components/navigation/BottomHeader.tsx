@@ -112,7 +112,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 // single navbar menu item
   const MenuItem = ({image, title, description, path}:menuItemProps) => {
     return (
-      <Link to={user ? path : '/log-in'} className='lg:w-[320px] lg:h-[80px] rounded-md p-[11px] hover:bg-[#0073AD1A] w-fit' onClick={closeMenu}>
+      <Link to={path} className='lg:w-[320px] lg:h-[80px] rounded-md p-[11px] hover:bg-[#0073AD1A] w-fit' onClick={closeMenu}>
         <div className="lg:h-full lg:w-[272px] w-[230px] flex lg:gap-6 gap-4 items-center lg:items-stretch">
           <div className="size-[32px] flex-none">
             <img src={image} alt='icon' className='object-cover'/>
@@ -130,10 +130,12 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const DropDownMenu = ({menuList, style, isOpen}:dropDownMenuProps) => {
     return (
       <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col gap-3 shadow-lg absolute',style, isOpen ? 'flex': 'hidden')}>
-        {menuList.map((item:menuItemProps) => (
+        {menuList === tradeCryptoList ? tradeCryptoList.map((item:menuItemProps) => (
+          <MenuItem key={item.title} {...item} path={user ? item.path : '/log-in'}/>
+        )) : menuList.map((item:menuItemProps) => ( 
           <MenuItem key={item.title} {...item}/>
         ))}
-      </div>
+      </div>  
     )
   };
 
