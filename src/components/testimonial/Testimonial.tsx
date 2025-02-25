@@ -1,7 +1,7 @@
-import image4 from '../../assets/images/avatar_4.png'
-import image1 from '../../assets/images/avatar_1.png'
-import image2 from '../../assets/images/avatar_2.png'
-import image3 from '../../assets/images/avatar_3.png'
+// import image4 from '../../assets/images/avatar_4.png'
+// import image1 from '../../assets/images/avatar_1.png'
+// import image2 from '../../assets/images/avatar_2.png'
+// import image3 from '../../assets/images/avatar_3.png'
 import ImageAvatar from '../ui/image-avatar';
 import ratingBig from '../../assets/images/rating_big.png'
 import ratingSmall from '../../assets/images/rating_small.png'
@@ -12,25 +12,25 @@ const testimonialList = [
     name: "Olumide Fashola",
     role: "Day to Day Trader",
     testimony: "I like that Olamax takes their time to improve on their processes and feedback from users. It’s a good one for the team to be innovative.",
-    image: image4
+    image: '/images/avatar_4.png'
   },
   {
     name: "David Rasmus",
     role: "CEO X.inc",
     testimony: "For me, and a couple of my friends, what we found most interesting about Olamax is that human interaction. The team is always fantastic and they don’t make you feel alone even if it’s your first time trading. Love it!",
-    image: image1
+    image: '/images/avatar_1.png'
   },
   {
     name: "Elias Timble",
     role: "Student",
     testimony: "My first interaction with the Olamax platform was through referral from a friend. I had to ditch a global platform for a simpler and easier interface. It’s been a worthwhile decision.",
-    image: image2
+    image: '/images/avatar_2.png'
   },
   {
     name: "Esther Friday",
     role: "Trader",
     testimony: "I was really skeptical about crypto trading thinking it was too complex till I was introduced to Olamax. I discovered the platform is easy to navigate and understand. It’s perfect for novices and suitable for more advanced traders.",
-    image: image3
+    image:  '/images/avatar_3.png'
   },
 ];
 

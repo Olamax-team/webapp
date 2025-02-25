@@ -2,10 +2,8 @@ import React from 'react';
 import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
-import { cn, timelineCreator } from '../../lib/utils';
-import userimage from '../../assets/images/avatar_1.png'
+import { cn, generateImagePath, timelineCreator } from '../../lib/utils';
 import ImageAvatar from '../ui/image-avatar';
-import olamaxLogo from '../../assets/images/olamax_logo_2.png'
 import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
 import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
 import useUserDetails from '../../stores/userStore';
@@ -199,7 +197,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
           <Menu size={25} className='xl:hidden cursor-pointer' onClick={() => setOpenMobile(!openMobile)}/>
           <Link to={'/'}>
             <div className='w-[110px] xl:w-[153px] h-[34px] xl:h-[48px]'>
-              <img src={olamaxLogo} alt="logo" className='object-cover'/>
+              <img src={'/images/olamax_logo_2.png'} alt="logo" className='object-cover'/>
             </div>
           </Link>
         </div>
@@ -322,7 +320,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
                   {notifications && <div className="absolute bg-primary size-[9px] rounded-full top-0 right-[2px]" />}
                 </div>
               </button>
-              <ImageAvatar style='md:size-[56px] size-[40px]' image={userimage}/>
+              <ImageAvatar style='md:size-[56px] size-[40px]' image={'/images/avatar_1.png'}/>
             </div>
           ) : 
           (

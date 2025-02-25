@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
-import gmailIcon from '../assets/images/logos_google-gmail.png'
-import arrow from '../assets/images/arrow-left.png'
+// import gmailIcon from '../assets/images/logos_google-gmail.png'
+// import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import useUserDetails from '../stores/userStore';
 import { useToast } from '../hooks/use-toast';
@@ -140,7 +140,7 @@ const LoginPage = () => {
             </div>
             <button className='flex gap-4 items-center text-black/50 lg:hidden' onClick={() => navigate(-1)} type='button'>
               <div className="size-[20px]">
-                <img src={arrow} alt="arrow_icon"/>
+                <img src={'/assets/images/arrow-left.png'} alt="arrow_icon"/>
               </div>
               Back
             </button>
@@ -181,7 +181,7 @@ const LoginPage = () => {
             <h2 className='font-semibold'>{isLoading ? 'Logging in...' : 'Continue with Google'}</h2>
             {isLoading && <Loader2 className='animate-spin'/>}
             <div className='w-[24px] h-[18px]'>
-              <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
+              <img src={'/images/logos_google-gmail.png'} alt="gmail_icon" className='object-cover' />
             </div>
           </button>
           <p className='font-poppins'>Don&apos;t have an account ? <Link to={'/sign-up'} className='font-semibold'>Register</Link></p>

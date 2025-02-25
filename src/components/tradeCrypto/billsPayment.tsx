@@ -2,11 +2,11 @@ import React, { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import arrowIcon from '../../assets/images/arrowdown.svg';
-import BTC from "../../assets/images/BTC Circular.png";
-import ETH from "../../assets/images/ETH Circular.png";
-import USDT from "../../assets/images/USDT Circular.png";
-import SOL from "../../assets/images/SOL Circular.png";
-import IBEDC from "../../assets/images/IBEDC Circular.png";
+// import BTC from "../../assets/images/BTC Circular.png";
+// import ETH from "../../assets/images/ETH Circular.png";
+// import USDT from "../../assets/images/USDT Circular.png";
+// import SOL from "../../assets/images/SOL Circular.png";
+// import IBEDC from "../../assets/images/IBEDC Circular.png";
 interface BillsPaymentProps {
 categories: string[]; // Categories to map for dropdown
 billProps1: string[]; // Options for billProp1 dropdown
@@ -28,12 +28,13 @@ const [amount2, setAmount2] = useState<string>("");
 const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 }
+
   const logoMap: Record<string, string> = {
-    BTC,
-    ETH,
-    SOL,
-    USDT,
-    IBEDC,
+    BTC: '/images/BTC Circular.png',
+    ETH: '/images/ETH Circular.png',
+    SOL: '/images/SOL Circular.png',
+    USDT: 'images/USDT Circular.png',
+    IBEDC: '/images/IBEDC Circular.png',
   };
 
 return (

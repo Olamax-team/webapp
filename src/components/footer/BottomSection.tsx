@@ -1,9 +1,9 @@
-import logo from '../../assets/images/olamax_logo_2.png'
-import googleplaylogo from '../../assets/images/googleplay.png';
-import applestorelogo from '../../assets/images/appstore.png';
-import whatsapp from '../../assets/images/whatsapp.png';
-import email from '../../assets/images/email.png';
-import call from '../../assets/images/call.png';
+// import logo from '../../assets/images/olamax_logo_2.png'
+// import googleplaylogo from '../../assets/images/googleplay.png';
+// import applestorelogo from '../../assets/images/appstore.png';
+// import whatsapp from '../../assets/images/whatsapp.png';
+// import email from '../../assets/images/email.png';
+// import call from '../../assets/images/call.png';
 import { Link } from 'react-router';
 
 const links = {
@@ -65,17 +65,17 @@ const links = {
     {
       label: 'support@olamax.io',
       path: '/support-us',
-      image: email,
+      image: "/images/email.png",
     },
     {
       label: 'Call Us',
       path: '/call-us',
-      image: call,
+      image: "/images/call.png",
     },
     {
       label: 'Message Us',
       path: '/message-us',
-      image: whatsapp,
+      image: "/images/whatsapp.png",
     }
   ],  
 };
@@ -90,15 +90,15 @@ const BottomSection = () => {
         <div className="w-[90%] mx-auto lg:py-[44px] flex gap-14">
           <div className="w-[25%] flex flex-col gap-8">
             <Link to={'/'} className="block w-[153px] h-[54px]">
-              <img src={logo} alt="logo" className='object-cover'/>
+              <img src={"/images/olamax_logo_2.png"} alt="logo" className='object-cover'/>
             </Link>
             <div className="flex flex-col gap-3">
               <h2 className='font-bold text-[26px] leading-normal font-DMSans mb-3'>Download the Mobile App</h2>
               <Link  to={'/'} className='block w-[203.9px] h-[59px]'>
-                <img src={googleplaylogo} alt="googleplay_logo" className='object-cover'/>
+                <img src={"/images/googleplay.png"} alt="googleplay_logo" className='object-cover'/>
               </Link>
               <Link  to={'/'} className='block w-[203.9px] h-[59px]'>
-                <img src={applestorelogo} alt="applestore_logo" className='object-cover'/>
+                <img src={"/images/appstore.png"} alt="applestore_logo" className='object-cover'/>
               </Link>
             </div>
           </div>
@@ -152,7 +152,7 @@ const BottomSection = () => {
       <div className="w-full lg:hidden flex-col gap-4 py-[40px]">
         <div className="w-[90%] md:[80%] mx-auto flex flex-col gap-6">
           <Link to={'/'} className="block w-[110px] h-[34px]">
-            <img src={logo} alt="logo" className='object-cover'/>
+            <img src={"/images/olamax_logo_2.png"} alt="logo" className='object-cover'/>
           </Link>
           <div className="grid grid-cols-2 gap-8">
             <div className="w-full h-full">
@@ -197,10 +197,10 @@ const BottomSection = () => {
             <h2 className='font-bold text-lg font-DMSans mb-3'>Download the Mobile App</h2>
             <div className="flex items-center gap-4">
               <Link  to={'/'} className='block w-[172px] h-[50px]'>
-                <img src={googleplaylogo} alt="googleplay_logo" className='object-cover'/>
+                <img src={"/images/googleplay.png"} alt="googleplay_logo" className='object-cover'/>
               </Link>
               <Link  to={'/'} className='block w-[172px] h-[50px]'>
-                <img src={applestorelogo} alt="applestore_logo" className='object-cover'/>
+                <img src={"/images/appstore.png"} alt="applestore_logo" className='object-cover'/>
               </Link>
             </div>
           </div>
