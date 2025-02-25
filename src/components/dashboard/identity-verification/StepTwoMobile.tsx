@@ -25,8 +25,48 @@ const StepTwoMobile = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const { getItem } = useLocalStorage();
   const token = getItem('token');
+
+  const [availableKyc, setAvailableKyc] = React.useState<any[]>([])
  
   const DocumentSelect = () => {
+
+    React.useEffect(()=> {
+
+      const config = {
+        method: 'get',
+        url: 'https://api.olamax.io/api/available-kyc-method',
+        header: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      };
+
+      axios.request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          setAvailableKyc(response.data.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          toast({
+            title: 'Error',
+            description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+            variant: 'destructive'
+          });
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Something went wrong!! Try again later',
+            variant: 'destructive'
+          });
+          console.error("Unexpected error:", error);
+        }; 
+      });
+
+    },[]);
+
+    console.log(availableKyc);
 
     const handleDocumentSelect = (value:string) => {
       setDocumentType(value);
@@ -164,6 +204,7 @@ const StepTwoMobile = () => {
     } else {
 
       formData.append('method', documentType);
+
       if (frontImage) {
         formData.append('front', frontImage, frontImage.name)
       };
@@ -173,6 +214,7 @@ const StepTwoMobile = () => {
       if (holdingImage) {
         formData.append('holding', holdingImage, holdingImage.name)
       };
+
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
@@ -191,6 +233,7 @@ const StepTwoMobile = () => {
           variant: 'destructive'
         });
         return;
+        
       } else {
         setIsLoading(true);
         axios.request(config)

@@ -1,5 +1,5 @@
-import avatar from "../../assets/images/posterAvatar.svg"
-import avatar1 from "../../assets/images/posterAvatar1.svg"
+// import avatar from "../../assets/images/posterAvatar.svg"
+// import avatar1 from "../../assets/images/posterAvatar1.svg"
 interface Announce {
     id: number;
     text: string;
@@ -17,7 +17,7 @@ const Announcement =() => {
             text: "GET MORE VALUE FOR YOUR USDT AND BTC WHEN YOU BUY OR SELL USDT/BTC AND EARN BONK TOKEN. PROMO STARTS FROM 6TH OF MARCH TILL 6TH OF APRIL.",
             link:"",
             poster: "Admin",
-            posterAvatar: avatar,
+            posterAvatar: '/images/posterAvatar.svg',
             date: "24/11/2024",
         },
         {
@@ -25,7 +25,7 @@ const Announcement =() => {
             text: "ENJOY LOWER FEES ON ALL CRYPTO TRANSACTIONS WHEN YOU TRADE ETH AND LTC. SPECIAL DISCOUNT RUNS FROM 1ST OF NOVEMBER TO 1ST OF DECEMBER.",
             link:"",
             poster: "Admin",
-            posterAvatar: avatar,
+            posterAvatar: '/images/posterAvatar.svg',
             date: "24/11/2024",
         },
         {
@@ -33,7 +33,7 @@ const Announcement =() => {
             text: "TRADE YOUR CRYPTO SECURELY AND EARN REWARDS ON EVERY BTC AND DOGE TRANSACTION. PROMO RUNS FROM 10TH OF OCTOBER TO 10TH OF NOVEMBER.",
             link:"",
             poster: "Admin",
-            posterAvatar: avatar1,
+            posterAvatar: '/images/posterAvatar1.svg',
             date: "24/11/2024",
         },
       ];

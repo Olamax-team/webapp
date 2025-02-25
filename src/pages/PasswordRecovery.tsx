@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
-import arrow from '../assets/images/arrow-left.png'
+// import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import { useToast } from '../hooks/use-toast';
 import { Loader2 } from 'lucide-react';
@@ -91,7 +91,7 @@ const PasswordRecovery = () => {
             </div>
             <button className='flex gap-4 items-center text-black/50 lg:hidden mt-4 -mr-8' onClick={() => navigate(-1)}>
               <div className="size-[20px]">
-                <img src={arrow} alt="arrow_icon"/>
+                <img src={'/images/arrow-left.png'} alt="arrow_icon"/>
               </div>
               Back
             </button>
