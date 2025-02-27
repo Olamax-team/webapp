@@ -83,7 +83,6 @@ const AirtimeInput = () => {
                         <div className="space-y-2 mt-3">
                             <p className="font-medium text-[16px] leading-[24px]">{airtimeData.item?.selectedNetwork}</p>
                         </div>
-                        {/* className="flex justify-between border-t-2 py-6" */}
 
                         <div className="flex justify-between w-full  font-Inter  border-t-2 border-[#0000001A] mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">You Recieve</p>

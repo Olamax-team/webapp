@@ -2,10 +2,9 @@
 import React from 'react';
 import { IconType } from 'react-icons/lib';
 
-// Modify billsLinkProps to include the onClick prop
 type billsLinkProps = {
   index: number;
-  setActive: React.Dispatch<React.SetStateAction<number>>; // setActive will update the active state
+  setActive: React.Dispatch<React.SetStateAction<number>>; 
   active: number;
   icon: IconType;
   name: string;
