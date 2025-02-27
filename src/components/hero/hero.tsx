@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import FloatingTag from '../ui/floating-tag';
-import waves from "../../assets/images/waves.png"
-import wavesMobile from "../../assets/images/waves-mobile.png"
+import waves from "../../assets/images/waves.svg"
+import wavesMobile from "../../assets/images/wavesmobile.svg"
 
 const HeroSection: React.FC = () => {
   return (
@@ -11,7 +11,7 @@ const HeroSection: React.FC = () => {
       {/* Content */}
       <>
         <div className="relative mx-auto top-[72px] bottom-[251.66px] w-[430px] xl:w-[1220.42px] h-[550px] xl:h-[326.34px]">
-          <div className="font-poppins w-full flex text-center">
+          <div className="font-poppins w-full flex flex-wrap text-center">
             {/* Floating Tags */}
             <div className='hidden xl:block'>
               {/* Top-Left */}
@@ -66,7 +66,7 @@ const HeroSection: React.FC = () => {
                 animate='float-up'
                 boxPosition={{bottom:'-5px', left:'-2px'}} />
             </div>
-            <div className='relative xl:p-[80px] mx-auto text-center items-center justify-center w-full'>
+            <div className='relative xl:p-[80px] p-10 mx-auto text-center items-center justify-center w-full'>
               {/* Content */}
               <h1 className="text-wrap font-DMSans text-[18px] leading-[27px] xl:text-[32px] font-bold xl:leading-[48px] text-textDark mt-4 mb-4">
               Your all-in-one crypto platform to buy, sell & trade, cryptocurrencies

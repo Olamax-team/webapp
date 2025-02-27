@@ -4,7 +4,7 @@ import BTC from "../../assets/images/BTC Circular.png"
 import ETH from "../../assets/images/ETH Circular.png"
 import USDT from "../../assets/images/USDT Circular.png"
 import SOL from "../../assets/images/SOL Circular.png"
-import graphUp from "../../assets/images/positive-graph.png"
+import graphUp from "../../assets/images/positive-graph.svg"
 // Define the type for a single crypto item
 interface Crypto {
   name: string;

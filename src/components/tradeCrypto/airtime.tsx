@@ -118,7 +118,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                               <select
                               value={airtimeProp1}
                               onChange={(e) => setAirtimeProp1(e.target.value)}
-                              className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
+                              className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                               >
                               {airtimeProps1.map((prop) => (
                               <option key={prop} value={prop}>
@@ -166,7 +166,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                                   ? setprop2(e.target.value)
                                   : setprop1(e.target.value)
                               }
-                              className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
+                              className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                           >
                               {(subTab === "CRYPTO" ? props2currency : props1).map((prop) => (
                               <option key={prop} value={prop}>

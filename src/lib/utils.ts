@@ -216,6 +216,26 @@ export const useConfirmVerificationModal = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+export const useCryptoDonateModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
 
+export const useFiatDonateModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
 
+export const useDonateCompletedModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
 
+export const useDonateConfirmationModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));

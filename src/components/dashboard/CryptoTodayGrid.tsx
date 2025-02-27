@@ -6,12 +6,12 @@ import BTC from "../../assets/images/BTC Circular.png"
 import ETH from "../../assets/images/ETH Circular.png"
 import USDT from "../../assets/images/USDT Circular.png"
 import SOL from "../../assets/images/SOL Circular.png"
-import news1 from "../../assets/images/news1.png"
-import news2 from "../../assets/images/news2.png"
-import news3 from "../../assets/images/news3.png"
-import graphUp from "../../assets/images/positive-graph.png"
+import news1 from "../../assets/images/news1.svg"
+import news2 from "../../assets/images/news2.svg"
+import news3 from "../../assets/images/news3.svg"
+import graphUp from "../../assets/images/positive-graph.svg"
 // import graphDown from "../../assets/images/negative-graph.png"
-import invites from "../../assets/images/invites.png"
+import invites from "../../assets/images/Invites.svg"
 // Define the type for a single crypto item
 interface Crypto {
     name: string;
