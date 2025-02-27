@@ -19,6 +19,9 @@ import AboutUs from './components/aboutUs/aboutUs';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import Education from './components/educationalCenter/education';
 import OlamaxFoundationPage from './pages/OlamaxFoundationPage';
+import ModuleOne from './components/educationalCenter/moduleOne';
+import { ReferralPrograme } from './components/referralPage/referralProgram';
+import Escrow from './components/escrow/escrow';
 
 
 const router = createBrowserRouter([
@@ -40,6 +43,19 @@ const router = createBrowserRouter([
       {
         path: '/educational-center',
         element: <Education/>
+      },
+      {
+        path:'/moduleOne',
+        element: <ModuleOne/>
+      },
+      {
+          path:'/referral-program',
+          element: <ReferralPrograme/>
+      },
+      {
+        path: '/escrow-services',
+        element:  <Escrow/>
+
       },
       {
         path: '/sign-up',
