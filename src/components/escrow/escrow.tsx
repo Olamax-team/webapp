@@ -1,7 +1,6 @@
 import React from "react"
 import rectangleescrow from '../../assets/images/Rectangleescrow.svg'
 import btcEscrow from '../../assets/images/BitcoinEscrow.svg'
-// import { ShieldCheck , ShieldAlert  } from 'lucide-react';
 import alertescrow from '../../assets/images/alertescrow.svg'
 import shieldCheck from '../../assets/images/shield-check.svg'
 import trustbuild from '../../assets/images/trustBuild.svg'

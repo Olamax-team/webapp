@@ -10,7 +10,6 @@ import strokeleft from '../../assets/images/strokesLeft.svg'
 import strokeright from '../../assets/images/strokesRight.svg'
 
 export const ReferralPrograme = () => {
-    // Specify that openQuestion can be either a number or null
     const [openQuestion, setOpenQuestion] = useState<number | null>(null);
 
     const toggleQuestion = (index: number) => {

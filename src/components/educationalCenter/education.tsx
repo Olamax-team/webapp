@@ -7,8 +7,7 @@ import bgImage from '../../assets/images/bgImage.svg';
 // import rectangleD from '../../assets/images/RectangleD.svg'
 // import rectangleZ from '../../assets/images/Rectangle Z.svg'
 import { useNavigate } from "react-router-dom";
-// import { Link } from "lucide-react";
-// import moduleOne from './'
+
 
 
 const Education = () => {

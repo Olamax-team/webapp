@@ -18,7 +18,7 @@ const AboutUs = () => {
   
   return (
     <React.Fragment>
-      <section className="w-full h-auto p-4 lg:py-10 lg:px-24 flex items-center justify-center flex-col text-center ">
+      <section className="w-full h-auto p-5 xl:p-10 flex items-center justify-center flex-col text-center ">
           <div className="lg:w-[60%] w-full text-center ">
               <h2 className="font-Inter font-bold text-[18px] leading-[27px] text-center text-[#121826] xl:font-DMSans xl:font-bold xl:text-[32px] xl:leading-[48px] ">We see no reason why buying & selling crypto should be so hard</h2>
               <p className="mt-5 font-Inter font-medium  text-[14px] text-center  text-[#121826] leading-[21px] xl:font-Inter xl:font-medium xl:leading-[27px] xl:text-[18px]"> 
