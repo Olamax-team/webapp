@@ -14,7 +14,7 @@ const OurValues = () => {
           </p>
         </div>
   
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-4 lg:grid-cols-4 mt-10">
+        <div className="grid grid-cols-1 gap-1 xl:grid-cols-4 lg:grid-cols-4 mt-10">
           <div className="w-full h-auto bg-[#039AE4] rounded-[5px] xl:rounded-[20px]  text-[#ffffff] flex flex-col items-center justify-center py-6 px-5 ">
             <div className="size-8 bg-[#ffffff] flex items-center justify-center mb-3 rounded-full">
               < HeartHandshake className="size-6  text-[#039AE4]" />
@@ -36,7 +36,7 @@ const OurValues = () => {
           </div>
   
 
-          <div className="w-full h-auto lg:bg-[#039AE4] rounded-[5px]  bg-[#121826]  xl:rounded-[20px] text-[#ffffff] flex flex-col items-center justify-center  py-2 px-3">
+          <div className="w-full h-auto bg-[#039AE4] rounded-[5px]    xl:rounded-[20px] text-[#ffffff] flex flex-col items-center justify-center  py-2 px-3">
             <div className="size-8 bg-[#ffffff] flex items-center justify-center mb-3 rounded-full">
               <HeartHandshake className="size-6  text-[#039AE4]" />
             </div>
@@ -46,7 +46,7 @@ const OurValues = () => {
             </p>
           </div>
 
-            <div className="  w-full h-auto bg-[#039AE4]  lg:bg-[#121826] rounded-[5px]  xl:rounded-[20px] text-[#ffffff] flex flex-col items-center justify-center  py-2  px-3">
+            <div className="  w-full h-auto bg-[#121826] rounded-[5px]  xl:rounded-[20px] text-[#ffffff] flex flex-col items-center justify-center  py-2  px-3">
             <div className="size-8 bg-[#ffffff] flex items-center justify-center mb-3 rounded-full">
               < HeartHandshake className="size-6 text-[#121826]" />
             </div>
