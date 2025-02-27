@@ -1,5 +1,5 @@
 import BuyInput from "./tradeInput/buyInput";
-import arrow from '../../assets/images/arrow-left.png'
+// import arrow from '../../assets/images/arrow-left.png'
 import SellInput from "./tradeInput/sellInput";
 
 type tradeDetailsProps = {
@@ -24,7 +24,7 @@ type tradeDetailsProps = {
       <div className="flex flex-col h-auto w-full">
         <button className='flex gap-4 text-black/50 items-center' onClick={() => setShowTransactionDetail(false)}>  
           <div className="size-[20px]">
-            <img src={arrow} alt="arrow_icon" />
+            <img src={"/images/arrow-left.png"} alt="arrow_icon" />
           </div>
           Back
         </button>

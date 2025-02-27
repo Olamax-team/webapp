@@ -1,11 +1,11 @@
-import deskBanner from '../../assets/images/Rectangle 45.png';
-import mobBanner from '../../assets/images/Rectangle 4763.png';
-import instagram from '../../assets/images/Vector_1.png';
-import facebook from '../../assets/images/Vector_2.png';
-import x from '../../assets/images/Vector_3.png';
-import youtube from '../../assets/images/Vector_4.png';
-import linkedin from '../../assets/images/Vector.png';
-import send from '../../assets/images/Vector_5.png';
+// import deskBanner from '../../assets/images/Rectangle 45.png';
+// import mobBanner from '../../assets/images/Rectangle 4763.png';
+// import instagram from '../../assets/images/Vector_1.png';
+// import facebook from '../../assets/images/Vector_2.png';
+// import x from '../../assets/images/Vector_3.png';
+// import youtube from '../../assets/images/Vector_4.png';
+// import linkedin from '../../assets/images/Vector.png';
+// import send from '../../assets/images/Vector_5.png';
 import React from 'react';
 
 
@@ -13,27 +13,27 @@ const mediaList = [
   {
     name: 'linkedin',
     path: 'https://www.linkedin.com/in/olamax',
-    image: linkedin
+    image: '/images/Vector.png'
   },
   {
     name: 'instagram',
     path: 'https://www.instagram.com/olamax',
-    image: instagram
+    image: '/images/Vector_1.png'
   },
   {
     name: 'facebook',
     path: 'https://www.facebook.com/olamax',
-    image: facebook
+    image: '/images/Vector_2.png'
   },
   {
     name: 'youtube',
     path: 'https://www.youtube.com/olamax',
-    image: youtube
+    image: '/images/Vector_4.png'
   },
   {
     name: 'x',
     path: 'https://www.x.com/olamax',
-    image: x
+    image: '/images/Vector_3.png'
   },
 ]
 
@@ -55,9 +55,9 @@ const TopHeader = () => {
   return (
     <div className="w-full relative md:border overflow-hidden">
       {/* image for the desktop and medium screen */}
-      <img src={deskBanner} alt="footer_banner" className='object-cover lg:min-h-[480px] md:min-h-[500px] w-full h-full hidden md:block'/>
+      <img src={'/images/Rectangle_45.png'} alt="footer_banner" className='object-cover lg:min-h-[480px] md:min-h-[500px] w-full h-full hidden md:block'/>
       {/* image for the mobile only */}
-      <img src={mobBanner} alt="footer_banner" className='object-cover h-[400px] w-full md:hidden'/>
+      <img src={'/images/Rectangle_4763.png'} alt="footer_banner" className='object-cover h-[400px] w-full md:hidden'/>
       <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center">
         <div className="w-[80%] md:h-[400px] min-h-[320px] rounded-[20px] border-[3px] bg-black/20 backdrop-blur-sm text-white flex items-center justify-center">
           <div className="w-[80%] md:h-[292px] h-[262px] flex flex-col items-center justify-between">
@@ -76,7 +76,7 @@ const TopHeader = () => {
             <form className='w-[90%] h-[44px] mx-auto flex items-center border-b border-white pb-1' onSubmit={subscribeUser}>
               <input type="email" className='h-full flex-1 bg-inherit focus:outline-none placeholder:text-white md:text-[23px] text-base' placeholder='Sign up for Newsletter' onChange={(evt) => setEmail(evt.target.value)}/>
               <button className="size-[32px] flex-none flex items-center justify-center" type='submit'>
-                <img src={send} alt="send_button" className='object-cover'/>
+                <img src={'/images/Vector_5.png'} alt="send_button" className='object-cover'/>
               </button>
             </form>
           </div>

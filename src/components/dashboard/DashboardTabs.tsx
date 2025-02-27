@@ -5,8 +5,8 @@ import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
-import phone from "../../assets/images/phone.png"
-import electricity from "../../assets/images/electricity.png"
+// import phone from "../../assets/images/phone.png"
+// import electricity from "../../assets/images/electricity.png"
 import useUserDetails from "../../stores/userStore";
 
 interface UserInfoProps {
@@ -156,14 +156,14 @@ const DashboardTab: React.FC = () => {
       title: "Buy Airtime & Data",
       description: "Top-up your devices with ease",
       icon: <div className="flex w-[40px] h-[40px] items-center justify-center bg-white rounded-full">
-                <img src={phone} alt="phone" className="w-[24px] h-[24px]"/>
+                <img src={"/images/phone.png"} alt="phone" className="w-[24px] h-[24px]"/>
             </div>,
     },
     {
       title: "Pay Utilities",
       description: "Pay your bills with ease",
       icon: <div className="flex w-[40px] h-[40px] items-center justify-center bg-white rounded-full">
-                <img src={electricity} alt="phone" className=""/>
+                <img src={"/images/electricity.png"} alt="phone" className=""/>
             </div>,
     },
   ];

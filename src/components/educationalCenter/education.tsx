@@ -1,11 +1,11 @@
 import React from "react";
 import TopHeader from "../footer/TopHeader";
 import bgImage from '../../assets/images/bgImage.svg';
-import rectangleA from '../../assets/images/RectangleA.svg'
-import rectangleB from '../../assets/images/RectanglB.svg'
-import rectangleC from '../../assets/images/Rectangle C.svg'
-import rectangleD from '../../assets/images/RectangleD.svg'
-import rectangleZ from '../../assets/images/Rectangle Z.svg'
+// import rectangleA from '../../assets/images/RectangleA.svg'
+// import rectangleB from '../../assets/images/RectanglB.svg'
+// import rectangleC from '../../assets/images/Rectangle C.svg'
+// import rectangleD from '../../assets/images/RectangleD.svg'
+// import rectangleZ from '../../assets/images/Rectangle Z.svg'
 import { useNavigate } from "react-router-dom";
 // import { Link } from "lucide-react";
 // import moduleOne from './'
@@ -16,32 +16,32 @@ const Education = () => {
 
     const modules = [
         {
-            img: rectangleA, label: "Blockchain Basics",
+            img: "/images/RectangleA.svg", label: "Blockchain Basics",
             value: "Learn about the basics to blockchain technology, its history, principles, and applications.",
             button:"Module 1",
             Link: "/ModuleOne",      
          },
         {
-            img:rectangleB, label:"Cryptocurrency and Earning Oppor...",
+            img:'/images/RectanglB.svg', label:"Cryptocurrency and Earning Oppor...",
             value:"learn the basics of cryptocurrency, strategies for earning, and key aspects of investing.",
             button:"Module 2",
             Link: "/ModuleTwo",
         },
         {
-            img: rectangleC, label:"Digital Wallet Security and Safegu...",
+            img: '/images/Rectangle C.svg', label:"Digital Wallet Security and Safegu...",
             value:"Learn the essentials of cryptocurrency wallet management, private keys, and security protocols.",
             button: "Module 3",
             Link: "/ModuleThree",
 
         },
         {
-            img: rectangleZ, label: "Web3 Fundamentals and Development",
+            img: '/images/Rectangle Z.svg', label: "Web3 Fundamentals and Development",
             value:"The principles of Web3, smart contracts, and decentralized applications (dApps) for beginners",
             button: "Module 4",
             Link: "/ModuleFour",
         },
         {
-            img:rectangleD,label: "Artificial Intelligence in Blockchain",
+            img:'/images/RectangleD.svg', label: "Artificial Intelligence in Blockchain",
             value:"The integration of artificial intelligence with blockchain technology.",
             button: "Module 5",
             Link: "/ModuleFive",

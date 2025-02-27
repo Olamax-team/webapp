@@ -10,6 +10,7 @@ import nationalitiesJson from './nationalities.json'
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
+import { useLocalStorage } from '../../../hooks/use-localstorage';
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
   const [lname, setLName] = React.useState('');
@@ -18,6 +19,9 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const [gender, setGender] = React.useState('');
   const [nationality, setNationality] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
+
+  const { getItem } = useLocalStorage();
+  const token = getItem('token');
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -52,9 +56,14 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://api.olamax.io/api/add-biodata',
-      header: {'Content-Type':'application/json'},
+      header: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       data: stepOneData,
     };
+
+    console.log(config.header);
 
     setIsLoading(true);
     axios.request(config)
