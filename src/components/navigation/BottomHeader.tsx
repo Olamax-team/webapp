@@ -2,12 +2,13 @@ import React from 'react';
 import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
-import { cn, generateImagePath, timelineCreator } from '../../lib/utils';
+import { cn, timelineCreator } from '../../lib/utils';
 import ImageAvatar from '../ui/image-avatar';
 import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
 import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
 import useUserDetails from '../../stores/userStore';
-import { useLocalStorage } from '../../hooks/use-localstorage';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import axios from 'axios';
 
 type menuItemProps = {
   image: string;
@@ -46,17 +47,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const [openMobile, setOpenMobile] = React.useState(false);
   const [openNotification, setOpenNotification] = React.useState(false);
 
-  const { user, setUser } = useUserDetails();
-
-    const { getItem } = useLocalStorage();
-  const storedUser = getItem('user');
-  const storedToken = getItem('token');
-
-  React.useEffect(() => {
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser), storedToken)
-    }
-  }, [storedUser, storedToken]);
+  const { user, token , clearUser} = useUserDetails();
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -186,6 +177,33 @@ const BottomHeader = ({notifications}:bottomProps) => {
           ))}
       </div>
     )
+  };
+
+  const signOut = () => {
+    const config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://api.olamax.io/api/logout',
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    };
+
+    clearUser();
+    axios.request(config)
+    .then((response) => {
+      console.log(response)
+      if (response.status === 200) {
+        console.log('logged out')
+      };
+    }).catch((error) => {
+      if (axios.isAxiosError(error)) {
+        console.error("Error fetching data message:", error.response?.data.message || error.message);        
+      } else {
+        console.error("Unexpected error:", error);
+      };
+    });
   };
 
   return (
@@ -320,7 +338,18 @@ const BottomHeader = ({notifications}:bottomProps) => {
                   {notifications && <div className="absolute bg-primary size-[9px] rounded-full top-0 right-[2px]" />}
                 </div>
               </button>
-              <ImageAvatar style='md:size-[56px] size-[40px]' image={'/images/avatar_1.png'}/>
+              <DropdownMenu>
+                <DropdownMenuTrigger className='cursor-pointer'>
+                  <ImageAvatar style='md:size-[56px] size-[40px]' image={'/images/avatar_1.png'}/>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
+                  <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <button type="button" onClick={signOut}>Log Out</button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : 
           (

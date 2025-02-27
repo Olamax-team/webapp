@@ -6,7 +6,12 @@ import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
-import { useLocalStorage } from '../../../hooks/use-localstorage';
+import useUserDetails from '../../../stores/userStore';
+
+type kyc = {
+  method: string;
+  name: string;
+};
 
 const StepTwoDesktop = () => {
   const [documentType, setDocumentType] = React.useState('');
@@ -22,54 +27,44 @@ const StepTwoDesktop = () => {
   const formData = new FormData();
 
   const { toast } = useToast();
-  const { getItem } = useLocalStorage();
-  const token = getItem('token');
+  const { token } = useUserDetails();
 
-    const [availableKyc, setAvailableKyc] = React.useState<any[]>([])
+  const [availableKyc, setAvailableKyc] = React.useState<kyc[]>([])
+
+  React.useEffect(()=> {
+
+    const fetchKyc = () => {
+      const config = {
+        method: 'get',
+        url: 'https://api.olamax.io/api/available-kyc-method',
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      };
+  
+      axios.request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          setAvailableKyc(response.data.kyc_methods)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+
+    fetchKyc();
+  },[]);
 
   const DocumentSelect = () => {
 
     const handleDocumentSelect = (value:string) => {
       setDocumentType(value);
     };
-
-    React.useEffect(()=> {
-
-      const config = {
-        method: 'get',
-        url: 'https://api.olamax.io/api/available-kyc-method',
-        header: {
-          'Content-Type':'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-      };
-
-      axios.request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          setAvailableKyc(response.data.data)
-        };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          toast({
-            title: 'Error',
-            description: error.response? error.response.data.message : 'Something went wrong, try again later!',
-            variant: 'destructive'
-          });
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          toast({
-            title: 'Error',
-            description: 'Something went wrong!! Try again later',
-            variant: 'destructive'
-          });
-          console.error("Unexpected error:", error);
-        }; 
-      });
-
-    },[]);
-
-    console.log(availableKyc);
 
     return (
       <Select onValueChange={(value) => handleDocumentSelect(value)} defaultValue={documentType}>
@@ -78,10 +73,10 @@ const StepTwoDesktop = () => {
         </SelectTrigger>
         <SelectContent className='z-[300000]'>
           <SelectGroup>
-            <SelectItem value="national_id">National Identity Card</SelectItem>
-            <SelectItem value="passport">International Passport</SelectItem> 
-            <SelectItem value="license">Driver License</SelectItem> 
-            <SelectItem value="bvn">Bank Verification Number</SelectItem> 
+          {availableKyc === undefined && <Loader2 className='animate-spin'/>}
+            {availableKyc && availableKyc.map((item) => (
+              <SelectItem value={item.method}>{item.name}</SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -210,7 +205,7 @@ const StepTwoDesktop = () => {
         formData.append('back', backImage, backImage.name)
       };
       if (holdingImage) {
-        formData.append('holding', holdingImage, holdingImage.name)
+        formData.append('hold', holdingImage, holdingImage.name)
       };
 
       const config = {
