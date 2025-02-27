@@ -27,14 +27,14 @@ const Education = () => {
             Link: "/ModuleTwo",
         },
         {
-            img: '/images/Rectangle C.svg', label:"Digital Wallet Security and Safegu...",
+            img: '/images/Rectangle_C.svg', label:"Digital Wallet Security and Safegu...",
             value:"Learn the essentials of cryptocurrency wallet management, private keys, and security protocols.",
             button: "Module 3",
             Link: "/ModuleThree",
 
         },
         {
-            img: '/images/Rectangle Z.svg', label: "Web3 Fundamentals and Development",
+            img: '/images/Rectangle_Z.svg', label: "Web3 Fundamentals and Development",
             value:"The principles of Web3, smart contracts, and decentralized applications (dApps) for beginners",
             button: "Module 4",
             Link: "/ModuleFour",
