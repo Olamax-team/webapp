@@ -6,7 +6,12 @@ import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
-import { useLocalStorage } from '../../../hooks/use-localstorage';
+import useUserDetails from '../../../stores/userStore';
+
+type kyc = {
+  method: string;
+  name: string;
+};
 
 const StepTwoMobile = () => {
 
@@ -21,52 +26,41 @@ const StepTwoMobile = () => {
   const { onClose } = useUploadDocumentModal();
 
   const { toast } = useToast();
-
+  const { token } = useUserDetails();
   const [isLoading, setIsLoading] = React.useState(false);
-  const { getItem } = useLocalStorage();
-  const token = getItem('token');
 
-  const [availableKyc, setAvailableKyc] = React.useState<any[]>([])
- 
-  const DocumentSelect = () => {
+  const [availableKyc, setAvailableKyc] = React.useState<kyc[]>([])
 
-    React.useEffect(()=> {
+  React.useEffect(()=> {
 
+    const fetchKyc = () => {
       const config = {
         method: 'get',
         url: 'https://api.olamax.io/api/available-kyc-method',
-        header: {
+        headers: {
           'Content-Type':'application/json',
           'Authorization': `Bearer ${token}`
         },
       };
-
+  
       axios.request(config)
       .then((response) => {
         if (response.status === 200) {
-          setAvailableKyc(response.data.data)
+          setAvailableKyc(response.data.kyc_methods)
         };
       }).catch((error) => {
         if (axios.isAxiosError(error)) {
-          toast({
-            title: 'Error',
-            description: error.response? error.response.data.message : 'Something went wrong, try again later!',
-            variant: 'destructive'
-          });
           console.error("Error fetching data message:", error.response?.data.message || error.message);        
         } else {
-          toast({
-            title: 'Error',
-            description: 'Something went wrong!! Try again later',
-            variant: 'destructive'
-          });
           console.error("Unexpected error:", error);
         }; 
       });
+    };
 
-    },[]);
-
-    console.log(availableKyc);
+    fetchKyc();
+  },[]);
+ 
+  const DocumentSelect = () => {
 
     const handleDocumentSelect = (value:string) => {
       setDocumentType(value);
@@ -79,10 +73,10 @@ const StepTwoMobile = () => {
         </SelectTrigger>
         <SelectContent className='z-[300000]'>
           <SelectGroup>
-            <SelectItem value="nin">NIN</SelectItem>
-            <SelectItem value="passport">INTERNATIONAL PASSPORT</SelectItem> 
-            <SelectItem value="nid">NATIONAL IDENTITY CARD</SelectItem> 
-            <SelectItem value="bvn">BVN</SelectItem> 
+          {availableKyc === undefined && <Loader2 className='animate-spin'/>}
+            {availableKyc && availableKyc.map((item) => (
+              <SelectItem value={item.method}>{item.name}</SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -212,14 +206,14 @@ const StepTwoMobile = () => {
         formData.append('back', backImage, backImage.name)
       };
       if (holdingImage) {
-        formData.append('holding', holdingImage, holdingImage.name)
+        formData.append('hold', holdingImage, holdingImage.name)
       };
 
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/upload-document',
-        header: {
+        headers: {
           'Content-Type':'multipart/form-data',
           'Authorization': `Bearer ${token}`
         },

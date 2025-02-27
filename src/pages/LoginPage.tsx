@@ -140,7 +140,7 @@ const LoginPage = () => {
             </div>
             <button className='flex gap-4 items-center text-black/50 lg:hidden' onClick={() => navigate(-1)} type='button'>
               <div className="size-[20px]">
-                <img src={'/assets/images/arrow-left.png'} alt="arrow_icon"/>
+                <img src={'/images/arrow-left.png'} alt="arrow_icon"/>
               </div>
               Back
             </button>

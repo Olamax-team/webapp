@@ -1,24 +1,13 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useUserDetails from '../../stores/userStore';
-import { useLocalStorage } from '../../hooks/use-localstorage';
+import { Loader2 } from 'lucide-react';
 
 const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, token, setUser } = useUserDetails();
-
-  const { getItem } = useLocalStorage();
-  const storedUser = getItem('user');
-  const storedToken = getItem('token');
-
-
-  React.useEffect(() => {
-    if (storedUser && storedToken && !user && !token) {
-      setUser(JSON.parse(storedUser), storedToken);
-    }
-  }, []);
+  const { user, token } = useUserDetails();
 
   React.useEffect(() => {
     if (!user || !token) {
@@ -31,7 +20,7 @@ const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) 
     return children;
   }
   
-  return null;
+  return <Loader2 className='animate-spin'/>;
 };
 
 export default ProtectedRoute;

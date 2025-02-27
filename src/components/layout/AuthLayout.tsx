@@ -14,7 +14,7 @@ const AuthLayout = ({children}: Props) => {
 
   return (
     <div className='w-full lg:h-screen'>
-      <div className="w-full lg:h-[100px] md:h-[80px] h-[64px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)] lg:px-[80px] px-[50px] md:px-[90px] flex items-center justify-between">
+      <div className="w-full lg:h-[100px] md:h-[80px] h-[64px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)] lg:px-[80px] px-[20px] md:px-[90px] flex items-center justify-between">
         <Link className='w-[110px] h-[34px] lg:w-[153px] lg:h-[48px]' to={'/'}>
           <img src={'/images/olamax_logo_2.png'} alt="logo" className='object-cover'/>
         </Link>

@@ -226,13 +226,14 @@ const SignUpPage = () => {
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://api.olamax.io/api/verify_email',
+        url: 'https://api.olamax.io/api/verify-email',
         header: {'Content-Type':'application/json'},
         data: verifyValues,
       };
 
       setIsLoading(true);
       axios.request(config).then((response) => {
+        console.log(response);
         if (response.status === 200) {
           setIsLoading(false);
           onOpen();
