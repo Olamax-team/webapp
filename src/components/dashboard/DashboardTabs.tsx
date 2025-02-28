@@ -16,7 +16,7 @@ interface UserInfoProps {
   uid: string;
   isVerified: string;
   inviteLink: string;
-}
+};
 
 const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerified, email }) => {
   //clipboard copy function
@@ -140,10 +140,16 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
-  const { user:userDetail } = useUserDetails();
+  const { user:userDetail, fetchKycDetails, kycDetails } = useUserDetails();
+
+  React.useEffect(() => {
+    if (userDetail) {
+      fetchKycDetails();
+    }
+  },[userDetail]);
 
   const user = {
-    name: "Tosin Adebayor",
+    name: kycDetails ?  `${kycDetails.fname} ${kycDetails.lname}` : '',
     email: userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
@@ -167,6 +173,7 @@ const DashboardTab: React.FC = () => {
             </div>,
     },
   ];
+
   const props1 = ["NGN", "USD", "EUR", "GBP"];
   const props2currency = ["BTC","ETH", "USDT", "SOL" ];
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);

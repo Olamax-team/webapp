@@ -1,6 +1,15 @@
+import React from "react";
 import { HiOutlineDuplicate } from "react-icons/hi"
+import useUserDetails from "../../../stores/userStore";
 
 const ClaimReward = () => {
+  const {user:userDetail, fetchKycDetails, kycDetails } = useUserDetails();
+
+    React.useEffect(() => {
+      if (userDetail) {
+        fetchKycDetails();
+      }
+    },[userDetail]);
 
   const link = 'https://olamax.io/referral_link/id?=36843611';
   const copyLinkToClipboard = (link:string) => {
@@ -14,14 +23,11 @@ const ClaimReward = () => {
     return `${first_part}....${last_part}`
   };
 
-  const id = '36843611';
+  const id = kycDetails.referral_code;
   const copyIdToClipboard = (id:string) => {
     navigator.clipboard.writeText(id);
     alert("referral id copied!");
   };
-
-
-
 
   return (
     <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 lg:gap-10 lg:h-[334px]">

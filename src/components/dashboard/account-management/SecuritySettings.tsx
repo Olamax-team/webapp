@@ -13,7 +13,7 @@ const SecuritySettings = () => {
   const toggle2FaSwitch = (value:boolean) => {
     setUse2Fa(value);
     openEnableAuth.onOpen();
-  }
+  };
 
   return (
     <div className="w-full h-auto p-4 lg:p-5 rounded-md bg-white flex flex-col gap-5">
