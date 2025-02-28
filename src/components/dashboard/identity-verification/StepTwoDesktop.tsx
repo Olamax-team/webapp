@@ -148,7 +148,7 @@ const StepTwoDesktop = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/start-kyc-verification',
-        header: {
+        headers: {
           'Content-Type':'application/json',
           'Authorization': `Bearer ${token}`,
         },
@@ -212,7 +212,7 @@ const StepTwoDesktop = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/upload-document',
-        header: {
+        headers: {
           'Content-Type':'multipart/form-data',
           'Authorization': `Bearer ${token}`
         },
@@ -230,6 +230,7 @@ const StepTwoDesktop = () => {
         setIsLoading(true);
         axios.request(config)
         .then((response) => {
+          console.log(response);
           if (response.status === 200) {
             toast({
               title: 'Success',

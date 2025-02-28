@@ -148,7 +148,7 @@ const StepTwoMobile = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/start-kyc-verification',
-        header: {
+        headers: {
           'Content-Type':'application/json',
           'Authorization': `Bearer ${token}`
         },

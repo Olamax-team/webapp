@@ -1,5 +1,5 @@
 import ImageAvatar from '../../ui/image-avatar'
-import avatar from '../../../assets/images/avatar_1.png'
+// import avatar from '../../../assets/images/avatar_1.png'
 import { HiOutlineDuplicate, HiOutlineShieldCheck } from 'react-icons/hi'
 
 
@@ -13,7 +13,7 @@ const NameHeader = () => {
   return (
     <div className="w-full h-[75px] lg:h-[100px] rounded-md bg-white p-4 lg:p-5 flex items-center justify-between">
       <div className="flex gap-4">
-        <ImageAvatar image={avatar} style='lg:size-[60px] size-[40px]'/>
+        <ImageAvatar image={'/images/avatar_1.png'} style='lg:size-[60px] size-[40px]'/>
         <div>
           <h2 className='font-bold lg:text-lg text-sm'>Tosin Adebayor</h2>
           <button className='flex gap-3 items-center' onClick={copyToClipboard}>
