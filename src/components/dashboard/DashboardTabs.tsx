@@ -148,9 +148,11 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
+  console.log(kycDetails.email);
+
   const user = {
     name: kycDetails ?  `${kycDetails.fname} ${kycDetails.lname}` : '',
-    email: userDetail?.email,
+    email: kycDetails ? kycDetails.email : userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
     isVerified: userDetail?.account_status || 'Unverified',
@@ -187,10 +189,10 @@ const DashboardTab: React.FC = () => {
             <div className="my-auto w-full xl:w-[50%] h-auto">
               <UserInfoCard
                 name={user.name}
-                email={userDetail?.email}
-                lastLogin={userDetail?.last_login_location || ''}
+                email={user.email}
+                lastLogin={user.lastLogin}
                 uid={userDetail?.UID || ''}
-                isVerified={userDetail?.account_status || 'Unverified'}
+                isVerified={user.isVerified}
                 inviteLink={user.inviteLink}
               />
               <ServicesCard services={services} />

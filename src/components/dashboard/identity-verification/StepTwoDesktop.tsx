@@ -230,7 +230,6 @@ const StepTwoDesktop = () => {
         setIsLoading(true);
         axios.request(config)
         .then((response) => {
-          console.log(response);
           if (response.status === 200) {
             toast({
               title: 'Success',
