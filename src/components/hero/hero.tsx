@@ -10,8 +10,8 @@ const HeroSection: React.FC = () => {
 
       {/* Content */}
       <>
-        <div className="relative mx-auto top-[72px] bottom-[251.66px] w-[430px] xl:w-[1220.42px] h-[550px] xl:h-[326.34px]">
-          <div className="font-poppins w-full flex flex-wrap text-center">
+        <div className="relative mx-auto my-[72px] w-full xl:w-[1220.42px] h-auto xl:h-[326.34px]">
+          <div className="font-poppins w-full flex flex-wrap text-center mx-auto items-center justify-center">
             {/* Floating Tags */}
             <div className='hidden xl:block'>
               {/* Top-Left */}
@@ -66,7 +66,7 @@ const HeroSection: React.FC = () => {
                 animate='float-up'
                 boxPosition={{bottom:'-5px', left:'-2px'}} />
             </div>
-            <div className='relative xl:p-[80px] p-10 mx-auto text-center items-center justify-center w-full'>
+            <div className='relative m-10 xl:m-20 text-center items-center justify-center w-full'>
               {/* Content */}
               <h1 className="text-wrap font-DMSans text-[18px] leading-[27px] xl:text-[32px] font-bold xl:leading-[48px] text-textDark mt-4 mb-4">
               Your all-in-one crypto platform to buy, sell & trade, cryptocurrencies
@@ -81,16 +81,18 @@ const HeroSection: React.FC = () => {
             </div>
           </div>
        </div>
-        <img
-          src={'/images/waves.svg'}
-          alt="waves"
-          className="absolute bottom-0 hidden xl:block w-full h-[200px]"
-        />
-        <img
-          src={'/images/wavesmobile.svg'}
-          alt="waves"
-          className="absolute bottom-0 xl:hidden block w-full h-[222px]"
-        />
+       <div className='w-full'>
+          <img
+            src={'/images/waves.svg'}
+            alt="waves"
+            className="absolute bottom-0 hidden xl:block w-full h-[200px] object-cover"
+          />
+          <img
+            src={'/images/wavesmobile.svg'}
+            alt="waves"
+            className="absolute bottom-0 xl:hidden block w-full h-[222px]"
+          />
+        </div>
       </>
     </section>
   );
