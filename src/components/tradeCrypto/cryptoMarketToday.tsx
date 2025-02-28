@@ -1,10 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import BTC from "../../assets/images/BTC Circular.png"
-import ETH from "../../assets/images/ETH Circular.png"
-import USDT from "../../assets/images/USDT Circular.png"
-import SOL from "../../assets/images/SOL Circular.png"
-import graphUp from "../../assets/images/positive-graph.svg"
+// import BTC from "../../assets/images/BTC Circular.png"
+// import ETH from "../../assets/images/ETH Circular.png"
+// import USDT from "../../assets/images/USDT Circular.png"
+// import SOL from "../../assets/images/SOL Circular.png"
+// import graphUp from "../../assets/images/positive-graph.svg"
+
 // Define the type for a single crypto item
 interface Crypto {
   name: string;
@@ -36,28 +37,28 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
       ticker: "BTC",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: BTC,
+      logo: '/images/BTC Circular.png',
     },
     {
       name: "Ethereum",
       ticker: "ETH",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: ETH,
+      logo: '/images/ETH Circular.png',
     },
     {
       name: "Tether",
       ticker: "USDT",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: USDT,
+      logo: '/images/USDT Circular.png',
     },
     {
       name: "Solana",
       ticker: "SOL",
       price: "$2,051,913.71",
       change: "0.05%",
-      logo: SOL,
+      logo: '/images/SOL Circular.png',
     },
   ];
 
@@ -103,7 +104,7 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
                   >
                     {!crypto.change.startsWith("-") && (
                       <img
-                        src={graphUp}
+                        src={'/images/positive-graph.svg'}
                         alt="Upward Trend"
                         className="inline-block w-[14px] h-[14px] m-2 justify-center"
                       />

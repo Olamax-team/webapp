@@ -1,14 +1,14 @@
-import olamaxFoundation from "../../assets/images/olamaxFoundation.svg";
-import olamaxFoundationMobile from "../../assets/images/olamaxFoundationMobile.svg";
+// import olamaxFoundation from "../../assets/images/olamaxFoundation.svg";
+// import olamaxFoundationMobile from "../../assets/images/olamaxFoundationMobile.svg";
 import Donate from "./Donate";
-import goal1 from "../../assets/images/goal 1.svg";
-import goal2 from "../../assets/images/goal 2.svg";
-import goal3 from "../../assets/images/goal 3.svg";
-import goal4 from "../../assets/images/goal 4.svg";
-import thumbnail1 from "../../assets/images/thumbnail1.svg";
-import thumbnail2 from "../../assets/images/thumbnail2.svg";
-import thumbnail3 from "../../assets/images/thumbnail3.svg";
-import youtube from "../../assets/images/YouTube.svg"
+// import goal1 from "../../assets/images/goal 1.svg";
+// import goal2 from "../../assets/images/goal 2.svg";
+// import goal3 from "../../assets/images/goal 3.svg";
+// import goal4 from "../../assets/images/goal 4.svg";
+// import thumbnail1 from "../../assets/images/thumbnail1.svg";
+// import thumbnail2 from "../../assets/images/thumbnail2.svg";
+// import thumbnail3 from "../../assets/images/thumbnail3.svg";
+// import youtube from "../../assets/images/YouTube.svg"
 import CompPlan from "./ComprehensivePlan";
 import { Button } from "../ui/button";
 
@@ -24,22 +24,22 @@ const OlamaxFoundation = () => {
         {
             id: 1,
             title: "Expand Access to Quality Education in Technology",
-            imageUrl: goal1,
+            imageUrl: '/images/goal 1.svg',
         },
         {
             id: 2,
             title: "Supply Clean and Renewable Energy to Schools",
-            imageUrl: goal2,
+            imageUrl: '/images/goal 2.svg',
         },
         {
             id: 3,
             title: "Build Nigeria's Future Tech Workforce",
-            imageUrl: goal3,
+            imageUrl: '/images/goal 3.svg',
         },
         {
             id: 4,
             title: "Facilitate Global Involvement through Cryptocurrency Donations",
-            imageUrl: goal4,
+            imageUrl: '/images/goal 4.svg',
         },
       ];
     
@@ -142,19 +142,19 @@ const OlamaxFoundation = () => {
         {
             id: 1,
             title: "EP 1 Pilot Program at ST Jermain's Primary School.",
-            imageUrl: thumbnail1,
+            imageUrl: '/images/thumbnail1.svg',
             link:"",
         },
         {
             id: 2,
             title: "EP 2 Pilot Program at ST Jermain's Primary School.",
-            imageUrl: thumbnail2,
+            imageUrl: '/images/thumbnail2.svg',
             link:"",
         },
         {
             id: 3,
             title: "EP 3 Pilot Program at ST Jermain's Primary School.",
-            imageUrl: thumbnail3,
+            imageUrl: '/images/thumbnail3.svg',
             link:"",
         },
     ];
@@ -166,12 +166,12 @@ const OlamaxFoundation = () => {
                 <div 
                 className="w-full h-full ">
                     <img
-                        src={olamaxFoundation}
+                        src={'/images/olamaxFoundation.svg'}
                         className="w-full h-auto object-cover hidden lg:block"
                         alt="Empowering Nigeria"
                     />
                     <img
-                        src={olamaxFoundationMobile}
+                        src={'/images/olamaxFoundationMobile.svg'}
                         className="w-full h-auto object-cover block lg:hidden"
                         alt="Empowering Nigeria"
                     />
@@ -286,7 +286,7 @@ const OlamaxFoundation = () => {
                                             className=" w-full h-auto object-contain rounded-lg"
                                             />
                                             <img
-                                                src={youtube}
+                                                src={'/images/YouTube.svg'}
                                                 alt="Play Video"
                                                 className="absolute inset-0 m-auto w-16 h-16 opacity-90"
                                             />

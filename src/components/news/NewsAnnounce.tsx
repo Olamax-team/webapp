@@ -2,8 +2,8 @@ import { useState } from "react";
 import News from "./News";
 import Announcement from "./Announcement";
 import { Button } from "../ui/button";
-import news from "../../assets/images/newshero.svg"
-import newsMobile from "../../assets/images/newsheromobile.svg"
+// import news from "../../assets/images/newshero.svg"
+// import newsMobile from "../../assets/images/newsheromobile.svg"
 
 const NewsAnnounce = () => {
     const [activeTab, setActiveTab] = useState("News");
@@ -44,12 +44,12 @@ const NewsAnnounce = () => {
             <div 
             className="w-full h-full ">
                 <img
-                    src={news}
+                    src={'/images/newshero.svg'}
                     className="w-full h-auto object-cover hidden lg:block"
                     alt="news and announcement"
                 />
                 <img
-                    src={newsMobile}
+                    src={'/images/newsheromobile.svg'}
                     className="w-full h-auto object-cover block lg:hidden"
                     alt="news and announcement"
                 />

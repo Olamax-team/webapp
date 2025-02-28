@@ -2,16 +2,17 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
-import BTC from "../../assets/images/BTC Circular.png"
-import ETH from "../../assets/images/ETH Circular.png"
-import USDT from "../../assets/images/USDT Circular.png"
-import SOL from "../../assets/images/SOL Circular.png"
-import news1 from "../../assets/images/news1.svg"
-import news2 from "../../assets/images/news2.svg"
-import news3 from "../../assets/images/news3.svg"
-import graphUp from "../../assets/images/positive-graph.svg"
+// import BTC from "../../assets/images/BTC Circular.png"
+// import ETH from "../../assets/images/ETH Circular.png"
+// import USDT from "../../assets/images/USDT Circular.png"
+// import SOL from "../../assets/images/SOL Circular.png"
+// import news1 from "../../assets/images/news1.png"
+// import news2 from "../../assets/images/news2.png"
+// import news3 from "../../assets/images/news3.png"
+// import graphUp from "../../assets/images/positive-graph.png"
 // import graphDown from "../../assets/images/negative-graph.png"
-import invites from "../../assets/images/Invites.svg"
+// import invites from "../../assets/images/invites.png"
+
 // Define the type for a single crypto item
 interface Crypto {
     name: string;
@@ -43,77 +44,77 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
           ticker: "BTC",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: BTC,
+          logo: "/images/BTC Circular.png",
         },
         {
           name: "Ethereum",
           ticker: "ETH",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: ETH,
+          logo: "/images/ETH Circular.png",
         },
         {
           name: "Tether",
           ticker: "USDT",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: USDT,
+          logo: "/images/USDT Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
         {
           name: "Solana",
           ticker: "SOL",
           price: "$2,051,913.71",
           change: "0.05%",
-          logo: SOL,
+          logo: "/images/SOL Circular.png",
         },
       ];
 
@@ -122,17 +123,17 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     {
       id: 1,
       title: "Olamax Launches New Escrow Service",
-      imageUrl: news1,
+      imageUrl: "/images/news1.svg",
     },
     {
       id: 2,
       title: "Olamax Now Supports Over 20 Cryptocurrencies, Expanding Your Options",
-      imageUrl: news2,
+      imageUrl: "/images/news2.svg",
     },
     {
       id: 3,
       title: "Olamax Partners with Top Nigerian Banks to Streamline Crypto-to-Naira Conversions",
-      imageUrl: news3,
+      imageUrl: "/images/news3.svg",
     },
   ];
   const copyToClipboard = () => {
@@ -198,7 +199,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
               >
                 {!crypto.change.startsWith("-") && (
                   <img
-                    src= {graphUp}
+                    src= {"/images/positive-graph.svg"}
                     alt="Upward Trend"
                     className="inline-block w-[14px] h-[14px] m-2 justify-center"
                   />
@@ -230,7 +231,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
             {/* Invites section */}
             <div className="w-full h-auto mx-auto bg-white rounded-xl">
               <img      
-              src={invites}
+              src={"/images/invites.svg"}
               alt="invites photo"
               className="w-full h-auto"/>
               <div className="font-Inter w-full h-auto my-4 p-4 items-center justify-center mx-auto space-y-3">

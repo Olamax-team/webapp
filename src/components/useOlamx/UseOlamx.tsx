@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import reactangl2 from '../../assets/images/Rectangle (1).svg';
-import rectangle0 from '../../assets/images/Rectangle (2).svg';
-import rectangle00 from '../../assets/images/Rectangle (3).svg';
+// import reactangl2 from '../../assets/images/Rectangle (1).svg';
+// import rectangle0 from '../../assets/images/Rectangle (2).svg';
+// import rectangle00 from '../../assets/images/Rectangle (3).svg';
 import { cn } from '../../lib/utils';
 
 const textList = [
@@ -32,7 +32,7 @@ type textContentProps = {
 
 const UseOlamax  = () => {
   const [activeStep, setActiveStep] = useState(1);
-  const stepImages = [reactangl2, rectangle0, rectangle00];
+  const stepImages = ['/images/Rectangle_(1).svg', '/images/Rectangle_(2).svg', '/images/Rectangle_(3).svg'];
 
   useEffect(() => {
     const timer = setInterval(() => {

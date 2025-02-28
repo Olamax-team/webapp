@@ -1,13 +1,13 @@
 import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import arrowIcon from '../../assets/images/arrowdown.svg';
-import BTC from "../../assets/images/BTC Circular.png";
-import ETH from "../../assets/images/ETH Circular.png";
-import USDT from "../../assets/images/USDT Circular.png";
-import SOL from "../../assets/images/SOL Circular.png";
-import NGN from "../../assets/images/NGN Circular.png";
-import MTN from "../../assets/images/MTN Circular.png"
+// import arrowIcon from '../../assets/images/arrowdown.svg';
+// import BTC from "../../assets/images/BTC Circular.png";
+// import ETH from "../../assets/images/ETH Circular.png";
+// import USDT from "../../assets/images/USDT Circular.png";
+// import SOL from "../../assets/images/SOL Circular.png";
+// import NGN from "../../assets/images/NGN Circular.png";
+// import MTN from "../../assets/images/MTN Circular.png"
 
 interface airtimePaymentProps {
   className?: string; // Editable className prop
@@ -36,12 +36,12 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
       event.preventDefault();
     }
     const logoMap: Record<string, string> = {
-      BTC,
-      ETH,
-      SOL,
-      USDT,
-      NGN,
-      MTN,
+      BTC: '/images/BTC Circular.png',
+      ETH: '/images/ETH Circular.png',
+      SOL: '/images/SOL Circular.png',
+      USDT: 'images/USDT Circular.png',
+      NGN: '/images/NGN Circular.png',
+      MTN: '/images/MTN Circular.png',
     };
 
   return (
@@ -134,7 +134,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
 
               {/* Switch Icon */}
               <div className="flex justify-center font-bold text-primary my-2">
-                <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] lg:w-[32px] lg:h-[32px]" />
+                <img src={'/images/arrowdown.svg'} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] lg:w-[32px] lg:h-[32px]" />
               </div>
 
               {/* Payment Input */}

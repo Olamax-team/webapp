@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom';
 import { documentTitle, useWhatNextPasswordModal } from '../lib/utils';
-import gmailIcon from '../assets/images/logos_google-gmail.png'
-import arrow from '../assets/images/arrow-left.png'
+// import gmailIcon from '../assets/images/logos_google-gmail.png'
+// import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
 import { useToast } from '../hooks/use-toast';
@@ -92,13 +92,13 @@ const SignUpPage = () => {
     };
 
     const continueWithGoogle = async () => {
+
       const config = {
         method: 'get',
         url: 'https://api.olamax.io/auth/google',
       };
 
       setIsLoading(true);
-
       axios.request(config)
       .then((response) => {
         console.log(response);
@@ -141,7 +141,7 @@ const SignUpPage = () => {
             </div>
             <button className='flex gap-4 text-black/50 lg:hidden' onClick={() => navigate(-1)} type='button'>
               <div className="size-[20px]">
-                <img src={arrow} alt="arrow_icon"/>
+                <img src={'/images/arrow-left.png'} alt="arrow_icon"/>
               </div>
               Back
             </button>
@@ -192,11 +192,10 @@ const SignUpPage = () => {
           </div>
           <button type='button' className='font-semibold w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] gap-3 disabled:bg-gray-300' onClick={continueWithGoogle} disabled={isLoading}>
             { isLoading ? 'Creating account...' : 'Continue with Google' }
-            {isLoading ? <Loader2 className='animate-spin'/> :
-              <div className='w-[24px] h-[18px]'>
-                <img src={gmailIcon} alt="gmail_icon" className='object-cover' />
-              </div>
-            }
+            {isLoading && <Loader2 className='animate-spin'/>}
+            <div className='w-[24px] h-[18px]'>
+              <img src={'/images/logos_google-gmail.png'} alt="gmail_icon" className='object-cover' />
+            </div>
           </button>
         </form> 
       </Form>
@@ -227,13 +226,14 @@ const SignUpPage = () => {
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://api.olamax.io/api/verify_email',
+        url: 'https://api.olamax.io/api/verify-email',
         header: {'Content-Type':'application/json'},
         data: verifyValues,
       };
 
       setIsLoading(true);
       axios.request(config).then((response) => {
+        console.log(response);
         if (response.status === 200) {
           setIsLoading(false);
           onOpen();
@@ -260,7 +260,7 @@ const SignUpPage = () => {
             </div>
             <button className='flex gap-4 text-black/50 lg:hidden' onClick={() => navigate(-1)}>
               <div className="size-[20px]">
-                <img src={arrow} alt="arrow_icon"/>
+                <img src={'/images/arrow-left.png'} alt="arrow_icon"/>
               </div>
               Back
             </button>

@@ -10,6 +10,7 @@ import nationalitiesJson from './nationalities.json'
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
+import { useLocalStorage } from '../../../hooks/use-localstorage';
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
   const [lname, setLName] = React.useState('');
@@ -19,13 +20,62 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const [nationality, setNationality] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
 
+  const { getItem } = useLocalStorage();
+  const token = getItem('token');
+
   const [isLoading, setIsLoading] = React.useState(false);
 
   const { toast } = useToast();
 
   const nationalities = nationalitiesJson;
 
+  const formatPhoneNumber = (phoneNumber:string) => {
+    const tenDigits = phoneNumber.slice(1, 11)
+    return `+234${tenDigits}`;
+  };
+
+  React.useEffect(()=> {
+
+    const fetchKyc = () => {
+      const config = {
+        method: 'get',
+        url: 'https://api.olamax.io/api/available-kyc-method',
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      };
+  
+      axios.request(config)
+      .then((response) => {
+        console.log('kyc-response', response)
+        if (response.status === 200) {
+          setAvailableKyc(response.data.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          toast({
+            title: 'Error',
+            description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+            variant: 'destructive'
+          });
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Something went wrong!! Try again later',
+            variant: 'destructive'
+          });
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    }
+
+    fetchKyc();
+  },[]);
+
   const onNext = () => {
+
     if (currentStep === 2) {
       return;
     };
@@ -42,17 +92,20 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     const stepOneData = {
       lname: lname,
       fname: fname,
-      dateOfBirth: dateOfBirth.toISOString(),
+      dateOfBirth: format(dateOfBirth, 'yyyy-MM-dd'),
       gender: gender,
       nationality: nationality,
-      phone_number: phoneNumber,
+      phone_number: formatPhoneNumber(phoneNumber),
     };
 
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://api.olamax.io/api/add-biodata',
-      header: {'Content-Type':'application/json'},
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       data: stepOneData,
     };
 
@@ -87,7 +140,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
         console.error("Unexpected error:", error);
       };
     });
-  }
+  };
 
   const DateComponent = () => {
     return (

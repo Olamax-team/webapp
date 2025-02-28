@@ -18,7 +18,7 @@ const AboutUs = () => {
   
   return (
     <React.Fragment>
-      <section className="w-full h-auto p-4 lg:p-10 flex items-center justify-center flex-col text-center ">
+      <section className="w-full h-auto p-5 xl:p-10 flex items-center justify-center flex-col text-center ">
           <div className="lg:w-[60%] w-full text-center ">
               <h2 className="font-Inter font-bold text-[18px] leading-[27px] text-center text-[#121826] xl:font-DMSans xl:font-bold xl:text-[32px] xl:leading-[48px] ">We see no reason why buying & selling crypto should be so hard</h2>
               <p className="mt-5 font-Inter font-medium  text-[14px] text-center  text-[#121826] leading-[21px] xl:font-Inter xl:font-medium xl:leading-[27px] xl:text-[18px]"> 
@@ -46,7 +46,7 @@ const AboutUs = () => {
             </div>
 
               <div className="flex items-center xl:mt-10 justify-center mt-10">
-                  <div className="xl:flex justify-between items-center  xl:w-[65%] bg-[#121826] h-auto xl:h-[150px] rounded-[20px] w-full p-4 flex-wrap text-[#ffffff]">
+                  <div className="xl:flex justify-between items-center  xl:w-[70%] bg-[#121826] h-auto xl:h-[170px] rounded-[20px] w-full p-4 lg:px-10 flex-wrap text-[#ffffff]">
                   {cryptoData.map((item, index) => (
                     <p className="mt-5 " key={index}>
                       <h5 className="font-semibold font-inter xl:text-[23px] xl:leading-[34.5px text-white] text-[18px] leading-[27px] ">{item.value}</h5>

@@ -1,14 +1,13 @@
 import React from "react";
-import TopHeader from "../components/footer/TopHeader";
 import { documentTitle } from "../lib/utils";
+import Support from "../components/support/support";
 
 const SupportPage = () => {
   documentTitle('Support');
 
   return (
     <React.Fragment>
-        <SupportPage/>
-        <TopHeader/>
+        <Support/>
     </React.Fragment>
   )
 }

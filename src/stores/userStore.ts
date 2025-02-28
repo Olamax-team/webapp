@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 export type userProps = {
   UID: string | null;
@@ -16,14 +17,22 @@ export type userDetailProps = {
   setLoading: (loading:boolean) => void;
 };
 
+export const useUserDetails = create<userDetailProps>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
+      loading: false,
+      setLoading: (loading) => set({ loading }),
+      setUser: (user, token) => set({ user, token}),
+      clearUser: () => set({ user: null, token: null }),
+    }),
+    {
+      name: 'user-store',
+      storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
+)
 
-const useUserDetails = create<userDetailProps>((set) => ({
-  user: null,
-  token: null,
-  loading: false,
-  setLoading: (loading) => set({ loading }),
-  setUser: (user, token) => set({ user, token}),
-  clearUser: () => set({ user: null, token: null }),
-}));
 
 export default useUserDetails;
