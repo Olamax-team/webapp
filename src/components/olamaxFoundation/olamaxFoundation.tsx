@@ -186,7 +186,7 @@ const OlamaxFoundation = () => {
                             To achieve this vision, we will provide tech skills training, clean energy infrastructure, and free internet to support learning in primary and secondary schools across Nigeria. 
                             <br/><br/>Our ambitious goal is to train thousands in tech skills, nurturing a future-ready workforce for Nigerian startups, including our own. With the support of cryptocurrency donations, we invite you to join us in building a more sustainable, technologically advanced Nigeria.</p>
                     </div>
-                    <div className="w-full xl:w-1/2">
+                    <div className="w-full xl:w-1/2 items-center mx-9 xl:mx-0">
                         <Donate/>
                     </div>
                 </div>
@@ -279,7 +279,7 @@ const OlamaxFoundation = () => {
                                     key={item.id} 
                                     className="w-1/3"
                                     >
-                                        <a href={item.link} target="_blank" className=" w-full relative block border">
+                                        <a href={item.link} target="_blank" className=" w-full relative block">
                                             <img
                                             src={item.imageUrl}
                                             alt={item.title}

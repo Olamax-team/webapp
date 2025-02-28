@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 // import ETH from "../../assets/images/ETH Circular.png"
 // import USDT from "../../assets/images/USDT Circular.png"
 // import SOL from "../../assets/images/SOL Circular.png"
-// import graphUp from "../../assets/images/positive-graph.png"
+// import graphUp from "../../assets/images/positive-graph.svg"
 
 // Define the type for a single crypto item
 interface Crypto {
@@ -104,7 +104,7 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
                   >
                     {!crypto.change.startsWith("-") && (
                       <img
-                        src={'/images/positive-graph.png'}
+                        src={'/images/positive-graph.svg'}
                         alt="Upward Trend"
                         className="inline-block w-[14px] h-[14px] m-2 justify-center"
                       />

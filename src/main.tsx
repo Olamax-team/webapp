@@ -22,6 +22,8 @@ import OlamaxFoundationPage from './pages/OlamaxFoundationPage';
 import ModuleOne from './components/educationalCenter/moduleOne';
 import { ReferralPrograme } from './components/referralPage/referralProgram';
 import Escrow from './components/escrow/escrow';
+import OTC from './components/OTC/otc';
+import SupportPage from './pages/SupportPage';
 
 
 const router = createBrowserRouter([
@@ -96,6 +98,14 @@ const router = createBrowserRouter([
       {
         path: '/olamax-foundation',
         element: <OlamaxFoundationPage/>
+      },
+      {
+        path: '/otc-desk',
+        element: <OTC/>
+      },
+      {
+        path: '/support',
+        element: <SupportPage/>
       },
     ]
   }

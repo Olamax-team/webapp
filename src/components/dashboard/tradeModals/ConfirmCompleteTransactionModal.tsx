@@ -5,7 +5,7 @@ import useTradeStore from '../../../stores/tradeStore';
 const ConfirmCompleteTransaction = () => {
   const { isOpen, onClose } = useConfirmCompleteTransaction();
   const tradeData = useTradeStore();
-  const verifyCodeModal = tradeData.item?.tradeType === "Buy" ? useVerifyCodeModal(): useTwoFactorModal();
+  const verifyCodeModal = tradeData.item?.tradeType === "Buy" ? useVerifyCodeModal() : useTwoFactorModal();
   return (
     <Modal 
       isOpen={isOpen} 

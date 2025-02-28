@@ -18,7 +18,7 @@ const IndicatorButtonGroup: React.FC<ButtonGroupProps> = ({
   dynamicButtonClassName,
   bgClassName = "bg-white", // Default background white
   indicatorColor = "bg-primary", // Default indicator color
-  indicatorSize = "w-[64px]",
+  indicatorSize = "w-[32px] md:w-[64px]",
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -56,7 +56,7 @@ const IndicatorButtonGroup: React.FC<ButtonGroupProps> = ({
   };
 
   return (
-    <div className="flex relative h-[32px] xl:h-[44px] w-full sm:gap-x-4 gap-x-8 xl:gap-x-20" ref={containerRef}>
+    <div className="flex relative h-[32px] xl:h-[44px] w-full sm:gap-x-2 xl:gap-x-20" ref={containerRef}>
       {buttons.map((label, index) => (
         <Button
           key={index}
