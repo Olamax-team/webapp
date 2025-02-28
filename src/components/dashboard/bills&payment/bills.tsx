@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AirtimeRecharge from './billsPayment/airtimeRecharge';
 import Datapurchase from './billsPayment/datapurchase';
 import ElectricityBills from './billsPayment/electricityBills';
@@ -13,6 +13,7 @@ import { HiOutlineDeviceMobile, HiOutlineWifi, HiOutlineLightBulb, HiOutlineDesk
 import { IoWaterOutline } from 'react-icons/io5';
 import { FiCreditCard } from 'react-icons/fi';
 import { IconType } from 'react-icons/lib';
+import useUserDetails from '../../../stores/userStore';
 
 interface Bill {
   name: string;
@@ -23,6 +24,16 @@ const Bills = () => {
   const [active, setActive] = useState(0);
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);
   const [selectedBill, setSelectedBill] = useState<string>('');  
+
+  const { user, fetchKycDetails, kycDetails } = useUserDetails();
+
+  useEffect(() => {
+    if (user) {
+      fetchKycDetails();
+    }
+  }, [user])
+
+  console.log(kycDetails);
 
   const renderBill = () => {
     switch (active) {
@@ -55,9 +66,6 @@ const Bills = () => {
     { name: 'Cowry Card', icon: FiCreditCard },
   ];
 
-  
-
-    
 
   return (
     <section className="flex flex-col w-full items-center">
@@ -66,7 +74,7 @@ const Bills = () => {
           <div className="xl:w-[50%] w-full xl:pt-6">
             <div className="top-[195px] text-[#121826]">
               <h1 className="font-bold font-Inter xl:font-DMSans text-[20px] leading-[30px] xl:text-[24px] xl:leading-[39px] text-[#121826]">
-                Hello, Tosin Adebayor
+                Hello, {kycDetails.fname} {kycDetails.lname}
               </h1>
               <p className="font-medium font-Inter text-[14px] leading-[21px]">
                 What bill would you be paying today?
