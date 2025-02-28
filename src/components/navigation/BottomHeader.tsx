@@ -237,7 +237,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
             <Link to={'/escrow-services'}>Escrow Services</Link>
           </li>
           <li className='hover:text-primary'>
-            <Link to={'/escrow-services'}>OTC Desk</Link>
+            <Link to={'/otc-desk'}>OTC Desk</Link>
           </li>
           <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenSupport(!openSupport); setOpenMore(false); setOpenTrade(false);}}>
             <span className={cn('group-hover:text-primary', openSupport ? 'text-primary' : '')}>Support</span>
@@ -283,7 +283,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
                   <Link to={'/escrow-services'}>Escrow Services</Link>
                 </li>
                 <li className='hover:text-primary'>
-                  <Link to={'/escrow-services'}>OTC Desk</Link>
+                  <Link to={'/otc-desk'}>OTC Desk</Link>
                 </li>
                 <li className='h-full flex items-center gap-2 relative group' onClick={() => {setOpenSupport(!openSupport); setOpenMore(false); setOpenTrade(false);}}>
                   <span className={cn('group-hover:text-primary', openSupport ? 'text-primary' : '')}>Support</span>

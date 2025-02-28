@@ -1,12 +1,12 @@
 import Modal from '../../ui/modal'; 
-import { usePaymentConfirmationModal, useFiatPaymentDetailsModal } from '../../../lib/utils';
+import { useDonateConfirmationModal, useFiatDonateModal } from '../../../lib/utils';
 import qrCode from '../../../assets/images/QR.png';
 import logo from '../../../assets/images/GTCO.svg';
 import { HiOutlineDuplicate } from 'react-icons/hi';
 
-const FiatPaymentDetailsModal = () => {
-  const { isOpen, onClose } = useFiatPaymentDetailsModal();
-  const openPaymentConfirmation = usePaymentConfirmationModal();
+const FiatDonateModal = () => {
+  const { isOpen, onClose } = useFiatDonateModal();
+  const openDonateConfirmation = useDonateConfirmationModal();
   // const [isMobile, setisMobile] = useState(false); // State to track active section
   const accountNumber = "1001232987";
 
@@ -82,7 +82,7 @@ const FiatPaymentDetailsModal = () => {
           <div>
             <button 
               className="font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6"
-              onClick={() => { onClose(); openPaymentConfirmation.onOpen(); }}
+              onClick={() => { onClose(); openDonateConfirmation.onOpen(); }}
             >
               I Have Made Payment
             </button>
@@ -93,4 +93,4 @@ const FiatPaymentDetailsModal = () => {
   );
 };
 
-export default FiatPaymentDetailsModal;
+export default FiatDonateModal;

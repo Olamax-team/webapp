@@ -89,7 +89,7 @@ return (
                                 <select
                                     value={billProp1}
                                     onChange={(e) => setBillProp1(e.target.value)}
-                                    className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
+                                    className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                                 >
                                     {billProps1.map((bill) => (
                                     <option key={bill} value={bill}>
@@ -127,7 +127,7 @@ return (
                                         <select
                                             value={currency}
                                             onChange={(e) => setCurrency(e.target.value)}
-                                            className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
+                                            className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                                         >
                                             {props2currency.map((curr) => (
                                             <option key={curr} value={curr}>

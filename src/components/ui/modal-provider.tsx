@@ -27,6 +27,8 @@ import OtpModals from '../dashboard/bills&payment/billModal/otpModal'
 import QRModals from '../dashboard/bills&payment/billModal/qrcodeModal'
 import CompleteTransactionModals from '../dashboard/bills&payment/billModal/completeTransactionModal'
 import PaymentModals from '../dashboard/bills&payment/billModal/paymentModal'
+import CryptoDonateModal from '../olamaxFoundation/foundationModals/CryptoDonateModal'
+import FiatDonateModal from '../olamaxFoundation/foundationModals/FiatDonateModal'
 
 
 const ModalProvider = () => {
@@ -63,6 +65,8 @@ const ModalProvider = () => {
       <QRModals/>
       <CompleteTransactionModals/>
       <PaymentModals/>
+      <CryptoDonateModal/>
+      <FiatDonateModal/>
     </React.Fragment>
   )
 }

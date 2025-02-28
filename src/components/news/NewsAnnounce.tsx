@@ -57,21 +57,21 @@ const NewsAnnounce = () => {
                   Stay Updated with the Latest at OLAMAX EXCHANGE
                 </div> */}
             </div>
-                <div className="px-[20px] xl:px-20 flex h-[64px] bg-white w-full items-center font-Inter">
-                    {tabs.map((label, index) => (
-                        <Button
-                            key={index}
-                            variant="ghost"
-                            className={`px-5 xl:text-lg font-semibold ${dynamicButtonClassName(index,activeIndex)}`}
-                            onClick={() => handleTabClick(index)}
-                        >
-                            {label}
-                        </Button>
-                    ))}
-                </div>
-                <div className="px-[20px] xl:px-20 pt-0 xl:pt-10 pb-[20px] xl:pb-20 my-auto mx-auto">
-                    {renderContent()}
-                </div>
+            <div className="px-[20px] xl:px-20 flex h-[64px] bg-white w-full items-center font-Inter">
+                {tabs.map((label, index) => (
+                    <Button
+                        key={index}
+                        variant="ghost"
+                        className={`px-5 xl:text-lg font-semibold ${dynamicButtonClassName(index,activeIndex)}`}
+                        onClick={() => handleTabClick(index)}
+                    >
+                        {label}
+                    </Button>
+                ))}
+            </div>
+            <div className="px-[20px] xl:px-20 pt-0 xl:pt-10 pb-[20px] xl:pb-20 my-auto mx-auto">
+                {renderContent()}
+            </div>
         </section>
     );
 };

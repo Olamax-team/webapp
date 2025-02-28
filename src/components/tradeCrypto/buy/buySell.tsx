@@ -56,7 +56,7 @@ const BuySell: React.FC<BuySellProps> = ({
   return (
       <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>
         {/* Sub-Tabs for Buy and Sell */}
-        <div className="ml-2 xl:ml-4">
+        <div className="ml-1 xl:ml-2">
           <div className="font-poppins flex items-start space-x-4 text-[16px] leading-[24px] text-textDark">
             <Button
               variant={subTab === "Buy" ? "default" : "ghost"}
@@ -83,7 +83,7 @@ const BuySell: React.FC<BuySellProps> = ({
           </div>
         </div>
         <form  onSubmit={handleBuySell}>
-          <div className="mt-5 mx-2 xl:mx-4">
+          <div className="mt-5 mx-1 xl:mx-2">
             {/* First prop Input */}
             <div className="flex justify-center space-x-4">
               <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
@@ -91,7 +91,7 @@ const BuySell: React.FC<BuySellProps> = ({
                   <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
                     You {subTab === "Buy" ? "Pay" : "Sell"}
                   </p>
-                  <div className="grid grid-cols-2">
+                  <div className="flex w-full justify-between">
                     <Input
                       value={amount1}
                       required
@@ -113,7 +113,7 @@ const BuySell: React.FC<BuySellProps> = ({
                             ? setProp1(e.target.value)
                             : setProp2(e.target.value)
                         }
-                        className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
+                        className="rounded-md bg-bg px-2 py-1 font-medium text-base w-fit max-w-20"
                       >
                         {(subTab === "Buy" ? props1Currency : props2Currency).map((prop) => (
                           <option key={prop} value={prop}>
@@ -139,7 +139,7 @@ const BuySell: React.FC<BuySellProps> = ({
                   <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
                     You Receive
                   </p>
-                  <div className="grid grid-cols-2">
+                  <div className="flex w-full justify-between">
                     <Input
                       value={amount2}
                       required
@@ -160,7 +160,7 @@ const BuySell: React.FC<BuySellProps> = ({
                           ? setProp2(e.target.value)
                           : setProp1(e.target.value)
                       }
-                      className="rounded-md bg-bg px-2 py-1 w-[60px] font-medium text-base md:w-[70px] min-w-[40px] max-w-20"
+                      className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                     >
                       {(subTab === "Buy" ? props2Currency : props1Currency).map((prop) => (
                         <option key={prop} value={prop}>
