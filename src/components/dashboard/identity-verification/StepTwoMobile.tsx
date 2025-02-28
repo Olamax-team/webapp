@@ -6,6 +6,12 @@ import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
+import useUserDetails from '../../../stores/userStore';
+
+type kyc = {
+  method: string;
+  name: string;
+};
 
 const StepTwoMobile = () => {
 
@@ -20,9 +26,40 @@ const StepTwoMobile = () => {
   const { onClose } = useUploadDocumentModal();
 
   const { toast } = useToast();
-
+  const { token } = useUserDetails();
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const [availableKyc, setAvailableKyc] = React.useState<kyc[]>([])
+
+  React.useEffect(()=> {
+
+    const fetchKyc = () => {
+      const config = {
+        method: 'get',
+        url: 'https://api.olamax.io/api/available-kyc-method',
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      };
+  
+      axios.request(config)
+      .then((response) => {
+        if (response.status === 200) {
+          setAvailableKyc(response.data.kyc_methods)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+
+    fetchKyc();
+  },[]);
+ 
   const DocumentSelect = () => {
 
     const handleDocumentSelect = (value:string) => {
@@ -36,10 +73,10 @@ const StepTwoMobile = () => {
         </SelectTrigger>
         <SelectContent className='z-[300000]'>
           <SelectGroup>
-            <SelectItem value="nin">NIN</SelectItem>
-            <SelectItem value="passport">INTERNATIONAL PASSPORT</SelectItem> 
-            <SelectItem value="nid">NATIONAL IDENTITY CARD</SelectItem> 
-            <SelectItem value="bvn">BVN</SelectItem> 
+          {availableKyc === undefined && <Loader2 className='animate-spin'/>}
+            {availableKyc && availableKyc.map((item) => (
+              <SelectItem value={item.method}>{item.name}</SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -111,7 +148,10 @@ const StepTwoMobile = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/start-kyc-verification',
-        header: {'Content-Type':'application/json'},
+        header: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         data: kycData,
       };
 
@@ -158,6 +198,7 @@ const StepTwoMobile = () => {
     } else {
 
       formData.append('method', documentType);
+
       if (frontImage) {
         formData.append('front', frontImage, frontImage.name)
       };
@@ -165,13 +206,17 @@ const StepTwoMobile = () => {
         formData.append('back', backImage, backImage.name)
       };
       if (holdingImage) {
-        formData.append('holding', holdingImage, holdingImage.name)
+        formData.append('hold', holdingImage, holdingImage.name)
       };
+
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/upload-document',
-        header: {'Content-Type':'multipart/form-data'},
+        headers: {
+          'Content-Type':'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        },
         data: formData,
       };
 
@@ -182,6 +227,7 @@ const StepTwoMobile = () => {
           variant: 'destructive'
         });
         return;
+        
       } else {
         setIsLoading(true);
         axios.request(config)

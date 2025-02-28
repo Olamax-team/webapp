@@ -13,19 +13,19 @@ import money from '../../assets/images/cash.png'
 
 export const tradeCryptoList = [
   {
-    path: '/fast-trade',
+    path: '/dashboard',
     image: fastTrade,
     description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
     title: 'Fast Trade'
   },
   {
-    path: '/airtime-data',
+    path: '/dashboard/bills_payment',
     image: airtimeData,
     description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
     title: 'Airtime & Data'
   },
   {
-    path: '/bill-payment',
+    path: '/dashboard/bills_payment',
     image: billPayment,
     description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
     title: 'Bills & Payment'

@@ -3,13 +3,12 @@ import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
 import { cn, timelineCreator } from '../../lib/utils';
-import userimage from '../../assets/images/avatar_1.png'
 import ImageAvatar from '../ui/image-avatar';
-import olamaxLogo from '../../assets/images/olamax_logo_2.png'
 import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
 import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
 import useUserDetails from '../../stores/userStore';
-import { useLocalStorage } from '../../hooks/use-localstorage';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import axios from 'axios';
 
 type menuItemProps = {
   image: string;
@@ -48,17 +47,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const [openMobile, setOpenMobile] = React.useState(false);
   const [openNotification, setOpenNotification] = React.useState(false);
 
-  const { user, setUser } = useUserDetails();
-
-    const { getItem } = useLocalStorage();
-  const storedUser = getItem('user');
-  const storedToken = getItem('token');
-
-  React.useEffect(() => {
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser), storedToken)
-    }
-  }, [storedUser, storedToken]);
+  const { user, token , clearUser} = useUserDetails();
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -71,6 +60,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 // for closing menu when links are clicked on
   const closeMenu = () => {
     if (openTrade) {
+      setOpenTrade(false);
       setOpenSupport(false);
       setOpenMore(false);
       setOpenMobile(false);
@@ -78,11 +68,13 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
     if (openSupport) {
       setOpenSupport(false);
+      setOpenTrade(false);
       setOpenMore(false);
       setOpenMobile(false);
     }
 
     if (openMore) {
+      setOpenMore(false);
       setOpenSupport(false);
       setOpenTrade(false);
       setOpenMobile(false);
@@ -127,10 +119,12 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const DropDownMenu = ({menuList, style, isOpen}:dropDownMenuProps) => {
     return (
       <div className={cn('bg-bgSurface border rounded-lg z-10 px-3 py-5 flex-col gap-3 shadow-lg absolute',style, isOpen ? 'flex': 'hidden')}>
-        {menuList.map((item:menuItemProps) => (
+        {menuList === tradeCryptoList ? tradeCryptoList.map((item:menuItemProps) => (
+          <MenuItem key={item.title} {...item} path={user ? item.path : '/log-in'}/>
+        )) : menuList.map((item:menuItemProps) => ( 
           <MenuItem key={item.title} {...item}/>
         ))}
-      </div>
+      </div>  
     )
   };
 
@@ -185,33 +179,60 @@ const BottomHeader = ({notifications}:bottomProps) => {
     )
   };
 
+  const signOut = () => {
+    const config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://api.olamax.io/api/logout',
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    };
+
+    clearUser();
+    axios.request(config)
+    .then((response) => {
+      console.log(response)
+      if (response.status === 200) {
+        console.log('logged out')
+      };
+    }).catch((error) => {
+      if (axios.isAxiosError(error)) {
+        console.error("Error fetching data message:", error.response?.data.message || error.message);        
+      } else {
+        console.error("Unexpected error:", error);
+      };
+    });
+  };
+
   return (
     <div className={navIsFixed}>
-      <div className="mx-auto h-full px-[25px] xl:px-[95px] flex items-center justify-between font-poppins">
+      <div className="mx-auto h-full px-[15px] xl:px-[95px] flex items-center justify-between font-poppins">
         
         {/* home page link */}
         <div className="flex items-center gap-4">
           <Menu size={25} className='xl:hidden cursor-pointer' onClick={() => setOpenMobile(!openMobile)}/>
           <Link to={'/'}>
             <div className='w-[110px] xl:w-[153px] h-[34px] xl:h-[48px]'>
-              <img src={olamaxLogo} alt="logo" className='object-cover'/>
+              <img src={'/images/olamax_logo_2.png'} alt="logo" className='object-cover'/>
             </div>
           </Link>
         </div>
 
         {/* other links for desktop */}
         <ul className='hidden xl:flex items-center gap-8 cursor-pointer h-full'>
-          <li className='flex items-center gap-2 h-full relative group'>
-            <button className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')} onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
-              Trade Crypto
-            </button>
-            <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
-            <DropDownMenu 
-              menuList={tradeCryptoList}
-              style='left-0 top-[108px]'
-              isOpen={openTrade}
-            />
-          </li>
+        <li className='flex items-center gap-2 h-full relative group'>
+          <button className={cn('group-hover:text-primary', openTrade ? 'text-primary' : '')} onClick={() => {setOpenTrade((prev) => !prev); setOpenSupport(false); setOpenMore(false);}}>
+            Trade Crypto
+          </button>
+          <ChevronDown className={cn('size-4 mt-1 group-hover:text-primary group-hover:rotate-180', openTrade ? 'text-primary rotate-180': '')}/>
+          <DropDownMenu 
+            menuList={tradeCryptoList}
+            style='left-0 top-[108px]'
+            isOpen={openTrade}
+          />
+        </li>
           <li className='hover:text-primary'>
             <Link to={'/escrow-services'}>Escrow Services</Link>
           </li>
@@ -317,15 +338,26 @@ const BottomHeader = ({notifications}:bottomProps) => {
                   {notifications && <div className="absolute bg-primary size-[9px] rounded-full top-0 right-[2px]" />}
                 </div>
               </button>
-              <ImageAvatar style='md:size-[56px] size-[40px]' image={userimage}/>
+              <DropdownMenu>
+                <DropdownMenuTrigger className='cursor-pointer'>
+                  <ImageAvatar style='md:size-[56px] size-[40px]' image={'/images/avatar_1.png'}/>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
+                  <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <button type="button" onClick={signOut}>Log Out</button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : 
           (
             <div className='flex items-center gap-2'>
-              <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] text-primary hover:text-primary'>
+              <Button variant={'ghost'} className='font-semibold w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] md:text-primary md:hover:text-primary bg-primary text-white hover:text-white md:bg-white'>
                 <Link to={'/log-in'}>Sign In</Link>
               </Button>
-              <Button className='font-semibold bg-primary hover:bg-secondary w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px]'>
+              <Button className='font-semibold bg-primary hover:bg-secondary w-[80px] h-[38px] xl:w-[112px] xl:h-[54px] rounded-lg text-[13px] leading-[19.5px] xl:text-base xl:leading-[24px] hidden md:block'>
                 <Link to={'/sign-up'}>Sign Up</Link>
               </Button>
             </div>

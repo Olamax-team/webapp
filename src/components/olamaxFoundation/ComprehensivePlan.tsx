@@ -1,7 +1,7 @@
 import { Calendar } from "lucide-react";
-import phase1 from "../../assets/images/phase1.svg";
-import phase2 from "../../assets/images/phase2.svg";
-import phase3 from "../../assets/images/phase3.svg";
+// import phase1 from "../../assets/images/phase1.svg";
+// import phase2 from "../../assets/images/phase2.svg";
+// import phase3 from "../../assets/images/phase3.svg";
 const CompPlan = () => {
 
     interface Phases{
@@ -17,7 +17,7 @@ const CompPlan = () => {
             id: 1,
             title: "Phase 1: Research, Development, and Initial Pilot Programs",
             duration: "1 - 6 Months",
-            imageUrl: phase1,
+            imageUrl: '/images/phase1.svg',
             description: [
                 "Needs Assessment: Conduct a thorough needs assessment in targeted schools in the northern regions, identifying gaps in energy, educational resources, and digital infrastructure.",
                 "Curriculum Development: Develop a tech-focused curriculum for primary and secondary schools in collaboration with educational consultants, covering topics such as blockchain basics, coding, AI fundamentals, and digital literacy.",
@@ -29,7 +29,7 @@ const CompPlan = () => {
             id: 2,
             title: "Phase 2: Expansion and Scaling",
             duration: "6 - 24 Months",
-            imageUrl: phase2,
+            imageUrl: '/images/phase2.svg',
             description: [
                 "Tech Skills Training Rollout: Implement the tech curriculum in additional schools, initially targeting 100 schools in the northern region and expanding to other areas as resources allow.",
                 "Clean Energy Expansion: Scale the solar installation initiative to reach 200 schools within this phase, ensuring maintenance and operational support.",
@@ -41,7 +41,7 @@ const CompPlan = () => {
             id: 3,
             title: "Phase 3: Long-Term Sustainability and Impact Evaluation",
             duration: "24+ Months",
-            imageUrl: phase3,
+            imageUrl: '/images/phase3.svg',
             description: [
                 "Continuous Training and Curriculum Updates: Adapt curriculum content to evolving tech trends, ensuring students remain competitive in the job market.",
                 "Nationwide Expansion: Increase the number of schools with access to both clean energy and tech education, aiming to impact all underserved regions.",
@@ -66,10 +66,10 @@ const CompPlan = () => {
                             <img
                             src={item.imageUrl}
                             alt={item.title}
-                            className={`mx-auto w-auto ${item.imageUrl === phase2 ? 'order-last' : 'order-first'} h-auto object-contain`}
+                            className={`mx-auto w-auto ${item.imageUrl === '/images/phase2.svg' ? 'order-last' : 'order-first'} h-auto object-contain`}
                             />
                         </div>
-                        <div className={`items-start w-full xl:w-1/2 font-Inter ${item.imageUrl === phase2 ? 'order-first' : 'order-last'}`}>
+                        <div className={`items-start w-full xl:w-1/2 font-Inter ${item.imageUrl === '/images/phase2.svg' ? 'order-first' : 'order-last'}`}>
                             <h1 className="text-[16px] leading-[24px] xl:text-[20px] xl:leading-[30px] font-bold text-nowrap">{item.title}</h1>
                             <span className="flex gap-2 text-[14px] leading-[21px] xl:text-[18px] xl:leading-[27px] font-bold"><Calendar size={24}/>{item.duration}</span>
                             <ul className="space-y-6 font-normal text-base">
