@@ -123,17 +123,17 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     {
       id: 1,
       title: "Olamax Launches New Escrow Service",
-      imageUrl: "/images/news1.png",
+      imageUrl: "/images/news1.svg",
     },
     {
       id: 2,
       title: "Olamax Now Supports Over 20 Cryptocurrencies, Expanding Your Options",
-      imageUrl: "/images/news2.png",
+      imageUrl: "/images/news2.svg",
     },
     {
       id: 3,
       title: "Olamax Partners with Top Nigerian Banks to Streamline Crypto-to-Naira Conversions",
-      imageUrl: "/images/news3.png",
+      imageUrl: "/images/news3.svg",
     },
   ];
   const copyToClipboard = () => {
@@ -199,7 +199,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
               >
                 {!crypto.change.startsWith("-") && (
                   <img
-                    src= {"/images/positive-graph.png"}
+                    src= {"/images/positive-graph.svg"}
                     alt="Upward Trend"
                     className="inline-block w-[14px] h-[14px] m-2 justify-center"
                   />
@@ -231,7 +231,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
             {/* Invites section */}
             <div className="w-full h-auto mx-auto bg-white rounded-xl">
               <img      
-              src={"/images/invites.png"}
+              src={"/images/invites.svg"}
               alt="invites photo"
               className="w-full h-auto"/>
               <div className="font-Inter w-full h-auto my-4 p-4 items-center justify-center mx-auto space-y-3">
