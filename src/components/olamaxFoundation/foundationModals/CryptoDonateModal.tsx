@@ -68,7 +68,7 @@ const CryptoDonateModal = () => {
             </div>
           </div>
           <div>
-            <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {onClose(); openDonateConfirmation.onOpen()}}>
+            <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {onClose(); openDonateConfirmation.onOpen();}}>
               I Have Made Payment
             </button>
           </div>

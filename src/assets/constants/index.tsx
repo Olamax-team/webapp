@@ -34,13 +34,13 @@ export const tradeCryptoList = [
 
 export const supportList = [
   {
-    path: '/help-center',
+    path: '/support#help',
     image: helpCenter,
     description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
     title: 'Help Center'
   },
   {
-    path: '/chat-us',
+    path: '/support#contact',
     image: chatUs,
     description: 'Buy crypto with Mastercard, Visa, Fiat balance.',
     title: 'Chat Us'

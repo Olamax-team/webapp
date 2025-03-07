@@ -66,7 +66,7 @@ const HeroSection: React.FC = () => {
                 animate='float-up'
                 boxPosition={{bottom:'-5px', left:'-2px'}} />
             </div>
-            <div className='relative m-10 xl:m-20 text-center items-center justify-center w-full'>
+            <div className='relative m-5 xl:m-20 text-center items-center justify-center w-full'>
               {/* Content */}
               <h1 className="text-wrap font-DMSans text-[18px] leading-[27px] xl:text-[32px] font-bold xl:leading-[48px] text-textDark mt-4 mb-4">
               Your all-in-one crypto platform to buy, sell & trade, cryptocurrencies
