@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useEffect, useRef } from "react"
+import { useOTCModal } from "../../lib/utils";
 // import rectangleOTC from '../../assets/images/RectangleOTC.svg'
 // import btcOTC from '../../assets/images/BitcoinOTC.svg'
 // import alertOTC from '../../assets/images/alertOTC.svg'
@@ -24,6 +25,16 @@ const OTC = () => {
             description:'OTC desks offer a more tailored service for large traders, typically involving dedicated account managers or brokers who help facilitate the trade, ensuring smooth, reliable, and secure transactions.'
         }
     ]
+
+    const hasOpenedRef = useRef(false);
+    const openOTCModal = useOTCModal();
+
+    useEffect(() => {
+        if ( !hasOpenedRef.current) {
+        openOTCModal.onOpen();
+        hasOpenedRef.current = true; 
+        }
+    }, [openOTCModal]);
   return (
     <React.Fragment>
         <section className="p-5 xl:p-10 w-full h-auto">

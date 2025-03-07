@@ -24,6 +24,8 @@ import Escrow from './components/escrow/escrow';
 import OTC from './components/OTC/otc';
 import SupportPage from './pages/SupportPage';
 import PrivacyPolicy from './components/privacy/privacyPolicy';
+import TOS from './pages/TOS';
+import Cookies from './pages/Cookies';
 
 
 const router = createBrowserRouter([
@@ -112,6 +114,14 @@ const router = createBrowserRouter([
       {
         path: '/support',
         element: <SupportPage/>
+      },
+      {
+        path:'/terms',
+        element:<TOS/>
+      },
+      {
+        path:'/cookies',
+        element:<Cookies/>
       },
     ]
   }
