@@ -104,7 +104,7 @@ const TOS = () => {
   return (
     <div className='px-10 xl:px-32 py-10 space-y-10 bg-bg'>
       <div className='font-Inter space-y-[26px]'>
-        <h1 className='font-DMSans text-[29px] leading-[43.5px] font-bold text-center'>Terms of Service</h1>
+        <h1 className='mt-7 font-DMSans text-[29px] leading-[43.5px] font-bold text-center'>Terms of Service</h1>
         <p className='text-[18px] leading-[27px] font-normal'>Welcome to Olamax Exchange. By accessing or using our platform, you agree to abide by these Terms of Service ("Terms"). Please read them carefully as they govern your use of Olamax Exchange's services, including buying and selling cryptocurrency, escrow services, bills payment, and our referral and foundation programs.</p>
       </div>
       

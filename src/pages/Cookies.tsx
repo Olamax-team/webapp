@@ -2,7 +2,7 @@ const Cookies = () => {
   return (
     <div  className="px-10 xl:px-32 py-10 space-y-10 bg-bg">
       <div className='font-Inter space-y-[26px]'>
-        <h1 className='font-DMSans text-[29px] leading-[43.5px] font-bold text-center'>Cookies</h1>
+        <h1 className='mt-7 font-DMSans text-[29px] leading-[43.5px] font-bold text-center'>Cookies</h1>
         <p className='text-[18px] leading-[27px] font-normal'>
             At OLAMAX EXCHANGE, we value the privacy of our visitors and customers. We also know that people are concerned about how their online activity can be monitored, and what information is shared with other companies.
             <br/>One of the most common ways websites track and save information about their visitors is through the use of cookies. A cookie is a small file of text, often encrypted for privacy, that is used to store information between visits to a website. Modern internet browsers allow you to see what cookies are currently stored on your computer, and selectively delete them as you wish.
