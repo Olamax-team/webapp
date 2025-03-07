@@ -49,7 +49,7 @@ const Escrow = () => {
                         <div className="p-5">
                             {escrowBenefit.map((escrow, index) => (
                                 <div key={index} className="">
-                                 <div className="flex items-centern gap-3  mt-5">
+                                 <div className="flex items-center gap-3  mt-5">
                                      <div className="size-10 bg-white flex items-center justify-center rounded-full">
                                           <img src={escrow.icon}/>
                                       </div>
