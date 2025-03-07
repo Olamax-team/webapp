@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import Contact from "./contact";
+import { Link, useLocation } from "react-router-dom";
 
 const Support = () => {
     const [searchInput, setSearchInput] = useState("");
@@ -12,50 +13,67 @@ const Support = () => {
                 label:'Getting Started',
                 description:'All you need to know about OLAMAX EXCHANGE.',
                 article:'3 Articles',
+                path:"/support",
             },
             {
                 icon: '/images/CryptoPortfolio.svg' ,
                 label:'Trading Crypto',
                 description:'How to make your first trade.',
                 article:'2 Articles',
+                path:"/support",
             },
             {      
                 icon:'/images/PrivacyPolicy1.svg',
                 label:'Privacy & Security',
                 description:'Keep your account secure.',
                 article:'10 Articles',
+                path:"/support",
             },
             {
                 icon:'/images/IDCard.svg',
                 label:'KYC',
                 description:'Know your customer (KYC) verification steps.',
                 article:'4 Articles',
+                path:"/support",
             },
             {
                 icon: '/images/PrivacyPolicy2.svg' ,
                 label:'Our Policies',
                 description:'OLAMAX EXCHANGE compliance & policies.',
                 article:'15 Articles',
+                path:"/support",
             },
             {      
                 icon:'/images/MyPassword.svg',
                 label:'Manage my Account',
                 description:'Manage your personal preferences.',
                 article:'6 Articles',
+                path:"/support",
             },
             {
                 icon:'/images/Referral.svg',
                 label:'Referral Program',
                 description:'Gifts, benefits & promos',
                 article:'4 Articles',
+                path:"/support",
             },
             {
                 icon: '/images/GroupTherapy.svg' ,
                 label:'Other Topics',
                 description:'Find out more about OLAMAX EXCHANGE.',
                 article:'2 Articles',
+                path:"/support",
             },
         ]
+    const location = useLocation();
+    useEffect(() => {
+        if (location.hash) {
+        const element = document.getElementById(location.hash.substring(1));
+        if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+        }
+        }
+    }, [location]);
   return (
     <section className="mx-auto my-auto w-full bg-bg overflow-hidden h-auto flex items-center justify-center flex-col">
         {/* Support Image */}
@@ -96,7 +114,7 @@ const Support = () => {
         </div>
 
         {/* Help Categories */}
-        <div className="bg-primary bg-opacity-20 px-8 xl:px-20 items-center justify-center space-y-6 xl:space-y-16 py-16 font-Inter w-full">
+        <div id="help" className="bg-primary bg-opacity-20 px-8 xl:px-20 items-center justify-center space-y-6 xl:space-y-16 py-16 font-Inter w-full">
             <div>
                 <h1 className="font-DMSans text-[32px] leading-[48px] font-bold">Browse our help categories</h1>
             </div>
@@ -116,7 +134,7 @@ const Support = () => {
                                 <p className="text-[14px] leading-[21px] font-normal">{help.description}</p>
                             </span>
                             <span className="items-end justify-end ">
-                                <p className="text-[16px] leading-[24px] font-medium text-secondary">{help.article}</p>
+                                <Link to={help.path} className="text-[16px] leading-[24px] font-medium text-secondary"key={help.path}>{help.article}</Link>
                             </span>
                         </div>
                     </div>
@@ -124,7 +142,7 @@ const Support = () => {
             </div>
 
         </div>
-        <div className="mx-auto my-8 xl:my-20 w-full h-full flex items-center justify-center">
+        <div id="contact" className="mx-auto my-8 xl:my-20 w-full h-full flex items-center justify-center">
             <Contact/>
         </div>
 
