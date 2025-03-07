@@ -15,7 +15,6 @@ import AccountManagement from './pages/AccountManagement';
 import MyReward from './pages/MyReward';
 import NewsAnnouncement from './pages/NewsAnnouncement';
 import AboutUs from './components/aboutUs/aboutUs';
-
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import Education from './components/educationalCenter/education';
 import OlamaxFoundationPage from './pages/OlamaxFoundationPage';
@@ -24,6 +23,7 @@ import { ReferralPrograme } from './components/referralPage/referralProgram';
 import Escrow from './components/escrow/escrow';
 import OTC from './components/OTC/otc';
 import SupportPage from './pages/SupportPage';
+import PrivacyPolicy from './components/privacy/privacyPolicy';
 import TOS from './pages/TOS';
 import Cookies from './pages/Cookies';
 
@@ -45,6 +45,11 @@ const router = createBrowserRouter([
         element: <AboutUs/>
       },
       {
+        path:'/privacy',
+        element:  <PrivacyPolicy/>
+
+      },
+      {
         path: '/educational-center',
         element: <Education/>
       },
@@ -61,6 +66,7 @@ const router = createBrowserRouter([
         element:  <Escrow/>
 
       },
+      
       {
         path: '/sign-up',
         element: <SignUpPage/>
