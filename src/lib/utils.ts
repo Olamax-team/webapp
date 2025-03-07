@@ -243,3 +243,9 @@ export const useDonateConfirmationModal = create<modalProps>((set) => ({
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
+
+export const useOTCModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
