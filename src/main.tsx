@@ -27,6 +27,7 @@ import PrivacyPolicy from './components/privacy/privacyPolicy';
 
 
 const router = createBrowserRouter([
+  
   {
     element: <Layout/>,
     children: [
