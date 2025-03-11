@@ -14,7 +14,7 @@ const links = {
     },
     {
       label: 'News & Anouncement',
-      path: '/new-announcement'
+      path: '/news-and-announcement'
     },
     {
       label: 'Olamax Foundation',
@@ -26,7 +26,7 @@ const links = {
     },
     {
       label: 'Referral Program',
-      path: '/referrals'
+      path: '/referral-program'
     },
   ],
   legal: [
@@ -46,11 +46,11 @@ const links = {
   support: [
     {
       label: 'Help Center',
-      path: '/help-center'
+      path: '/support#help'
     },
     {
       label: 'Leave us a message',
-      path: '/contact'
+      path: '/support#contact'
     },
     {
       label: 'OTC Desk',

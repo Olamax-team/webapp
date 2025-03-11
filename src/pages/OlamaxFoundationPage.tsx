@@ -1,6 +1,7 @@
 import React from "react";
 import OlamaxFoundation from "../components/olamaxFoundation/olamaxFoundation";
 import { documentTitle } from "../lib/utils";
+import TopHeader from "../components/footer/TopHeader";
 
 const OlamaxFoundationPage = () => {
   documentTitle('Olamax Foundation');
@@ -8,6 +9,7 @@ const OlamaxFoundationPage = () => {
   return (
     <React.Fragment>
         <OlamaxFoundation/>
+        <TopHeader/>
     </React.Fragment>
   )
 }
