@@ -87,7 +87,7 @@ export const useUserDetails = create<userDetailProps>()(
       storage: createJSONStorage(() => sessionStorage),
     },
   ),
-)
+);
 
 
 export default useUserDetails;

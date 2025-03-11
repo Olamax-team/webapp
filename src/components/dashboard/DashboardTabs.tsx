@@ -8,6 +8,8 @@ import { useConfirmVerificationModal } from "../../lib/utils";
 // import phone from "../../assets/images/phone.png"
 // import electricity from "../../assets/images/electricity.png"
 import useUserDetails from "../../stores/userStore";
+import { useApiConfig } from "../../hooks/api";
+import axios from "axios";
 
 interface UserInfoProps {
   name: string;
@@ -113,6 +115,7 @@ interface ServicesProps {
   services: { title: string; description: string; icon: JSX.Element }[];
 }
 
+
 const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
   return (
     <div className="p-6 justify-center flex flex-col w-full h-auto bg-primary bg-opacity-20 rounded-lg mt-6 font-Inter">
@@ -148,11 +151,9 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
-  console.log(kycDetails.email);
-
   const user = {
     name: kycDetails ?  `${kycDetails.fname} ${kycDetails.lname}` : '',
-    email: kycDetails ? kycDetails.email : userDetail?.email,
+    email: kycDetails ? kycDetails?.email : userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
     isVerified: userDetail?.account_status || 'Unverified',
@@ -179,7 +180,100 @@ const DashboardTab: React.FC = () => {
   const props1 = ["NGN", "USD", "EUR", "GBP"];
   const props2currency = ["BTC","ETH", "USDT", "SOL" ];
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);
-  const [tradeType, setTradeType] = useState<string>('');  
+  const [tradeType, setTradeType] = useState<string>('');
+
+  const coinConfig = useApiConfig({
+    url:'coin-prices',
+    method:'get',
+  });
+
+  const liveRateConfig = useApiConfig({
+    url:'price-ticker',
+    method:'get',
+  });
+
+  const getCoinByNameConfig = useApiConfig({
+    url: 'coin-naira-value/selling',
+    method: 'get'
+  });
+
+  const cryptoServiceConfig = useApiConfig({
+    url: 'coin-naira-value/selling',
+    method: 'get'
+  });
+
+  React.useEffect(()=> {
+    const fetchLiveRates = () => {
+      axios.request(liveRateConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('live-rates', response.data.price_ticker)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+    fetchLiveRates();
+  },[]);
+
+  React.useEffect(()=> {
+    const fetchAllCoinPrices = () => {
+      axios.request(coinConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('all-coin-price', response.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+    fetchAllCoinPrices();
+  },[]);
+
+  React.useEffect(()=> {
+    const fetchCoinByName = () => {
+      axios.request(getCoinByNameConfig )
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('coin-by-name', response.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+    fetchCoinByName();
+  },[]);
+
+  React.useEffect(()=> {
+    const fetchCryptoService = () => {
+      axios.request(cryptoServiceConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('crypto-services', response.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+    fetchCryptoService();
+  },[]);
+
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">
       {!showTransactionDetail ? (
