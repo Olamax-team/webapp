@@ -9,6 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { HiEllipsisVertical } from "react-icons/hi2";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
 import { transactionList } from "../assets/constants";
+import { useApiConfig } from "../hooks/api";
+import axios from "axios";
 
 type dateComponentProps = {
   date: Date | undefined;
@@ -39,6 +41,29 @@ const Transaction = () => {
 
   const [fromDate, setFromDate] = React.useState<Date | undefined>();
   const [toDate, setToDate] = React.useState<Date | undefined>();
+
+  const minTranscationConfig = useApiConfig({
+    url: 'min-transaction/1',
+    method: 'get'
+  });
+
+  React.useEffect(()=> {
+    const fetchLiveRates = () => {
+      axios.request(minTranscationConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('min-transaction', response.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+    fetchLiveRates();
+  },[]);
 
 
   const DateComponent = ({date, setDate, placeholder}:dateComponentProps) => {
@@ -93,7 +118,7 @@ const Transaction = () => {
         </TableHeader>
         <TableBody>
           {transactionList.map((item) => (
-            <TableRow className="border-b-0 h-[60px] even:bg-white font-Inter even:hover:bg-white odd:bg-[#f5f5f5]">
+            <TableRow className="border-b-0 h-[60px] even:bg-white font-Inter even:hover:bg-white odd:bg-[#f5f5f5]" key={item.id}>
               <TableCell className="text-center">{format(new Date(item.date), 'dd/MM/yyyy')}</TableCell>
               <TableCell className="text-center">{item.transaction_id}</TableCell>
               <TableCell className="text-center">{item.type}</TableCell>
