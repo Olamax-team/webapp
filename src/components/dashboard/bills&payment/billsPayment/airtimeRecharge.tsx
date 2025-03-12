@@ -237,7 +237,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
       {errors.paymentAmount && <p className="text-red-500 text-xs">{errors.paymentAmount?.message}</p>}
 
       <div className="flex items-center justify-center mt-10 ">
-        <button type="submit" className="xl:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]">
+        <button type="submit" className="xl:w-[150px] w-[96px] h-[38px] rounded-[5px] text-[13px] leading-[19.5px] font-Inter  font-semibold xl:h-[54px] xl:rounded-[10px] px-[25px] py-[15px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]">
           Buy
         </button>
       </div>

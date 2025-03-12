@@ -31,25 +31,25 @@ const Blockchain = () => {
       {/* Right-side Content */}
       <div className="xl:w-[50%] w-full lg:p-5 lg:mt-0 mt-5 lg:overflow-y-scroll lg:max-h-screen">
         <section id="section1" className="p-5">
-          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[34.5px] leading-[28px]">
+          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[150%] leading-[150%]">
             Introduction to Blockchain
           </h2>
-          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[27px] leading-[23x] mt-3">
+          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[150%] leading-[150%] mt-3">
             Blockchain technology serves as a groundbreaking advancement in how data is securely stored, shared, and verified. By using a distributed ledger system, blockchain ensures that transactions are recorded across a network of computers, making it virtually impossible to alter or delete data without consensus. This system’s decentralized nature means that no central authority controls the information, offering a higher level of security, transparency, and integrity. Blockchain is particularly transformative in sectors where trust and traceability are crucial, laying the groundwork for innovations in finance, supply chain management, healthcare, and beyond.
           </p>
         </section>
 
         <section id="section2" className="p-5">
-          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[34.5px] leading-[28px]">
+          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[150%] leading-[150%]">
             Blockchain vs. Traditional Databases
           </h2>
-          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[27px] leading-[23x] mt-3">
+          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[150%] leading-[150%] mt-3">
             Unlike traditional databases, which are typically centralized and controlled by a single authority, blockchain operates on a decentralized model, providing enhanced trust, security, and transparency. In traditional databases, data changes can be made by authorized users, which poses risks to data integrity and security. Blockchain’s unique structure, where data is cryptographically secured and validated by network consensus, minimizes these risks. Every transaction on a blockchain is transparent and immutable, meaning changes are visible and unchangeable, making blockchain an attractive alternative in scenarios where data trust and accuracy are essential.
           </p>
         </section>
 
         <section id="section3" className="p-5">
-          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[34.5px] leading-[28px]">
+          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[150%] leading-[150%]">
             Types of Blockchain
           </h2>
           <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[27px] leading-[23x] mt-3">
@@ -58,19 +58,19 @@ const Blockchain = () => {
         </section>
 
         <section id="section4" className="p-5">
-          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[34.5px] leading-[28px]">
+          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[150%] leading-[150%]">
             Key Blockchain Terms
           </h2>
-          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[27px] leading-[23x] mt-3">
+          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[150%] leading-[150%] mt-3">
             To understand blockchain, it's essential to familiarize yourself with key terms. Nodes are individual devices within the blockchain network that validate transactions and share data. Consensus mechanisms are methods by which nodes agree on the validity of transactions, with common mechanisms including Proof of Work (PoW) and Proof of Stake (PoS). Mining is a process used in PoW systems where nodes solve complex algorithms to validate transactions, adding them to the chain and earning rewards. Decentralization refers to the distributed nature of blockchain, which removes central authority control, making the system resilient, transparent, and secure. Other important terms include smart contracts, which are self-executing contracts with the terms of the agreement directly written into code, and tokens, which represent digital assets or utility within a blockchain network.
           </p>
         </section>
 
         <section id="section5" className="p-5">
-          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[34.5px] leading-[28px]">
+          <h2 className="font-Inter font-bold xl:text-[23px] text-[18px] xl:leading-[150%] leading-[150%]">
             Real-World Applications of Blockchain
           </h2>
-          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[27px] leading-[23x] mt-3">
+          <p className="font-medium font-Inter xl:text-[18px] text-[14px] xl:leading-[150%] leading-[150%] mt-3">
             Blockchain’s capabilities extend far beyond cryptocurrency. In finance, blockchain is transforming payments, lending, and investments, offering faster transactions and reduced fraud. In the supply chain, it provides transparent tracking of products from source to destination, reducing fraud and inefficiencies. Healthcare leverages blockchain for secure, patient-centered data sharing, ensuring patient information is tamper-proof and accessible to authorized providers. Blockchain is also being applied in sectors like real estate, legal contracts, and voting systems, where it offers robust solutions for security, transparency, and efficiency. These real-world applications highlight blockchain's potential to revolutionize a wide range of industries, bringing transformative changes to how business is conducted and how data is shared and trusted across the globe.
           </p>
         </section>
