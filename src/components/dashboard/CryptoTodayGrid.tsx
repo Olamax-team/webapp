@@ -231,7 +231,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
             {/* Invites section */}
             <div className="w-full h-auto mx-auto bg-white rounded-xl">
               <img      
-              src={"/images/invites.svg"}
+              src={"/images/invites.png"}
               alt="invites photo"
               className="w-full h-auto"/>
               <div className="font-Inter w-full h-auto my-4 p-4 items-center justify-center mx-auto space-y-3">

@@ -10,7 +10,7 @@ import nationalitiesJson from './nationalities.json'
 import { useToast } from '../../../hooks/use-toast';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
-import { useLocalStorage } from '../../../hooks/use-localstorage';
+import useUserDetails from '../../../stores/userStore';
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
   const [lname, setLName] = React.useState('');
@@ -20,8 +20,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const [nationality, setNationality] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
 
-  const { getItem } = useLocalStorage();
-  const token = getItem('token');
+  const { token } = useUserDetails();
 
   const [isLoading, setIsLoading] = React.useState(false);
 
