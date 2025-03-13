@@ -30,6 +30,7 @@ import VerificationPage from './pages/VerificationPage';
 
 
 const router = createBrowserRouter([
+  
   {
     element: <Layout/>,
     children: [

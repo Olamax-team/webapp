@@ -66,10 +66,10 @@ const Donate = ()=> {
                         </select>
                     </div>
                     {/* Coin Selection */}
-                    <div className="px-4 py-2 xl:py-4 rounded-md items-center h-[96px] bg-[#F5F5F5]">
+                    <div className="px-4 py-2 xl:py-4 rounded-md items-center h-[96px] bg-[#F5F5F5] w-full">
                         <p className="font-normal text-xs xl:text-sm">You Donate</p>
-                        <div className="w-full flex items-end justify-between">
-                            <div className="w-full">
+                        <div className="w-full flex items-end justify-between overflow-hidden">
+                            <div className="w-1/2">
                                 <Input
                                 value={amount}
                                 required
@@ -78,8 +78,7 @@ const Donate = ()=> {
                                 className="h-[35px] text-[18px] leading-[27px] bg-[#F5F5F5]  mt-0 xl:text-[23px] xl:leading-[34.5px] pl-0 shadow-none border-none rounded-none focus:outline-none font-bold"
                                 />
                             </div>
-                            {}
-                            <div className="flex w-fit items-end justify-end gap-1 font-Inter">
+                            <div className="flex w-1/2 items-end justify-end gap-1 font-Inter">
                                 <img
                                 src={logoMap[(paymentMethod === "Fiat" ? fiatType : cryptoType) as keyof typeof logoMap]}
                                 alt={`${paymentMethod === "Fiat" ? fiatType : cryptoType} logo`}

@@ -239,12 +239,11 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                 <p className="text-wrap text-[14] xl:text-[] leading-[22.5px] xl:leading-[] font-medium text-textDark">Help grow our community by inviting your friends to join! Share the link and let others enjoy all the benefits we have to offer.</p>
                 <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={copyToClipboard}
                 >
                   <span className="text-primary text-sm font-medium">
                     Copy Invite Link
                   </span>
-                  <HiOutlineDuplicate className="w-5 h-5 text-primary" />
+                  <HiOutlineDuplicate className="w-5 h-5 text-primary" onClick={copyToClipboard} />
                 </div>
               </div>
             </div>
@@ -252,7 +251,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                 <h2 className="font-Inter text-[18px] leading-[27px] font-bold mb-[16px]">Latest News</h2>
                 <div className="space-y-7 mb-2 xl:mb-0">
                 {news.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-4">
+                    <div key={item.id} className="flex flex-row flex-wrap items-center space-x-4">
                       <img
                           src={item.imageUrl}
                           alt="photo"

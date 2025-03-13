@@ -60,11 +60,11 @@ const Education = () => {
                   }}
                    className="bg-cover bg-center flex flex-col items-start justify-center text-[#FFFFFF] "
                 >
-                    <div className=" flex flex-col text-left items-start    p-8 xl:p-10  ">
-                        <h2 className="font-bold font-DM Sans  text-[18px] xl:text-[32px] leading-[30px] xl:leading-[48px] w-[300px] xl:w-[501px] text-left ">Learn all about cryptocurrency, blockchain & financial literacy</h2>
-                        <p className="text-lg  gap-2 flex items-center justify-center text-left">
-                            <span className="font-inter font-medium xl:text-[24px] text-[18px] leading-[24px] xl:leading-[27px]">Educational Center</span>
-                            <span className="w-16 border-t-2 border-gray-300"></span>
+                    <div className=" flex flex-col text-left items-start p-8 xl:ml-20      ">
+                        <h2 className="font-bold font-DMSans  text-[18px] xl:text-[32px] leading-[44px] xl:leading-[48px] w-[300px] xl:w-[501px] text-left ">Learn all about cryptocurrency, blockchain & financial literacy</h2>
+                        <p className="text-lg  gap-2 flex items-center  text-left">
+                            <span className="font-inter font-medium xl:text-[20px] text-[16px] leading-[24px] xl:leading-[27px]">Educational Center</span>
+                            <span className="w-24 border-t-2 border-gray-300"></span>
                         </p>
                     </div>
                 </div>

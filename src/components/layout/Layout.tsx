@@ -4,6 +4,7 @@ import Navigation from '../navigation/Navigation';
 import Footer from '../footer/Footer';
 import ModalProvider from '../ui/modal-provider';
 import { Toaster } from "../ui/toaster"
+import ScrollUp from '../scrollUpIcon/scrollUp';
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -15,6 +16,7 @@ const Layout = () => {
     <React.Fragment>
       <Toaster/>
       <ModalProvider/>
+      <ScrollUp/>
       { isAuthRoutes ? '' : <Navigation/> }
       <Outlet/>
       { isAuthRoutes ? '' : <Footer/> }
