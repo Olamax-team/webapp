@@ -178,15 +178,15 @@ const OlamaxFoundation = () => {
                 </div>
 
                 {/* Our Mission */}
-                <div className="flex flex-row flex-wrap xl:flex-nowrap mx-5 xl:mx-20 my-8 xl:my-20 gap-16">
-                    <div className="w-full xl:w-1/2">
+                <div className="flex flex-row flex-wrap xl:flex-nowrap w-full mx-5 xl:mx-20 my-8 xl:my-20 gap-16">
+                    <div className="w-full xl:w-1/2 px-5">
                         <h1 className="font-DMSans text-[18px] leading-[27px] xl:text-[32px] xl:leading-[48px] font-bold">Our Mission</h1>
                         <p className="text-[14px] leading-[21px] xl:text-[18px] xl:leading-[27px] font-medium font-Inter">The Olamax Foundation is dedicated to advancing two essential Sustainable Development Goals (SDGs) in Nigeria: Quality Education (SDG 4) and Affordable and Clean Energy (SDG 7). Recognizing the transformative potential of technology and renewable energy, our vision is to empower Nigeria's youth with tech-based skills from an early age while ensuring access to reliable, clean energy sources for schools, particularly in under-resourced areas in the northern regions of Nigeria.<br/><br/>
                             This initiative will not only bolster Nigeria's position in the global tech space, particularly in sectors like blockchain and artificial intelligence (AI), but also contribute to a cleaner, more sustainable future.
                             To achieve this vision, we will provide tech skills training, clean energy infrastructure, and free internet to support learning in primary and secondary schools across Nigeria. 
                             <br/><br/>Our ambitious goal is to train thousands in tech skills, nurturing a future-ready workforce for Nigerian startups, including our own. With the support of cryptocurrency donations, we invite you to join us in building a more sustainable, technologically advanced Nigeria.</p>
                     </div>
-                    <div className="w-full xl:w-1/2 items-center mx-9 xl:mx-0">
+                    <div className="w-full xl:w-1/2 items-center px-9 xl:px-0">
                         <Donate/>
                     </div>
                 </div>

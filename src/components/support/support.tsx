@@ -7,64 +7,64 @@ import { Link, useLocation } from "react-router-dom";
 const Support = () => {
     const [searchInput, setSearchInput] = useState("");
 
-        const helpCat = [
-            {
-                icon:'/images/Launching.svg',
-                label:'Getting Started',
-                description:'All you need to know about OLAMAX EXCHANGE.',
-                article:'3 Articles',
-                path:"/support",
-            },
-            {
-                icon: '/images/CryptoPortfolio.svg' ,
-                label:'Trading Crypto',
-                description:'How to make your first trade.',
-                article:'2 Articles',
-                path:"/support",
-            },
-            {      
-                icon:'/images/PrivacyPolicy1.svg',
-                label:'Privacy & Security',
-                description:'Keep your account secure.',
-                article:'10 Articles',
-                path:"/support",
-            },
-            {
-                icon:'/images/IDCard.svg',
-                label:'KYC',
-                description:'Know your customer (KYC) verification steps.',
-                article:'4 Articles',
-                path:"/support",
-            },
-            {
-                icon: '/images/PrivacyPolicy2.svg' ,
-                label:'Our Policies',
-                description:'OLAMAX EXCHANGE compliance & policies.',
-                article:'15 Articles',
-                path:"/support",
-            },
-            {      
-                icon:'/images/MyPassword.svg',
-                label:'Manage my Account',
-                description:'Manage your personal preferences.',
-                article:'6 Articles',
-                path:"/support",
-            },
-            {
-                icon:'/images/Referral.svg',
-                label:'Referral Program',
-                description:'Gifts, benefits & promos',
-                article:'4 Articles',
-                path:"/support",
-            },
-            {
-                icon: '/images/GroupTherapy.svg' ,
-                label:'Other Topics',
-                description:'Find out more about OLAMAX EXCHANGE.',
-                article:'2 Articles',
-                path:"/support",
-            },
-        ]
+    const helpCat = [
+        {
+            icon:'/images/Launching.svg',
+            label:'Getting Started',
+            description:'All you need to know about OLAMAX EXCHANGE.',
+            article:'3 Articles',
+            path:"/support",
+        },
+        {
+            icon: '/images/CryptoPortfolio.svg' ,
+            label:'Trading Crypto',
+            description:'How to make your first trade.',
+            article:'2 Articles',
+            path:"/support",
+        },
+        {      
+            icon:'/images/PrivacyPolicy1.svg',
+            label:'Privacy & Security',
+            description:'Keep your account secure.',
+            article:'10 Articles',
+            path:"/support",
+        },
+        {
+            icon:'/images/IDCard.svg',
+            label:'KYC',
+            description:'Know your customer (KYC) verification steps.',
+            article:'4 Articles',
+            path:"/support",
+        },
+        {
+            icon: '/images/PrivacyPolicy2.svg' ,
+            label:'Our Policies',
+            description:'OLAMAX EXCHANGE compliance & policies.',
+            article:'15 Articles',
+            path:"/support",
+        },
+        {      
+            icon:'/images/MyPassword.svg',
+            label:'Manage my Account',
+            description:'Manage your personal preferences.',
+            article:'6 Articles',
+            path:"/support",
+        },
+        {
+            icon:'/images/Referral.svg',
+            label:'Referral Program',
+            description:'Gifts, benefits & promos',
+            article:'4 Articles',
+            path:"/support",
+        },
+        {
+            icon: '/images/GroupTherapy.svg' ,
+            label:'Other Topics',
+            description:'Find out more about OLAMAX EXCHANGE.',
+            article:'2 Articles',
+            path:"/support",
+        },
+    ]
     const location = useLocation();
     useEffect(() => {
         if (location.hash) {
