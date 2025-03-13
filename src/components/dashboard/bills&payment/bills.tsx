@@ -74,7 +74,7 @@ const Bills = () => {
           <div className="xl:w-[50%] w-full xl:pt-6">
             <div className="top-[195px] text-[#121826]">
               <h1 className="font-bold font-Inter xl:font-DMSans text-[20px] leading-[30px] xl:text-[24px] xl:leading-[39px] text-[#121826]">
-                Hello, {kycDetails.fname} {kycDetails.lname}
+                Hello, {kycDetails?.fname} {kycDetails?.lname}
               </h1>
               <p className="font-medium font-Inter text-[14px] leading-[21px]">
                 What bill would you be paying today?

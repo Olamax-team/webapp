@@ -8,7 +8,7 @@ import ScrollUp from '../scrollUpIcon/scrollUp';
 
 const Layout = () => {
   const { pathname } = useLocation();
-  const authRoutes = ['/log-in', '/sign-up', '/password-recovery']
+  const authRoutes = ['/log-in', '/sign-up', '/password-recovery', '/verify-email']
   const isAuthRoutes = authRoutes.includes(pathname);
   
 

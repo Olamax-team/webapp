@@ -152,7 +152,7 @@ const DashboardTab: React.FC = () => {
   },[userDetail]);
 
   const user = {
-    name: kycDetails ?  `${kycDetails.fname} ${kycDetails.lname}` : '',
+    name: kycDetails ?  `${kycDetails?.fname} ${kycDetails?.lname}` : '',
     email: kycDetails ? kycDetails?.email : userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
