@@ -65,6 +65,57 @@ const VerificationPage = () => {
       })
     };
 
+    const [timeLeft, setTimeLeft] = React.useState<number | null>(null);
+    const [showResendButton, setShowResendButton] = React.useState(false);
+    const [isSending, setIsSending] = React.useState(false);
+  
+    const resentOtp = async () => {
+      setIsSending(true);
+      setShowResendButton(false);
+      startDelay();
+    };
+  
+    const startCountdown = () => {
+      setTimeLeft(60);
+      const intervalId = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime && prevTime <= 1) {
+            clearInterval(intervalId);
+            setShowResendButton(true);
+            return 0
+          }
+          return prevTime ? prevTime - 1 : 0;
+        })
+      }, 1000);
+    }
+  
+    const startDelay = () => {
+      setTimeLeft(null);
+      setTimeout(() => {
+        startCountdown();
+      }, 10000)
+    };
+  
+    React.useEffect(() => {
+      startDelay();
+    }, []);
+  
+    React.useEffect(() =>{
+      if (timeLeft && timeLeft > 0) {
+        const intervalId = setInterval(() => {
+          setTimeLeft((prevTime) => {
+            if (prevTime && prevTime <= 1) {
+              clearInterval(intervalId);
+              setShowResendButton(true);
+              return 0
+            }
+            return prevTime ? prevTime - 1 : 0;
+          })
+        }, 1000);
+        return () => clearInterval(intervalId)
+      }
+    },[timeLeft]);
+
     return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitForm)} className='flex flex-col gap-4 lg:w-[440px] md:w-[500px] w-[390px] mx-auto lg:mx-0'>
@@ -101,6 +152,14 @@ const VerificationPage = () => {
               </FormItem>
             )}
           />
+          <div className='flex items-center justify-end'>
+            {timeLeft !== null && timeLeft > 0 && <p>{timeLeft}s</p>}
+            {showResendButton && 
+              <button type="button" className='text-primary text-sm font-semibold flex items-center gap-3 disabled:text-primary/60' onClick={resentOtp} disabled={isSending}>
+                {isSending ? 'Resending OTP...' : 'Resend OTP'}
+                {isSending && <Loader2 className='animate-spin'/>}
+              </button>}
+          </div>
           <button className='w-full h-[70px] rounded-md bg-primary text-white mt-8 flex items-center gap-3 justify-center disabled:bg-primary/50' type='submit' disabled={isLoading}>
             {isLoading ? 'Proceeding...' : 'Proceed'}
             {isLoading && <Loader2 className='animate-spin'/>}
