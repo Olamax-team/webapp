@@ -29,6 +29,7 @@ import Cookies from './pages/Cookies';
 
 
 const router = createBrowserRouter([
+  
   {
     element: <Layout/>,
     children: [
