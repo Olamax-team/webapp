@@ -6,6 +6,7 @@ import { ChevronDown, ChevronUp, X } from 'lucide-react'
 import StepOne from './StepOne'
 import StepTwoDesktop from './StepTwoDesktop'
 import StepTwoMobile from './StepTwoMobile'
+import StepThree from './StepThree'
 
 const headers = ['Personal Information', 'Documents Identification ', 'Liveness Check']
 
@@ -49,7 +50,8 @@ const DocumentUploadModal = () => {
           </div>
           <div className='mt-5'>
             { currentStep === 0 && <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
-            { currentStep === 1 && <StepTwoDesktop/> }
+            { currentStep === 1 && <StepTwoDesktop currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
+            { currentStep === 2 && <StepThree /> }
           </div>
         </div>
       </React.Fragment>
@@ -93,7 +95,8 @@ const DocumentUploadModal = () => {
               </div>
               <div className='mt-5'>
                 { currentStep === 0 && <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
-                { currentStep === 1 && <StepTwoMobile/> }
+                { currentStep === 1 && <StepTwoMobile currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
+                { currentStep === 2 && <StepThree /> }
               </div>
             </div>
           </React.Fragment>
