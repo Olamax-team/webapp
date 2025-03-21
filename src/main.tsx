@@ -26,9 +26,11 @@ import SupportPage from './pages/SupportPage';
 import PrivacyPolicy from './components/privacy/privacyPolicy';
 import TOS from './pages/TOS';
 import Cookies from './pages/Cookies';
+import VerificationPage from './pages/VerificationPage';
 
 
 const router = createBrowserRouter([
+  
   {
     element: <Layout/>,
     children: [
@@ -66,10 +68,13 @@ const router = createBrowserRouter([
         element:  <Escrow/>
 
       },
-      
       {
         path: '/sign-up',
         element: <SignUpPage/>
+      },
+      {
+        path: '/verify-email',
+        element: <VerificationPage/>
       },
       {
         path: '/password-recovery',
@@ -129,6 +134,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <RouterProvider router={router}/>
+    <RouterProvider router={router}/>
   </StrictMode>,
 )

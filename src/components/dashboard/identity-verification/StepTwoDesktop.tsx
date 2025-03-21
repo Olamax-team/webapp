@@ -13,7 +13,7 @@ type kyc = {
   name: string;
 };
 
-const StepTwoDesktop = () => {
+const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
   const [documentType, setDocumentType] = React.useState('');
   const [frontImage, setFrontImage] = React.useState<File | null>(null);
   const [backImage, setBackImage] = React.useState<File | null>(null);
@@ -155,6 +155,10 @@ const StepTwoDesktop = () => {
         data: kycData,
       };
 
+      if (currentStep === 3) {
+        return;
+      };
+
       if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn)) {
         toast({
           title: 'Error',
@@ -173,7 +177,7 @@ const StepTwoDesktop = () => {
               variant: 'success'
             });
             setIsLoading(false);
-            onClose();
+            setCurrentStep((prevNum) => prevNum + 1)
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {

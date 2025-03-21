@@ -1,6 +1,6 @@
 import React from 'react'
 import {  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { cn, useUploadDocumentModal } from '../../../lib/utils';
+import { cn } from '../../../lib/utils';
 import { Loader2, Paperclip, X } from 'lucide-react';
 import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
@@ -13,7 +13,7 @@ type kyc = {
   name: string;
 };
 
-const StepTwoMobile = () => {
+const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
 
   const [documentType, setDocumentType] = React.useState('');
   const [frontImage, setFrontImage] = React.useState<File | null>(null);
@@ -22,8 +22,6 @@ const StepTwoMobile = () => {
   const [bvn, setBvn] = React.useState('');
 
   const formData = new FormData();
-
-  const { onClose } = useUploadDocumentModal();
 
   const { toast } = useToast();
   const { token } = useUserDetails();
@@ -144,6 +142,10 @@ const StepTwoMobile = () => {
         identityNumber: bvn
       };
 
+      if (currentStep === 3) {
+        return;
+      };
+
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
@@ -173,7 +175,7 @@ const StepTwoMobile = () => {
               variant: 'success'
             });
             setIsLoading(false);
-            onClose();
+            setCurrentStep((prevNum) => prevNum + 1)
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {
@@ -239,7 +241,7 @@ const StepTwoMobile = () => {
               variant: 'success'
             });
             setIsLoading(false);
-            onClose();
+            setCurrentStep((prevNum) => prevNum + 1)
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {
