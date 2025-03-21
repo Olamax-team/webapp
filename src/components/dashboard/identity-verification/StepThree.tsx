@@ -67,6 +67,7 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
 
   const uploadVideo = async (blob: Blob | File, isFile: boolean) => {
     setUploadStatus(null);
+    
     try {
       const formData = new FormData();
       formData.append('short_video', blob, 'liveness_check.webm');
@@ -76,7 +77,7 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/upload-short-video',
         headers: {
-          'Content-Type':'application/json',
+          'Content-Type':'multipart/form-data',
           'Authorization': `Bearer ${token}`
         },
         data: formData,
@@ -84,7 +85,8 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
 
       axios.request(config)
       .then((response) => {
-        if (response.status === 200) {
+        console.log('step-3', response);
+        if (response.status === 201) {
           toast({
             title: 'Success',
             description: response.data.message,
@@ -117,7 +119,7 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
       console.error('Error uploading video:', error);
     } finally {
       if(isFile) {
-        setVideoFile(null); //reset the file after upload.
+        setVideoFile(null);
       }
     }
   };
@@ -133,7 +135,7 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
     if (file && file.type.startsWith('video/')) {
       setVideoFile(file);
       setRecordedVideo(URL.createObjectURL(file));
-      uploadVideo(file, true); // true = uploaded file
+      uploadVideo(file, true);
     } else {
       alert('Please select a video file.');
     }
@@ -162,7 +164,7 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
         </div>
       ) : (
         <div>
-          <button onClick={startRecording} disabled={isRecording || !!videoFile}>
+          <button onClick={startRecording} disabled={isRecording || !!videoFile} className='text-sm lg:text-base'>
             {isRecording ? 'Recording...' : 'Start Liveness Check (Record)'}
           </button>
           <input
