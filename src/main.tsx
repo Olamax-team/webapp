@@ -86,7 +86,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/dashboard',
-        element: <Dashboard/>
+        element: <ProtectedRoute><Dashboard/></ProtectedRoute>
       },
       {
         path: '/dashboard/bills_payment',
