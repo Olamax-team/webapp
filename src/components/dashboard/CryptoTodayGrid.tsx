@@ -251,11 +251,11 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                 <h2 className="font-Inter text-[18px] leading-[27px] font-bold mb-[16px]">Latest News</h2>
                 <div className="space-y-7 mb-2 xl:mb-0">
                 {news.map((item) => (
-                    <div key={item.id} className="flex flex-row flex-wrap items-center space-x-4">
+                    <div key={item.id} className="flex flex-row flex-wrap items-center gap-4">
                       <img
                           src={item.imageUrl}
                           alt="photo"
-                          className="w-auto h-auto rounded-sm object-fit"
+                          className="w-full h-auto rounded-sm object-fit"
                       />
                       <div>
                           <h3 className="text-wrap text-[14px] leading-[21px] font-medium">{item.title}</h3>
