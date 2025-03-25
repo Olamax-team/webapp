@@ -29,7 +29,6 @@ import Cookies from './pages/Cookies';
 import VerificationPage from './pages/VerificationPage';
 import GoogleLoginCallback from './pages/GoogLoginCallback';
 
-
 const router = createBrowserRouter([
   
   {
@@ -42,10 +41,6 @@ const router = createBrowserRouter([
       {
         path: '/log-in',
         element: <LoginPage/>
-      },
-      {
-        path: '/google-callback',
-        element: <GoogleLoginCallback/>
       },
       {
         path: '/about-us',
@@ -133,12 +128,13 @@ const router = createBrowserRouter([
         path:'/cookies',
         element:<Cookies/>
       },
+      { path: '/google-callback', element: <GoogleLoginCallback /> },
     ]
   }
 ]); 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router}/>
-  </StrictMode>,
-)
+    <RouterProvider router={router} />
+  </StrictMode>
+);

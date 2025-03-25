@@ -1,4 +1,6 @@
 import React, {FormEvent, useState} from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import arrowIcon from '../../../assets/images/arrowdown.svg';
@@ -8,6 +10,7 @@ import ETH from "../../../assets/images/ETH Circular.png";
 import USDT from "../../../assets/images/USDT Circular.png";
 import SOL from "../../../assets/images/SOL Circular.png";
 import NGN from "../../../assets/images/NGN Circular.png";
+import { tradeSchema } from "../../formValidation/formValidation";
 
 interface BuySellProps {
   props1Currency: string[];
@@ -37,22 +40,27 @@ const BuySell: React.FC<BuySellProps> = ({
     USDT,
     NGN,
   };
-  const handleBuySell = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(tradeSchema),
+  });
+  
+const onSubmit = (data: any) => {
+  const tradeData = {
+    tradeType: subTab,
+    fiatType: prop1,
+    cryptoType: prop2,
+    fiatAmount: subTab === "Buy" ? data.amount1 : data.amount2,
+    cryptoAmount: subTab === "Buy" ? data.amount2 : data.amount1,
+  };
+  setShowTransactionDetail?.(true);
+  setTradeType?.(subTab);
+  tradeDetails.setItem(tradeData);
+};
 
-    const tradeData = {
-      tradeType: subTab, 
-      fiatType: prop1,
-      cryptoType: prop2,
-      fiatAmount: subTab === "Buy" ? amount1 : amount2,
-      cryptoAmount: subTab === "Buy" ? amount2 : amount1,
-    };
-    setShowTransactionDetail?.(true);
-    setTradeType?.(subTab);
-    tradeDetails.setItem(tradeData);  
-
-
-  }
   return (
       <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>
         {/* Sub-Tabs for Buy and Sell */}
@@ -82,7 +90,7 @@ const BuySell: React.FC<BuySellProps> = ({
             </Button>
           </div>
         </div>
-        <form  onSubmit={handleBuySell}>
+        <form  onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-5 mx-1 xl:mx-2">
             {/* First prop Input */}
             <div className="flex justify-center space-x-4">
@@ -92,13 +100,15 @@ const BuySell: React.FC<BuySellProps> = ({
                     You {subTab === "Buy" ? "Pay" : "Sell"}
                   </p>
                   <div className="flex w-full justify-between">
-                    <Input
-                      value={amount1}
-                      required
-                      onChange={(e) => setAmount1(e.target.value)}
-                      placeholder="0.00"
-                      className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
-                    />
+                  <Input
+                    {...register("amount1")}
+                    value={amount1}
+                    onChange={(e) => setAmount1(e.target.value)}
+                    placeholder="0.00"
+                    className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
+                  />
+                  {errors.amount1 && <p className="text-red-500 text-sm">{(errors.amount1 as { message: string }).message}</p>}
+
                     <div className="flex items-center justify-end gap-1 font-Inter">
                     <img
                       src={logoMap[(subTab === "Buy" ? prop1 : prop2) as keyof typeof logoMap]}
@@ -141,12 +151,14 @@ const BuySell: React.FC<BuySellProps> = ({
                   </p>
                   <div className="flex w-full justify-between">
                     <Input
+                      {...register("amount2")}
                       value={amount2}
-                      required
                       onChange={(e) => setAmount2(e.target.value)}
                       placeholder="0.00"
-                      className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
+                      className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                     />
+                    {errors.amount2 && <p className="text-red-500 text-sm text-wrap">{(errors.amount2 as { message: string }).message}</p>}
+
                     <div className="flex items-center justify-end gap-1 font-Inter">
                     <img
                       src={logoMap[(subTab === "Buy" ? prop2 : prop1) as keyof typeof logoMap]}

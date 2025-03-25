@@ -6,6 +6,7 @@ import TradeCrypto from "../components/tradeCrypto/tradeCrypto";
 import UseOlamax from "../components/useOlamx/UseOlamx";
 import TopHeader from "../components/footer/TopHeader";
 
+
 const LandingPage = () => {
   return (
     <React.Fragment>
