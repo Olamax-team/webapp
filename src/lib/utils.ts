@@ -61,7 +61,7 @@ export const useVerificationProgressModal = create<modalProps>((set) => ({
 }));
 
 export const useUploadDocumentModal = create<modalProps>((set) => ({
-  isOpen: true,
+  isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
