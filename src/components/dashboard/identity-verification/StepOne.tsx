@@ -14,17 +14,26 @@ import useUserDetails from '../../../stores/userStore';
 import { CustomSelectSearch } from '../../ui/custom-select-search';
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
-  const [lname, setLName] = React.useState('');
-  const [fname, setFName] = React.useState('');
-  const [dateOfBirth, setDateOfBirth] = React.useState<string| null>(null);
+  const { user, kycDetails, fetchKycDetails } = useUserDetails();
+
+  const [lname, setLName] = React.useState(kycDetails ? kycDetails.lname : '');
+  const [fname, setFName] = React.useState(kycDetails ? kycDetails.fname : '');
+  const [dateOfBirth, setDateOfBirth] = React.useState<string| null>(kycDetails ? kycDetails.dateOfBirth : null);
+
+
+  React.useLayoutEffect(() => {
+    if (user) {
+      fetchKycDetails();
+    }
+  }, [user]);
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDateOfBirth(event.target.value);
   };
 
-  const [gender, setGender] = React.useState('');
-  const [nationality, setNationality] = React.useState('');
-  const [phoneNumber, setPhoneNumber] = React.useState('');
+  const [gender, setGender] = React.useState(kycDetails ? kycDetails.gender : '');
+  const [nationality, setNationality] = React.useState(kycDetails ? kycDetails.nationality : '');
+  const [phoneNumber, setPhoneNumber] = React.useState(kycDetails ? kycDetails.phone_number : '');
 
   const { token } = useUserDetails();
 
@@ -168,8 +177,9 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Bio-Data</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-3 gap-2 lg:p-2">
         <AuthInput
-          inputValue={lname}
+          inputValue={kycDetails ? kycDetails.lname : lname}
           onChange={(e) => setLName(e.target.value)}
+          value={lname}
           label='Last Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
           name='lname'
@@ -177,6 +187,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
         />
         <AuthInput
           inputValue={fname}
+          value={fname}
           onChange={(e) => setFName(e.target.value)}
           label='First Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
@@ -212,6 +223,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-3 gap-2 lg:p-2">
         <AuthInput
           inputValue={phoneNumber}
+          value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           label='Phone Number'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
