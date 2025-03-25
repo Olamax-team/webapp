@@ -1,6 +1,6 @@
 import React from 'react'
 import {  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { cn, useUploadDocumentModal } from '../../../lib/utils';
+import { cn } from '../../../lib/utils';
 import { Loader2, Paperclip, X } from 'lucide-react';
 import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
@@ -19,8 +19,6 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
   const [backImage, setBackImage] = React.useState<File | null>(null);
   const [holdingImage, setHoldingImage] = React.useState<File | null>(null);
   const [bvn, setBvn] = React.useState('');
-
-  const { onClose } = useUploadDocumentModal();
 
   const [isLoading, setIsLoading] = React.useState(false)
 
@@ -241,7 +239,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
               variant: 'success'
             });
             setIsLoading(false);
-            onClose();
+            setCurrentStep((prevNum) => prevNum + 1);
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {
@@ -276,7 +274,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         </div>
         { documentType === 'bvn' || documentType === 'nin' ?
           <React.Fragment>
-            <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud.</h2>
+            <h2 className='text-sm'>Confirming your {documentType === 'bvn' ? 'BVN': 'NIN'} helps us verify your identity and protect your account from fraud.</h2>
             <AuthInput
               inputValue={bvn}
               onChange={(e) => setBvn(e.target.value)} 

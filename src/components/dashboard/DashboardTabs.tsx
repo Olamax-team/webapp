@@ -28,6 +28,8 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
   };
 
   const { user } = useUserDetails();
+  console.log('user-details', user);
+
   const openConfirmVerification = useConfirmVerificationModal();
     // Mask email function
     // const maskEmail = (email: string) => {
@@ -143,17 +145,20 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
-  const { user:userDetail, fetchKycDetails, kycDetails } = useUserDetails();
+  const { user:userDetail, fetchKycDetails, kycStatus, fetchKycStatus } = useUserDetails();
 
   React.useEffect(() => {
     if (userDetail) {
       fetchKycDetails();
+      fetchKycStatus();
     }
   },[userDetail]);
 
+  console.log('kyc-status', kycStatus);
+
   const user = {
-    name: kycDetails ?  `${kycDetails?.fname} ${kycDetails?.lname}` : '',
-    email: kycDetails ? kycDetails?.email : userDetail?.email,
+    name: '',
+    email: userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
     isVerified: userDetail?.account_status || 'Unverified',
