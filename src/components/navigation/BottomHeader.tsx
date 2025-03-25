@@ -310,7 +310,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
         {/* notifications */}
         {openNotification &&
-          <div className={cn('overflow-y-auto w-full h-screen fixed top-0 left-0 bg-black/10 z-[4000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
+          <div className={cn('overflow-y-auto w-full h-full fixed top-0 left-0 bg-black/10 z-[4000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
             <div className="ml-auto lg:w-[540px] md:w-[440px] w-[80%] bg-bgSurface h-full lg:px-8 px-5">
               <div className="w-full h-[96px] flex place-items-end mb-4">
                 <div className="w-full flex items-center justify-between">

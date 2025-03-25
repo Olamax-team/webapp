@@ -39,7 +39,7 @@ export const useUserDetails = create<userDetailProps>()(
         return axios.request({
           method: 'get',
           maxBodyLength: Infinity,
-          url: 'https://api.olamax.io/api/get-kyc-details',
+          url: 'https://api.olamax.io/api/get-user-details',
           headers: {
             'Content-Type':'application/json',
             'Authorization': `Bearer ${token}`
