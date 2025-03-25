@@ -27,7 +27,7 @@ import PrivacyPolicy from './components/privacy/privacyPolicy';
 import TOS from './pages/TOS';
 import Cookies from './pages/Cookies';
 import VerificationPage from './pages/VerificationPage';
-
+import GoogleLoginCallback from './pages/GoogleLoginCallback';
 
 const router = createBrowserRouter([
   
@@ -128,12 +128,13 @@ const router = createBrowserRouter([
         path:'/cookies',
         element:<Cookies/>
       },
+      { path: '/google-callback', element: <GoogleLoginCallback /> },
     ]
   }
 ]); 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router}/>
-  </StrictMode>,
-)
+    <RouterProvider router={router} />
+  </StrictMode>
+);
