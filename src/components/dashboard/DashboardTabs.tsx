@@ -145,7 +145,7 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
-  const { user:userDetail, fetchKycDetails, kycStatus, fetchKycStatus } = useUserDetails();
+  const { user:userDetail, fetchKycDetails, fetchKycStatus, kycDetails } = useUserDetails();
 
   React.useEffect(() => {
     if (userDetail) {
@@ -154,7 +154,7 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
-  console.log('kyc-status', kycStatus);
+  console.log('kyc-status', kycDetails );
 
   const user = {
     name: '',

@@ -27,6 +27,7 @@ import PrivacyPolicy from './components/privacy/privacyPolicy';
 import TOS from './pages/TOS';
 import Cookies from './pages/Cookies';
 import VerificationPage from './pages/VerificationPage';
+import GoogleLoginCallback from './pages/GoogLoginCallback';
 
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: '/log-in',
         element: <LoginPage/>
+      },
+      {
+        path: '/google-callback',
+        element: <GoogleLoginCallback/>
       },
       {
         path: '/about-us',

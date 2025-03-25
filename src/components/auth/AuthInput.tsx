@@ -23,7 +23,7 @@ const AuthInput = React.forwardRef<HTMLInputElement, AuthInputProps>(({ inputVal
           ref={ref}
           {...props}
         />
-        <label className={cn("mb-1 font-Inter font-semibold absolute left-4 top-[50%] -translate-y-[50%] peer-focus:text-[13px] leading-normal peer-focus:top-2 peer-focus:-translate-y-[5%] peer-focus:text-black/50 text-sm lg:text-base", inputValue && inputValue.length > 0 && '-translate-y-[5%] text-black/50 top-2 text-[13px] lg:text-[13px]')}>{label}</label>
+        <label className={cn("mb-2 font-Inter font-semibold absolute left-4 top-[50%] -translate-y-[50%] peer-focus:lg-text-[13px] peer-focus:text-[11px] leading-normal peer-focus:top-1.5 peer-focus:-translate-y-[5%] peer-focus:text-black/50 text-sm lg:text-base", inputValue && inputValue.length > 0 && '-translate-y-[4%] text-black/50 top-1.5 text-[12px] lg:text-[13px]')}>{label}</label>
         { type === 'password' &&
           <button className="absolute top-1/2 right-4 -translate-y-1/2" onClick={togglePassword} type="button">
             { inputType === 'text' ? <EyeIcon/> : <EyeClosed/> }

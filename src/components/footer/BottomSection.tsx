@@ -64,17 +64,17 @@ const links = {
   contact: [
     {
       label: 'support@olamax.io',
-      path: '/support-us',
+      path: 'support@olamax.io',
       image: "/images/email.png",
     },
     {
       label: 'Call Us',
-      path: '/call-us',
+      path: '+2347074322020',
       image: "/images/call.png",
     },
     {
       label: 'Message Us',
-      path: '/message-us',
+      path: 'https://wa.me/+2347074322020',
       image: "/images/whatsapp.png",
     }
   ],  
@@ -131,14 +131,14 @@ const BottomSection = () => {
               <h2 className='text-lg font-semibold mb-5 font-DMSans'>Contact Us</h2>
               <div className='flex flex-col gap-4'>
                 {links.contact.map((item) => (
-                  <Link to={item.path} className='flex font-Inter items-center gap-2' key={item.path}>
+                  <a href={item.label === 'Call Us' ? `tel: ${item.path}` : item.label === 'support@olamax.io' ? `mailto:${item.path}` : item.path} target="_blank" rel="noopener noreferrer" className='flex font-Inter items-center gap-2' key={item.path} >
                     <div className="size-[16.67px]">
                       <img src={item.image} alt="icon" className='object-cover'/>
                     </div>
                     {item.label}
-                  </Link>
+                  </a>
                 ))}
-              </div>              
+              </div>           
             </div>
           </div>
         </div>

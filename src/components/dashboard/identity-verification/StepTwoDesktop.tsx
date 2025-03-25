@@ -274,7 +274,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         </div>
         { documentType === 'bvn' || documentType === 'nin' ?
           <React.Fragment>
-            <h2 className='text-sm'>Confirming your {documentType === 'bvn' ? 'BVN': 'NIN'} helps us verify your identity and protect your account from fraud.</h2>
+            <h2 className='text-sm'>{documentType === 'bvn' ? 'Confirming your BVN helps us verify your identity and protect your account from fraud.': 'Confirming your NIN helps us verify your identity and protect your account from fraud.'}</h2>
             <AuthInput
               inputValue={bvn}
               onChange={(e) => setBvn(e.target.value)} 

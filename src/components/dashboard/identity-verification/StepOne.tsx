@@ -63,8 +63,6 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       phone_number: formatPhoneNumber(phoneNumber),
     };
 
-    console.log(stepOneData);
-
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -186,19 +184,19 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           id='fname'
         />
         <div className="relative">
-          {dateOfBirth && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Date of Birth</label>}
-          <div className='w-full lg:h-[60px] h-[48px] relative border rounded-md px-4 flex gap-2 items-center'>
-            <h2 className='font-semibold'>Date Of Birth</h2>
+          {/* {dateOfBirth && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Date of Birth</label>} */}
+          <div className='w-full lg:h-[55px] h-[48px] relative border rounded-md px-4 flex gap-2 items-center'>
+            <h2 className={cn('font-semibold')}>Date Of Birth</h2>
             <input 
               type="date" 
-              className='flex-1 h-full focus:outline-none'
+              className={cn('flex-1 h-full focus:outline-none')}
               value={dateOfBirth || ''}
               onChange={handleDateChange}
             />
           </div>
         </div>
         <div className="w-full lg:h-[60px] h-[48px] relative">
-          {gender && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Gender</label>}
+          {gender && <label className='-translate-y-[4%] text-black/50 top-1.5 text-[12px] lg:text-[13px] font-semibold absolute left-4'>Gender</label>}
           <GenderSelect/>
         </div>
         <div className="w-full lg:h-[60px] h-[48px] relative">
