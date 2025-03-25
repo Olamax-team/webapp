@@ -23,7 +23,6 @@ const ClaimReward = () => {
     return `${first_part}....${last_part}`
   };
 
-  const id = kycDetails.referral_code;
   const copyIdToClipboard = (id:string) => {
     navigator.clipboard.writeText(id);
     alert("referral id copied!");
@@ -67,8 +66,8 @@ const ClaimReward = () => {
         </div>
         <div className="h-[45px] lg:h-[60px] bg-[#f5f5f5] rounded-md p-5 flex items-center justify-between">
           <p className="text-sm lg:text-base">Referral ID</p>
-          <button className="flex items-center gap-1" onClick={() => copyIdToClipboard(id)}>
-            <p className="text-sm lg:text-base">{id}</p>
+          <button className="flex items-center gap-1" onClick={() => copyIdToClipboard(kycDetails ? kycDetails.referral_code : '')}>
+            <p className="text-sm lg:text-base">{kycDetails ? kycDetails.referral_code : ''}</p>
             <HiOutlineDuplicate size={18}/>
           </button>
         </div>

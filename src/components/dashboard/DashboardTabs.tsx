@@ -157,8 +157,8 @@ const DashboardTab: React.FC = () => {
   console.log('kyc-status', kycDetails );
 
   const user = {
-    name: '',
-    email: userDetail?.email,
+    name: kycDetails ? `${kycDetails.lname+' '+kycDetails.fname }`: '' ,
+    email: kycDetails ? kycDetails.email : userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
     isVerified: userDetail?.account_status || 'Unverified',

@@ -1,23 +1,17 @@
 import React from "react";
 import { HiBell, HiCheckCircle, HiMail, HiPhone } from "react-icons/hi"
 import { Switch } from "../../ui/switch";
+import useUserDetails from "../../../stores/userStore";
 
 const AccountSettings = () => {
 
-  const maskEmail = (email: string) => {
-    const [localPart, domain] = email.split("@");
-    const maskedLocalPart = localPart.length > 3 ? `${localPart.slice(0, 3)}***` : `${localPart.slice(0, 1)}***`;
-
-    return `${maskedLocalPart}@${domain}`;
-  };
-
-  const maskPhoneNumber = (phoneNumber:string) => {
-    const countryCode = '+234';
-    const number = phoneNumber.slice(1, 11);
-    const first_part = number.slice(0, 2);
-    const last_part = number.slice(7, 11);
-    return `${countryCode}${first_part}....${last_part}`
-  };
+    const { user, fetchKycDetails, kycDetails } = useUserDetails();
+  
+    React.useLayoutEffect(() => {
+      if (user) {
+        fetchKycDetails();
+      }
+    },[user]);
 
   const [getNotification, setGetNotification] = React.useState(false)
 
@@ -41,7 +35,7 @@ const AccountSettings = () => {
           <div className="size-6 md:size-7 lg:size-8 flex items-center justify-cente text-[#1FAF38]">
             <HiCheckCircle className="lg:size-6 size-5"/>
           </div>
-          <p className="hidden md:block">{maskEmail('tosinAdebayor7@gmail.com')}</p>
+          <p className="hidden md:block">{kycDetails ? kycDetails.email : user?.email}</p>
         </div>
       </div>
       <div className="w-full bg-[#f5f5f5] lg:h-[100px] h-[75px] rounded p-4 lg:p-5 flex items-center justify-between">
@@ -58,7 +52,7 @@ const AccountSettings = () => {
           <div className="size-6 md:size-7 lg:size-8 flex items-center justify-cente text-[#1FAF38]">
             <HiCheckCircle className="lg:size-6 size-5"/>
           </div>
-          <p className="hidden md:block">{maskPhoneNumber('09136565987')}</p>
+          <p className="hidden md:block">{kycDetails ? kycDetails.phone_number : ''}</p>
         </div>
       </div>
       <div className="w-full bg-[#f5f5f5] lg:h-[100px] h-[75px] rounded p-4 lg:p-5 flex items-center justify-between">

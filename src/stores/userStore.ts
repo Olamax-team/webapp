@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
 import axios from 'axios';
+import { kycDetailsProps } from '../lib/types';
 
 export type userProps = {
   UID: string | null;
@@ -20,7 +21,7 @@ export type userDetailProps = {
   fetchKycStatus: () =>  void;
   clearKycDetails: () => void;
   clearKycStatus: () => void;
-  kycDetails: any | null;
+  kycDetails: kycDetailsProps | null;
   kycStatus: any | null;
 };
 
