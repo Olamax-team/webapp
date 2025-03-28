@@ -207,7 +207,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
         </ul>
 
         {/* other links for mobile */}
-        {openMobile &&
+        {openMobile.isOpen &&
           <div className={cn('w-full h-screen fixed top-0 left-0 bg-black/10 xl:hidden z-[40000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
             <div className="w-[80%] bg-bgSurface h-full px-8">
               <div className="border-b w-full h-[96px] flex place-items-end pb-1">
