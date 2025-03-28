@@ -34,7 +34,13 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const [openSupport, setOpenSupport] = React.useState(false);
   const [openMore, setOpenMore] = React.useState(false);
 
-  const { user, token , clearUser} = useUserDetails();
+  const { user, token , clearUser, kycDetails, fetchKycDetails} = useUserDetails();
+
+  React.useLayoutEffect(() => {
+    if (user) {
+      fetchKycDetails();
+    };
+  }, [user]);
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -273,7 +279,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
                   <ImageAvatar style='md:size-[56px] size-[40px]' image={'/images/avatar_1.png'}/>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
-                  <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                  <DropdownMenuLabel>{kycDetails ? kycDetails.email : user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <button type="button" onClick={signOut}>Log Out</button>
