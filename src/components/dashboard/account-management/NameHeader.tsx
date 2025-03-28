@@ -15,9 +15,8 @@ const NameHeader = () => {
     }
   },[user]);
 
-  const accountNumber = '20921123';
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(accountNumber);
+    navigator.clipboard.writeText(kycDetails? kycDetails.uid : '');
     alert("copied!");
   };
 
@@ -28,7 +27,7 @@ const NameHeader = () => {
         <div>
           <h2 className='font-bold lg:text-lg text-sm'>{kycDetails ? `${kycDetails.fname + ' ' + kycDetails.lname}` : user?.email}</h2>
           <button className='flex gap-3 items-center' onClick={copyToClipboard}>
-            <h2 className='md:text-sm text-xs'>{accountNumber}</h2>
+            <h2 className='md:text-sm text-xs'>{kycDetails?.uid}</h2>
             <HiOutlineDuplicate className='lg:size-6 size-5'/>
           </button>
         </div>
