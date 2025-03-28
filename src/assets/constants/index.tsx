@@ -87,56 +87,56 @@ export const moreList = [
 ];
 
 export const notificationList = [
-  {
-    date: '2024-12-12T06:41:18.421Z',
-    notifications: [
-      {
-        title: 'Transaction Successful',
-        content: "Your crypto has been converted to Naira. Check your wallet for the updated balance.",
-        alertType: 'transaction-alert'
-      },
-      {
-        title: 'New Feature Alert!',
-        content: "We’ve added a quick-buy option for USDT. Access faster transactions directly from your dashboard.",
-        alertType: 'feature-update'
-      },
-    ],
-  },
-  {
-    date: '2024-12-11T07:38:18.421Z',
-    notifications: [
-      {
-        title: 'Security Update Required',
-        content: "Please verify your email address and enable two-factor authentication to keep your account secure.",
-        alertType: 'security-update'
-      },
-      {
-        title: 'Referral Program Ending Soon!',
-        content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
-        alertType: 'referral-update'
-      },
-      {
-        title: 'Transaction Successful',
-        content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
-        alertType: 'transaction-alert'
-      },
-    ]
-  },
-  {
-    date: '2024-12-10T11:31:18.421Z',
-    notifications: [
-      {
-        title: 'Transaction Successful',
-        content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
-        alertType: 'transaction-alert'
-      },
-      {
-        title: 'Referral Program Ending Soon!',
-        content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
-        alertType: 'referral-update'
-      },
-    ]
-  }
+{
+  date: '2024-12-12T06:41:18.421Z',
+  notifications: [
+    {
+      title: 'Transaction Successful',
+      content: "Your crypto has been converted to Naira. Check your wallet for the updated balance.",
+      alertType: 'transaction-alert'
+    },
+    {
+      title: 'New Feature Alert!',
+      content: "We’ve added a quick-buy option for USDT. Access faster transactions directly from your dashboard.",
+      alertType: 'feature-update'
+    },
+  ],
+},
+{
+  date: '2024-12-11T07:38:18.421Z',
+  notifications: [
+    {
+      title: 'Security Update Required',
+      content: "Please verify your email address and enable two-factor authentication to keep your account secure.",
+      alertType: 'security-update'
+    },
+    {
+      title: 'Referral Program Ending Soon!',
+      content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
+      alertType: 'referral-update'
+    },
+    {
+      title: 'Transaction Successful',
+      content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
+      alertType: 'transaction-alert'
+    },
+  ]
+},
+{
+  date: '2024-12-10T11:31:18.421Z',
+  notifications: [
+    {
+      title: 'Transaction Successful',
+      content: 'Your crypto has been converted to Naira. Check your wallet for the updated balance.',
+      alertType: 'transaction-alert'
+    },
+    {
+      title: 'Referral Program Ending Soon!',
+      content: "Only a few days left to earn extra BONK Tokens on every BTC purchase. Don’t miss out!",
+      alertType: 'referral-update'
+    },
+]
+}
 ];
 
 export const transactionList = [
