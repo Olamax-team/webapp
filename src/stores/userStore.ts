@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
 import axios from 'axios';
-import { kycDetailsProps } from '../lib/types';
+import { kycDetailsProps, kycDetailsStatusProps } from '../lib/types';
 
 export type userProps = {
   UID: string | null;
@@ -22,7 +22,7 @@ export type userDetailProps = {
   clearKycDetails: () => void;
   clearKycStatus: () => void;
   kycDetails: kycDetailsProps | null;
-  kycStatus: any | null;
+  kycStatus: kycDetailsStatusProps | null;
 };
 
 export const useUserDetails = create<userDetailProps>()(
@@ -69,7 +69,7 @@ export const useUserDetails = create<userDetailProps>()(
           },
         }).then((response) => {
           if (response.status === 200) {
-            set({ kycStatus: response.data, loading: false });
+            set({ kycStatus: response.data[0], loading: false });
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {

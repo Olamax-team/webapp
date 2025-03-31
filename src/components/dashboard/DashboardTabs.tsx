@@ -145,7 +145,7 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
-  const { user:userDetail, fetchKycDetails, fetchKycStatus, kycDetails } = useUserDetails();
+  const { user:userDetail, fetchKycDetails, fetchKycStatus, kycDetails, kycStatus } = useUserDetails();
 
   React.useEffect(() => {
     if (userDetail) {
@@ -154,7 +154,9 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
-  console.log('kyc-status', kycDetails );
+  console.log(userDetail)
+  console.log('kyc-status', kycStatus );
+  console.log('account-status', kycDetails );
 
   const user = {
     name: kycDetails ? `${kycDetails.lname+' '+kycDetails.fname }`: '' ,
@@ -204,6 +206,11 @@ const DashboardTab: React.FC = () => {
 
   const cryptoServiceConfig = useApiConfig({
     url: 'coin-naira-value/selling',
+    method: 'get'
+  });
+
+  const getKycDetailsConfig = useApiConfig({
+    url: 'get-kyc-details/kyc-status',
     method: 'get'
   });
 
@@ -279,6 +286,24 @@ const DashboardTab: React.FC = () => {
     fetchCryptoService();
   },[]);
 
+  React.useEffect(()=> {
+    const fetchKycDetails = () => {
+      axios.request(getKycDetailsConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('kyc-details', response.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+    fetchKycDetails();
+  },[]);
+
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">
       {!showTransactionDetail ? (
@@ -291,7 +316,7 @@ const DashboardTab: React.FC = () => {
                 email={user.email}
                 lastLogin={user.lastLogin}
                 uid={userDetail?.UID || ''}
-                isVerified={user.isVerified}
+                isVerified={kycStatus?.status || 'Unverified'}
                 inviteLink={user.inviteLink}
               />
               <ServicesCard services={services} />
