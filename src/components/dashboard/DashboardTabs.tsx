@@ -5,8 +5,6 @@ import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
-// import phone from "../../assets/images/phone.png"
-// import electricity from "../../assets/images/electricity.png"
 import useUserDetails from "../../stores/userStore";
 import { useApiConfig } from "../../hooks/api";
 import axios from "axios";
