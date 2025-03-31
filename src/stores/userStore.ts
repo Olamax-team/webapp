@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
 import axios from 'axios';
+import { kycDetailsProps, kycDetailsStatusProps } from '../lib/types';
 
 export type userProps = {
   UID: string | null;
@@ -20,8 +21,8 @@ export type userDetailProps = {
   fetchKycStatus: () =>  void;
   clearKycDetails: () => void;
   clearKycStatus: () => void;
-  kycDetails: any | null;
-  kycStatus: any | null;
+  kycDetails: kycDetailsProps | null;
+  kycStatus: kycDetailsStatusProps | null;
 };
 
 export const useUserDetails = create<userDetailProps>()(
@@ -39,7 +40,7 @@ export const useUserDetails = create<userDetailProps>()(
         return axios.request({
           method: 'get',
           maxBodyLength: Infinity,
-          url: 'https://api.olamax.io/api/get-kyc-details',
+          url: 'https://api.olamax.io/api/get-user-details',
           headers: {
             'Content-Type':'application/json',
             'Authorization': `Bearer ${token}`
@@ -68,7 +69,7 @@ export const useUserDetails = create<userDetailProps>()(
           },
         }).then((response) => {
           if (response.status === 200) {
-            set({ kycStatus: response.data, loading: false });
+            set({ kycStatus: response.data[0], loading: false });
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {

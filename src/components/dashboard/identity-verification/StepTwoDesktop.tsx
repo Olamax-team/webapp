@@ -1,6 +1,6 @@
 import React from 'react'
 import {  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { cn, useUploadDocumentModal } from '../../../lib/utils';
+import { cn } from '../../../lib/utils';
 import { Loader2, Paperclip, X } from 'lucide-react';
 import { HiOutlineDocumentText} from 'react-icons/hi';
 import { AuthInput } from '../../auth/AuthInput';
@@ -19,46 +19,48 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
   const [backImage, setBackImage] = React.useState<File | null>(null);
   const [holdingImage, setHoldingImage] = React.useState<File | null>(null);
   const [bvn, setBvn] = React.useState('');
-
-  const { onClose } = useUploadDocumentModal();
+  const [nin, setNin] = React.useState('');
 
   const [isLoading, setIsLoading] = React.useState(false)
 
   const formData = new FormData();
 
   const { toast } = useToast();
-  const { token } = useUserDetails();
+  const { token, user, kycStatus, fetchKycStatus, fetchKycDetails } = useUserDetails();
 
   const [availableKyc, setAvailableKyc] = React.useState<kyc[]>([])
 
   React.useEffect(()=> {
-
-    const fetchKyc = () => {
-      const config = {
-        method: 'get',
-        url: 'https://api.olamax.io/api/available-kyc-method',
-        headers: {
-          'Content-Type':'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-      };
-  
-      axios.request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          setAvailableKyc(response.data.kyc_methods)
+    if (user) {
+      const fetchKyc = () => {
+        const config = {
+          method: 'get',
+          url: 'https://api.olamax.io/api/available-kyc-method',
+          headers: {
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${token}`
+          },
         };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          console.error("Unexpected error:", error);
-        }; 
-      });
-    };
+    
+        axios.request(config)
+        .then((response) => {
+          if (response.status === 200) {
+            setAvailableKyc(response.data.kyc_methods)
+          };
+        }).catch((error) => {
+          if (axios.isAxiosError(error)) {
+            console.error("Error fetching data message:", error.response?.data.message || error.message);        
+          } else {
+            console.error("Unexpected error:", error);
+          }; 
+        });
+      };
 
-    fetchKyc();
-  },[]);
+      fetchKyc();
+      fetchKycStatus();
+      fetchKycDetails();
+    }
+  },[user]);
 
   const DocumentSelect = () => {
 
@@ -73,7 +75,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         </SelectTrigger>
         <SelectContent className='z-[300000]'>
           <SelectGroup>
-          {availableKyc === undefined && <Loader2 className='animate-spin'/>}
+          {availableKyc === undefined || availableKyc === null && <Loader2 className='animate-spin'/>}
             {availableKyc && availableKyc.map((item) => (
               <SelectItem value={item.method}>{item.name}</SelectItem>
             ))}
@@ -97,20 +99,6 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
     }
   };
 
-  const formatImageSize = (size: number| undefined) => {
-
-    if (size) {
-      const fileSizeInKB = (size / 1024)
-      const fileSizeInMB = (size / (1024*1024));
-
-      if (fileSizeInMB >= 1) {
-        return `${fileSizeInMB.toFixed(2)}MB`
-      } else {
-        return `${fileSizeInKB.toFixed(2)}KB`
-      }
-    }
-  };
-
   const cancelImage = ( type:string) => {
 
     if (type === 'front') {
@@ -120,6 +108,21 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
     } else {
       setHoldingImage(null);
     }
+  };
+
+  const displayImage = (file: File | null, onClick:() =>void): JSX.Element | null => {
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      return (
+        <div className='w-fit relative'>
+          <img src={imageUrl} alt="Uploaded Image" style={{ maxWidth: '210px', maxHeight: '210px' }} className='rounded-md'/>
+          <button type='button' className="size-7 bg-white absolute bottom-2 right-2 flex items-center justify-center rounded-md" onClick={onClick}>
+            <X className=' text-red-500'/>
+          </button>
+        </div>
+      )
+    }
+    return null;
   };
 
   const isNumeric = (str:string) => {
@@ -137,11 +140,11 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
   }
 
   const handleSubmit = () => {
-    if (documentType === 'bvn') {
+    if (documentType === 'bvn' || documentType === 'nin') {
 
       const kycData = {
         method: documentType == 'bvn' ? 'bvn' : 'nin',
-        identityNumber: bvn
+        identityNumber:documentType == 'bvn' ?  bvn : nin
       };
 
       const config = {
@@ -159,13 +162,14 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         return;
       };
 
-      if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn)) {
+      if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn) || nin.trim().length < 11 || nin.trim().length > 11 || !isNumeric(nin)) {
         toast({
           title: 'Error',
-          description: 'Invalid BVN number!!!',
+          description: documentType === 'bvn' ? 'Invalid BVN number!!!': 'Invalid NIN number!!!',
           variant: 'destructive'
         });
         return;
+
       } else {
         setIsLoading(true);
         axios.request(config)
@@ -241,7 +245,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
               variant: 'success'
             });
             setIsLoading(false);
-            onClose();
+            setCurrentStep((prevNum) => prevNum + 1);
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {
@@ -266,6 +270,27 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
     };
   };
 
+    const document_status = {
+      kyc_documents_status: 'pending'
+    }
+  
+    React.useLayoutEffect(() => {
+      if (kycStatus) {
+        function checkObjectPresence(object1: Record<string, any>, generalObject: Record<string, any>): boolean {
+          const object1Keys = Object.keys(object1);
+        
+          return object1Keys.every((key) => generalObject.hasOwnProperty(key));
+        }
+
+        if (kycStatus.front !== '' || kycStatus.back !== '' || kycStatus.hold !== '') {
+          if (checkObjectPresence(document_status, kycStatus)) {
+            setCurrentStep(2);
+          }
+        };
+  
+      }
+    }, [kycStatus]);
+
   return (
     <div className='lg:w-75% hidden lg:block'>
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Select Document Type</h2>
@@ -276,11 +301,11 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         </div>
         { documentType === 'bvn' || documentType === 'nin' ?
           <React.Fragment>
-            <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud.</h2>
+            <h2 className='text-sm'>{documentType === 'bvn' ? 'Confirming your BVN helps us verify your identity and protect your account from fraud.': 'Confirming your NIN helps us verify your identity and protect your account from fraud.'}</h2>
             <AuthInput
-              inputValue={bvn}
-              onChange={(e) => setBvn(e.target.value)} 
-              label='BVN'
+              inputValue={documentType === 'bvn' ? bvn : nin}
+              onChange={documentType === 'bvn' ? (e) => setBvn(e.target.value) : (e) => setNin(e.target.value)} 
+              label={documentType === 'bvn' ? 'BVN': 'NIN'}
               inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
             />
           </React.Fragment>
@@ -288,57 +313,45 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
           <React.Fragment>
             <div className='flex flex-col gap-2'>
               <h2 className='text-sm'>Document Front Side</h2>
-              <label className="border rounded-md lg:h-[60px] h-[48px] w-full relative p-4 pl-14 cursor-pointer flex items-center" htmlFor='front-image'>
-                <HiOutlineDocumentText className='size-6 absolute left-4 top-1/2 -translate-y-1/2 '/>
-                {frontImage ? 
-                  <X className='size-6 absolute right-4 top-1/2 -translate-y-1/2 text-red-500' onClick={() =>cancelImage('front')}/> : 
+              {frontImage ?
+                <React.Fragment>
+                  {displayImage(frontImage, () =>cancelImage('front'))}
+                </React.Fragment> :
+                <label className="border rounded-md lg:h-[60px] h-[48px] w-full relative p-4 pl-14 cursor-pointer flex items-center" htmlFor='front-image'>
+                  <HiOutlineDocumentText className='size-6 absolute left-4 top-1/2 -translate-y-1/2 '/>
                   <Paperclip className='size-6 absolute right-4 top-1/2 -translate-y-1/2'/>
-                }
-                {frontImage ?
-                  <div className='flex flex-col'>
-                    <span className='text-sm line-clamp-1'>{frontImage.name}</span>
-                    <span className='text-sm'>{formatImageSize(frontImage.size)}</span>
-                  </div> : 
                   <p className='text-sm'>Upload Document</p>
-                }
-                <input type='file' id='front-image' hidden accept='jpeg' onChange={(e) => handleImageChange(e, 'front')}/>
-              </label>
+                  <input type='file' id='front-image' hidden accept='jpeg' onChange={(e) => handleImageChange(e, 'front')}/>
+                </label>
+              }
             </div>
             <div className='flex flex-col gap-2'> 
               <h2 className='text-sm'>Document Back Side</h2>
-              <label className="border rounded-md lg:h-[60px] h-[48px] w-full relative p-4 pl-14 cursor-pointer flex items-center" htmlFor='back-image'>
-                <HiOutlineDocumentText className='size-6 absolute left-4 top-1/2 -translate-y-1/2 '/>
-                {backImage ? 
-                  <X className='size-6 absolute right-4 top-1/2 -translate-y-1/2 text-red-500' onClick={() =>cancelImage('back')}/> : 
+              { backImage ?
+                <React.Fragment>
+                  {displayImage(backImage,() =>cancelImage('back') )}
+                </React.Fragment> :
+                <label className="border rounded-md lg:h-[60px] h-[48px] w-full relative p-4 pl-14 cursor-pointer flex items-center" htmlFor='back-image'>
+                  <HiOutlineDocumentText className='size-6 absolute left-4 top-1/2 -translate-y-1/2 '/>
                   <Paperclip className='size-6 absolute right-4 top-1/2 -translate-y-1/2'/>
-                }
-                {backImage ?
-                  <div className='flex flex-col'>
-                    <span className='text-sm line-clamp-1'>{backImage.name}</span>
-                    <span className='text-sm'>{formatImageSize(backImage.size)}</span>
-                  </div> : 
                   <p className='text-sm'>Upload Document</p>
-                }
-                <input type='file' id='back-image' hidden accept='jpeg' onChange={(e) => handleImageChange(e, 'back')}/>
-              </label>
+                  <input type='file' id='back-image' hidden accept='jpeg' onChange={(e) => handleImageChange(e, 'back')}/>
+                </label>
+              }
             </div>
             <div className='flex flex-col gap-2'>
               <h2 className='text-sm'>User Holding Document</h2>
-              <label className="border rounded-md lg:h-[60px] h-[48px] w-full relative p-4 pl-14 cursor-pointer flex items-center" htmlFor='holding-image'>
-                <HiOutlineDocumentText className='size-6 absolute left-4 top-1/2 -translate-y-1/2 '/>
-                {holdingImage ? 
-                  <X className='size-6 absolute right-4 top-1/2 -translate-y-1/2 text-red-500' onClick={() =>cancelImage('holding')}/> : 
+              { holdingImage ? 
+                <React.Fragment>
+                  {displayImage(holdingImage, () =>cancelImage('holding'))}
+                </React.Fragment> :
+                <label className="border rounded-md lg:h-[60px] h-[48px] w-full relative p-4 pl-14 cursor-pointer flex items-center" htmlFor='holding-image'>
+                  <HiOutlineDocumentText className='size-6 absolute left-4 top-1/2 -translate-y-1/2 '/>
                   <Paperclip className='size-6 absolute right-4 top-1/2 -translate-y-1/2'/>
-                }
-                { holdingImage ?
-                  <div className='flex flex-col'>
-                    <span className='text-sm line-clamp-1'>{holdingImage.name}</span>
-                    <span className='text-sm'>{formatImageSize(holdingImage.size)}</span>
-                  </div> : 
                   <p className='text-sm'>Upload Document</p>
-                }
-                <input type='file' id='holding-image' hidden accept='jpeg' onChange={(e) => handleImageChange(e, 'holding')}/>
-              </label>
+                  <input type='file' id='holding-image' hidden accept='jpeg' onChange={(e) => handleImageChange(e, 'holding')}/>
+                </label>
+              }
             </div>
           </React.Fragment>
         }

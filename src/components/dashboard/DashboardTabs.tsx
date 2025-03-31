@@ -26,6 +26,8 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
   };
 
   const { user } = useUserDetails();
+  console.log('user-details', user);
+
   const openConfirmVerification = useConfirmVerificationModal();
     // Mask email function
     // const maskEmail = (email: string) => {
@@ -141,17 +143,22 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
-  const { user:userDetail, fetchKycDetails, kycDetails } = useUserDetails();
+  const { user:userDetail, fetchKycDetails, fetchKycStatus, kycDetails, kycStatus } = useUserDetails();
 
   React.useEffect(() => {
     if (userDetail) {
       fetchKycDetails();
+      fetchKycStatus();
     }
   },[userDetail]);
 
+  console.log(userDetail)
+  console.log('kyc-status', kycStatus );
+  console.log('account-status', kycDetails );
+
   const user = {
-    name: kycDetails ?  `${kycDetails?.fname} ${kycDetails?.lname}` : '',
-    email: kycDetails ? kycDetails?.email : userDetail?.email,
+    name: kycDetails ? `${kycDetails.lname+' '+kycDetails.fname }`: '' ,
+    email: kycDetails ? kycDetails.email : userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
     isVerified: userDetail?.account_status || 'Unverified',
@@ -197,6 +204,11 @@ const DashboardTab: React.FC = () => {
 
   const cryptoServiceConfig = useApiConfig({
     url: 'coin-naira-value/selling',
+    method: 'get'
+  });
+
+  const getKycDetailsConfig = useApiConfig({
+    url: 'get-kyc-details/kyc-status',
     method: 'get'
   });
 
@@ -272,6 +284,24 @@ const DashboardTab: React.FC = () => {
     fetchCryptoService();
   },[]);
 
+  React.useEffect(()=> {
+    const fetchKycDetails = () => {
+      axios.request(getKycDetailsConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('kyc-details', response.data)
+        };
+      }).catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.error("Error fetching data message:", error.response?.data.message || error.message);        
+        } else {
+          console.error("Unexpected error:", error);
+        }; 
+      });
+    };
+    fetchKycDetails();
+  },[]);
+
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">
       {!showTransactionDetail ? (
@@ -284,7 +314,7 @@ const DashboardTab: React.FC = () => {
                 email={user.email}
                 lastLogin={user.lastLogin}
                 uid={userDetail?.UID || ''}
-                isVerified={user.isVerified}
+                isVerified={kycStatus?.status || 'Unverified'}
                 inviteLink={user.inviteLink}
               />
               <ServicesCard services={services} />

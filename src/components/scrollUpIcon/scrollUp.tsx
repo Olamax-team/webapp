@@ -30,7 +30,7 @@ import { ArrowUp } from 'lucide-react';
                 isVisible && (
                 <button
                     onClick={scrollToTop}
-                    className="fixed bottom-6 right-6 p-3 bg-[#039AE4] text-white w-[50px] h-[50px] rounded-full shadow-lg hover:bg-[#039AE4] focus:outline-none transition-all"
+                    className="fixed bottom-6 right-6 p-3 bg-[#039AE4] text-white w-[50px] h-[50px] rounded-full shadow-lg hover:bg-[#039AE4] focus:outline-none transition-all z-50"
                 >
                       <ArrowUp />
                 </button>

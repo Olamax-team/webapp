@@ -2,10 +2,9 @@ import React from 'react';
 import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button';
-import { cn, timelineCreator } from '../../lib/utils';
+import { cn, useOpenMobile, useOpenNotification } from '../../lib/utils';
 import ImageAvatar from '../ui/image-avatar';
-import { HiCheckCircle, HiExclamationCircle, HiGift, HiShieldCheck } from "react-icons/hi2";
-import { moreList, notificationList, supportList, tradeCryptoList } from '../../assets/constants';
+import { moreList, supportList, tradeCryptoList } from '../../assets/constants';
 import useUserDetails from '../../stores/userStore';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import axios from 'axios';
@@ -27,27 +26,21 @@ type bottomProps = {
   notifications: boolean;
 }
 
-type notification = {
-  title: string;
-  content: string;
-  alertType: string;
-}
-
-type notificationCardProps = {
-  date: string;
-  notifications: notification[]
-}
-
 
 const BottomHeader = ({notifications}:bottomProps) => {
-
+  const openMobile = useOpenMobile();
+  const openNotification = useOpenNotification();
   const [openTrade, setOpenTrade] = React.useState(false);
   const [openSupport, setOpenSupport] = React.useState(false);
   const [openMore, setOpenMore] = React.useState(false);
-  const [openMobile, setOpenMobile] = React.useState(false);
-  const [openNotification, setOpenNotification] = React.useState(false);
 
-  const { user, token , clearUser} = useUserDetails();
+  const { user, token , clearUser, kycDetails, fetchKycDetails} = useUserDetails();
+
+  React.useLayoutEffect(() => {
+    if (user) {
+      fetchKycDetails();
+    };
+  }, [user]);
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -63,21 +56,21 @@ const BottomHeader = ({notifications}:bottomProps) => {
       setOpenTrade(false);
       setOpenSupport(false);
       setOpenMore(false);
-      setOpenMobile(false);
+      openMobile.onClose();
     }
 
     if (openSupport) {
       setOpenSupport(false);
       setOpenTrade(false);
       setOpenMore(false);
-      setOpenMobile(false);
+     openMobile.onClose();
     }
 
     if (openMore) {
       setOpenMore(false);
       setOpenSupport(false);
       setOpenTrade(false);
-      setOpenMobile(false);
+      openMobile.onClose();
     }
   };
 
@@ -139,46 +132,6 @@ const BottomHeader = ({notifications}:bottomProps) => {
     )
   };
 
-  //function for selection of icon
-  const iconSelector = (alertType:string) => {
-    if (alertType === 'transaction-alert') {
-      return <HiCheckCircle className='size-[16px] lg:size-[20px]'/>
-    } else if (alertType === 'feature-update') {
-      return <HiExclamationCircle className='size-[16px] lg:size-[20px]'/>
-    } else if (alertType === 'security-update') {
-      return <HiShieldCheck className='size-[16px] lg:size-[20px]'/>
-    } else {
-      return <HiGift className='size-[16px] lg:size-[20px]'/>
-    }
-  };
-
-  // for each notification item
-  const NotificationCard = ({date, notifications}:notificationCardProps) => {
-    return (
-      <div className='flex flex-col gap-3 font-Inter'>
-        <h3 className='text-base mb-1 text-gray-500'>
-          {timelineCreator(date)}
-        </h3>
-        {notifications.map((notification:notification, index:number) => (
-          <div className='flex gap-4' key={index}>
-            <div className="size-[40px] lg:size-[50px] rounded-full flex items-center justify-center bg-primary/20 text-primary flex-none">
-              {iconSelector(notification.alertType)}
-            </div>
-            <div className='flex-1'>
-              <div className='flex-1 flex flex-col gap-1'>
-                <div className='flex items-center justify-between'>
-                  <h2 className='font-Inter text-base lg:text-lg font-bold'>{notification.title}</h2>
-                  <p className='text-[12px] leading-[19px] font-semibold text-gray-500'>1h</p>
-                </div>
-                <p className='text-[12px] leading-[19px]'>{notification.content}</p>
-              </div>
-            </div>
-          </div>
-          ))}
-      </div>
-    )
-  };
-
   const signOut = () => {
     const config = {
       method: 'get',
@@ -212,7 +165,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
         
         {/* home page link */}
         <div className="flex items-center gap-4">
-          <Menu size={25} className='xl:hidden cursor-pointer' onClick={() => setOpenMobile(!openMobile)}/>
+          <Menu size={25} className='xl:hidden cursor-pointer' onClick={openMobile.isOpen ? () =>openMobile.onClose() : () => openMobile.onOpen()}/>
           <Link to={'/'}>
             <div className='w-[110px] xl:w-[153px] h-[34px] xl:h-[48px]'>
               <img src={'/images/olamax_logo_2.png'} alt="logo" className='object-cover'/>
@@ -260,13 +213,13 @@ const BottomHeader = ({notifications}:bottomProps) => {
         </ul>
 
         {/* other links for mobile */}
-        {openMobile &&
+        {openMobile.isOpen &&
           <div className={cn('w-full h-screen fixed top-0 left-0 bg-black/10 xl:hidden z-[40000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
             <div className="w-[80%] bg-bgSurface h-full px-8">
               <div className="border-b w-full h-[96px] flex place-items-end pb-1">
                 <div className="w-full flex items-center justify-between">
                   <h2 className='text-base leading-[24px]'>Menu</h2>
-                  <X size={25} className='cursor-pointer' onClick={() =>setOpenMobile(false)}/>
+                  <X size={25} className='cursor-pointer' onClick={() =>openMobile.onClose()}/>
                 </div>
               </div>
               <ul className='flex flex-col gap-8 mt-8'>
@@ -308,23 +261,6 @@ const BottomHeader = ({notifications}:bottomProps) => {
           </div>
         }
 
-        {/* notifications */}
-        {openNotification &&
-          <div className={cn('overflow-y-auto w-full h-screen fixed top-0 left-0 bg-black/10 z-[4000] transition-all ease-in-out', openMobile ? '-right-0' : '-right-[100%]')}>
-            <div className="ml-auto lg:w-[540px] md:w-[440px] w-[80%] bg-bgSurface h-full lg:px-8 px-5">
-              <div className="w-full h-[96px] flex place-items-end mb-4">
-                <div className="w-full flex items-center justify-between">
-                  <h2 className='text-[24px] md:text-[32px] font-bold font-DMSans'>Notifications</h2>
-                  <X size={25} className='cursor-pointer' onClick={() =>setOpenNotification(false)}/>
-                </div>
-              </div>
-              { notificationList.map((notification, index:number) => (
-                <NotificationCard key={index} {...notification}/>
-              ))}
-            </div>
-          </div>
-        }
-
         {/* if user is logged in he will see either his notifications and profile picture else login and sign in */}
         { user ? 
           (
@@ -332,7 +268,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
               <Link to={'/dashboard'}>
                 <span className='text-primary text-sm md:text-base'>My Account</span>
               </Link>
-              <button className='size-[32px] md:size-[40px] bg-bg rounded-full flex items-center justify-center' onClick={() =>setOpenNotification(!openNotification)}>
+              <button className='size-[32px] md:size-[40px] bg-bg rounded-full flex items-center justify-center' onClick={openNotification.isOpen ? () =>openNotification.onClose() : () =>openNotification.onOpen()}>
                 <div className='size-[20px] flex items-center justify-center relative'>
                   <Bell className='size-4 md:size-7'/>
                   {notifications && <div className="absolute bg-primary size-[9px] rounded-full top-0 right-[2px]" />}
@@ -343,7 +279,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
                   <ImageAvatar style='md:size-[56px] size-[40px]' image={'/images/avatar_1.png'}/>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
-                  <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                  <DropdownMenuLabel>{kycDetails ? kycDetails.email : user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <button type="button" onClick={signOut}>Log Out</button>

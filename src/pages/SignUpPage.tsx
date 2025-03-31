@@ -13,15 +13,21 @@ import axios from 'axios';
 import { useToast } from '../hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
+
+
 const SignUpPage = () => {
   documentTitle('Registration');
 
   const navigate = useNavigate();
   const { toast } = useToast();
-
+   
+ 
   const SignUpForm = () => {
     const [loading, setLoading] = React.useState(false);
     
+
+
+
     const defaultSignUpValues = {
       email: '',
       password: '',
