@@ -1,16 +1,18 @@
-import React, {FormEvent, useState} from "react";
+import React, {useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import arrowIcon from '../../../assets/images/arrowdown.svg';
+import arrowIcon from '/images/arrowdown.svg';
 import useTradeStore from "../../../stores/tradeStore";
-import BTC from "../../../assets/images/BTC Circular.png";
-import ETH from "../../../assets/images/ETH Circular.png";
-import USDT from "../../../assets/images/USDT Circular.png";
-import SOL from "../../../assets/images/SOL Circular.png";
-import NGN from "../../../assets/images/NGN Circular.png";
+import BTC from "/images/BTC Circular.png";
+import ETH from "/images/ETH Circular.png";
+import USDT from "/images/USDT Circular.png";
+import SOL from "/images/SOL Circular.png";
+import NGN from "/images/NGN Circular.png";
 import { tradeSchema } from "../../formValidation/formValidation";
+import useUserDetails from "../../../stores/userStore";
+import { useNavigate } from "react-router-dom";
 
 interface BuySellProps {
   props1Currency: string[];
@@ -19,14 +21,16 @@ interface BuySellProps {
   setShowTransactionDetail?: React.Dispatch<React.SetStateAction<boolean>>; // Optional
   className?: string;
 }
-
 const BuySell: React.FC<BuySellProps> = ({
   className,
   props1Currency,
   props2Currency,
   setTradeType,
   setShowTransactionDetail,
+  
 }) => {
+  const navigate = useNavigate();
+  const { user } = useUserDetails();
   const [subTab, setSubTab] = useState("Buy");
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
@@ -49,6 +53,10 @@ const BuySell: React.FC<BuySellProps> = ({
   });
   
 const onSubmit = (data: any) => {
+  if (!user) {
+    navigate("/log-in"); // Redirect to login if not logged in
+    return;
+  }
   const tradeData = {
     tradeType: subTab,
     fiatType: prop1,

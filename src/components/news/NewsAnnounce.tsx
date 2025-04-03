@@ -42,7 +42,7 @@ const NewsAnnounce = () => {
     return (
         <section className="bg-bg overflow-hidden w-full h-auto my-auto flex items-center justify-center flex-col">
             <div 
-            className="w-full h-full ">
+            className="w-full h-full relative">
                 <img
                     src={'/images/newshero.svg'}
                     className="w-full h-auto object-cover hidden lg:block"
@@ -53,9 +53,15 @@ const NewsAnnounce = () => {
                     className="w-full h-auto object-cover block lg:hidden"
                     alt="news and announcement"
                 />
-                  {/* <div className="absolute inset-0 flex items-center justify-center text-white text-2xl font-bold">
-                  Stay Updated with the Latest at OLAMAX EXCHANGE
-                </div> */}
+                <div className="absolute top-1/3 left-10 xl:top-36 xl:left-36 w-[479px] h-fit flex flex-col items-start justify-start text-white text-xl font-semibold">
+                    <h1 className="font-DMSans text-[20px] xl:text-[32px] leading-[150%] font-bold">Stay Updated with the Latest <br/> at OLAMAX EXCHANGE</h1>
+
+                    {/* Line and text */}
+                    <div className="flex items-center space-x-2 mt-2 font-Inter text-[14px] xl:text-[18px] leading-[150%] font-medium">
+                        <h1>News & Announcement</h1>
+                        <div className="border-t-2 border-white w-40"></div> {/* Horizontal line */}
+                    </div>
+                </div>
             </div>
             <div className="px-[20px] xl:px-20 flex h-[64px] bg-white w-full items-center font-Inter">
                 {tabs.map((label, index) => (
