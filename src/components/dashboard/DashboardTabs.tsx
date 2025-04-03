@@ -192,11 +192,6 @@ const DashboardTab: React.FC = () => {
     method:'get',
   });
 
-  const liveRateConfig = useApiConfig({
-    url:'price-ticker',
-    method:'get',
-  });
-
   const getCoinByNameConfig = useApiConfig({
     url: 'coin-naira-value/selling',
     method: 'get'
@@ -206,24 +201,6 @@ const DashboardTab: React.FC = () => {
     url: 'coin-naira-value/selling',
     method: 'get'
   });
-
-  React.useEffect(()=> {
-    const fetchLiveRates = () => {
-      axios.request(liveRateConfig)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('live-rates', response.data.price_ticker)
-        };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          console.error("Unexpected error:", error);
-        }; 
-      });
-    };
-    fetchLiveRates();
-  },[]);
 
   React.useEffect(()=> {
     const fetchAllCoinPrices = () => {

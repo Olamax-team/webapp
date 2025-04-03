@@ -5,6 +5,8 @@ import { Loader2 } from 'lucide-react';
 
 const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
 
+  const authRoutes = ['/log-in', '/sign-up', '/verify-email'];
+
   const navigate = useNavigate();
   const location = useLocation();
   const { user, token } = useUserDetails();
@@ -17,9 +19,14 @@ const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) 
   }, [user, token, navigate, location.pathname]);
 
   if (user && token) {
-    return children;
+    if (authRoutes.includes(location.pathname)) {
+      const intendedRoute = localStorage.getItem('intendedRoute') || '/';
+      navigate(intendedRoute);
+    } else {
+      return children;
+    }
   }
-  
+
   return <Loader2 className='animate-spin'/>;
 };
 

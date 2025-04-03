@@ -11,7 +11,9 @@ const ClaimReward = () => {
       }
     },[userDetail]);
 
-  const link = 'https://olamax.io/referral_link/id?=36843611';
+  const baseLink = 'https://app.olamax.io/';
+
+  const link = `${baseLink}sign-up?referralCode=${kycDetails?.referral_code}`;
   const copyLinkToClipboard = (link:string) => {
     navigator.clipboard.writeText(link);
     alert("referral link copied!");

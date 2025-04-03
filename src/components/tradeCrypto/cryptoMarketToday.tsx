@@ -65,7 +65,7 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
           <span className="block text-right font-[500] text-textDark">
             ${coin.price}
           </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 justify-end">
             {coin.arrow}
             <span className={cn('', coin.color === "red" ? 'text-red-600' : 'text-green-600')}>{coin.percentageChange}</span>
           </div>
@@ -99,7 +99,7 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
 
     if (status === 'pending') {
       return (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center my-8">
           <Loader className="animate-spin"/>
         </div>
       )
