@@ -209,11 +209,6 @@ const DashboardTab: React.FC = () => {
     method: 'get'
   });
 
-  const getKycDetailsConfig = useApiConfig({
-    url: 'get-kyc-details/kyc-status',
-    method: 'get'
-  });
-
   React.useEffect(()=> {
     const fetchLiveRates = () => {
       axios.request(liveRateConfig)
@@ -284,24 +279,6 @@ const DashboardTab: React.FC = () => {
       });
     };
     fetchCryptoService();
-  },[]);
-
-  React.useEffect(()=> {
-    const fetchKycDetails = () => {
-      axios.request(getKycDetailsConfig)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('kyc-details', response.data)
-        };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          console.error("Unexpected error:", error);
-        }; 
-      });
-    };
-    fetchKycDetails();
   },[]);
 
   return (
