@@ -28,6 +28,7 @@ import TOS from './pages/TOS';
 import Cookies from './pages/Cookies';
 import VerificationPage from './pages/VerificationPage';
 import GoogleLoginCallback from './pages/GoogLoginCallback';
+import ProtectAuthRoute from './components/layout/ProtectAuthRoutes';
 
 const router = createBrowserRouter([
   
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/log-in',
-        element: <LoginPage/>
+        element: <ProtectAuthRoute><LoginPage/></ProtectAuthRoute>
       },
       {
         path: '/about-us',
@@ -70,11 +71,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/sign-up',
-        element: <SignUpPage/>
+        element: <ProtectAuthRoute><SignUpPage/></ProtectAuthRoute>
       },
       {
         path: '/verify-email',
-        element: <VerificationPage/>
+        element: <ProtectAuthRoute><VerificationPage/></ProtectAuthRoute>
       },
       {
         path: '/password-recovery',

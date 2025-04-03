@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '../componen
 import { signupSchema, signUpValues } from '../lib/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
 // import gmailIcon from '../assets/images/logos_google-gmail.png'
 // import arrow from '../assets/images/arrow-left.png'
@@ -25,13 +25,14 @@ const SignUpPage = () => {
   const SignUpForm = () => {
     const [loading, setLoading] = React.useState(false);
     
+    const [searchParams] = useSearchParams();
 
-
+    const referral_code = searchParams.get('referralCode');
 
     const defaultSignUpValues = {
       email: '',
       password: '',
-      referralCode: ''
+      referralCode: referral_code ? referral_code : '',
     };
   
     const form = useForm<signUpValues>({

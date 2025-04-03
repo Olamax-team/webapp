@@ -12,6 +12,14 @@ const Layout = () => {
   const authRoutes = ['/log-in', '/sign-up', '/password-recovery', '/verify-email']
   const isAuthRoutes = authRoutes.includes(pathname);
   
+  const location = useLocation();
+  const protectedRoutes = ['/dashboard']; 
+  
+  React.useEffect(() => {
+    if (protectedRoutes.includes(location.pathname)) {
+      localStorage.setItem('intendedRoute', location.pathname);
+    }
+  }, [location.pathname]);
 
   return (
     <React.Fragment>
