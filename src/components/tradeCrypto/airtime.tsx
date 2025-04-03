@@ -1,13 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-// import arrowIcon from '../../assets/images/arrowdown.svg';
-// import BTC from "../../assets/images/BTC Circular.png";
-// import ETH from "../../assets/images/ETH Circular.png";
-// import USDT from "../../assets/images/USDT Circular.png";
-// import SOL from "../../assets/images/SOL Circular.png";
-// import NGN from "../../assets/images/NGN Circular.png";
-// import MTN from "../../assets/images/MTN Circular.png"
+
 
 interface airtimePaymentProps {
   className?: string; // Editable className prop

@@ -18,6 +18,8 @@ const OlamaxFoundation = () => {
         id: number;
         title: string;
         imageUrl :string;
+        head: string;
+        text: string;
     }
     
     const goals: Goals[] = [
@@ -25,21 +27,29 @@ const OlamaxFoundation = () => {
             id: 1,
             title: "Expand Access to Quality Education in Technology",
             imageUrl: '/images/goal 1.svg',
+            head:'Expand Access to Quality Education in Technology',
+            text:'Introduce tech education from primary school with a curriculum focused on blockchain and AI, aligned to industry trends, and supported through educational partnerships for scalability.',
         },
         {
             id: 2,
             title: "Supply Clean and Renewable Energy to Schools",
             imageUrl: '/images/goal 2.svg',
+            head:'Supply Clean and Renewable Energy to Schools',
+            text:'Install and maintain solar energy systems in at least 500 underserved schools over five years, with a focus on northern regions and supported by a sustainable network of local operators.',
         },
         {
             id: 3,
             title: "Build Nigeria's Future Tech Workforce",
             imageUrl: '/images/goal 3.svg',
+            head:'Build Nigeria’s Future Tech Workforce',
+            text:`Develop a talent pipeline to support Nigeria's tech startups, aiming to establish the country as Africa's leading hub for blockchain and AI expertise by 2030.`,
         },
         {
             id: 4,
             title: "Facilitate Global Involvement through Cryptocurrency Donations",
             imageUrl: '/images/goal 4.svg',
+            head:'Facilitate Global Involvement through Cryptocurrency Donations',
+            text:'Utilize cryptocurrency for seamless, transparent donations, with real-time impact tracking through a public ledger.',
         },
       ];
     
@@ -164,7 +174,7 @@ const OlamaxFoundation = () => {
             <section className="bg-bg overflow-hidden w-full h-auto my-auto flex items-center justify-center flex-col">
                 {/* Olamax Foundation Image */}
                 <div 
-                className="w-full h-full ">
+                className="w-full h-full relative">
                     <img
                         src={'/images/olamaxFoundation.svg'}
                         className="w-full h-auto object-cover hidden lg:block"
@@ -175,6 +185,14 @@ const OlamaxFoundation = () => {
                         className="w-full h-auto object-cover block lg:hidden"
                         alt="Empowering Nigeria"
                     />
+                    <div className="absolute top-1/3 left-10 xl:top-36 xl:left-36 w-[479px] h-fit flex flex-col items-start justify-start text-white text-xl font-semibold">
+                        <h1 className="font-DMSans text-[20px] xl:text-[32px] leading-[150%] font-bold">Empowering Nigeria with Tech<br />Education & Clean Energy</h1>
+
+                        <div className="flex items-center space-x-2 mt-2 font-Inter text-[14px] xl:text-[18px] leading-[150%] font-medium">
+                            <h1>OLAMAX Foundation</h1>
+                            <div className="border-t-2 border-white w-40"></div>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Our Mission */}
@@ -197,14 +215,22 @@ const OlamaxFoundation = () => {
                         <h1 className="text-center font-DMSans text-[18px] leading-[27px] xl:text-[32px] xl:leading-[48px] font-bold">Goals & Objectives</h1>
                         <p className="text-[14px] leading-[21px] xl:text-[20px] xl:leading-[30px] font-medium text-center">What we aim to achieve</p>
                     </div>
-                    <div className="flex flex-row flex-wrap xl:flex-nowrap mt-6 xl:mt-10">
+                    <div className="flex flex-row flex-wrap xl:flex-nowrap mt-6 xl:mt-10 w-full">
                         {goals.map((item) => (
-                            <img
-                                key={item.id}
-                                src={item.imageUrl}
-                                alt={item.title}
-                                className="w-1/2 xl:w-full h-auto object-cover"
-                             />
+                            <div className="relative w-1/2 xl:w-full overflow-hidden">
+                                <img
+                                    key={item.id}
+                                    src={item.imageUrl} 
+                                    alt={item.title}
+                                    className="w-full h-auto object-cover"
+                                />
+                                <div className="bg-darkBg bg-opacity-60 absolute bottom-0 left-0 xl:bottom-0 xl:left-0 p-4 xl:p-8 w-full h-1/2 flex text-wrap items-start justify-start text-white">
+                                    <div className="flex flex-wrap items-center justify-between w-full">
+                                        <h1 className="text-wrap font-Inter text-[12px] xl:text-[21px] leading-[150%] font-bold">{item.head}</h1>
+                                        <h1 className="flex items-center text-wrap font-Inter text-[8px] xl:text-[16px] leading-[150%] font-normal">{item.text}</h1>
+                                    </div>
+                                </div>
+                            </div>
                         ))}
                     </div>
                     <div className="my-20 space-y-8 xl:space-y-20 mx-5 xl:mx-[138px]">
