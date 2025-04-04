@@ -101,23 +101,23 @@ const onSubmit = (data: any) => {
         <form  onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-5 mx-1 xl:mx-2">
             {/* First prop Input */}
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center space-x-4 overflow-scroll">
               <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div className="flex flex-col w-full">
                   <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
                     You {subTab === "Buy" ? "Pay" : "Sell"}
                   </p>
                   <div className="flex w-full justify-between">
-                  <Input
-                    {...register("amount1")}
-                    value={amount1}
-                    onChange={(e) => setAmount1(e.target.value)}
-                    placeholder="0.00"
-                    className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
-                  />
+                    <Input
+                      {...register("amount1")}
+                      value={amount1}
+                      onChange={(e) => setAmount1(e.target.value)}
+                      placeholder="0.00"
+                      className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
+                    />
                   {errors.amount1 && <p className="text-red-500 text-sm">{(errors.amount1 as { message: string }).message}</p>}
 
-                    <div className="flex items-center justify-end gap-1 font-Inter">
+                    <div className="flex items-center justify-start gap-1 font-Inter w-fit">
                     <img
                       src={logoMap[(subTab === "Buy" ? prop1 : prop2) as keyof typeof logoMap]}
                       alt={`${subTab === "Buy" ? prop1 : prop2} logo`}
@@ -151,7 +151,7 @@ const onSubmit = (data: any) => {
             </div>
 
             {/* Second prop Input */}
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center space-x-4 overflow-scroll">
               <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div className="w-full">
                   <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
@@ -167,21 +167,21 @@ const onSubmit = (data: any) => {
                     />
                     {errors.amount2 && <p className="text-red-500 text-sm text-wrap">{(errors.amount2 as { message: string }).message}</p>}
 
-                    <div className="flex items-center justify-end gap-1 font-Inter">
-                    <img
-                      src={logoMap[(subTab === "Buy" ? prop2 : prop1) as keyof typeof logoMap]}
-                      alt={`${subTab === "Buy" ? prop2 : prop1} logo`}
-                      className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
-                    />
-                    <select
-                      value={subTab === "Buy" ? prop2 : prop1}
+                    <div className="flex items-center justify-start gap-1 font-Inter w-fit">
+                      <img
+                        src={logoMap[(subTab === "Buy" ? prop2 : prop1) as keyof typeof logoMap]}
+                        alt={`${subTab === "Buy" ? prop2 : prop1} logo`}
+                        className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
+                      />
+                      <select
+                        value={subTab === "Buy" ? prop2 : prop1}
                       onChange={(e) =>
                         subTab === "Buy"
                           ? setProp2(e.target.value)
                           : setProp1(e.target.value)
                       }
                       className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
-                    >
+                      >
                       {(subTab === "Buy" ? props2Currency : props1Currency).map((prop) => (
                         <option key={prop} value={prop}>
                           {prop}

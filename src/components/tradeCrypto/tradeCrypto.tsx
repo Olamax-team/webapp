@@ -62,7 +62,9 @@ return (
           </Card>
         </div>
         {/* Right Section: Crypto Market Today */}
-        <CryptoMarketToday/> 
+        <div className="mx-auto my-auto items-center w-full">
+          <CryptoMarketToday/> 
+        </div>
       </div>
     </div>
   </section>
