@@ -13,14 +13,13 @@ import useUserDetails from '../stores/userStore';
 import { useToast } from '../hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useLocalStorage } from '../hooks/use-localstorage';
-import React from 'react';
+import { useApiConfig } from '../hooks/api';
 
 const LoginPage = () => {
   documentTitle('Login');
 
   const navigate = useNavigate();
   const { setUser, setLoading, loading } = useUserDetails();
-  const [isLoading, setIsLoading] = React.useState(false);
   const { setItem } = useLocalStorage();
   const { toast } = useToast();
 
@@ -45,16 +44,14 @@ const LoginPage = () => {
       password: password,
     };
 
-    const config = {
+    const loginConfig = useApiConfig({
       method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://api.olamax.io/api/login',
-      header: {'Content-Type':'application/json'},
-      data: loginValues,
-    };
+      url: 'login',
+      formdata: loginValues
+    });
 
     setLoading(true);
-    axios.request(config)
+    axios.request(loginConfig)
     .then((response) => {
       if (response.status === 200) {
         setItem('token', response.data.token);
@@ -180,9 +177,8 @@ const LoginPage = () => {
           <div className='lines'>
             <h2>or</h2>
           </div>
-          <button type='button' className='w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] disabled:bg-gray-300 gap-3' onClick={continueWithGoogle} disabled={isLoading}>
-            <h2 className='font-semibold'>{isLoading ? 'Logging in...' : 'Continue with Google'}</h2>
-            {isLoading && <Loader2 className='animate-spin'/>}
+          <button type='button' className='w-full h-[70px] rounded-md flex items-center justify-center bg-[#f5f5f5] disabled:bg-gray-300 gap-3' onClick={continueWithGoogle}>
+            <h2 className='font-semibold'>Continue with Google</h2>
             <div className='w-[24px] h-[18px]'>
               <img src={'/images/logos_google-gmail.png'} alt="gmail_icon" className='object-cover' />
             </div>

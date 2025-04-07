@@ -4,6 +4,7 @@ import { useConfirmDeleteModal, useConfirmPasswordChangeModal, useEnableAuthModa
 import { Switch } from "../../ui/switch";
 
 const SecuritySettings = () => {
+
   const { onOpen } = useConfirmDeleteModal();
   const openChangePassword = useConfirmPasswordChangeModal();
   const openEnableAuth = useEnableAuthModal();
