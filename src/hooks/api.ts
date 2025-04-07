@@ -3,6 +3,7 @@ import useUserDetails from "../stores/userStore";
 const useApiConfig = ({formdata, method, url}:{url:string, method:string, formdata?:any}) => {
 
   const { token } = useUserDetails();
+  
   const config = {
     method: method,
     maxBodyLength: Infinity,

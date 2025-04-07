@@ -2,8 +2,10 @@ import Modal from '../ui/modal'
 import { useActivateAuthModal, useEnableAuthModal } from '../../lib/utils'
 
 const EnableAuthModal = () => {
+
   const { isOpen, onClose } = useEnableAuthModal();
   const openActiveAuthModal = useActivateAuthModal();
+
   return (
     <Modal 
       isOpen={isOpen} 

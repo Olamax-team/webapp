@@ -1,23 +1,53 @@
 import Modal from '../ui/modal'
 import { useActivateAuthModal, useQRCodeModal, useSecurityAuthModal } from '../../lib/utils'
 import { HiOutlineDuplicate } from 'react-icons/hi';
+import React from 'react';
+import useUserDetails from '../../stores/userStore';
+import { useApiConfig } from '../../hooks/api';
+import axios from 'axios';
 
 const ActivateAuthModal = () => {
+  const {user, token} = useUserDetails();
+
   const { isOpen, onClose } = useActivateAuthModal();
   const openQRModal = useQRCodeModal();
   const openSecurityAuthModal = useSecurityAuthModal();
 
-  const activationCode = '2NVCDG7YUIHGFV3ZOH4';
+  const [activationCode, setActivationCode] = React.useState('');
+
+  const start2FaConfig = useApiConfig({
+    method: 'get',
+    url: 'two-fact-auth'
+  });
+
+  const start2Fa = async () => {
+    const response = await axios.request(start2FaConfig);
+    setActivationCode(response?.data.key);
+    console.log(response?.data);
+  }
+
+
+  React.useEffect(() => {
+    if (user && token) {
+      start2Fa();
+    }
+  }, []);
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(activationCode);
     alert("copied!");
   };
 
+  const openQrCode = () => {
+    openQRModal.onOpen(); 
+    onClose();
+  }
+
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
-      useCloseButton={false}
+      useCloseButton={true}
       title='Security Authentication'
       modalSize='md:max-w-[540px] w-full'
       modalStyle='rounded p-6 xl:p-7'
@@ -35,7 +65,7 @@ const ActivateAuthModal = () => {
             Activate
           </button>
           <div className="flex items-center justify-center my-5">
-            <button onClick={() => {openQRModal.onOpen(); onClose()}} className='underline'>Use QR code Instead</button>
+            <button onClick={openQrCode} className='underline'>Use QR code Instead</button>
           </div>
         </div>
       </div>

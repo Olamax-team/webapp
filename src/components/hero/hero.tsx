@@ -1,10 +1,14 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import FloatingTag from '../ui/floating-tag';
+import { useNavigate } from 'react-router-dom';
+import useUserDetails from '../../stores/userStore';
 // import waves from "../../assets/images/waves.svg"
 // import wavesMobile from "../../assets/images/wavesmobile.svg"
 
 const HeroSection: React.FC = () => {
+  const { user } = useUserDetails();
+  const navigate = useNavigate();
   return (
     <section className="relative bg-bgSurface overflow-hidden w-full h-[650px] mx-auto mt-1">
 
@@ -75,7 +79,7 @@ const HeroSection: React.FC = () => {
                 OLAMAX is a highly-secure crypto platform to buy, sell or trade Bitcoin, Ethereum, 
                 Tether <br/>(USDT), Celo, Stellar, USDC, and other cryptocurrencies at the best rates.
               </p>           
-              <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary">
+              <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary" onClick={() =>{user ? '' : navigate('/sign-up') }}>
                 Trade Now !
               </Button>
             </div>
