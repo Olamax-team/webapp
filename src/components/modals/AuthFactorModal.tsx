@@ -5,6 +5,9 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp';
 import { useForm } from 'react-hook-form';
 import { verficationSchema, verficationValues } from '../../lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { toast } from '../../hooks/use-toast';
+import useUserDetails from '../../stores/userStore';
 
 const AuthFactorModal = () => {
   const { isOpen, onClose } = useAuthFactorModal();
@@ -19,15 +22,54 @@ const AuthFactorModal = () => {
     defaultValues: defaultVerificationValues
   });
 
-  const onSubmitForm = (values:verficationValues) => {
-    const { verificationCode } = values;
+  const { token } = useUserDetails();
+  const onSubmitForm = async (values:verficationValues) => {
+    try {
+      const { verificationCode } = values;
 
-    const verifyData = {
-      verify_email: verificationCode,
-    };
+      const verifyData = {
+        otp: verificationCode,
+      };
 
-    console.log(verifyData)
+      const verifyConfig = {
+        method: 'POST',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/verify-two-fact-auth',
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token ? token : ''}`
+        },
+        data: verifyData
+      };
+
+      const response = await axios.request(verifyConfig);
+      
+      if (response.status === 200) {
+        toast({
+          title: "Success",
+          description: "2FA code verified successfully",
+          variant: 'success'
+        });
+        openVerifyModal.onOpen();
+        onClose();
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.response?.data.message || "Failed to verify 2FA code",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "An unexpected error occurred",
+        });
+      }
+    }
   };
+
 
   return (
     <Modal 
@@ -64,13 +106,14 @@ const AuthFactorModal = () => {
                   </FormItem>
                 )}
               />
+              <button 
+                className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' 
+                type='submit'
+              >
+                Proceed
+              </button>
             </form>
           </Form>
-        </div>
-        <div>
-          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {openVerifyModal.onOpen(); onClose()}}>
-            Proceed
-          </button>
           <p className='text-center mt-3 font-Inter'>Didn&apos;t receive an email ? <button className='font-bold'>Request Code again</button></p>
         </div>
       </div>
