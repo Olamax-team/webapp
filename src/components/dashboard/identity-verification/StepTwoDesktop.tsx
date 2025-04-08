@@ -270,11 +270,9 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
     };
   };
 
-    const document_status = {
-      kyc_documents_status: 'pending'
-    }
+    const document_status = { kyc_documents_status: 'pending' };
   
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       if (kycStatus) {
         function checkObjectPresence(object1: Record<string, any>, generalObject: Record<string, any>): boolean {
           const object1Keys = Object.keys(object1);

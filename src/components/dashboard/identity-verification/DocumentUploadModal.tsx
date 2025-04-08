@@ -51,7 +51,7 @@ const DocumentUploadModal = () => {
           <div className='mt-5'>
             { currentStep === 0 && <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
             { currentStep === 1 && <StepTwoDesktop currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
-            { currentStep === 2 && <StepThree /> }
+            { currentStep === 2 && <StepThree/> }
           </div>
         </div>
       </React.Fragment>

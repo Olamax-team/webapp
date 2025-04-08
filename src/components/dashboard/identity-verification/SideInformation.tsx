@@ -15,11 +15,9 @@ const sideInformations = [
     "Ensure each document is under the max file size limit of 5MB for faster upload and processing."
   ],
   [
-    "Ensure documents are clearly visible and not blurry to avoid verification delays.",
-    "Only valid, unexpired documents are accepted; expired IDs will delay your application.",
-    "The name on your documents must match the personal information provided.",
-    "Submit full, uncropped images of your documents to ensure all information is visible.",
-    "Ensure each document is under the max file size limit of 5MB for faster upload and processing."
+    "Ensure your face is place at the center of the circle",
+    "Check that your camera has no dust on it.",
+    "Check that your background is not blurry or faint",
   ],
 ]
 
