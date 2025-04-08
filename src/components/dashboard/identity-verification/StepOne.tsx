@@ -138,7 +138,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     phone_number: formatPhoneNumber(phoneNumber),
   };
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (kycStatus) {
       function checkObjectPresence(object1: Record<string, any>, generalObject: Record<string, any>): boolean {
         const object1Keys = Object.keys(object1);

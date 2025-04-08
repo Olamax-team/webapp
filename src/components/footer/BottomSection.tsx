@@ -144,7 +144,7 @@ const BottomSection = () => {
         </div>
         <div className="w-[96%] border-b-[3px] mx-auto"/>
         <div className='p-5 flex items-center justify-center tracking-wider'>
-          <span className='text-lg'>&copy; {date.getFullYear()} OLAMAX, All Rights Reserved.</span>
+          <span className='text-sm'>&copy; {date.getFullYear()} OLAMAX, All Rights Reserved.</span>
         </div>
       </div>
 
