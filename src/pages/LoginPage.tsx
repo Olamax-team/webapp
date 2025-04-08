@@ -44,11 +44,15 @@ const LoginPage = () => {
       password: password,
     };
 
-    const loginConfig = useApiConfig({
+    const loginConfig = {
       method: 'post',
-      url: 'login',
-      formdata: loginValues
-    });
+      maxBodyLength: Infinity,
+      url: 'https://api.olamax.io/api/login',
+      headers: {
+        'Content-Type':'application/json',
+      },
+      data: loginValues
+    };
 
     setLoading(true);
     axios.request(loginConfig)
