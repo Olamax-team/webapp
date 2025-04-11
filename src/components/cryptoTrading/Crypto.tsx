@@ -2,8 +2,13 @@ import { Button } from "../ui/button";
 import rectangle18 from '../../assets/images/Rectangle 18.png';
 import strokes from '../../assets/images/strokes-removebg-preview.png';
 import strokesmall from '../../assets/images/strokessmall.svg'
+import useUserDetails from "../../stores/userStore";
+import { useNavigate } from "react-router-dom";
 
 const Crypto = () => {
+  const { user } = useUserDetails();
+  const navigate = useNavigate();
+
   return (
     <section className="h-auto w-full flex justify-center items-center overflow-hidden">
       <div className="relative flex flex-col sm:flex-row justify-between items-center w-full h-auto flex-wrap">
@@ -29,7 +34,7 @@ const Crypto = () => {
               </h2>
               <div className="flex flex-col justify-between">
                 <p className="mb-12">Trade Bitcoin, Ethereum, Tether (USDT), Stellar, Ripple, Matic, USDC and your favorite cryptocurrencies on the OLAMAX trading platform</p>
-                <Button className="w-[160px] h-[38px] md:w-[200px] md:h-[44px] bg-secondary text-[13px] md:text-[15px] leading-normal font-semibold hover:bg-secondary/80">Start Crypto Trading !</Button>
+                <Button className="w-[160px] h-[38px] md:w-[200px] md:h-[44px] bg-secondary text-[13px] md:text-[15px] leading-normal font-semibold hover:bg-secondary/80" onClick={() =>{ user ? navigate('/dashboard')  : navigate('/sign-up') }}>Start Crypto Trading !</Button>
               </div>
             </div>
           </div>
@@ -45,7 +50,7 @@ const Crypto = () => {
           </h2>
           <div className="lg:h-[160px] lg:w-[420px] flex flex-col justify-between">
             <p>Trade Bitcoin, Ethereum, Tether (USDT), Stellar, Ripple, Matic, USDC and your favorite cryptocurrencies on the OLAMAX trading platform</p>
-            <Button className="w-[226px] h-[54px] bg-secondary text-base font-semibold hover:bg-secondary/80">Start Crypto Trading !</Button>
+            <Button className="w-[226px] h-[54px] bg-secondary text-base font-semibold hover:bg-secondary/80" onClick={() =>{ user ? navigate('/dashboard')  : navigate('/sign-up') }}>Start Crypto Trading !</Button>
           </div>
         </div>
       </div>
