@@ -183,16 +183,16 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
           {uploadStatus === false && <button onClick={handleRetry} className="mt-2 px-4 py-2 text-sm bg-primary hover:bg-secondary text-white rounded-md  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">Retry</button>}
         </div>
       ) : (
-        <div className="flex flex-col items-center">
+        <div className="flex items-center gap-4">
           <button
             onClick={startRecording}
             disabled={isRecording}
-            className='text-sm lg:text-base px-6 py-3 bg-primary hover:bg-secondary text-white rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1'
+            className='text-sm lg:text-base px-4 py-2 bg-primary hover:bg-secondary text-white rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1'
           >
-            {isRecording ? 'Recording (30s)' : 'Start Liveness Check'}
+            {isRecording ? 'Recording for 30s' : 'Start Liveness Check'}
           </button>
           {isRecording && (
-            <button onClick={stopRecording} className='mt-2 text-sm lg:text-base px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1'>
+            <button onClick={stopRecording} className='text-sm lg:text-base px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1'>
               Stop Recording
             </button>
           )}

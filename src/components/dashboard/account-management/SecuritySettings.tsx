@@ -1,11 +1,11 @@
 import React from "react";
 import { HiInformationCircle, HiLockClosed, HiShieldCheck } from "react-icons/hi";
-import { useConfirmDeleteModal, useConfirmPasswordChangeModal, useEnableAuthModal } from "../../../lib/utils";
+import { useConfirmPasswordChangeModal, useEnableAuthModal, useStartDeleteModal } from "../../../lib/utils";
 import { Switch } from "../../ui/switch";
 
 const SecuritySettings = () => {
 
-  const { onOpen } = useConfirmDeleteModal();
+  const { onOpen } = useStartDeleteModal();
   const openChangePassword = useConfirmPasswordChangeModal();
   const openEnableAuth = useEnableAuthModal();
 
@@ -51,15 +51,15 @@ const SecuritySettings = () => {
       </div>
       <div className="w-full bg-[#f5f5f5] lg:h-[100px] h-[75px] rounded p-4 lg:p-5 flex items-center justify-between">
         <div className="h-[40px] lg:h-[50px] flex lg:gap-5 gap-4">
-          <div className="size-[40px] lg:size-[50px] rounded-full bg-white/50 flex items-center justify-center text-primary flex-none">
+          <div className="size-[40px] lg:size-[50px] rounded-full bg-red-300/50 flex items-center justify-center text-red-600 flex-none">
             <HiInformationCircle className="size-5 lg:size-6"/>
           </div>
           <div className="font-Inter">
-            <h2 className="lg:text-lg md:text-base text-sm font-bold">Delete account</h2>
-            <p className="text-xs md:text-sm lg:text-base">Close your account permanently</p>
+            <h2 className="lg:text-lg md:text-base text-sm font-bold text-red-600">Delete account</h2>
+            <p className="text-xs md:text-sm lg:text-base text-red-500">Close your account permanently</p>
           </div>
         </div>
-        <button className="text-primary lg:text-base md:text-xm text-xs" onClick={() => onOpen()}>Delete Account</button>
+        <button className="text-red-500 lg:text-base md:text-xm text-xs" onClick={() => onOpen()}>Delete Account</button>
       </div>
     </div>
   )

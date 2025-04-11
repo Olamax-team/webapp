@@ -49,7 +49,7 @@ const LoginPage = () => {
         'Content-Type':'application/json',
       },
       data: loginValues
-    };
+    };
 
     setLoading(true);
     axios.request(loginConfig)

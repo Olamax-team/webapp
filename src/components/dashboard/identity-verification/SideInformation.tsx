@@ -15,9 +15,10 @@ const sideInformations = [
     "Ensure each document is under the max file size limit of 5MB for faster upload and processing."
   ],
   [
-    "Ensure your face is place at the center of the circle",
-    "Check that your camera has no dust on it.",
-    "Check that your background is not blurry or faint",
+    "Ensure your face aligns within the on-screen frame",
+    "Ensure no hats, sunglasses, or masks are worn",
+    "Check that you are in a well lit environment and your background is neutral",
+    "Smile, blink your eyes and open your mouth in course of the recording",
   ],
 ]
 

@@ -79,7 +79,7 @@ const HeroSection: React.FC = () => {
                 OLAMAX is a highly-secure crypto platform to buy, sell or trade Bitcoin, Ethereum, 
                 Tether <br/>(USDT), Celo, Stellar, USDC, and other cryptocurrencies at the best rates.
               </p>           
-              <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary" onClick={() =>{user ? '' : navigate('/sign-up') }}>
+              <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary" onClick={() =>{user ? navigate('/dashboard')  : navigate('/sign-up') }}>
                 Trade Now !
               </Button>
             </div>

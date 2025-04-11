@@ -1,13 +1,17 @@
-import { useUploadDocumentModal } from "../../../lib/utils";
+import { useIdentityVerifiedModal, useUploadDocumentModal, useVerificationProgressModal } from "../../../lib/utils";
 import useUserDetails from "../../../stores/userStore";
 import React from "react";
 
 const StartVerification = () => {
   const { onOpen } = useUploadDocumentModal();
   const { user, fetchKycStatus, kycStatus } = useUserDetails();
+
   const [stepOneChecked, setStepOneChecked] = React.useState(false);
   const [stepTwoChecked, setStepTwoChecked] = React.useState(false);
   const [stepThreeChecked, setStepThreeChecked] = React.useState(false);
+
+  const identityVerified = useIdentityVerifiedModal();
+  const verificationInProgress = useVerificationProgressModal();
 
   React.useEffect(() => {
     if (user) {
@@ -50,6 +54,16 @@ const StartVerification = () => {
     }
   }, [kycStatus]);
 
+  const checkStatus = () => {
+    if (user && kycStatus) {
+      if (kycStatus.status === 'Verified') {
+        identityVerified.onOpen();
+      } else {
+        verificationInProgress.onOpen();
+      }
+    }
+  }
+
 
 
   return (
@@ -61,7 +75,7 @@ const StartVerification = () => {
         </div>
         <div>
           {stepOneChecked && stepTwoChecked && stepThreeChecked ?
-            <button className="bg-primary hover:bg-secondary font-semibold text-white px-4 py-2 lg:px-6 lg:py-3 rounded-md text-sm lg:text-base">Check Status!</button> :
+            <button className="bg-primary hover:bg-secondary font-semibold text-white px-4 py-2 lg:px-6 lg:py-3 rounded-md text-sm lg:text-base" onClick={checkStatus}>Check Status!</button> :
             <button className="bg-primary hover:bg-secondary font-semibold text-white px-4 py-2 lg:px-6 lg:py-3 rounded-md text-sm lg:text-base" onClick={() =>onOpen()}>Verify Now!</button>
           }
         </div>

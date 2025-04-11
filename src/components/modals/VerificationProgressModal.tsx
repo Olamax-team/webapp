@@ -7,7 +7,7 @@ const VerificationProgressModal = () => {
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
-      useCloseButton={false}
+      useCloseButton
       title='Verification in Progress'
       modalSize='w-[420px]'
     >
