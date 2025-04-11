@@ -32,6 +32,7 @@ import FiatDonateModal from '../olamaxFoundation/foundationModals/FiatDonateModa
 import OTCModal from '../OTC/OTCModal'
 import DonateConfirmationModal from '../olamaxFoundation/foundationModals/DonateConfirmationModal'
 import DonateCompletedModal from '../olamaxFoundation/foundationModals/DonateCompletedModal'
+import StartDeleteModal from '../modals/StartDeleteModal'
 
 
 const ModalProvider = () => {
@@ -73,6 +74,7 @@ const ModalProvider = () => {
       <DonateConfirmationModal/>
       <DonateCompletedModal/>
       <OTCModal/>
+      <StartDeleteModal/>
     </React.Fragment>
   )
 }
