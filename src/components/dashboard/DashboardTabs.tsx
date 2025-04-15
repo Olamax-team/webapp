@@ -25,20 +25,17 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
     alert("copied!");
   };
 
-  const { user } = useUserDetails();
-  console.log('user-details', user);
+  const { user, kycStatus, fetchKycStatus } = useUserDetails();
 
-  const openConfirmVerification = useConfirmVerificationModal();
-    // Mask email function
-    // const maskEmail = (email: string) => {
-    //   const [localPart, domain] = email.split("@");
-    //   const maskedLocalPart = localPart.length > 3 ? `${localPart.slice(0, 3)}***` : `${localPart.slice(0, 1)}***`;
+  React.useEffect(() => {
+    if (user) {
+      fetchKycStatus();
+    }
+  }, [user]);
+  
+  console.log('user-details', kycStatus);
 
-    //   // Mask everything in the domain except the top-level domain
-    //   const [ , topLevelDomain] = domain.split(".");
-    //   const maskedDomain = "***." + topLevelDomain;
-    //   return `${maskedLocalPart}@${maskedDomain}`;
-    // };
+    const openConfirmVerification = useConfirmVerificationModal();
 
     const hasOpenedRef = useRef(false);
 

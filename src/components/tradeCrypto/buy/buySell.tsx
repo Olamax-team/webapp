@@ -13,6 +13,8 @@ import NGN from "/images/NGN Circular.png";
 import { tradeSchema } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
+import { useApiConfig } from "../../../hooks/api";
+import axios from "axios";
 
 interface BuySellProps {
   props1Currency: string[];
@@ -20,7 +22,8 @@ interface BuySellProps {
   setTradeType?: React.Dispatch<React.SetStateAction<string>>; // Optional
   setShowTransactionDetail?: React.Dispatch<React.SetStateAction<boolean>>; // Optional
   className?: string;
-}
+};
+
 const BuySell: React.FC<BuySellProps> = ({
   className,
   props1Currency,
@@ -37,6 +40,7 @@ const BuySell: React.FC<BuySellProps> = ({
   const [amount1, setAmount1] = useState<string>("");
   const [amount2, setAmount2] = useState<string>("");
   const tradeDetails = useTradeStore();
+
   const logoMap: Record<string, string> = {
     BTC,
     ETH,
@@ -44,6 +48,7 @@ const BuySell: React.FC<BuySellProps> = ({
     USDT,
     NGN,
   };
+
   const {
     register,
     handleSubmit,
@@ -51,6 +56,48 @@ const BuySell: React.FC<BuySellProps> = ({
   } = useForm({
     resolver: zodResolver(tradeSchema),
   });
+
+  const getCryptoConfig = useApiConfig({
+    method: 'get',
+    url: 'crypto-service'
+  });
+
+  const getCoinConfig = useApiConfig({
+    method: 'get',
+    url: 'all-coins'
+  });
+
+  const getTransactionConfig = useApiConfig({
+    method: 'get',
+    url: 'min-transaction/1'
+  });
+
+  const fetchCryptoService = async () => {
+    await axios.request(getCryptoConfig)
+    .then((response) => {
+      console.log('cs', response.data)
+    })
+  };
+
+  const fetchCoins = async () => {
+    await axios.request(getCoinConfig)
+    .then((response) => {
+      console.log('co', response.data)
+    })
+  };
+
+  const fetchMinTransaction = async () => {
+    await axios.request( getTransactionConfig)
+    .then((response) => {
+      console.log('min-t', response.data)
+    })
+  };
+
+  React.useEffect(() => {
+    fetchCoins();
+    fetchCryptoService();
+    fetchMinTransaction();
+  },[]);
   
 const onSubmit = (data: any) => {
   if (!user) {
@@ -68,6 +115,8 @@ const onSubmit = (data: any) => {
   setTradeType?.(subTab);
   tradeDetails.setItem(tradeData);
 };
+
+
 
   return (
       <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>
@@ -101,7 +150,7 @@ const onSubmit = (data: any) => {
         <form  onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-5 mx-1 xl:mx-2">
             {/* First prop Input */}
-            <div className="flex justify-center space-x-4 overflow-scroll">
+            <div className="flex justify-center space-x-4">
               <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div className="flex flex-col w-full">
                   <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
@@ -115,7 +164,7 @@ const onSubmit = (data: any) => {
                       placeholder="0.00"
                       className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                     />
-                  {errors.amount1 && <p className="text-red-500 text-sm">{(errors.amount1 as { message: string }).message}</p>}
+                  {errors.amount1 && <p className="text-red-500 text-sm text-wrap">{(errors.amount1 as { message: string }).message}</p>}
 
                     <div className="flex items-center justify-start gap-1 font-Inter w-fit">
                     <img
@@ -134,7 +183,7 @@ const onSubmit = (data: any) => {
                         className="rounded-md bg-bg px-2 py-1 font-medium text-base w-fit max-w-20"
                       >
                         {(subTab === "Buy" ? props1Currency : props2Currency).map((prop) => (
-                          <option key={prop} value={prop}>
+                          <option key={prop} value={prop} className="p-1">
                             {prop}
                           </option>
                         ))}
@@ -151,7 +200,7 @@ const onSubmit = (data: any) => {
             </div>
 
             {/* Second prop Input */}
-            <div className="flex justify-center space-x-4 overflow-scroll">
+            <div className="flex justify-center space-x-4">
               <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                 <div className="w-full">
                   <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">
@@ -180,10 +229,10 @@ const onSubmit = (data: any) => {
                           ? setProp2(e.target.value)
                           : setProp1(e.target.value)
                       }
-                      className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
+                      className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-sm max-w-20 border-0"
                       >
                       {(subTab === "Buy" ? props2Currency : props1Currency).map((prop) => (
-                        <option key={prop} value={prop}>
+                        <option key={prop} value={prop} className="text-sm">
                           {prop}
                         </option>
                       ))}

@@ -20,10 +20,26 @@ const ActivateAuthModal = () => {
     url: 'two-fact-auth'
   });
 
+  const getEmailOtpConfig = useApiConfig({
+    method: 'get',
+    url: 'get-email-otp'
+  });
+
+
   const start2Fa = async () => {
     const response = await axios.request(start2FaConfig);
     setActivationCode(response?.data.key);
-    console.log(response?.data);
+  };
+
+  const getEmailOtp = async () => {
+    await axios.request(getEmailOtpConfig)
+    .then((response) => {
+      console.log(response)
+      if (response.status === 200) {
+        openSecurityAuthModal.onOpen(); 
+        onClose();
+      }
+    })
   }
 
 
@@ -61,7 +77,7 @@ const ActivateAuthModal = () => {
           </div>
         </div>
         <div>
-          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {openSecurityAuthModal.onOpen(); onClose()}}>
+          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={getEmailOtp}>
             Activate
           </button>
           <div className="flex items-center justify-center my-5">

@@ -1,11 +1,13 @@
 import React from "react";
 import { HiInformationCircle, HiLockClosed, HiShieldCheck } from "react-icons/hi";
-import { useConfirmPasswordChangeModal, useEnableAuthModal, useStartDeleteModal } from "../../../lib/utils";
+import { cn, useConfirmPasswordChangeModal, useEnableAuthModal, useStartDeleteModal } from "../../../lib/utils";
 import { Switch } from "../../ui/switch";
+import useUserDetails from "../../../stores/userStore";
 
 const SecuritySettings = () => {
 
   const { onOpen } = useStartDeleteModal();
+  const { user, fetchKycStatus } = useUserDetails();
   const openChangePassword = useConfirmPasswordChangeModal();
   const openEnableAuth = useEnableAuthModal();
 
@@ -16,6 +18,18 @@ const SecuritySettings = () => {
     openEnableAuth.onOpen();
   };
 
+  React.useEffect(() => {
+    if (!openEnableAuth.isOpen) {
+      setUse2Fa(false)
+    }
+  },[openEnableAuth.isOpen])
+
+  React.useEffect(() => {
+    if (user) {
+      fetchKycStatus();
+    }
+  },[user]);
+
   return (
     <div className="w-full h-auto p-4 lg:p-5 rounded-md bg-white flex flex-col gap-5">
       <div>
@@ -24,7 +38,7 @@ const SecuritySettings = () => {
       </div>
       <div className="w-full bg-[#f5f5f5] lg:h-[100px] h-[75px] rounded p-4 lg:p-5 flex items-center justify-between">
         <div className="h-[40px] lg:h-[50px] flex lg:gap-5 gap-4">
-          <div className="size-[40px] lg:size-[50px] rounded-full bg-white/50 flex items-center justify-center text-primary flex-none">
+          <div className={cn("size-[40px] lg:size-[50px] rounded-full bg-white/50 flex items-center justify-center text-primary flex-none")}>
             <HiShieldCheck className="size-5 lg:size-6"/>
           </div>
           <div className="font-Inter">

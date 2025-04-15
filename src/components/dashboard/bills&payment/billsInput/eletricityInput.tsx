@@ -4,6 +4,8 @@ import { billsSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
 import { useConfirmModal } from "../../../../lib/utils";
 import { Info } from "lucide-react";
+import useUserDetails from "../../../../stores/userStore";
+import React from "react";
   
 
 
@@ -11,10 +13,22 @@ import { Info } from "lucide-react";
 const ElectricityInput = () => {
     const electricityData = useBillsStore();
     const {onOpen}  = useConfirmModal()
+        const { user, fetchKycStatus, kycStatus } = useUserDetails();
+        
+        React.useEffect(() => {
+            if (user) {
+                fetchKycStatus();
+            };
+        }, [user])
 
 
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: zodResolver(billsSchema)
+        resolver: zodResolver(billsSchema),
+        defaultValues: {
+            phoneNumber: kycStatus?.phone_number,
+            billType: '',
+            meterNumber: ''
+        }
     });
 
     const onSubmit = (data: any) => {

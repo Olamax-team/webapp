@@ -42,7 +42,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const nationalities = nationalitiesJson;
 
   const formatPhoneNumber = (phoneNumber:string) => {
-    const tenDigits = phoneNumber.slice(1, 11)
+    const tenDigits = phoneNumber?.slice(1, 11)
     return `+234${tenDigits}`;
   };
 
@@ -146,9 +146,12 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
         return object1Keys.every((key) => generalObject.hasOwnProperty(key));
       }
 
-      if (checkObjectPresence(stepOneData, kycStatus)) {
-        setCurrentStep(1);
+      if (kycStatus.lname !== null && kycStatus.fname !== null && kycStatus.dateOfBirth !== null && kycStatus.gender !== null && kycStatus.phone_number !== null) {
+        if (checkObjectPresence(stepOneData, kycStatus)) {
+          setCurrentStep(1);
+        }
       }
+
     }
   }, [kycStatus]);
 
