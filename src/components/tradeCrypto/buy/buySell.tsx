@@ -79,10 +79,10 @@ const BuySell: React.FC<BuySellProps> = ({
     url: 'min-transaction/1'
   });
 
-  const getBuyConfig = useApiConfig({
-    method: 'post',
-    url: 'start-buy',
-  });
+  // const getBuyConfig = useApiConfig({
+  //   method: 'post',
+  //   url: 'start-buy',
+  // });
 
 
   const fetchCryptoService = async () => {
@@ -114,12 +114,12 @@ const BuySell: React.FC<BuySellProps> = ({
       console.log('min-t', response.data)
     })
   };
-  const fetchBuy = async () => {
-    await axios.request(getBuyConfig)
-    .then((response) => {
-      console.log('startBuy', response.data)
-    })
-  };
+  // const fetchBuy = async () => {
+  //   await axios.request(getBuyConfig)
+  //   .then((response) => {
+  //     console.log('startBuy', response.data)
+  //   })
+  // };
 
   React.useEffect(() => {
     fetchCoins();
@@ -185,7 +185,7 @@ const onSubmit = (data: any) => {
   setShowTransactionDetail?.(true);
   setTradeType?.(subTab);
   tradeDetails.setItem(tradeData);
-  fetchBuy();
+  // fetchBuy();
 };
 
 
