@@ -2,6 +2,12 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useApiConfig } from "../../hooks/api";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
+import { cn } from "../../lib/utils";
 // import BTC from "../../assets/images/BTC Circular.png"
 // import ETH from "../../assets/images/ETH Circular.png"
 // import USDT from "../../assets/images/USDT Circular.png"
@@ -14,6 +20,17 @@ import IndicatorButtonGroup from "../tradeCrypto/indicator";
 // import invites from "../../assets/images/invites.png"
 
 // Define the type for a single crypto item
+
+interface liveRateCoin {
+  coin: string;
+  symbol: string;
+  price: string;
+  icon: string;
+  change: string;
+  percentageChange: string;
+  arrow: string;
+  color: string;
+}
 interface Crypto {
     name: string;
     ticker: string;
@@ -38,85 +55,85 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     itemClassName = "flex justify-between items-center",
     userInvite,
 }) => {
-    const cryptos: Crypto[] = [
-        {
-          name: "Bitcoin",
-          ticker: "BTC",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/BTC Circular.png",
-        },
-        {
-          name: "Ethereum",
-          ticker: "ETH",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/ETH Circular.png",
-        },
-        {
-          name: "Tether",
-          ticker: "USDT",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/USDT Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-        {
-          name: "Solana",
-          ticker: "SOL",
-          price: "$2,051,913.71",
-          change: "0.05%",
-          logo: "/images/SOL Circular.png",
-        },
-      ];
+    // const cryptos: Crypto[] = [
+    //     {
+    //       name: "Bitcoin",
+    //       ticker: "BTC",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/BTC Circular.png",
+    //     },
+    //     {
+    //       name: "Ethereum",
+    //       ticker: "ETH",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/ETH Circular.png",
+    //     },
+    //     {
+    //       name: "Tether",
+    //       ticker: "USDT",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/USDT Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //     {
+    //       name: "Solana",
+    //       ticker: "SOL",
+    //       price: "$2,051,913.71",
+    //       change: "0.05%",
+    //       logo: "/images/SOL Circular.png",
+    //     },
+    //   ];
 
   // Static data for the "Latest News" section
   const news: News[] = [
@@ -146,6 +163,94 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
       ? "text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-textDark"
       : "px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]";
   };
+  const LiveRateComponent = ({coin}:{coin:liveRateCoin}) => {
+    return(
+        <div className={itemClassName}>
+          {/* Crypto Info */}
+          <div className="p-4 flex gap-5 w-full">
+            <span>
+              <img
+                src={coin.coin}
+                alt={`${coin.symbol} logo`}
+                className="w-[32px] xl:w-[48px] h-[32px] xl:h-[48px]"
+              />
+            </span>
+            <div className="flex flex-col">
+              <span className="w-1/2 font-Inter text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-[500] text-wrap">
+                {coin.coin}
+              </span>
+              <span className="font-Inter block text-[13px] leading-[19.5px] xl:text-[16px] xl:leading-[24px] text-[#545454]">
+                {coin.symbol}
+              </span>
+            </div>
+          </div>
+          {/* Crypto Price and Change */}
+          <div className="w-full flex flex-col items-start">
+            <span className="block item-end font-[500] text-textDark">
+              ${coin.price}
+            </span>
+            <div className="flex items-center gap-1 justify-end">
+              {coin.arrow}
+              <span className={cn('', coin.color === "red" ? 'text-red-600' : 'text-green-600')}>{coin.percentageChange}</span>
+            </div>
+            </div>
+            <Button 
+              className="text-secondary hover:bg-white hover:text-secondary"
+              variant={"ghost"}
+              >
+                Trade
+            </Button>
+        </div>
+    )
+  };
+
+    const liveRateConfig = useApiConfig({
+      url:'price-ticker',
+      method:'get',
+    });
+  
+    const fetchLiveRates = async () => {
+      const response = await axios.request(liveRateConfig);
+    
+      if (response.status !== 200) {
+        throw new Error('Something went wrong, try again later');
+      }
+    
+      const data = response.data as liveRateCoin[];
+      return data;
+    };
+  
+    const { data, status } = useQuery({
+      queryKey: ['live-rates'],
+      queryFn: fetchLiveRates,
+    });
+  
+    const LiveRates = () => {
+  
+      if (status === 'pending') {
+        return (
+          <div className="w-full h-full flex items-center justify-center my-8">
+            <Loader className="animate-spin"/>
+          </div>
+        )
+      }
+  
+      if (status === 'error') {
+        return (
+          <div className="w-full h-full flex items-center justify-center">
+            <p>Something went wrong while loading live rates, refresh the page please.</p>
+          </div>
+        )
+      }
+  
+      return (
+        <div className={contentClassName}>
+          {data.map((item, index) => (
+            <LiveRateComponent coin={item} key={index}/>
+          ))}
+        </div>
+      )
+    };
 
   return (
     <>
@@ -163,67 +268,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                 indicatorSize="w-[39px]"
               />
             </div>
-            <div className={contentClassName}>
-            {cryptos.map((crypto, index) => (
-          <div key={index} className={itemClassName}>
-            {/* Crypto Info */}
-            <div className="p-4 flex gap-5">
-              <span>
-                <img
-                  src={crypto.logo}
-                  alt={`${crypto.name} logo`}
-                  className="w-[32px] xl:w-[48px] h-[32px] xl:h-[48px]"
-                />
-              </span>
-              <div className="flex flex-col">
-                <span className="font-Inter text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-[500]">
-                  {crypto.name}
-                </span>
-                <span className="font-Inter block text-[13px] leading-[19.5px] xl:text-[16px] xl:leading-[24px] text-[#545454]">
-                  {crypto.ticker}
-                </span>
-              </div>
-            </div>
-            {/* Crypto Price and Change */}
-            <div className="flex space-x-6 items-center justify-center">
-            <div>
-              <span className="font-Inter block text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-textDark">
-                {crypto.price}
-              </span>
-              <span
-                className={`block text-right text-[14px] leading-[21px] ${
-                  crypto.change.startsWith("-")
-                    ? "text-red-500"
-                    : "text-green-500"
-                }`}
-              >
-                {!crypto.change.startsWith("-") && (
-                  <img
-                    src= {"/images/positive-graph.svg"}
-                    alt="Upward Trend"
-                    className="inline-block w-[14px] h-[14px] m-2 justify-center"
-                  />
-                )}
-                {crypto.change.startsWith("-") && (
-                  <img
-                    src=''
-                    alt="Downward Trend"
-                    className="inline-block w-[14px] h-[14px]"
-                  />
-                )}
-                {crypto.change}
-              </span>
-            </div>
-            <Button 
-              className="text-secondary hover:bg-white hover:text-secondary"
-              variant={"ghost"}
-              >
-                Trade
-            </Button>
-            </div>
-          </div>
-          ))}
-            </div>
+            <LiveRates/>
           </div>  
         </div>
         {/* Invite and Latest News Section */}
