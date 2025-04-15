@@ -51,7 +51,6 @@ const LoginPage = () => {
       data: loginValues
     };
 
-
     setLoading(true);
     axios.request(loginConfig)
     .then((response) => {
