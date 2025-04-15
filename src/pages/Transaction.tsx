@@ -48,7 +48,7 @@ const Transaction = () => {
   });
 
   React.useEffect(()=> {
-    const fetchLiveRates = () => {
+    const fetchMinTranscations = () => {
       axios.request(minTranscationConfig)
       .then((response) => {
         if (response.status === 200) {
@@ -62,7 +62,7 @@ const Transaction = () => {
         }; 
       });
     };
-    fetchLiveRates();
+    fetchMinTranscations();
   },[]);
 
 

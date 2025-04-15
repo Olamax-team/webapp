@@ -4,14 +4,25 @@ import { numberSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
 import { useConfirmModal } from "../../../../lib/utils";
 import { Info } from "lucide-react";
+import useUserDetails from "../../../../stores/userStore";
+import React from "react";
 
 const CableInput = () => {
     const cableTvData = useBillsStore();
     const {onOpen}  = useConfirmModal()
 
 
+    const { user, fetchKycStatus, kycStatus } = useUserDetails();
+    
+    React.useEffect(() => {
+        if (user) {
+            fetchKycStatus();
+        };
+    }, [user])
+     
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: zodResolver(numberSchema)
+        resolver: zodResolver(numberSchema),
+        defaultValues: {phoneNumber: kycStatus?.phone_number}
     });
 
     const onSubmit = (data: any) => {

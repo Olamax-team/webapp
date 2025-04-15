@@ -1,6 +1,5 @@
 import Modal from '../ui/modal'
-import { useActivateAuthModal, useQRCodeModal } from '../../lib/utils'
-import qrCode from '../../assets/images/QR.png'
+import { useActivateAuthModal, useQRCodeModal, useSecurityAuthModal } from '../../lib/utils'
 import React from 'react';
 import axios from 'axios';
 import useUserDetails from '../../stores/userStore';
@@ -10,6 +9,7 @@ import {QRCodeSVG} from 'qrcode.react';
 const QRCodeModal = () => {
   const {user, token} = useUserDetails();
   const { isOpen, onClose } = useQRCodeModal();
+  const openSecurityAuthModal = useSecurityAuthModal();
   const openActiveAuthModal = useActivateAuthModal();
 
     const [activationQRCode, setActivationQRCode] = React.useState('');
@@ -32,6 +32,22 @@ const QRCodeModal = () => {
       }
     }, []);
 
+    const getEmailOtpConfig = useApiConfig({
+      method: 'get',
+      url: 'get-email-otp'
+    });
+
+    const getEmailOtp = async () => {
+      await axios.request(getEmailOtpConfig)
+      .then((response) => {
+        console.log(response)
+        if (response.status === 200) {
+          openSecurityAuthModal.onOpen(); 
+          onClose();
+        }
+      })
+    }
+
   return (
     <Modal 
       isOpen={isOpen} 
@@ -47,7 +63,7 @@ const QRCodeModal = () => {
           <QRCodeSVG className='w-full h-full object-center' value={activationQRCode}/>
         </div>
         <div>
-          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {onClose()}}>
+          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={getEmailOtp}>
             Activate
           </button>
           <div className="flex items-center justify-center my-5">
