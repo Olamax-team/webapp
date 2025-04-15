@@ -163,8 +163,10 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
         return object1Keys.every((key) => generalObject.hasOwnProperty(key));
       };
 
-      if (checkObjectPresence(video_status, kycStatus)) {
-        onClose();
+      if (kycStatus.short_video !== null) {
+        if (checkObjectPresence(video_status, kycStatus)) {
+          onClose();
+        }
       }
     }
   }, [kycStatus]);

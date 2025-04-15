@@ -6,9 +6,15 @@ import { securityAuthSchema, securityAuthValues } from '../../lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../ui/input';
 import { Link } from 'react-router';
+import useUserDetails from '../../stores/userStore';
+import axios from 'axios';
+import { useToast } from '../../hooks/use-toast';
 
 const SecurityAuthModal = () => {
-  const { isOpen, onClose } = useSecurityAuthModal();;
+  const { isOpen, onClose } = useSecurityAuthModal();
+
+  const { user, token } = useUserDetails();
+  const { toast } = useToast();
 
   const defaultPasswordValues = {
     emailAuth: '',
@@ -20,22 +26,52 @@ const SecurityAuthModal = () => {
     defaultValues: defaultPasswordValues,
   });
 
-  const onSubmitForm = (values:securityAuthValues) => {
+  const onSubmitForm = async (values:securityAuthValues) => {
     const { emailAuth, newAuthApp } = values;
 
     const securityAuthData = {
-      new_auth_app: newAuthApp,
-      email_auth: emailAuth
+      auth_code: newAuthApp,
+      email_otp: emailAuth
     };
 
-    console.log(securityAuthData)
+    if (user && token) {
+      const verifyAuthConfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/verify-two-fact-auth',
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: securityAuthData
+      };
+      
+      await axios.request(verifyAuthConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          toast({
+            title: 'Success',
+            description: 'You have successfully set up your 2 factor authentication',
+            variant: 'success'
+          });
+          onClose();
+        }
+      }).catch((error) => {
+        console.log(error);
+        toast({
+          title: 'Error',
+          description: 'Error occurred while setting up your 2 factor authentication',
+          variant: 'destructive'
+        });
+      })
+    }
   };
 
   return (
     <Modal 
       isOpen={isOpen} 
-      onClose={onClose}
-      useCloseButton={false}
+      onClose={() => {onClose(); form.reset();}}
+      useCloseButton
       title='Security Authentication'
       modalSize='md:max-w-[540px] w-full'
       modalStyle='rounded p-6 xl:p-7'
@@ -69,16 +105,16 @@ const SecurityAuthModal = () => {
                   </FormItem>
                 )}
               />
+              <div className='mt-3'>
+                <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' type='submit'>
+                  Proceed
+                </button>
+                <div className='flex justify-center items-center my-4'>
+                  <Link to={'/password-recovery'} className="font-poppins font-semibold text-sm lg:text-base" onClick={() => {onClose()}}>Forgot Password?</Link>
+                </div>
+              </div>
             </form>
           </Form>
-        </div>
-        <div>
-          <button className='w-full h-12 rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {onClose()}}>
-            Proceed
-          </button>
-          <div className='flex justify-center items-center my-4'>
-            <Link to={'/password-recovery'} className="font-poppins font-semibold text-sm lg:text-base" onClick={() => {onClose()}}>Forgot Password?</Link>
-          </div>
         </div>
       </div>
     </Modal>

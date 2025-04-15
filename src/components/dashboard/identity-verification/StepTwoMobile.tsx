@@ -25,7 +25,7 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
   const formData = new FormData();
 
   const { toast } = useToast();
-  const { token, user, kycStatus, fetchKycStatus, fetchKycDetails, kycDetails} = useUserDetails();
+  const { token, user, kycStatus, fetchKycStatus, fetchKycDetails } = useUserDetails();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const [availableKyc, setAvailableKyc] = React.useState<kyc[]>([])
@@ -61,6 +61,8 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
       fetchKycDetails();
     }
   },[user]);
+
+  console.log(availableKyc);
  
   const DocumentSelect = () => {
 
@@ -124,20 +126,6 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
     }
     return null;
   };
-
-  // const formatImageSize = (size: number| undefined) => {
-
-  //   if (size) {
-  //     const fileSizeInKB = (size / 1024)
-  //     const fileSizeInMB = (size / (1024*1024));
-
-  //     if (fileSizeInMB >= 1) {
-  //       return `${fileSizeInMB.toFixed(2)}MB`
-  //     } else {
-  //       return `${fileSizeInKB.toFixed(2)}KB`
-  //     }
-  //   }
-  // };
 
   const isNumeric = (str:string) => {
     if (typeof str !== 'string' || str.length === 0) {
@@ -297,7 +285,7 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
         return object1Keys.every((key) => generalObject.hasOwnProperty(key));
       }
 
-      if (kycStatus.front !== '' || kycStatus.back !== '' || kycStatus.hold !== '') {
+      if (kycStatus.front !== null || kycStatus.back !== null || kycStatus.hold !== null) {
         if (checkObjectPresence(document_status, kycStatus)) {
           setCurrentStep(2);
         }

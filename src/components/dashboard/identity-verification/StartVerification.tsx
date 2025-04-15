@@ -20,11 +20,11 @@ const StartVerification = () => {
   }, [user]);
 
   const stepOneData = {
-    lname: kycStatus ? kycStatus.lname : '',
-    fname: kycStatus ? kycStatus.fname : '',
-    dateOfBirth: kycStatus ? kycStatus.dateOfBirth : '',
-    gender: kycStatus ? kycStatus.gender : '',
-    phone_number: kycStatus ? kycStatus.phone_number : '',
+    lname: kycStatus ? kycStatus.lname : null,
+    fname: kycStatus ? kycStatus.fname : null,
+    dateOfBirth: kycStatus ? kycStatus.dateOfBirth : null,
+    gender: kycStatus ? kycStatus.gender : null,
+    phone_number: kycStatus ? kycStatus.phone_number : null,
   };
 
   const document_status = { kyc_documents_status: 'pending' };
@@ -36,21 +36,23 @@ const StartVerification = () => {
         const object1Keys = Object.keys(object1);
       
         return object1Keys.every((key) => generalObject.hasOwnProperty(key));
-      }
+      };
 
       if (checkObjectPresence(stepOneData, kycStatus)) {
         setStepOneChecked(true);
-      }
+      } else setStepOneChecked(false);
 
       if (kycStatus.front !== '' || kycStatus.back !== '' || kycStatus.hold !== '') {
         if (checkObjectPresence(document_status, kycStatus)) {
           setStepTwoChecked(true)
         }
-      };
+      } else setStepTwoChecked(false);
 
-      if (checkObjectPresence(video_status, kycStatus)) {
-        setStepThreeChecked(true)
-      }
+      if (kycStatus.short_video) {
+        if (checkObjectPresence(video_status, kycStatus)) {
+          setStepThreeChecked(true)
+        }
+      } else setStepThreeChecked(false); 
     }
   }, [kycStatus]);
 

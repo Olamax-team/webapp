@@ -34,7 +34,7 @@ type dataProps = {
 
 
 const Datapurchase = ({setShowTransactionDetail,setSelectedBill}:dataProps) => {
-  const { register, handleSubmit, formState: { errors }} = useForm<Inputs>({
+  const { register, handleSubmit, formState: { errors }, reset} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues: {
       inputAmount: "",
@@ -102,13 +102,15 @@ const Datapurchase = ({setShowTransactionDetail,setSelectedBill}:dataProps) => {
 
 <div className="flex gap-5 items-center">
         <button
-          onClick={() => setActiveButton('crypto')}
+          type="button"
+          onClick={() => {reset(); setActiveButton('crypto');}}
           className={`w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-semibold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex ${activeButton === 'crypto' ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
         >
           CRYPTO
         </button>
         <button
-          onClick={() => setActiveButton('fiat')}
+          type="button"
+          onClick={() => {reset(); setActiveButton('fiat');}}
           className={`font-Inter font-medium text-[14px] xl:text-[18px] xl:leading-[27px] leading-[21px] rounded-md xl:w-[80px] xl:h-[44px] w-[60px] h-[32px] ${activeButton === 'fiat' ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
         >
           FIAT

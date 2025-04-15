@@ -280,7 +280,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
           return object1Keys.every((key) => generalObject.hasOwnProperty(key));
         }
 
-        if (kycStatus.front !== '' || kycStatus.back !== '' || kycStatus.hold !== '') {
+        if (kycStatus.front !== null || kycStatus.back !== null || kycStatus.hold !== null) {
           if (checkObjectPresence(document_status, kycStatus)) {
             setCurrentStep(2);
           }

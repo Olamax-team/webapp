@@ -4,16 +4,26 @@ import { numberSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
 import { useConfirmModal } from "../../../../lib/utils";
 import { Info } from "lucide-react";
+import useUserDetails from "../../../../stores/userStore";
+import React from "react";
 
 
 
 const AirtimeInput = () => {
     const airtimeData = useBillsStore();
-    const {onOpen}  = useConfirmModal()
+    const {onOpen}  = useConfirmModal();
+    
+    const { user, fetchKycStatus, kycStatus } = useUserDetails();
+    
+    React.useEffect(() => {
+        if (user) {
+            fetchKycStatus();
+        };
+    }, [user])
      
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(numberSchema),
-        
+        defaultValues: {phoneNumber: kycStatus?.phone_number}
     });
 
     const onSubmit = (data: any) => {
@@ -52,7 +62,7 @@ const AirtimeInput = () => {
                         minLength={10}
                          
                         className="bg-white h-[60px] w-full px-3 py-2 font-medium text-[16px] leading-[24px] text-[#121826] border-none rounded-sm focus:outline-none mt-5"
-                        {...register("phoneNumber")} 
+                        {...register("phoneNumber")}
                     />
                        {errors.phoneNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.phoneNumber as { message: string }).message} </p>
                     )}
