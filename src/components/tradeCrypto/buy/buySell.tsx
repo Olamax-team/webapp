@@ -76,7 +76,7 @@ const BuySell: React.FC<BuySellProps> = ({
 
   const getTransactionConfig = useApiConfig({
     method: 'get',
-    url: 'min-transaction/1'
+    url: 'min-transaction/'
   });
 
   // const getBuyConfig = useApiConfig({
