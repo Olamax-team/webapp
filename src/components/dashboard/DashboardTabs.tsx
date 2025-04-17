@@ -25,15 +25,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
     alert("copied!");
   };
 
-  const { user, kycStatus, fetchKycStatus } = useUserDetails();
-
-  React.useEffect(() => {
-    if (user) {
-      fetchKycStatus();
-    }
-  }, [user]);
-  
-  console.log('user-details', kycStatus);
+  const { user } = useUserDetails();
 
     const openConfirmVerification = useConfirmVerificationModal();
 
