@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../../ui/input";
@@ -6,10 +6,6 @@ import { Button } from "../../ui/button";
 import arrowIcon from '/images/arrowdown.svg';
 import useTradeStore from "../../../stores/tradeStore";
 import BTC from "/images/BTC Circular.png";
-import ETH from "/images/ETH Circular.png";
-import USDT from "/images/USDT Circular.png";
-import SOL from "/images/SOL Circular.png";
-import NGN from "/images/NGN Circular.png";
 import { tradeSchema } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
@@ -17,8 +13,6 @@ import { useApiConfig } from "../../../hooks/api";
 import axios from "axios";
 
 interface BuySellProps {
-  props1Currency: string[];
-  props2Currency: string[];
   setTradeType?: React.Dispatch<React.SetStateAction<string>>; // Optional
   setShowTransactionDetail?: React.Dispatch<React.SetStateAction<boolean>>; // Optional
   className?: string;
@@ -26,8 +20,6 @@ interface BuySellProps {
 
 const BuySell: React.FC<BuySellProps> = ({
   className,
-  props1Currency,
-  props2Currency,
   setTradeType,
   setShowTransactionDetail,
   
@@ -37,18 +29,28 @@ const BuySell: React.FC<BuySellProps> = ({
   const [subTab, setSubTab] = useState("Buy");
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
-  const [amount1, setAmount1] = useState<string>("");
+  const [amount1, setAmount1] = useState<string>("1");
   const [amount2, setAmount2] = useState<string>("");
+  const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
+  const [prices, setPrices] = useState<CoinPrice[]>([]);
+  const [coin, setCoin] = useState<Coins[]>([]);
   const tradeDetails = useTradeStore();
 
-  const logoMap: Record<string, string> = {
-    BTC,
-    ETH,
-    SOL,
-    USDT,
-    NGN,
+  type Coins = {
+    coin: string,
+    coin_name: string,
+    icon: string,
+    id: number,
   };
 
+  type CoinPrice = {
+    id: number;
+    coin_id: number;
+    selling: string; // "1000.00"
+    buying: string;
+    escrow: string;
+  };
+  
   const {
     register,
     handleSubmit,
@@ -67,10 +69,21 @@ const BuySell: React.FC<BuySellProps> = ({
     url: 'all-coins'
   });
 
+  const getCoinPricesConfig = useApiConfig({
+    method: 'get',
+    url: 'coin-prices'
+  });
+
   const getTransactionConfig = useApiConfig({
     method: 'get',
     url: 'min-transaction/1'
   });
+
+  // const getBuyConfig = useApiConfig({
+  //   method: 'post',
+  //   url: 'start-buy',
+  // });
+
 
   const fetchCryptoService = async () => {
     await axios.request(getCryptoConfig)
@@ -79,10 +92,19 @@ const BuySell: React.FC<BuySellProps> = ({
     })
   };
 
+  const fetchCoinPrices = async () => {
+    await axios.request(getCoinPricesConfig)
+    .then((response) => {
+      setPrices(response.data)
+      console.log('prices', response.data)
+    })
+  };
+
   const fetchCoins = async () => {
     await axios.request(getCoinConfig)
     .then((response) => {
-      console.log('co', response.data)
+      setCoin(response.data.coin);
+      console.log('co', coin)
     })
   };
 
@@ -92,12 +114,61 @@ const BuySell: React.FC<BuySellProps> = ({
       console.log('min-t', response.data)
     })
   };
+  // const fetchBuy = async () => {
+  //   await axios.request(getBuyConfig)
+  //   .then((response) => {
+  //     console.log('startBuy', response.data)
+  //   })
+  // };
 
   React.useEffect(() => {
     fetchCoins();
     fetchCryptoService();
     fetchMinTransaction();
+    fetchCoinPrices();
   },[]);
+
+  const getCoinId = (coinCode: string) => {
+    return coin.find(c => c.coin === coinCode)?.id;
+  };
+  
+  const getSellingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    return prices.find(p => p.coin_id === id)?.selling;
+  };
+  
+  const getBuyingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    return prices.find(p => p.coin_id === id)?.buying;
+  };
+  const price = subTab === "Buy" ? getSellingPrice(prop2) : getBuyingPrice(prop2);
+
+  useEffect(() => {
+    if (lastChanged !== 'amount1') return;
+    if (!amount1 || !prop2) return;
+  
+    if (price) {
+      if (subTab === "Buy") {
+        setAmount2((parseFloat(amount1) / parseFloat(price)).toFixed(6)); // NGN → BTC
+      } else {
+        setAmount2((parseFloat(amount1) * parseFloat(price)).toFixed(2)); // BTC → NGN
+      }
+    }
+  }, [amount1, prop2, subTab, prices, coin, lastChanged]);
+
+  useEffect(() => {
+    if (lastChanged !== 'amount2') return;
+    if (!amount2 || !prop2) return;
+  
+    if (price) {
+      if (subTab === 'Buy') {
+        setAmount1((parseFloat(amount2) * parseFloat(price)).toFixed(2)); // BTC → NGN
+      } else {
+        setAmount1((parseFloat(amount2) / parseFloat(price)).toFixed(6)); // NGN → BTC
+      }
+    }
+  }, [amount2, prop2, subTab, prices, coin, lastChanged]);
+  
   
 const onSubmit = (data: any) => {
   if (!user) {
@@ -114,6 +185,7 @@ const onSubmit = (data: any) => {
   setShowTransactionDetail?.(true);
   setTradeType?.(subTab);
   tradeDetails.setItem(tradeData);
+  // fetchBuy();
 };
 
 
@@ -160,20 +232,20 @@ const onSubmit = (data: any) => {
                     <Input
                       {...register("amount1")}
                       value={amount1}
-                      onChange={(e) => setAmount1(e.target.value)}
-                      placeholder="0.00"
+                      onChange={(e) => {setAmount1(e.target.value); setLastChanged('amount1');}}
+                      placeholder="1"
                       className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                     />
                   {errors.amount1 && <p className="text-red-500 text-sm text-wrap">{(errors.amount1 as { message: string }).message}</p>}
 
                     <div className="flex items-center justify-start gap-1 font-Inter w-fit">
                     <img
-                      src={logoMap[(subTab === "Buy" ? prop1 : prop2) as keyof typeof logoMap]}
+                      src={(subTab === "Buy" ? `/images/${prop1} Circular.png` : `/images/${prop2} Circular.png`)}
                       alt={`${subTab === "Buy" ? prop1 : prop2} logo`}
                       className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                     />
                       <select
-                        value={subTab === "Buy" ? prop1 : prop2}
+                        value={subTab === "Buy" ? prop1 :prop2}
                         required
                         onChange={(e) =>
                           subTab === "Buy"
@@ -182,11 +254,17 @@ const onSubmit = (data: any) => {
                         }
                         className="rounded-md bg-bg px-2 py-1 font-medium text-base w-fit max-w-20"
                       >
-                        {(subTab === "Buy" ? props1Currency : props2Currency).map((prop) => (
-                          <option key={prop} value={prop} className="p-1">
-                            {prop}
-                          </option>
-                        ))}
+                        {subTab === "Buy"     
+                        ?  (
+                            <option key={prop1} value={prop1} className="p-1">
+                              {prop1}
+                            </option>
+                          ) : 
+                          coin.map((c) => (
+                            <option key={c.id} value={c.coin} className="p-1">
+                              {c.coin}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -210,15 +288,15 @@ const onSubmit = (data: any) => {
                     <Input
                       {...register("amount2")}
                       value={amount2}
-                      onChange={(e) => setAmount2(e.target.value)}
-                      placeholder="0.00"
+                      onChange={(e) => {setAmount2(e.target.value); setLastChanged('amount2');}}
+                      placeholder='0.0001'
                       className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                     />
                     {errors.amount2 && <p className="text-red-500 text-sm text-wrap">{(errors.amount2 as { message: string }).message}</p>}
 
                     <div className="flex items-center justify-start gap-1 font-Inter w-fit">
                       <img
-                        src={logoMap[(subTab === "Buy" ? prop2 : prop1) as keyof typeof logoMap]}
+                        src={(subTab === "Buy" ? `/images/${prop2} Circular.png`: `/images/${prop1} Circular.png` )}
                         alt={`${subTab === "Buy" ? prop2 : prop1} logo`}
                         className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                       />
@@ -231,11 +309,16 @@ const onSubmit = (data: any) => {
                       }
                       className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-sm max-w-20 border-0"
                       >
-                      {(subTab === "Buy" ? props2Currency : props1Currency).map((prop) => (
-                        <option key={prop} value={prop} className="text-sm">
-                          {prop}
-                        </option>
-                      ))}
+                      {subTab === "Buy" ? coin.map((c) => (
+                            <option key={c.id} value={c.coin} className="p-1">
+                              {c.coin}
+                            </option>
+                          )) :
+                          (
+                            <option key={prop1} value={prop1} className="p-1">
+                              {prop1}
+                            </option>
+                          )}
                     </select>
                     </div>
                   </div>
