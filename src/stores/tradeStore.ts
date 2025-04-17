@@ -2,6 +2,8 @@ import { create } from 'zustand'
 
 
 interface tradeProps {
+    fiatType_id:  number;
+    crytoType_id: number;
     tradeType: string; 
     fiatType: string;
     cryptoType: string;

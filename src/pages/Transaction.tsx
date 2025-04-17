@@ -48,8 +48,8 @@ const Transaction = () => {
   });
 
   React.useEffect(()=> {
-    const fetchMinTranscations = () => {
-      axios.request(minTranscationConfig)
+    const fetchMinTranscations = async () => {
+      await axios.request(minTranscationConfig)
       .then((response) => {
         if (response.status === 200) {
           console.log('min-transaction', response.data)
