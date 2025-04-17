@@ -56,8 +56,8 @@ export const formValidationSchema = z.object({
       amount2: z
       .string()
       .min(1, 'Required field')
-      .regex(/^[0-9]+(\.[0-9]{1,2})?$/, 'Invalid amount')
-      .refine(val => parseFloat(val) >= 0.01, { message: 'Aamount must be at least 0.01' }),
+      .regex(/^[0-9]+(\.[0-9]{1,6})?$/, 'Invalid amount')
+      .refine(val => parseFloat(val) >= 0.000001, { message: 'Aamount must be at least 0.000001' }),
     });
 
     export const buyInput = z.object({
