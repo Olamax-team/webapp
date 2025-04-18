@@ -1,4 +1,4 @@
-import React from "react";
+import axios from "axios";
 import useTradeStore from "../../../stores/tradeStore";
 import { HiOutlineClipboard } from "react-icons/hi";
 import { Info } from "lucide-react";
@@ -6,12 +6,25 @@ import { Button } from "../../ui/button";
 import { useConfirmCompleteTransaction } from "../../../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { buyInput } from "../../formValidation/formValidation";
+import { buyInput, buyInputValues } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
+import React from "react";
+import { useApiConfig } from "../../../hooks/api";
+
+
+type blockChain = {
+  blockchain_name: string;
+  coin_id: number;
+  created_at: string;
+  id: string;
+  updated_at: string;
+}
 
 const BuyInput: React.FC = () => {
     
-  const { user, kycStatus, fetchKycStatus } = useUserDetails();
+  const { user, kycStatus, fetchKycStatus, token } = useUserDetails();
+
+  const [blockChains, setBlockChains] = React.useState<blockChain[]>([])
 
     const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
     //clipboard paste function
@@ -38,25 +51,72 @@ const BuyInput: React.FC = () => {
       handleSubmit,
       setValue,
       formState: { errors },
+      watch
     } = useForm({
       resolver: zodResolver(buyInput),
       defaultValues: {
         walletAddress: '',
         network: '',
-        phoneNumber: kycStatus?.phone_number,
+        phoneNumber: kycStatus?.phone_number || '',
         paymentMethod: 'bank'
       }
     });
-    const handleBuyInput = (data: any) => {
-      console.log("Form Data:", data); 
-      openConfirmCompleteTransaction.onOpen();
+
+    const getBlockChain = useApiConfig({
+      method: 'get',
+      url: 'blockchains'
+    });
+
+    const fetchBlockChain = async () => {
+      await axios.request( getBlockChain)
+      .then((response) => {
+        setBlockChains(response.data)
+      })
     };
+
+    React.useEffect(() =>{
+      fetchBlockChain();
+    },[]);
     
-    
-    const networks = ["Bitcoin", "Ethereum", "Binance Smart Chain"]
-    const tradeData = useTradeStore();
+    const { item } = useTradeStore();
+
+    const watchedNetwork = watch('network');
+    const selectedBlockChainDetails = blockChains.find((item) => item.blockchain_name === watchedNetwork);
 
     var fee= 2000.00;
+
+    const handleBuyInput = async (data:buyInputValues) => {
+
+      const transactionData = {
+        stable_coin_id: item?.fiatType_id,
+        coin_token_id: item?.cryptoType_id,
+        naira_amount: item?.fiatAmount,
+        coin_amount: item?.cryptoAmount,
+        wallet_address: data.walletAddress,
+        blockchain_id: selectedBlockChainDetails?.id,
+        transaction_type: 'transfer',
+        transaction_charges: fee,
+      };
+
+      const buyConfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.olamax.io/api/start-buy',
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: transactionData,
+      };
+
+      await axios.request(buyConfig)
+      .then((response) => {
+        console.log('startBuy', response.data)
+      });
+
+      openConfirmCompleteTransaction.onOpen();
+    };
+
     return(
       <div className="p-5 xl:py-6 flex flex-col xl:flex-row gap-10 h-auto w-full my-auto space-y-6 font-Inter">
         {/* Left Section - Transaction Form */}
@@ -88,12 +148,12 @@ const BuyInput: React.FC = () => {
               <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
                 <select
                   {...register("network")}
-                  className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white focus:outline-none outline-none focus:border-0"
+                  className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white focus:outline-none outline-none focus:border-0 uppercase"
                 >
-                  <option value="" className="">Select Network</option>
-                  {networks.map((prop) => (
-                    <option key={prop} value={prop}>
-                      {prop}
+                  <option value="" className="text-sm uppercase">Select Blockchain</option>
+                  { blockChains && blockChains.length > 0 && blockChains.map((prop) => (
+                    <option key={prop.id} value={prop.blockchain_name} className="uppercase text-sm">
+                      {prop.blockchain_name}
                     </option>
                   ))}
                 </select>
@@ -155,20 +215,20 @@ const BuyInput: React.FC = () => {
           <div>
             <div className="mt-4 flex items-center space-x-2">
               <img src={`/images/${
-                tradeData.item?.cryptoType
+                item?.cryptoType
                       } Circular.png`} alt="Btc" className="w-10 h-10" />
-              <p className="font-semibold xl:text-[18px] xl:leading-[27px]">{tradeData.item?.cryptoType}</p>
+              <p className="font-semibold xl:text-[18px] xl:leading-[27px]">{item?.cryptoType}</p>
             </div>
 
             <div className="mt-4 font-medium xl:text-[16px] xl:leading-[24px] space-y-3 text-textDark">
               <div className="flex justify-between border-t-2 py-6">
                 <span>You Receive</span>
-                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">{tradeData.item?.cryptoType} {tradeData.item?.cryptoAmount}</span>
+                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">{item?.cryptoType} {item?.cryptoAmount}</span>
               </div>
               <div className="border-t-2 py-6 space-y-4">
                 <div className="flex justify-between">
                   <span>Price</span>
-                  <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {tradeData.item?.fiatAmount}</span>
+                  <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {item?.fiatAmount}</span>
                 </div>
                 <div className="flex justify-between">
                   <div className="flex items-center justify-center space-x-2">
@@ -180,7 +240,7 @@ const BuyInput: React.FC = () => {
               </div>
               <div className="flex justify-between text-lg border-t-2 py-6">
                 <span>Total</span>
-                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {(Number(tradeData.item?.fiatAmount) || 0) + fee}</span>
+                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {(Number(item?.fiatAmount) || 0) + fee}</span>
               </div>
             </div>
           </div>

@@ -3,14 +3,14 @@ import { create } from 'zustand'
 
 interface tradeProps {
     fiatType_id:  number;
-    crytoType_id: number;
+    cryptoType_id: number;
     tradeType: string; 
     fiatType: string;
     cryptoType: string;
     fiatAmount: string;  
     cryptoAmount: string; 
+};
 
-}
 interface tradeState {
     item:tradeProps | null;                      
     setItem: (newItem:  tradeProps) => void,
