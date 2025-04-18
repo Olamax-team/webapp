@@ -27,7 +27,7 @@ const TradeCrypto = () => {
     switch (activeTab) {
       case "Buy & Sell Crypto":
         return (
-          <BuySell props1Currency={props1} props2Currency={props2currency}/>
+          <BuySell/>
         );
       case "Airtime & Data":
         return (
