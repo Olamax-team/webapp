@@ -10,15 +10,14 @@ type tradeDetailsProps = {
   const TradeDetails = ({ setShowTransactionDetail, activeInput }: tradeDetailsProps) => {
     const renderInput = () => {
       switch (activeInput) {
-        case 'Buy':
+        case 'buy':
           return <BuyInput/>
-        case 'Sell':
+        case 'sell':
           return <div><SellInput/></div>;
         default:
           return;
       }
     };
-    console.log(renderInput)
   
     return (
       <div className="flex flex-col h-auto w-full">

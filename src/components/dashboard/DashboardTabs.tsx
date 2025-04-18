@@ -25,15 +25,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
     alert("copied!");
   };
 
-  const { user, kycStatus, fetchKycStatus } = useUserDetails();
-
-  React.useEffect(() => {
-    if (user) {
-      fetchKycStatus();
-    }
-  }, [user]);
-  
-  console.log('user-details', kycStatus);
+  const { user } = useUserDetails();
 
     const openConfirmVerification = useConfirmVerificationModal();
 
@@ -149,10 +141,6 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
-  console.log(userDetail)
-  console.log('kyc-status', kycStatus );
-  console.log('account-status', kycDetails );
-
   const user = {
     name: kycDetails ? `${kycDetails.lname+' '+kycDetails.fname }`: '' ,
     email: kycDetails ? kycDetails.email : userDetail?.email,
@@ -193,11 +181,6 @@ const DashboardTab: React.FC = () => {
     method: 'get'
   });
 
-  const cryptoServiceConfig = useApiConfig({
-    url: 'coin-naira-value/selling',
-    method: 'get'
-  });
-
   React.useEffect(()=> {
     const fetchAllCoinPrices = () => {
       axios.request(coinConfig)
@@ -232,24 +215,6 @@ const DashboardTab: React.FC = () => {
       });
     };
     fetchCoinByName();
-  },[]);
-
-  React.useEffect(()=> {
-    const fetchCryptoService = () => {
-      axios.request(cryptoServiceConfig)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('crypto-services', response.data)
-        };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          console.error("Unexpected error:", error);
-        }; 
-      });
-    };
-    fetchCryptoService();
   },[]);
 
   return (

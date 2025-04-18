@@ -7,9 +7,12 @@ import { useConfirmCompleteTransaction } from "../../../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { buyInput } from "../../formValidation/formValidation";
+import useUserDetails from "../../../stores/userStore";
 
 const BuyInput: React.FC = () => {
     
+  const { user, kycStatus, fetchKycStatus } = useUserDetails();
+
     const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
     //clipboard paste function
     const pasteFromClipboard = async () => {
@@ -22,6 +25,13 @@ const BuyInput: React.FC = () => {
         console.error("Failed to read clipboard: ", err);
       }
     };
+
+
+    React.useEffect(() =>{
+      if (user) {
+        fetchKycStatus();
+      }
+    },[user]);
     
     const {
       register,
@@ -30,6 +40,12 @@ const BuyInput: React.FC = () => {
       formState: { errors },
     } = useForm({
       resolver: zodResolver(buyInput),
+      defaultValues: {
+        walletAddress: '',
+        network: '',
+        phoneNumber: kycStatus?.phone_number,
+        paymentMethod: 'bank'
+      }
     });
     const handleBuyInput = (data: any) => {
       console.log("Form Data:", data); 
@@ -58,7 +74,7 @@ const BuyInput: React.FC = () => {
                 type="text"
                 placeholder="Your Wallet Address"
                 {...register("walletAddress")}
-                className="font-medium xl:text-[16px] xl:leading-[24px] w-full py-2 pr-10 text-textDark h-[60px] outline-none"
+                className="font-medium xl:text-[16px] xl:leading-[24px] w-full py-2 pr-10 text-textDark h-[60px] outline-none focus:outline-none"
               />
                 <button type="button" onClick={pasteFromClipboard} className="text-textDark">
                   <HiOutlineClipboard size={24}/>
@@ -72,9 +88,9 @@ const BuyInput: React.FC = () => {
               <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
                 <select
                   {...register("network")}
-                  className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white"
+                  className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white focus:outline-none outline-none focus:border-0"
                 >
-                  <option value="">Select Network</option>
+                  <option value="" className="">Select Network</option>
                   {networks.map((prop) => (
                     <option key={prop} value={prop}>
                       {prop}
@@ -105,7 +121,7 @@ const BuyInput: React.FC = () => {
                 <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
                   <select
                     {...register("paymentMethod")}
-                    className="w-full mt-3 bg-white font-medium xl:text-[16px] xl:leading-[24px]"
+                    className="w-full mt-3 bg-white font-medium xl:text-[16px] xl:leading-[24px] focus:outline-none outline-none focus:border-0"
                   >
                     <option value="bank">Bank Transfer (Default)</option>
                     <option value="crypto">Crypto Wallet</option>
