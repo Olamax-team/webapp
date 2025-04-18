@@ -1,6 +1,7 @@
 import BuyInput from "./tradeInput/buyInput";
 // import arrow from '../../assets/images/arrow-left.png'
 import SellInput from "./tradeInput/sellInput";
+import React from "react";
 
 type tradeDetailsProps = {
     setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -8,6 +9,7 @@ type tradeDetailsProps = {
   };
 
   const TradeDetails = ({ setShowTransactionDetail, activeInput }: tradeDetailsProps) => {
+
     const renderInput = () => {
       switch (activeInput) {
         case 'buy':
