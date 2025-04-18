@@ -61,21 +61,13 @@ export const formValidationSchema = z.object({
     });
 
     export const buyInput = z.object({
-      walletAddress: z
-      .string()
-      .min(1, 'Required field'),
-      network: z.enum(["Bitcoin", "Ethereum", "Binance Smart Chain"], {
-        errorMap: () => ({ message: "Please select a valid network" }),
-      }),
-      phoneNumber: z
-        .string()
-        .regex(/^[0-9]+$/, 'Required field')
-        .max(15, 'Phone number cannot exceed 15 digits')
-        .min(10, 'Phone number cannot be less than 10 digits'),
-      paymentMethod: z.enum(["bank", "crypto"], {
-        errorMap: () => ({ message: "Please select a payment method" }),
-      }),
+      walletAddress: z.string().nonempty("Wallet Address is required"),
+      network: z.string().nonempty("Network is required"),
+      phoneNumber: z.string().nonempty("Phone Number is required"),
+      paymentMethod: z.string().nonempty("Payment Method is required"),
     });
+
+    export type buyInputValues = z.infer<typeof buyInput>;
 
     
     export const sellInput = z.object({

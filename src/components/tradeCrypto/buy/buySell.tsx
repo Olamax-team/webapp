@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useApiConfig } from "../../../hooks/api";
 import axios from "axios";
 
+
 interface BuySellProps {
   setTradeType?: React.Dispatch<React.SetStateAction<string>>; // Optional
   setShowTransactionDetail?: React.Dispatch<React.SetStateAction<boolean>>; // Optional
@@ -101,17 +102,6 @@ const BuySell: React.FC<BuySellProps> = ({
     url: 'min-transaction/'
   });
 
-  const getBlockChain = useApiConfig({
-    method: 'get',
-    url: 'blockchains'
-  });
-
-  // const getBuyConfig = useApiConfig({
-  //   method: 'post',
-  //   url: 'start-buy',
-  // });
-
-
   const fetchCryptoService = async () => {
     await axios.request(getCryptoConfig)
     .then((response) => {
@@ -150,26 +140,11 @@ const BuySell: React.FC<BuySellProps> = ({
     })
   };
 
-  const fetchBlockChain = async () => {
-    await axios.request( getBlockChain)
-    .then((response) => {
-      console.log('b-c', response.data);
-    })
-  };
-
-  // const fetchBuy = async () => {
-  //   await axios.request(getBuyConfig)
-  //   .then((response) => {
-  //     console.log('startBuy', response.data)
-  //   })
-  // };
-
   React.useEffect(() => {
     fetchCoins();
     fetchCryptoService();
     fetchMinTransaction();
     fetchCoinPrices();
-    fetchBlockChain();
     fetchStableCoin(); 
     console.log('coin list', coin);
   },[]);
@@ -247,7 +222,6 @@ const onSubmit = (data: any) => {
   setShowTransactionDetail?.(true);
   setTradeType?.(subTab);
   tradeDetails.setItem(tradeData);
-  console.log('Trade details',tradeData);
   // fetchBuy();
 };
 
