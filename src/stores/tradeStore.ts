@@ -10,7 +10,6 @@ interface tradeProps {
     fiatAmount: string;  
     cryptoAmount: string; 
 };
-
 interface tradeState {
     item:tradeProps | null;                      
     setItem: (newItem:  tradeProps) => void,
