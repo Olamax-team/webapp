@@ -1,5 +1,4 @@
 import BuyInput from "./tradeInput/buyInput";
-// import arrow from '../../assets/images/arrow-left.png'
 import SellInput from "./tradeInput/sellInput";
 import React from "react";
 
@@ -15,7 +14,7 @@ type tradeDetailsProps = {
         case 'buy':
           return <BuyInput/>
         case 'sell':
-          return <div><SellInput/></div>;
+          return <SellInput/>;
         default:
           return;
       }
