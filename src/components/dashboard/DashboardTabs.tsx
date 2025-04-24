@@ -141,13 +141,15 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
+  const baseLink = 'https://app.olamax.io/';
+
   const user = {
     name: kycDetails ? `${kycDetails.lname+' '+kycDetails.fname }`: '' ,
     email: kycDetails ? kycDetails.email : userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
     isVerified: userDetail?.account_status || 'Unverified',
-    inviteLink: "https://olamax.io/"
+    inviteLink: `${baseLink}sign-up?referralCode=${kycDetails?.referral_code}`
   };
   
   const services = [

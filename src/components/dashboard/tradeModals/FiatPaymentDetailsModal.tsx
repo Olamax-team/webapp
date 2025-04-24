@@ -3,18 +3,52 @@ import { usePaymentConfirmationModal, useFiatPaymentDetailsModal } from '../../.
 import qrCode from '../../../assets/images/QR.png';
 import logo from '../../../assets/images/GTCO.svg';
 import { HiOutlineDuplicate } from 'react-icons/hi';
+import useTradeStore from '../../../stores/tradeStore';
+import { useApiConfig } from '../../../hooks/api';
+import axios from 'axios';
+import { useToast } from '../../../hooks/use-toast';
 
 const FiatPaymentDetailsModal = () => {
   const { isOpen, onClose } = useFiatPaymentDetailsModal();
   const openPaymentConfirmation = usePaymentConfirmationModal();
   // const [isMobile, setisMobile] = useState(false); // State to track active section
-  const accountNumber = "1001232987";
 
   // Copy account number to clipboard
-  const copyToClipboard = () => {
+  const copyToClipboard = (accountNumber:string) => {
     navigator.clipboard.writeText(accountNumber);
     alert("Account number copied!");
   };
+
+  const { toast } = useToast();
+
+  const { accountDetails } = useTradeStore();
+
+  const completeBuyConfig = useApiConfig({
+    method: 'post',
+    url: 'complete-buy-order-transaction',
+    formdata: {ref_number: accountDetails?.ref_number}
+  });
+
+  const completeBuyTransaction = async () => {
+    await axios.request(completeBuyConfig)
+    .then((response) => {
+      if (response.status === 200) {
+        console.log(response.data)
+        onClose(); 
+        openPaymentConfirmation.onOpen(); 
+      } else {
+        console.log('Error:', response.statusText);
+      }
+    }).catch((error) => {
+      console.log(error);
+      toast({
+        title: 'Error',
+        description: error.response?.data[0].message || 'An error occurred while processing your request.',
+        variant: 'destructive',
+      })
+    });
+  }
+
 
   return (
     <Modal 
@@ -55,7 +89,7 @@ const FiatPaymentDetailsModal = () => {
             {/* Bank Logo and Name */}
             <div className="flex font-Inter items-center justify-center gap-6 mb-8">
               <img src={logo} alt="Bank Logo" className="w-9 h-9" />
-              <p className="text-lg font-semibold">Guaranty Trust Bank</p>
+              <p className="text-lg font-semibold">{accountDetails?.bank}</p>
             </div>
             
             {/* Account Details */}
@@ -63,17 +97,17 @@ const FiatPaymentDetailsModal = () => {
               <div className="space-y- border-b-2">
                 <p className="text-sm text-left text-textDark">Account Number</p>
                 <span className="flex text-center justify-between gap-2 mb-4">
-                  <p className="text-[14px] leading-[21px]">{accountNumber}</p>
+                  <p className="text-[14px] leading-[21px]">{accountDetails?.bank_account}</p>
                   <HiOutlineDuplicate 
                     size={24}
                     className="text-textDark cursor-pointer"
-                    onClick={copyToClipboard}
+                    onClick={() => copyToClipboard(accountDetails?.bank_account ?? '')}
                   />
                 </span>
               </div>
               <div className="space-y-2">
                 <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Account Name</p>
-                <p className="text-left text-[14px] leading-[21px]">Olamax Exchange Services</p>
+                <p className="text-left text-[14px] leading-[21px]">{accountDetails?.bank_account_name}</p>
               </div>
             </div>
           </div>
@@ -82,7 +116,7 @@ const FiatPaymentDetailsModal = () => {
           <div>
             <button 
               className="font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6"
-              onClick={() => { onClose(); openPaymentConfirmation.onOpen(); }}
+              onClick={() => completeBuyTransaction()}
             >
               I Have Made Payment
             </button>

@@ -93,7 +93,7 @@ export const ReferralPrograme = () => {
                             </div>
                             {openQuestion === 0 && (
                                 <p className='font-normal mt-5 font-Inter text-[14px] lg:text[18px] leading-[23px] lg:leading-[27px] text-[#121826]'>
-                                    To get started with OLAMAX EXCHANGE, simply go to our website or app, click “Sign Up,” enter your email, create a secure password, and agree to our terms of service. After registering, check your email inbox for a confirmation link to verify your account. Once verified, log in to complete any additional profile information, and you’re all set to start exploring the platform.
+                                    To get started with OLAMAX EXCHANGE, simply go to our website or app, click “Sign Up,” enter your email, create a secure password, and agree to our terms of service. After registering, check your email inbox for a confirmation link to verify your account. Once verified, log in to complete any additional profile information, and you&apos;re all set to start exploring the platform.
                                 </p>
                             )}
                         </div>
@@ -106,7 +106,7 @@ export const ReferralPrograme = () => {
                         </div>
                         {openQuestion === 1 && (
                             <p className='font-normal mt-5 font-Inter text-[14px] lg:text[18px] leading-[23px] lg:leading-[27px] text-[#121826]'>
-                                Follow the steps on the platform to complete identity verification for added security. This ensures that you can use all of the platform’s features.
+                                Follow the steps on the platform to complete identity verification for added security. This ensures that you can use all of the platform&apos;s features.
                             </p>
                         )}
 
@@ -118,7 +118,7 @@ export const ReferralPrograme = () => {
                         </div>
                         {openQuestion === 2 && (
                             <p className='font-normal mt-5 font-Inter text-[14px] lg:text[18px] leading-[23px] lg:leading-[27px] text-[#121826]'>
-                                To trade on OLAMAX EXCHANGE, log into your account, select the trading pairs, and execute your trades. It's fast, simple, and secure.
+                                To trade on OLAMAX EXCHANGE, log into your account, select the trading pairs, and execute your trades. It&apos;s fast, simple, and secure.
                             </p>
                         )}
                     </div>

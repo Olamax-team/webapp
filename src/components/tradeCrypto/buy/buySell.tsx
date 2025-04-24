@@ -58,7 +58,7 @@ const BuySell: React.FC<BuySellProps> = ({
   type CoinPrice = {
     id: number;
     coin_id: number;
-    selling: string; 
+    selling: string;
     buying: string;
     escrow: string;
   };
@@ -97,11 +97,6 @@ const BuySell: React.FC<BuySellProps> = ({
     url: 'stable-coins'
   });
 
-  const getTransactionConfig = useApiConfig({
-    method: 'get',
-    url: 'min-transaction/'
-  });
-
   const fetchCryptoService = async () => {
     await axios.request(getCryptoConfig)
     .then((response) => {
@@ -113,7 +108,6 @@ const BuySell: React.FC<BuySellProps> = ({
     await axios.request(getCoinPricesConfig)
     .then((response) => {
       setPrices(response.data)
-      console.log('prices', response.data)
     })
   };
 
@@ -121,7 +115,6 @@ const BuySell: React.FC<BuySellProps> = ({
     await axios.request(getStableCoins)
     .then((response) => {
       setStables(response.data.coin);
-      console.log('stables', response.data)
     })
   };
 
@@ -129,24 +122,14 @@ const BuySell: React.FC<BuySellProps> = ({
     await axios.request(getCoinConfig)
     .then((response) => {
       setCoin(response.data.coin);
-      console.log('co', response.data.coin)
-    })
-  };
-
-  const fetchMinTransaction = async () => {
-    await axios.request( getTransactionConfig)
-    .then((response) => {
-      console.log('min-t', response.data)
     })
   };
 
   React.useEffect(() => {
     fetchCoins();
     fetchCryptoService();
-    fetchMinTransaction();
     fetchCoinPrices();
     fetchStableCoin(); 
-    console.log('coin list', coin);
   },[]);
 
  
@@ -206,9 +189,11 @@ const onSubmit = (data: any) => {
   if (!user) {
     navigate("/log-in"); // Redirect to login if not logged in
     return;
-  }
+  };
+
   const fiatID = subTab === "buy" ? getCoinId(prop1) : getCoinId(prop2);
   const cryptoID = subTab === "buy" ? getCoinId(prop2) : getCoinId(prop1);
+
   const tradeData = {
     fiatType_id: fiatID,
     cryptoType_id: cryptoID,
@@ -219,10 +204,10 @@ const onSubmit = (data: any) => {
     cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
 
   };
+
   setShowTransactionDetail?.(true);
   setTradeType?.(subTab);
   tradeDetails.setItem(tradeData);
-  // fetchBuy();
 };
 
 
