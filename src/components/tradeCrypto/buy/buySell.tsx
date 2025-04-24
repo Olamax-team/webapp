@@ -58,7 +58,7 @@ const BuySell: React.FC<BuySellProps> = ({
   type CoinPrice = {
     id: number;
     coin_id: number;
-    selling: string; // "1000.00"
+    selling: string; 
     buying: string;
     escrow: string;
   };
