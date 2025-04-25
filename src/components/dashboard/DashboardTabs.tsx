@@ -6,8 +6,6 @@ import { HiOutlineDuplicate } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
-import { useApiConfig } from "../../hooks/api";
-import axios from "axios";
 
 interface UserInfoProps {
   name: string;
@@ -141,8 +139,6 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
-  console.log(kycDetails);
-
   const baseLink = 'https://app.olamax.io/';
 
   const user = {
@@ -174,52 +170,6 @@ const DashboardTab: React.FC = () => {
   
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);
   const [tradeType, setTradeType] = useState<string>('');
-
-  const coinConfig = useApiConfig({
-    url:'coin-prices',
-    method:'get',
-  });
-
-  const getCoinByNameConfig = useApiConfig({
-    url: 'coin-naira-value/selling',
-    method: 'get'
-  });
-
-  React.useEffect(()=> {
-    const fetchAllCoinPrices = () => {
-      axios.request(coinConfig)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('all-coin-price', response.data)
-        };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          console.error("Unexpected error:", error);
-        }; 
-      });
-    };
-    fetchAllCoinPrices();
-  },[]);
-
-  React.useEffect(()=> {
-    const fetchCoinByName = () => {
-      axios.request(getCoinByNameConfig )
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('coin-by-name', response.data)
-        };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          console.error("Unexpected error:", error);
-        }; 
-      });
-    };
-    fetchCoinByName();
-  },[]);
 
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">
