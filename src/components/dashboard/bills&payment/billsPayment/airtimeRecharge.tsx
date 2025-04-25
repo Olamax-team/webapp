@@ -1,4 +1,4 @@
-import {useState,  } from "react";
+import React, {useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
@@ -14,6 +14,8 @@ import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
 import ngnlogo from '../../../../assets/images/NGN Circular.png';
+import { useApiConfig } from "../../../../hooks/api";
+import axios from "axios";
 
 
 type Inputs = {
@@ -80,6 +82,24 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
     setFiaPayment(payment);
     setIsPaymentDropdownOpen(false);
   };
+
+  const billsServiceConfig = useApiConfig({
+    method: 'get',
+    url: 'get-electricity-branches/electricity/postpaid'
+  });
+
+  React.useEffect(() => {
+    const fetchBillServices = async () => {
+      try {
+        const response = await axios(billsServiceConfig);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching bill services:', error);
+      }
+    };
+
+    fetchBillServices()
+  }, []);
 
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {

@@ -8,9 +8,42 @@ import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
-import { transactionList } from "../assets/constants";
 import { useApiConfig } from "../hooks/api";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+
+type pagiantionProps = {
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+  next_page_url: string;
+  prev_page_url: string;
+  from: number;
+  to: number;
+}
+
+type transactionProps = {
+  id: number;
+  user_id: number;
+  created_at: string;
+  ref: string;
+  coin_id: string;
+  coin_name: string;
+  payment_method: string;
+  naira_value: number;
+  payment_status: string;
+  transaction_charges: string;
+  type: string;
+};
+
+type transactionDetails = {
+  pagination: pagiantionProps;
+  user_id: number;
+  transactions: transactionProps[];
+  status: string;
+};
 
 type dateComponentProps = {
   date: Date | undefined;
@@ -18,22 +51,10 @@ type dateComponentProps = {
   placeholder: string;
 };
 
-type transactionItem = {
-  id: number;
-  date: string;
-  transaction_id: string;
-  type: string;
-  coins: string;
-  payment_method: string;
-  amount: number;
-  status: string;
-  fees: string;
-};
-
 type mobileTransactionProps = {
   open: boolean;
   toggleTable: () => void;
-  transaction: transactionItem;
+  transaction: transactionProps
 };
 
 const Transaction = () => {
@@ -41,29 +62,29 @@ const Transaction = () => {
 
   const [fromDate, setFromDate] = React.useState<Date | undefined>();
   const [toDate, setToDate] = React.useState<Date | undefined>();
+  const [pendingMenu, setPendingMenu] = React.useState('view');
+  const [completedMenu, setCompletedMenu] = React.useState('save');
 
-  const minTranscationConfig = useApiConfig({
-    url: 'min-transaction/1',
+  const getTranscationConfig = useApiConfig({
+    url: 'get-transactions-history',
     method: 'get'
   });
+  
+  const fetchTranscations = async () => {
+    const response = await axios.request(getTranscationConfig)
 
-  React.useEffect(()=> {
-    const fetchMinTranscations = async () => {
-      await axios.request(minTranscationConfig)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('min-transaction', response.data)
-        };
-      }).catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching data message:", error.response?.data.message || error.message);        
-        } else {
-          console.error("Unexpected error:", error);
-        }; 
-      });
-    };
-    fetchMinTranscations();
-  },[]);
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+  
+    const data = response.data as transactionDetails;
+    return data;
+  };
+
+  const { data:allTransactionDetails, status } = useQuery({
+    queryKey: ['user-tranasctions'],
+    queryFn: fetchTranscations,
+  });
 
 
   const DateComponent = ({date, setDate, placeholder}:dateComponentProps) => {
@@ -97,9 +118,24 @@ const Transaction = () => {
     )
   };
 
+
   const DesktopTransactionTable = () => {
-    const [pendingMenu, setPendingMenu] = React.useState('view');
-    const [completedMenu, setCompletedMenu] = React.useState('save');
+
+    if (status === 'pending') {
+      return (
+        <div className="w-full py-5 flex items-center justify-center">
+          <Loader2 className="animate-spin w-full"/>
+        </div>
+      )
+    };
+
+    if (status === 'error') {
+      return (
+        <div className="w-full py-5 flex items-center justify-center text-red-500 font-semibold">
+          Something went wrong while getting transaction history, refresh the page
+        </div>
+      )
+    };
 
     return (
       <Table>
@@ -117,16 +153,16 @@ const Transaction = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactionList.map((item) => (
+          {allTransactionDetails && allTransactionDetails.transactions && allTransactionDetails.transactions.length > 0 &&  allTransactionDetails.transactions.map((item) => (
             <TableRow className="border-b-0 h-[60px] even:bg-white font-Inter even:hover:bg-white odd:bg-[#f5f5f5]" key={item.id}>
-              <TableCell className="text-center">{format(new Date(item.date), 'dd/MM/yyyy')}</TableCell>
-              <TableCell className="text-center">{item.transaction_id}</TableCell>
-              <TableCell className="text-center">{item.type}</TableCell>
-              <TableCell className="text-center">{item.coins}</TableCell>
-              <TableCell className="text-center">{item.payment_method}</TableCell>
-              <TableCell className="text-center">NGN{item.amount.toLocaleString()}</TableCell>
-              <TableCell className={cn("text-center font-medium", item.status === 'Pending' ? 'text-[#ff9c00]': item.status === 'Completed' ? 'text-[#1faf38]': 'text-[#e41d03]')}>{item.status}</TableCell>
-              <TableCell className="text-center">{item.fees} {item.coins}</TableCell>
+              <TableCell className="text-center">{format(new Date(item.created_at), 'dd/MM/yyyy')}</TableCell>
+              <TableCell className="text-center">{item.id}</TableCell>
+              <TableCell className="text-center uppercase">{item.type}</TableCell>
+              <TableCell className="text-center">{item.coin_name}</TableCell>
+              <TableCell className="text-center capitalize">{item.payment_method}</TableCell>
+              <TableCell className="text-center">NGN{item.naira_value.toLocaleString()}</TableCell>
+              <TableCell className={cn("text-center font-medium", item.payment_status === 'Pending' ? 'text-[#ff9c00]': item.payment_status === 'Completed' ? 'text-[#1faf38]': 'text-[#e41d03]')}>{item.payment_status}</TableCell>
+              <TableCell className="text-center">{item.transaction_charges} {item.coin_name}</TableCell>
               <TableCell className="flex items-center justify-center mt-1.5">
                 <DropdownMenu modal={false}>
                   <DropdownMenuTrigger className="outline-none">
@@ -134,14 +170,14 @@ const Transaction = () => {
                       <HiEllipsisVertical className="size-7"/>
                     </button>
                   </DropdownMenuTrigger>
-                  { item.status === 'Pending' ?
+                  { item.payment_status === 'Pending' ?
                     <DropdownMenuContent className="rounded-xl">
                       <DropdownMenuRadioGroup value={pendingMenu} onValueChange={setPendingMenu}>
                         <DropdownMenuRadioItem value="view" className="rounded-lg">View</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="cancel" className="rounded-lg">Cancel</DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
                     </DropdownMenuContent> :
-                    item.status === 'Completed' ?
+                    item.payment_status === 'Completed' ?
                     <DropdownMenuContent className="rounded-xl">
                       <DropdownMenuRadioGroup value={completedMenu} onValueChange={setCompletedMenu}>
                         <DropdownMenuRadioItem value="save" className="rounded-lg">Save</DropdownMenuRadioItem>
@@ -163,29 +199,29 @@ const Transaction = () => {
     return (
       <div className={cn("font-Inter w-full odd:bg-white even:bg-inherit h-[68px] md:h-[72px] overflow-hidden p-3 md:p-4 cursor-pointer transition-all duration-300", open ? 'h-auto md:h-auto': '')} onClick={toggleTable}>
         <div className="flex items-center justify-between">
-          <p className="text-sm">{transaction.type}</p>
-          <p className="text-sm">NGN{transaction.amount.toLocaleString()}</p>
+          <p className="text-sm uppercase">{transaction.type}</p>
+          <p className="text-sm">NGN{transaction.naira_value.toLocaleString()}</p>
         </div>
         <div className="flex items-center justify-between mt-1">
-          <p className={cn("text-center font-medium text-sm", transaction.status === 'Pending' ? 'text-[#ff9c00]': transaction.status === 'Completed' ? 'text-[#1faf38]': 'text-[#e41d03]')}>{transaction.status}</p>
-          <p className="text-sm text-black/40">{format(new Date(transaction.date), 'yyyy-MM-dd-HH:mm:ss')}</p>
+          <p className={cn("text-center font-medium text-sm", transaction.payment_status === 'Pending' ? 'text-[#ff9c00]': transaction.payment_status === 'Completed' ? 'text-[#1faf38]': 'text-[#e41d03]')}>{transaction.payment_status}</p>
+          <p className="text-sm text-black/40">{format(new Date(transaction.created_at), 'yyyy-MM-dd-HH:mm:ss')}</p>
         </div>
         <div className="border-b my-3"/>
         <div className="flex items-center justify-between">
           <p className="text-sm">Tx ID</p>
-          <p className="text-sm">{transaction.transaction_id}</p>
+          <p className="text-sm">{transaction.id}</p>
         </div>
         <div className="flex items-center justify-between">
           <p className="text-sm">Coins</p>
-          <p className="text-sm">{transaction.coins}</p>
+          <p className="text-sm uppercase">{transaction.coin_name}</p>
         </div>
         <div className="flex items-center justify-between">
           <p className="text-sm">Payment Method</p>
-          <p className="text-sm">{transaction.payment_method}</p>
+          <p className="text-sm capitalize">{transaction.payment_method}</p>
         </div>
         <div className="flex items-center justify-between">
           <p className="text-sm">Fees</p>
-          <p className="text-sm">{transaction.fees} {transaction.coins}</p>
+          <p className="text-sm">{transaction.transaction_charges} {transaction.coin_name}</p>
         </div>
       </div>
     )
@@ -200,7 +236,7 @@ const Transaction = () => {
 
     return (
       <React.Fragment>
-        {transactionList.map((item:transactionItem, index:number) => (
+        {allTransactionDetails && allTransactionDetails.transactions && allTransactionDetails.transactions.length > 0 &&  allTransactionDetails.transactions.map((item:transactionProps, index:number) => (
           <MobileTransactionItem
             key={index} 
             open={index === currentIndex} 

@@ -141,6 +141,8 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
+  console.log(kycDetails);
+
   const baseLink = 'https://app.olamax.io/';
 
   const user = {

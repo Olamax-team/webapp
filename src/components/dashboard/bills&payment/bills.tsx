@@ -33,8 +33,6 @@ const Bills = () => {
     }
   }, [user])
 
-  console.log(kycDetails);
-
   const renderBill = () => {
     switch (active) {
       case 0:
