@@ -212,22 +212,12 @@ const Mobile = () => {
 
 
   return (
-<<<<<<< HEAD
-    <Modal 
-      isOpen={isOpen} 
-      onClose={onClose}
-      useCloseButton={true}
-      title=""
-      modalSize="w-[1000px] h-[640px]"
-      modalStyle="p-0 xl:p-0"
-=======
     <UploadModal 
       isOpen={isOpen}
       modalSize='lg:max-w-[1000px] w-full max-w-[520px]'
       modalStyle='rounded-md'
       setShowModal={setShowModal}
       showModal={showModal}
->>>>>>> 6c704507e25689a3b2c771b6001f6651e9b6e0d4
     >
         <Desktop/>
         <Mobile/>

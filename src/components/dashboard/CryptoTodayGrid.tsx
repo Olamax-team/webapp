@@ -2,10 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
-<<<<<<< HEAD
-=======
 // import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
->>>>>>> 6c704507e25689a3b2c771b6001f6651e9b6e0d4
 import { useApiConfig } from "../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -24,13 +21,6 @@ interface liveRateCoin {
   arrow: string;
   color: string;
 }
-// interface Crypto {
-//     name: string;
-//     ticker: string;
-//     price: string;
-//     change: string;
-//     logo: string;
-//   }
 
 interface News {
   id: number;
