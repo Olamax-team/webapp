@@ -54,7 +54,7 @@ const FiatPaymentDetailsModal = () => {
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
-      useCloseButton={false}
+      useCloseButton={true}
       title=""
       modalSize="w-[1000px] h-[640px]"
       modalStyle="p-0 xl:p-0"

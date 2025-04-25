@@ -2,22 +2,11 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useApiConfig } from "../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { cn } from "../../lib/utils";
-// import BTC from "../../assets/images/BTC Circular.png"
-// import ETH from "../../assets/images/ETH Circular.png"
-// import USDT from "../../assets/images/USDT Circular.png"
-// import SOL from "../../assets/images/SOL Circular.png"
-// import news1 from "../../assets/images/news1.png"
-// import news2 from "../../assets/images/news2.png"
-// import news3 from "../../assets/images/news3.png"
-// import graphUp from "../../assets/images/positive-graph.png"
-// import graphDown from "../../assets/images/negative-graph.png"
-// import invites from "../../assets/images/invites.png"
 
 // Define the type for a single crypto item
 
@@ -55,85 +44,6 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     itemClassName = "flex justify-between items-center",
     userInvite,
 }) => {
-    // const cryptos: Crypto[] = [
-    //     {
-    //       name: "Bitcoin",
-    //       ticker: "BTC",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/BTC Circular.png",
-    //     },
-    //     {
-    //       name: "Ethereum",
-    //       ticker: "ETH",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/ETH Circular.png",
-    //     },
-    //     {
-    //       name: "Tether",
-    //       ticker: "USDT",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/USDT Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //     {
-    //       name: "Solana",
-    //       ticker: "SOL",
-    //       price: "$2,051,913.71",
-    //       change: "0.05%",
-    //       logo: "/images/SOL Circular.png",
-    //     },
-    //   ];
 
   // Static data for the "Latest News" section
   const news: News[] = [
