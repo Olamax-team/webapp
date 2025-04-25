@@ -132,13 +132,13 @@ const Mobile = () => {
             </> : 
             <>
             {/* Right Section: Payment Details */}
-            <div className={`lg:hidden block flex-col gap-5 w-full justify-center items-center pb-9 transition-all duration-300`}>
+            <div className={`lg:hidden block text-center flex-col gap-5 w-full justify-center items-center pb-9 transition-all duration-300`}>
                     <div className="size-[150px] md:size-[200px] mx-auto">
                     <img src={qrCode} className="w-full h-full object-center"/>
                     </div>
 
                     {/* Bank Details */}
-                    <div className="text-center">
+                    <div className="text-center flex flex-col items-center justify-center">
                     {/* Bank Logo and Name */}
                     <div className="flex font-Inter items-center justify-center gap-6 mb-8">
                         <img src={logo} alt="Bank Logo" className="w-9 h-9" />
