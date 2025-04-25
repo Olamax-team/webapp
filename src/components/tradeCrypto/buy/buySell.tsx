@@ -19,6 +19,33 @@ interface BuySellProps {
   className?: string;
 };
 
+type Coins = {
+  coin: string,
+  coin_name: string,
+  icon: string,
+  id: number,
+};
+
+type Stables = {
+  coin: string,
+  coin_name: string,
+  icon: string,
+  id: number,
+};
+
+type CoinPrice = {
+  id: number;
+  coin_id: number;
+  selling: string;
+  buying: string;
+  escrow: string;
+};
+
+type cryptoServiceProps = {
+  cs: string;
+  act: string;
+};
+
 const BuySell: React.FC<BuySellProps> = ({
   className,
   setTradeType,
@@ -40,33 +67,6 @@ const BuySell: React.FC<BuySellProps> = ({
 
   const tradeDetails = useTradeStore();
   const [cryptoService, setCryptoService] = React.useState<cryptoServiceProps[]>();
-
-  type Coins = {
-    coin: string,
-    coin_name: string,
-    icon: string,
-    id: number,
-  };
-
-  type Stables = {
-    coin: string,
-    coin_name: string,
-    icon: string,
-    id: number,
-  };
-
-  type CoinPrice = {
-    id: number;
-    coin_id: number;
-    selling: string;
-    buying: string;
-    escrow: string;
-  };
-
-  type cryptoServiceProps = {
-    cs: string;
-    act: string;
-  };
 
   const {
     register,
@@ -133,9 +133,8 @@ const BuySell: React.FC<BuySellProps> = ({
   },[]);
 
  
-
   const getCoinId = (coinCode: string): number => {
-      return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
+    return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
   };
   
   const getSellingPrice = (coinCode: string) => {
