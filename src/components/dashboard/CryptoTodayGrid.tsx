@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+// import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useApiConfig } from "../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -31,13 +31,13 @@ interface liveRateCoin {
   arrow: string;
   color: string;
 }
-interface Crypto {
-    name: string;
-    ticker: string;
-    price: string;
-    change: string;
-    logo: string;
-  }
+// interface Crypto {
+//     name: string;
+//     ticker: string;
+//     price: string;
+//     change: string;
+//     logo: string;
+//   }
 
 interface News {
   id: number;
@@ -170,7 +170,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
           <div className="p-4 flex gap-5 w-full">
             <span>
               <img
-                src={coin.coin}
+                src={coin.icon}
                 alt={`${coin.symbol} logo`}
                 className="w-[32px] xl:w-[48px] h-[32px] xl:h-[48px]"
               />
