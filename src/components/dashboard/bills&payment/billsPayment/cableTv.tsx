@@ -50,7 +50,6 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
     url: 'get-bills-services'
   });
 
-
   const tvServiceConfig = useApiConfig({
     method: 'get',
     url: 'get-tv'
@@ -84,21 +83,23 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
     queryFn: fetchTvServices,
   });
 
+  const frontPageData = JSON.parse(localStorage.getItem('tvData') || '{}');
+
   const { register, handleSubmit, formState: { errors }, reset} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues:{
-      inputAmount:"",
+      inputAmount: frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.amt_1 : "",
       paymentAmount:"",
     }
   });
 
-  const [selectedNetwork, setSelectedNetwork] = useState(tvServices ? tvServices[0].abrv : 'DSTV');
+  const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : tvServices ? tvServices[0].abrv : 'DSTV');
   const [selectPayment, setSelectPayment] = useState('BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
   const cableDetails = useBillsStore();
   const [fiatPayment, setFiaPayment] = useState('NGN');
-  const [activeButton, setActiveButton] = useState(billServices ? billServices[0].cs : 'fiat');
+  const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
 
   const handleSelectChange = (network: string) => {
     setSelectedNetwork(network);
@@ -129,6 +130,8 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
   ];
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    localStorage.getItem('tvData');
+
     const rechargeData = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
       selectedNetwork: selectedNetwork, 
@@ -174,13 +177,13 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
     
             <div className="relative ">
               <div
-                className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826]   w-[100px] h-[25px] xl:w-[115px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0  xl:ml-4 "
+                className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px]  xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0  xl:ml-4 "
                 onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
               >
                 <img
                   src={tvServices ? tvServices.find(option => option.abrv === selectedNetwork)?.icon : '/images/IBEDC_Circular.png'}
                   alt={selectedNetwork}
-                  className=" size-6 mr-2"
+                  className=" size-6 mr-2 rounded-full"
                 />
                 <span>{selectedNetwork}</span>
                 <HiChevronDown   className="size-6"/>  
@@ -194,7 +197,7 @@ const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
                       className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                       onClick={() => handleSelectChange(network.abrv)}
                     >
-                      <img src={network.icon} alt={network.abrv} className=" size-6 mr-2" />
+                      <img src={network.icon} alt={network.abrv} className=" size-6 mr-2 rounded-full" />
                       <span>{network.abrv}</span>
                     </div>
                   ))}

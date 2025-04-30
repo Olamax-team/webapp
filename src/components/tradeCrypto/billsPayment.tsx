@@ -2,31 +2,141 @@ import React, { FormEvent, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import arrowIcon from '../../assets/images/arrowdown.svg';
-// import BTC from "../../assets/images/BTC Circular.png";
-// import ETH from "../../assets/images/ETH Circular.png";
-// import USDT from "../../assets/images/USDT Circular.png";
-// import SOL from "../../assets/images/SOL Circular.png";
-// import IBEDC from "../../assets/images/IBEDC Circular.png";
+import { useApiConfig } from "../../hooks/api";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { HiChevronDown } from "react-icons/hi";
+import { Loader2 } from "lucide-react";
+import { activityIndex } from "../../stores/generalStore";
+import { useNavigate } from "react-router-dom";
+
 interface BillsPaymentProps {
-categories: string[]; // Categories to map for dropdown
-billProps1: string[]; // Options for billProp1 dropdown
-props2currency: string[]; // Options for currency dropdown
-className?: string; // Additional class names for styling
-}
+    categories: string[]; // Categories to map for dropdown
+    billProps1: string[]; // Options for billProp1 dropdown
+    props2currency: string[]; // Options for currency dropdown
+    className?: string; // Additional class names for styling
+};
+
+type cryptoServiceProps = {
+    cs: string;
+    act: string;
+};
+
+type electricBranchProps = {
+    electricity: string;
+    product_number: number;
+    abrv:string;
+    icon: string;
+}; 
+
+type cableServicesProps = {
+    cable: string;
+    product_number: number;
+    abrv: string;
+    icon: string;
+};
 
 const BillsPayment: React.FC<BillsPaymentProps> = ({
-categories,
-billProps1,
-props2currency,
-className = "",
+    categories,
+    props2currency,
+    className = "",
 }) => {
+
 const [cat, setCat] = useState<string>(categories[0] || "Electricity");
-const [billProp1, setBillProp1] = useState<string>(billProps1[0] || "IBEDC");
 const [currency, setCurrency] = useState<string>(props2currency[0] || "BTC");
 const [amount1, setAmount1] = useState<string>("");
 const [amount2, setAmount2] = useState<string>("");
+
+const navigate = useNavigate();
+
+const { setActive } = activityIndex();
+
+const billsServiceConfig = useApiConfig({
+    method: 'get',
+    url: 'get-bills-services'
+});
+
+const electricBranchesConfig = useApiConfig({
+    method: 'get',
+    url: 'get-electricity-branches/electricity/postpaid'
+});
+
+const tvServiceConfig = useApiConfig({
+    method: 'get',
+    url: 'get-tv'
+});
+
+const fetchBillServices = async () => {
+    const response = await axios.request(billsServiceConfig);
+    if (response.status !== 200) {
+        throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.bill_service as cryptoServiceProps[];
+    return data;
+};
+
+const fetchElectricBranches = async () => {
+    const response = await axios.request(electricBranchesConfig);
+    if (response.status !== 200) {
+        throw new Error('Something went wrong, try again later');
+    };
+    const data = response.data.branches as electricBranchProps[];
+    return data;
+};
+
+const fetchTvServices = async () => {
+    const response = await axios.request(tvServiceConfig);
+    if (response.status !== 200) {
+        throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.cable as cableServicesProps[];
+    return data;
+};
+
+const { data:billServices, status:billServiceStatus} = useQuery({
+    queryKey: ['bills-service'],
+    queryFn: fetchBillServices,
+});
+
+const { data:electicBranches, status:electricBranchesStatus} = useQuery({
+    queryKey: ['electric-branches'],
+    queryFn: fetchElectricBranches,
+});
+
+const { data:tvServices, status:tvServiceStatus } = useQuery({
+    queryKey: ['tv-services'],
+    queryFn: fetchTvServices,
+});
+
+const [subTab, setSubTab] = useState(billServices ? billServices[0].cs : 'fiat');
+const [selectedBranch, setSelectedBranch] = useState(electicBranches ? electicBranches[0].abrv : 'IBEDC');
+const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
+const [selectedTVNetwork, setSelectedTVNetwork] = useState(tvServices ? tvServices[0].abrv : 'DSTV');
+const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
+
+const handleSelectBranchChange = (branch: string) => {
+    setSelectedBranch(branch);
+    setIsBranchDropdownOpen(false);
+};
+
+const handleSelectNetworkChange = (network: string) => {
+    setSelectedTVNetwork(network);
+    setIsNetworkDropdownOpen(false);
+};
+
 const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const data  = {
+        type: subTab,
+        service: cat,
+        amt_1: amount1,
+        network: cat === 'Electricity' ? selectedBranch : selectedTVNetwork,
+    };
+
+    setActive(cat === 'Electricity' ? 2 : 3)
+    localStorage.setItem(cat === 'Electricity' ? "electricData" : "tvData", JSON.stringify(data));
+    navigate('/dashboard/bills_payment');
 }
 
   const logoMap: Record<string, string> = {
@@ -41,112 +151,207 @@ return (
     <>
         <form  onSubmit={handleBillPay}>
             <div className={`border border-white w-full space-y-2 ${className}`}>
-                {/* Header */}
-                <div className="my-4  font-bold leading-[24px] text-[16px] xl:leading-[24px] xl:text-[16px]">
-                    <p className="mt-[30px] mb-5">Pay your bills with ease</p>
+
+                <div>
+                    <div className="font-poppins flex justify-start space-x-4 text-[16px] leading-[24px] text-textDark">
+                        { billServices && billServices.length > 0 && billServices.map((item) => (
+                            <button
+                            key={item.cs}
+                            type="button"
+                            onClick={() => {setSubTab(item.cs)}}
+                            className={`${item.act === 'off' && 'hidden'} mt-[30px] w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-semibold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex uppercase ${subTab === item.cs ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
+                            >
+                            {item.cs}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Category Selection */}
-                <div className="font-poppins flex justify-center space-x-4 text-[16px] leading-[24px] text-textDark">
-                    <div className="mt-3 font-Inter flex items-center w-full h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
-                        <p className="leading-[18px] font-[500] text-[12px] xl:leading-[21px] xl:text-[14px]">Pay {cat} Bill</p>
-                        <div className="flex ml-auto">
-                        <div className="flex font-Inter items-center justify-end">
-                            <select
-                            value={cat}
-                            onChange={(e) => setCat(e.target.value)}
-                            className="rounded-md bg-bg px-2 py-1 text-right"
-                            >
-                            {categories.map((category) => (
-                                <option key={category} value={category}>
-                                {category}
-                                </option>
-                            ))}
-                            </select>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    {/* Input for Amount and BillProp1 */}
-                    <div className="flex justify-center space-x-4">
-                        <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-                            <div className="w-full">
-                            <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">Enter Amount</p>
-                            <div className="grid grid-cols-2">
-                                <Input
-                                value={amount1}
-                                onChange={(e) => setAmount1(e.target.value)}
-                                placeholder="0.00"
-                                className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
-                                />
-                                <div className="flex items-center justify-end xl:justify-end font-Inter">
-                                <img
-                                    src={logoMap[billProp1 as keyof typeof logoMap]}
-                                    alt={`${billProp1} logo`}
-                                    className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
-                                />
-                                <select
-                                    value={billProp1}
-                                    onChange={(e) => setBillProp1(e.target.value)}
-                                    className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
-                                >
-                                    {billProps1.map((bill) => (
-                                    <option key={bill} value={bill}>
-                                        {bill}
-                                    </option>
+                { billServiceStatus === 'success' && billServices && 
+                    <React.Fragment>
+                        {/* Category Selection */}
+                        <div className="font-poppins flex justify-center space-x-4 text-[16px] leading-[24px] text-textDark">
+                            <div className="mt-3 font-Inter flex items-center w-full h-[60px] justify-between bg-bg p-3 rounded-md text-textDark">
+                                <p className="leading-[18px] font-[500] text-[12px] xl:leading-[21px] xl:text-[14px]">Pay {cat} Bill</p>
+                                <div className="flex ml-auto">
+                                <div className="flex font-Inter items-center justify-end">
+                                    <select
+                                    value={cat}
+                                    onChange={(e) => setCat(e.target.value)}
+                                    className="rounded-md bg-bg px-2 py-1 text-right"
+                                    >
+                                    {categories.map((category) => (
+                                        <option key={category} value={category} className="text-center">
+                                        {category}
+                                        </option>
                                     ))}
-                                </select>
+                                    </select>
+                                </div>
                                 </div>
                             </div>
-                            </div>
                         </div>
-                    </div>
-                    {/* Switch Icon */}
-                    <div className="flex justify-center font-bold text-primary my-2">
-                        <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] lg:w-[32px] lg:h-[32px]" />
-                    </div>
-                    {/* Currency and Payment Section */}
-                    <div className="flex justify-center space-x-4">
-                        <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
-                            <div className="w-full">
-                                <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">You Pay</p>
-                                <div className="grid grid-cols-2">
-                                    <Input
-                                    value={amount2}
-                                    onChange={(e) => setAmount2(e.target.value)}
-                                    placeholder="0.00"
-                                    className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
-                                    />
-                                    <div className="flex items-center justify-end gap-1 font-Inter">
+                        <div>
+                            {/* Input for Amount and BillProp1 */}
+                            <div className="flex justify-center space-x-4">
+                                <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                                    <div className="w-full">
+                                    <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">Enter Amount</p>
+                                    <div className="flex gap-2">
+                                        <Input
+                                        value={amount1}
+                                        onChange={(e) => setAmount1(e.target.value)}
+                                        placeholder="0.00"
+                                        className="flex-1 h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
+                                        />
+                                        { cat === 'Electricity' ? 
+                                            <div className="relative w-[135px] xl:w-[150px] flex-none">
+                                            <div
+                                                className="flex-none cursor-pointer bg-inherit xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+                                                onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
+                                            >
+                                                <img
+                                                src={electicBranches && electicBranches.find(option => option.abrv === selectedBranch)?.icon}
+                                                alt={selectedBranch}
+                                                className="size-5 mr-1 rounded-full object-cover"
+                                                />
+                                                <span>{selectedBranch}</span>
+                                                <HiChevronDown   className="size-6"/>            
+                                            </div>
+                                            { isBranchDropdownOpen && (
+                                                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                                                { electicBranches && electicBranches.length > 0 && electicBranches.map((branch) => (
+                                                    <div
+                                                    key={branch.product_number}
+                                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                                    onClick={() => handleSelectBranchChange(branch.abrv)}
+                                                    >
+                                                    <img src={branch.icon} alt={branch.abrv} className="w-6 h-6 mr-2 rounded-full" />
+                                                    <span>{branch.abrv}</span>
+                                                    </div>
+                                                ))}
+                                
+                                                { electricBranchesStatus === 'pending' && (
+                                                    <div className="flex items-center justify-center py-4">
+                                                    <Loader2 className="animate-spin" />
+                                                    </div>
+                                                )}
+                                                </div>
+                                            )}
+                                            </div> : 
+                                            <div className="relative w-[135px] xl:w-[150px] flex-none">
+                                            <div
+                                                className="flex-none cursor-pointer bg-inherit xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+                                                onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
+                                            >
+                                                <img
+                                                src={tvServices && tvServices.find(option => option.abrv === selectedTVNetwork)?.icon}
+                                                alt={selectedTVNetwork}
+                                                className="size-5 mr-1 rounded-full object-cover"
+                                                />
+                                                <span>{selectedTVNetwork}</span>
+                                                <HiChevronDown   className="size-6"/>            
+                                            </div>
+                                            { isNetworkDropdownOpen && (
+                                                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                                                { tvServices && tvServices.length > 0 && tvServices.map((network) => (
+                                                    <div
+                                                    key={network.product_number}
+                                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                                    onClick={() => handleSelectNetworkChange(network.abrv)}
+                                                    >
+                                                    <img src={network.icon} alt={network.abrv} className="w-6 h-6 mr-2 rounded-full" />
+                                                    <span>{network.abrv}</span>
+                                                    </div>
+                                                ))}
+                                
+                                                { tvServiceStatus === 'pending' && (
+                                                    <div className="flex items-center justify-center py-4">
+                                                    <Loader2 className="animate-spin" />
+                                                    </div>
+                                                )}
+                                                </div>
+                                            )}
+                                            </div>
+                                        }
+
+                                        {/* <div className="flex items-center justify-end xl:justify-end font-Inter">
                                         <img
-                                            src={logoMap[currency as keyof typeof logoMap]}
-                                            alt={`${currency} logo`}
+                                            src={logoMap[billProp1 as keyof typeof logoMap]}
+                                            alt={`${billProp1} logo`}
                                             className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                                         />
                                         <select
-                                            value={currency}
-                                            onChange={(e) => setCurrency(e.target.value)}
+                                            value={billProp1}
+                                            onChange={(e) => setBillProp1(e.target.value)}
                                             className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                                         >
-                                            {props2currency.map((curr) => (
-                                            <option key={curr} value={curr}>
-                                                {curr}
+                                            {billProps1.map((bill) => (
+                                            <option key={bill} value={bill}>
+                                                {bill}
                                             </option>
                                             ))}
                                         </select>
+                                        </div> */}
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Switch Icon */}
+                            <div className="flex justify-center font-bold text-primary my-2">
+                                <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] lg:w-[32px] lg:h-[32px]" />
+                            </div>
+                            {/* Currency and Payment Section */}
+                            <div className="flex justify-center space-x-4">
+                                <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
+                                    <div className="w-full">
+                                        <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">You Pay</p>
+                                        <div className="grid grid-cols-2">
+                                            <Input
+                                            value={amount2}
+                                            onChange={(e) => setAmount2(e.target.value)}
+                                            placeholder="0.00"
+                                            className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
+                                            />
+                                            <div className="flex items-center justify-end gap-1 font-Inter">
+                                                <img
+                                                    src={logoMap[currency as keyof typeof logoMap]}
+                                                    alt={`${currency} logo`}
+                                                    className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
+                                                />
+                                                <select
+                                                    value={currency}
+                                                    onChange={(e) => setCurrency(e.target.value)}
+                                                    className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
+                                                >
+                                                    {props2currency.map((curr) => (
+                                                    <option key={curr} value={curr}>
+                                                        {curr}
+                                                    </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                    </React.Fragment>
+                }
+
+                { billServiceStatus === 'pending' && 
+                    <div className="flex justify-center items-center mt-5">
+                    <Loader2 className="animate-spin"/>
                     </div>
-                    {/* Button */}
-                    <div className="flex justify-center items-center">
-                        <Button className="py-3 mt-4 xl:mt-6 bg-primary hover:bg-secondary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
-                            Buy
-                        </Button>
-                    </div>
+                }
+
+                {/* Button */}
+                <div className="flex justify-center items-center">
+                    <Button className="py-3 mt-4 xl:mt-6 bg-primary hover:bg-secondary text-white rounded-lg text-[16px] leading-[24px] font-semibold w-[96px] h-[38px] xl:w-[150px] xl:h-[54px]">
+                        Buy
+                    </Button>
                 </div>
+
             </div>
         </form>
     </>

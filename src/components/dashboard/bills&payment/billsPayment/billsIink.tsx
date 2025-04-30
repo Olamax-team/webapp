@@ -1,16 +1,17 @@
 
-import React from 'react';
 import { IconType } from 'react-icons/lib';
+import { activityIndex } from '../../../../stores/generalStore';
 
 type billsLinkProps = {
   index: number;
-  setActive: React.Dispatch<React.SetStateAction<number>>; 
   active: number;
   icon: IconType;
   name: string;
 }
 
-const BillsIink = ({ index, setActive, active, icon: Icon, name}: billsLinkProps) => {
+const BillsIink = ({ index, active, icon: Icon, name}: billsLinkProps) => {
+  const { setActive } = activityIndex();
+
   return (
     <div
       key={index}

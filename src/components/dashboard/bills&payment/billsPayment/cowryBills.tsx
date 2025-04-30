@@ -209,7 +209,7 @@ const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
     
               <div className="relative">
                 <div
-                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
+                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
                   onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
                 >
                   {activeButton === 'crypto' ? (
