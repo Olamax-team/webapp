@@ -17,6 +17,7 @@ import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import { activityIndex } from '../../../stores/generalStore';
 
 interface billProps {
   service: string;
@@ -25,7 +26,7 @@ interface billProps {
 }
 
 const Bills = () => {
-  const [active, setActive] = useState(0);
+  const { active } = activityIndex()
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);
   const [selectedBill, setSelectedBill] = useState<string>('');  
 
@@ -141,7 +142,6 @@ const Bills = () => {
                   <BillsIink
                     key={index} 
                     index={index}
-                    setActive={setActive}  
                     active={active}
                     icon={renderIcons(bill.service)}
                     name={bill.service}

@@ -11,6 +11,7 @@ import useUserDetails from "../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { useApiConfig } from "../../../hooks/api";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 
 interface BuySellProps {
@@ -66,7 +67,6 @@ const BuySell: React.FC<BuySellProps> = ({
   const [stables, setStables] = useState<Stables[]>([]);
 
   const tradeDetails = useTradeStore();
-  const [cryptoService, setCryptoService] = React.useState<cryptoServiceProps[]>();
 
   const {
     register,
@@ -98,11 +98,18 @@ const BuySell: React.FC<BuySellProps> = ({
   });
 
   const fetchCryptoService = async () => {
-    await axios.request(getCryptoConfig)
-    .then((response) => {
-      setCryptoService(response.data.crypto_service)
-    })
+    const response = await axios.request(getCryptoConfig)
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.crypto_service as cryptoServiceProps[];
+    return data;
   };
+
+  const { data: cryptoService } = useQuery({
+    queryKey: ['crypto-service'],
+    queryFn: fetchCryptoService,
+  });
 
   const fetchCoinPrices = async () => {
     await axios.request(getCoinPricesConfig)
@@ -201,15 +208,12 @@ const onSubmit = (data: any) => {
     cryptoType: prop2,
     fiatAmount: subTab === "buy" ? data.amount1 : data.amount2,
     cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
-
   };
 
   setShowTransactionDetail?.(true);
   setTradeType?.(subTab);
   tradeDetails.setItem(tradeData);
 };
-
-
 
   return (
       <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>

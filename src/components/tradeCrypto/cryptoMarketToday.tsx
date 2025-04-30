@@ -3,13 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useApiConfig } from "../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { cn } from "../../lib/utils";
-// import BTC from "../../assets/images/BTC Circular.png"
-// import ETH from "../../assets/images/ETH Circular.png"
-// import USDT from "../../assets/images/USDT Circular.png"
-// import SOL from "../../assets/images/SOL Circular.png"
-// import graphUp from "../../assets/images/positive-graph.svg"
 
 interface liveRateCoin {
   coin: string;
@@ -99,8 +94,8 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
 
     if (status === 'pending') {
       return (
-        <div className="w-full h-full flex items-center justify-center my-8">
-          <Loader className="animate-spin"/>
+        <div className="w-full h-full min-h-40 flex items-center justify-center my-8">
+          <Loader2 className="animate-spin"/>
         </div>
       )
     }

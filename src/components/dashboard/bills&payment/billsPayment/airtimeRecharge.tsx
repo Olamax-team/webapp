@@ -2,10 +2,6 @@ import React, {useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-import mtnLogo from '../../../../assets/images/MTN Circular.png'; 
-import gloLogo from '../../../../assets/images/MTN Circular.png'; 
-import airtelLogo from '../../../../assets/images/MTN Circular.png'; 
-import nineMobileLogo from '../../../../assets/images/MTN Circular.png'; 
 import btcLogo from '../../../../assets/images/BTC Circular.png'
 import ETHLogo from '../../../../assets/images/ETH Circular.png'
 import USDTLogo from '../../../../assets/images/USDT Circular.png'
@@ -38,11 +34,22 @@ type cryptoServiceProps = {
   act: string;
 };
 
+type airtimeNetworkProps = {
+  network: string;
+  product_number: number;
+  icon: string;
+};
+
 const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeProps) => {
 
   const billsServiceConfig = useApiConfig({
     method: 'get',
     url: 'get-bills-services'
+  });
+
+  const networksConfig = useApiConfig({
+    method: 'get',
+    url: 'get-airtime-data-network/airtime'
   });
 
   const fetchBillServices = async () => {
@@ -54,33 +61,42 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
     return data;
   };
 
-  const { data:billServices, status} = useQuery({
+  const { data:billServices, status:billServiceStatus} = useQuery({
     queryKey: ['bills-service'],
     queryFn: fetchBillServices,
   });
 
+  const fetchNetworkAirtime = async () => {
+    const response = await axios.request(networksConfig);
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.branches as airtimeNetworkProps[];
+    return data;
+  };
+
+  const { data:airtimeNetworks, status:airtimeNetworkStatus } = useQuery({
+    queryKey: ['airtime-networks'],
+    queryFn: fetchNetworkAirtime,
+  });
+
+  const frontPageData = JSON.parse(localStorage.getItem('airtimeData') || '{}');
+
   const { register, handleSubmit, formState: { errors }, reset} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues:{
-      inputAmount:"",
+      inputAmount:frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.amt_1 : "",
       paymentAmount:"",
     }
-  });  
+  }); 
 
-  const [selectedNetwork, setSelectedNetwork] = useState('MTN');
+  const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
   const [selectPayment, setSelectPayment] = useState('BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
   const airtimeDetails = useBillsStore();
   const [fiatPayment, setFiaPayment] = useState('NGN');
-  const [activeButton, setActiveButton] = useState(billServices ? billServices[0].cs : 'fiat');
-
-  const networkOptions = [
-    { value: 'MTN', logo: mtnLogo },
-    { value: 'GLO', logo: gloLogo },
-    { value: 'Airtel', logo: airtelLogo },
-    { value: '9Mobile', logo: nineMobileLogo },
-  ];
+  const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
 
   const paymentOptions = [
     { value: 'BTC', logo: btcLogo },
@@ -112,7 +128,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    
+    localStorage.removeItem('airtimeData');
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
       selectedNetwork: selectedNetwork,
@@ -135,11 +151,10 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
           >
             {item.cs}
           </button>
-
         ))}
       </div>
 
-      { status === 'success' && billServices && billServices.length > 0 && <React.Fragment>
+      { billServiceStatus === 'success' && billServices && billServices.length > 0 && <React.Fragment>
         <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5 items-center">
           <h3 className="px-3 py-2" >Airtime Recharge</h3>
         </div>
@@ -157,29 +172,35 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
 
             <div className="relative">
               <div
-                className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[100px] h-[25px] xl:w-[115px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+                className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
                 onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
               >
                 <img
-                  src={networkOptions.find(option => option.value === selectedNetwork)?.logo}
+                  src={airtimeNetworks && airtimeNetworks.find(option => option.network === selectedNetwork)?.icon}
                   alt={selectedNetwork}
-                  className="size-5 mr-1"
+                  className="size-5 mr-1 rounded-full"
                 />
                 <span>{selectedNetwork}</span>
                 <HiChevronDown   className="size-6"/>            
-                </div>
-              {isNetworkDropdownOpen && (
+              </div>
+              { isNetworkDropdownOpen && (
                 <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                  {networkOptions.map((network) => (
+                  { airtimeNetworks && airtimeNetworks.length > 0 && airtimeNetworks.map((network) => (
                     <div
-                      key={network.value}
+                      key={network.product_number}
                       className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                      onClick={() => handleSelectChange(network.value)}
+                      onClick={() => handleSelectChange(network.network)}
                     >
-                      <img src={network.logo} alt={network.value} className="w-6 h-6 mr-2" />
-                      <span>{network.value}</span>
+                      <img src={network.icon} alt={network.network} className="w-6 h-6 mr-2 rounded-full" />
+                      <span>{network.network}</span>
                     </div>
                   ))}
+
+                  { airtimeNetworkStatus === 'pending' && (
+                    <div className="flex items-center justify-center py-4">
+                      <Loader2 className="animate-spin" />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -263,7 +284,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
         {errors.paymentAmount && <p className="text-red-500 text-xs">{errors.paymentAmount?.message}</p>}
       </React.Fragment> }
 
-      { status === 'pending' && 
+      { billServiceStatus === 'pending' && 
         <div className="flex justify-center items-center mt-5">
           <Loader2 className="animate-spin"/>
         </div>
