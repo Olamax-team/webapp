@@ -104,6 +104,10 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
       const id = getCoinId(coinCode);
       return prices.find(p => p.coin_id === id)?.selling;
     };
+    const getBuyingPrice = (coinCode: string) => {
+      const id = getCoinId(coinCode);
+      return prices.find(p => p.coin_id === id)?.buying;
+    };
     React.useEffect(() => {
       fetchCoins();
       fetchCoinPrices();
@@ -149,32 +153,47 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     const [prop2, setprop2] = useState("BTC");
     const [amount1, setAmount1] = useState<string>("");
     const [amount2, setAmount2] = useState<string>("");
-      const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
+    const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
     const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
-
-    const price = subTab === 'crypto' ? getPrice(prop2) : getPrice(prop1);
+    const price = React.useMemo(() => {
+      if (subTab === 'crypto') {
+        return getPrice(prop2);
+      } else {
+        return getBuyingPrice(prop2);
+      }
+    }, [subTab, prop1, prop2, prices, coin]);
+    
     useEffect(() => {
         if (lastChanged !== 'amount1') return;
         if (!amount1 || !prop1) return;
-      
+        console.log(price);
         if (price) {
           let newAmount2 = '';
-            newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); 
-      // Updating Zustand state
+          if (subTab === "crypto") {
+            newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+          } else if (subTab === 'fiat') {
+            newAmount2 = (parseFloat(amount1)).toFixed(2); // crypto → NGN
+          }
           setAmount2(newAmount2);
+          console.log('running');
+          console.log(amount2);
         }
-      }, [amount1, prop1, subTab, prices, coin, lastChanged]);
+      }, [amount1, prop1, subTab, prices, lastChanged]);
     
-      useEffect(() => {
-        if (lastChanged !== 'amount2') return;
-        if (!amount2 || !prop2) return;
-      
-        if (price) {
-          let newAmount1 = '';
-          newAmount1 = (parseFloat(amount2) / parseFloat(price)).toFixed(6); 
-          setAmount1(newAmount1);
+    useEffect(() => {
+      if (lastChanged !== 'amount2') return;
+      if (!amount2 || !prop2) return;
+      if (price) {
+        let newAmount1 = '';
+        if (subTab === "crypto") {
+          newAmount1 = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+        } else if (subTab === 'fiat') {
+          newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
         }
-      }, [amount2, prop2, subTab, prices, coin, lastChanged]);
+        setAmount1(newAmount1);
+      }
+    }, [amount2, prop2, subTab, prices, lastChanged]);
+
     const navigate = useNavigate();
 
 
@@ -199,14 +218,6 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
       navigate('/dashboard/bills_payment');
     };
 
-    // const logoMap: Record<string, string> = {
-    //   BTC: '/images/BTC Circular.png',
-    //   ETH: '/images/ETH Circular.png',
-    //   SOL: '/images/SOL Circular.png',
-    //   USDT: 'images/USDT Circular.png',
-    //   NGN: '/images/NGN Circular.png',
-    //   MTN: '/images/MTN Circular.png',
-    // };
 
   return (
     <form  onSubmit={handleBuyClick} >
@@ -320,7 +331,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                           />
                           <div className="flex items-center justify-end font-Inter">
                           <img
-                              src={(subTab === "crypto" ? `/images/${prop2}` : `/images/${prop1} Circular.png`)}
+                              src={(subTab === "crypto" ? `${coin.find(option => option.coin === prop2)?.icon}` : `${stables.find(option => option.coin === prop1)?.icon}`)}
                               alt={`${
                               subTab === "crypto" ? prop2 : prop1
                               } logo`}

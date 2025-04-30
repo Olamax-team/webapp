@@ -116,10 +116,14 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
     return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
   };
   
-  const getPrice = (coinCode: string) => {
+  const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
     return prices.find(p => p.coin_id === id)?.selling;
   };
+  const getBuyingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    return prices.find(p => p.coin_id === id)?.buying;};
+
   React.useEffect(() => {
     fetchCoins();
     fetchCoinPrices();
@@ -175,7 +179,13 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
   const [fiatPayment, setFiaPayment] = useState('NGN');
   const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
 
-  const price = activeButton === 'crypto' ? getPrice(selectPayment) : getPrice(fiatPayment);
+    const price = React.useMemo(() => {
+      if (activeButton === 'crypto') {
+        return getSellingPrice(selectPayment);
+      } else {
+        return getBuyingPrice(selectPayment);
+      }
+    }, [activeButton, inputAmount, paymentAmount, prices, coin]);
   useEffect(() => {
     console.log(frontPageData);
     if (lastChanged !== 'amount1') return;
@@ -183,7 +193,11 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
   
     if (price) {
       let newAmount2 = '';
-        newAmount2 = (parseFloat(inputAmount) / parseFloat(price)).toFixed(6); 
+      if (activeButton === "crypto") {
+        newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newAmount2 = (parseFloat(amount1)).toFixed(2); // crypto → NGN
+      }
   // Updating Zustand state
       setAmount2(newAmount2);
       setValue("paymentAmount", newAmount2);
@@ -196,7 +210,11 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
   
     if (price) {
       let newAmount1 = '';
-      newAmount1 = (parseFloat(paymentAmount) / parseFloat(price)).toFixed(6); 
+      if (activeButton === "crypto") {
+        newAmount1 = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
+      }
       setAmount1(newAmount1);
       setValue("inputAmount", newAmount1);
     }
