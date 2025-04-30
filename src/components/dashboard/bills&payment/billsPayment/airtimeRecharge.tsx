@@ -179,6 +179,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
   const [fiatPayment, setFiaPayment] = useState('NGN');
   const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
 
+  //autofill for both inputs
     const price = React.useMemo(() => {
       if (activeButton === 'crypto') {
         return getSellingPrice(selectPayment);

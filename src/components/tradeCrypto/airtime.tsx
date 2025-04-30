@@ -162,7 +162,8 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         return getBuyingPrice(prop2);
       }
     }, [subTab, prop1, prop2, prices, coin]);
-    
+  
+  //autofill for both inputs
     useEffect(() => {
         if (lastChanged !== 'amount1') return;
         if (!amount1 || !prop1) return;
