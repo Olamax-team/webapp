@@ -296,24 +296,6 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                             </div>
                           )}
                         </div>
-                          {/* <div className="flex items-center justify-end xl:justify-end font-Inter">
-                              <img
-                              src={logoMap[airtimeProp1 as keyof typeof logoMap]}
-                              alt={`${airtimeProp1} logo`}
-                              className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
-                              />
-                              <select
-                              value={airtimeProp1}
-                              onChange={(e) => setAirtimeProp1(e.target.value)}
-                              className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
-                              >
-                              {airtimeProps1.map((prop) => (
-                              <option key={prop} value={prop}>
-                                  {prop}
-                              </option>
-                              ))}
-                              </select>
-                          </div> */}
                       </div>
                   </div>
                 </div>

@@ -195,104 +195,85 @@ return (
                             <div className="flex justify-center space-x-4">
                                 <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">
                                     <div className="w-full">
-                                    <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">Enter Amount</p>
-                                    <div className="flex gap-2">
-                                        <Input
-                                        value={amount1}
-                                        onChange={(e) => setAmount1(e.target.value)}
-                                        placeholder="0.00"
-                                        className="flex-1 h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
-                                        />
-                                        { cat === 'Electricity' ? 
-                                            <div className="relative w-[135px] xl:w-[150px] flex-none">
-                                            <div
-                                                className="flex-none cursor-pointer bg-inherit xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
-                                                onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
-                                            >
-                                                <img
-                                                src={electicBranches && electicBranches.find(option => option.abrv === selectedBranch)?.icon}
-                                                alt={selectedBranch}
-                                                className="size-5 mr-1 rounded-full object-cover"
-                                                />
-                                                <span>{selectedBranch}</span>
-                                                <HiChevronDown   className="size-6"/>            
-                                            </div>
-                                            { isBranchDropdownOpen && (
-                                                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                                                { electicBranches && electicBranches.length > 0 && electicBranches.map((branch) => (
-                                                    <div
-                                                    key={branch.product_number}
-                                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                                    onClick={() => handleSelectBranchChange(branch.abrv)}
-                                                    >
-                                                    <img src={branch.icon} alt={branch.abrv} className="w-6 h-6 mr-2 rounded-full" />
-                                                    <span>{branch.abrv}</span>
-                                                    </div>
-                                                ))}
-                                
-                                                { electricBranchesStatus === 'pending' && (
-                                                    <div className="flex items-center justify-center py-4">
-                                                    <Loader2 className="animate-spin" />
+                                        <p className="leading-[18px] text-[12px] xl:leading-[21px] xl:text-[14px]">Enter Amount</p>
+                                        <div className="flex gap-2">
+                                            <Input
+                                            value={amount1}
+                                            onChange={(e) => setAmount1(e.target.value)}
+                                            placeholder="0.00"
+                                            className="flex-1 h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
+                                            />
+                                            { cat === 'Electricity' ? 
+                                                <div className="relative w-[135px] xl:w-[150px] flex-none">
+                                                <div
+                                                    className="flex-none cursor-pointer bg-inherit xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+                                                    onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
+                                                >
+                                                    <img
+                                                    src={electicBranches && electicBranches.find(option => option.abrv === selectedBranch)?.icon}
+                                                    alt={selectedBranch}
+                                                    className="size-5 mr-1 rounded-full object-cover"
+                                                    />
+                                                    <span>{selectedBranch}</span>
+                                                    <HiChevronDown   className="size-6"/>            
+                                                </div>
+                                                { isBranchDropdownOpen && (
+                                                    <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                                                    { electicBranches && electicBranches.length > 0 && electicBranches.map((branch) => (
+                                                        <div
+                                                        key={branch.product_number}
+                                                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                                        onClick={() => handleSelectBranchChange(branch.abrv)}
+                                                        >
+                                                        <img src={branch.icon} alt={branch.abrv} className="w-6 h-6 mr-2 rounded-full" />
+                                                        <span>{branch.abrv}</span>
+                                                        </div>
+                                                    ))}
+                                    
+                                                    { electricBranchesStatus === 'pending' && (
+                                                        <div className="flex items-center justify-center py-4">
+                                                        <Loader2 className="animate-spin" />
+                                                        </div>
+                                                    )}
                                                     </div>
                                                 )}
-                                                </div>
-                                            )}
-                                            </div> : 
-                                            <div className="relative w-[135px] xl:w-[150px] flex-none">
-                                            <div
-                                                className="flex-none cursor-pointer bg-inherit xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
-                                                onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
-                                            >
-                                                <img
-                                                src={tvServices && tvServices.find(option => option.abrv === selectedTVNetwork)?.icon}
-                                                alt={selectedTVNetwork}
-                                                className="size-5 mr-1 rounded-full object-cover"
-                                                />
-                                                <span>{selectedTVNetwork}</span>
-                                                <HiChevronDown   className="size-6"/>            
-                                            </div>
-                                            { isNetworkDropdownOpen && (
-                                                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                                                { tvServices && tvServices.length > 0 && tvServices.map((network) => (
+                                                </div> : 
+                                                <div className="relative w-[135px] xl:w-[150px] flex-none">
                                                     <div
-                                                    key={network.product_number}
-                                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                                    onClick={() => handleSelectNetworkChange(network.abrv)}
+                                                        className="flex-none cursor-pointer bg-inherit xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+                                                        onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
                                                     >
-                                                    <img src={network.icon} alt={network.abrv} className="w-6 h-6 mr-2 rounded-full" />
-                                                    <span>{network.abrv}</span>
+                                                        <img
+                                                        src={tvServices && tvServices.find(option => option.abrv === selectedTVNetwork)?.icon}
+                                                        alt={selectedTVNetwork}
+                                                        className="size-5 mr-1 rounded-full object-cover"
+                                                        />
+                                                        <span>{selectedTVNetwork}</span>
+                                                        <HiChevronDown   className="size-6"/>            
                                                     </div>
-                                                ))}
-                                
-                                                { tvServiceStatus === 'pending' && (
-                                                    <div className="flex items-center justify-center py-4">
-                                                    <Loader2 className="animate-spin" />
-                                                    </div>
-                                                )}
+                                                    { isNetworkDropdownOpen && (
+                                                        <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                                                        { tvServices && tvServices.length > 0 && tvServices.map((network) => (
+                                                            <div
+                                                            key={network.product_number}
+                                                            className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                                            onClick={() => handleSelectNetworkChange(network.abrv)}
+                                                            >
+                                                            <img src={network.icon} alt={network.abrv} className="w-6 h-6 mr-2 rounded-full" />
+                                                            <span>{network.abrv}</span>
+                                                            </div>
+                                                        ))}
+                                        
+                                                        { tvServiceStatus === 'pending' && (
+                                                            <div className="flex items-center justify-center py-4">
+                                                            <Loader2 className="animate-spin" />
+                                                            </div>
+                                                        )}
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                            </div>
-                                        }
-
-                                        {/* <div className="flex items-center justify-end xl:justify-end font-Inter">
-                                        <img
-                                            src={logoMap[billProp1 as keyof typeof logoMap]}
-                                            alt={`${billProp1} logo`}
-                                            className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
-                                        />
-                                        <select
-                                            value={billProp1}
-                                            onChange={(e) => setBillProp1(e.target.value)}
-                                            className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
-                                        >
-                                            {billProps1.map((bill) => (
-                                            <option key={bill} value={bill}>
-                                                {bill}
-                                            </option>
-                                            ))}
-                                        </select>
-                                        </div> */}
-                                    </div>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
