@@ -205,24 +205,6 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                             </div>
                           )}
                         </div>
-                          {/* <div className="flex items-center justify-end xl:justify-end font-Inter">
-                              <img
-                              src={logoMap[airtimeProp1 as keyof typeof logoMap]}
-                              alt={`${airtimeProp1} logo`}
-                              className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
-                              />
-                              <select
-                              value={airtimeProp1}
-                              onChange={(e) => setAirtimeProp1(e.target.value)}
-                              className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
-                              >
-                              {airtimeProps1.map((prop) => (
-                              <option key={prop} value={prop}>
-                                  {prop}
-                              </option>
-                              ))}
-                              </select>
-                          </div> */}
                       </div>
                   </div>
                 </div>
@@ -247,22 +229,22 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                           />
                           <div className="flex items-center justify-end font-Inter">
                           <img
-                              src={logoMap[(subTab === "CRYPTO" ? prop2 : prop1) as keyof typeof logoMap]}
+                              src={logoMap[(subTab === "crypto" ? prop2 : prop1) as keyof typeof logoMap]}
                               alt={`${
-                              subTab === "CRYPTO" ? prop2 : prop1
+                              subTab === "crypto" ? prop2 : prop1
                               } logo`}
                               className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                           />
                           <select
-                              value={subTab === "CRYPTO" ? prop2 : prop1}
+                              value={subTab === "crypto" ? prop2 : prop1}
                               onChange={(e) =>
-                              subTab === "CRYPTO"
+                              subTab === "crypto"
                                   ? setprop2(e.target.value)
                                   : setprop1(e.target.value)
                               }
                               className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                           >
-                              {(subTab === "CRYPTO" ? props2currency : props1).map((prop) => (
+                              {(subTab === "crypto" ? props2currency : props1).map((prop) => (
                               <option key={prop} value={prop}>
                                   {prop}
                               </option>
