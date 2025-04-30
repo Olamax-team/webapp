@@ -158,7 +158,7 @@ const BuySell: React.FC<BuySellProps> = ({
   const price = subTab === "buy" ? getSellingPrice(prop2) : getBuyingPrice(prop2);
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
-    if (!amount1 || !prop2) return;
+    if (!amount1 || !prop1) return;
   
     if (price) {
       let newAmount2 = '';
@@ -172,7 +172,7 @@ const BuySell: React.FC<BuySellProps> = ({
       setAmount2(newAmount2);  // Updating Zustand state
       setValue("amount2", newAmount2);
     }
-  }, [amount1, prop2, subTab, prices, coin, lastChanged]);
+  }, [amount1, prop1, subTab, prices, coin, lastChanged]);
 
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
