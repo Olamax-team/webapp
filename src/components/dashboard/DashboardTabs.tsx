@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
 import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
-import { HiOutlineDuplicate } from "react-icons/hi";
+import { HiOutlineDeviceMobile, HiOutlineDuplicate, HiOutlineLightBulb } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
+import { useNavigate } from "react-router-dom";
 
 interface UserInfoProps {
   name: string;
@@ -104,6 +105,10 @@ interface ServicesProps {
 
 
 const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
+  const navigate = useNavigate();
+  const handleServiceClick = () => {
+    navigate('/dashboard/bills_payment');
+  };
   return (
     <div className="p-6 justify-center flex flex-col w-full h-auto bg-primary bg-opacity-20 rounded-lg mt-6 font-Inter">
       <div className="mb-6">
@@ -114,6 +119,7 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
         <div
           key={index}
           className="flex items-center justify-between rounded-lg mb-8 cursor-pointer"
+          onClick={handleServiceClick}
         >
           <div className="flex text-[16px] leading-[24px] items-center space-x-4">
             {service.icon}
@@ -155,14 +161,14 @@ const DashboardTab: React.FC = () => {
       title: "Buy Airtime & Data",
       description: "Top-up your devices with ease",
       icon: <div className="flex w-[40px] h-[40px] items-center justify-center bg-white rounded-full">
-                <img src={"/images/phone.png"} alt="phone" className="w-[24px] h-[24px]"/>
+                <HiOutlineDeviceMobile className="w-[24px] h-[24px]"/>
             </div>,
     },
     {
       title: "Pay Utilities",
       description: "Pay your bills with ease",
       icon: <div className="flex w-[40px] h-[40px] items-center justify-center bg-white rounded-full">
-                <img src={"/images/electricity.png"} alt="phone" className=""/>
+                <HiOutlineLightBulb className="w-6 h-6"/>
             </div>,
     },
   ];

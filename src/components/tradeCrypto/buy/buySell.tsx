@@ -8,7 +8,7 @@ import useTradeStore from "../../../stores/tradeStore";
 import BTC from "/images/BTC Circular.png";
 import { tradeSchema } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useApiConfig } from "../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -54,6 +54,7 @@ const BuySell: React.FC<BuySellProps> = ({
   
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useUserDetails();
 
   const [subTab, setSubTab] = useState("sell");
@@ -61,6 +62,7 @@ const BuySell: React.FC<BuySellProps> = ({
   const [prop2, setProp2] = useState("BTC");
   const [amount1, setAmount1] = useState<string>("1");
   const [amount2, setAmount2] = useState<string>("");
+  const [btcPrice, setBtcPrice] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
   const [prices, setPrices] = useState<CoinPrice[]>([]);
   const [coin, setCoin] = useState<Coins[]>([]);
@@ -132,14 +134,6 @@ const BuySell: React.FC<BuySellProps> = ({
     })
   };
 
-  React.useEffect(() => {
-    fetchCoins();
-    fetchCryptoService();
-    fetchCoinPrices();
-    fetchStableCoin(); 
-  },[]);
-
- 
   const getCoinId = (coinCode: string): number => {
     return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
   };
@@ -153,11 +147,18 @@ const BuySell: React.FC<BuySellProps> = ({
     const id = getCoinId(coinCode);
     return prices.find(p => p.coin_id === id)?.buying;
   };
-  const price = subTab === "buy" ? getSellingPrice(prop2) : getBuyingPrice(prop2);
 
+  React.useEffect(() => {
+    fetchCoins();
+    fetchCryptoService();
+    fetchCoinPrices();
+    fetchStableCoin(); 
+  },[]);
+
+  const price = subTab === "buy" ? getSellingPrice(prop2) : getBuyingPrice(prop2);
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
-    if (!amount1 || !prop2) return;
+    if (!amount1 || !prop1) return;
   
     if (price) {
       let newAmount2 = '';
@@ -171,7 +172,7 @@ const BuySell: React.FC<BuySellProps> = ({
       setAmount2(newAmount2);  // Updating Zustand state
       setValue("amount2", newAmount2);
     }
-  }, [amount1, prop2, subTab, prices, coin, lastChanged]);
+  }, [amount1, prop1, subTab, prices, coin, lastChanged]);
 
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
@@ -190,7 +191,15 @@ const BuySell: React.FC<BuySellProps> = ({
     }
   }, [amount2, prop2, subTab, prices, coin, lastChanged]);
   
-  
+  useEffect(() => {
+    const BtcPrice = getSellingPrice("BTC");
+    if (BtcPrice) {
+      let BTCP = "";
+      BTCP = parseFloat(BtcPrice).toFixed(2);
+      setBtcPrice(BTCP);
+    }
+  }, [prices]); 
+
 const onSubmit = (data: any) => {
   if (!user) {
     navigate("/log-in"); // Redirect to login if not logged in
@@ -209,10 +218,15 @@ const onSubmit = (data: any) => {
     fiatAmount: subTab === "buy" ? data.amount1 : data.amount2,
     cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
   };
-
-  setShowTransactionDetail?.(true);
-  setTradeType?.(subTab);
   tradeDetails.setItem(tradeData);
+    if (location.pathname === "/") {
+      // Navigate to dashboard
+      navigate("/dashboard", { state: { from: '/' } });
+    } else {
+      setShowTransactionDetail?.(true);
+      setTradeType?.(subTab);
+      tradeDetails.setItem(tradeData);
+    }
 };
 
   return (
@@ -364,7 +378,7 @@ const onSubmit = (data: any) => {
                   alt={`BTC logo`}
                   className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                 />
-                1 BTC = 116,377,572 Naira
+                1 BTC = {btcPrice} Naira
               </div>
           </form>
         ) : cryptoService?.some(
