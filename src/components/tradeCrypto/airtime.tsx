@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useApiConfig } from "../../hooks/api";
@@ -13,9 +13,6 @@ import { activityIndex } from "../../stores/generalStore";
 interface airtimePaymentProps {
   className?: string; // Editable className prop
   airtimeOptions: string[];
-  props1: string[];
-  props2currency: string[];
-  airtimeProps1: string[];
 };
 
 type cryptoServiceProps = {
@@ -29,11 +26,31 @@ type airtimeNetworkProps = {
   icon: string;
 };
 
+type Coins = {
+  coin: string,
+  coin_name: string,
+  icon: string,
+  id: number,
+};
+
+type Stables = {
+  coin: string,
+  coin_name: string,
+  icon: string,
+  id: number,
+};
+
+type CoinPrice = {
+  id: number;
+  coin_id: number;
+  selling: string;
+  buying: string;
+  escrow: string;
+};
+
 const AirtimePayment: React.FC<airtimePaymentProps> = ({
   className,
   airtimeOptions,
-  props1,
-  props2currency,
 }) => {
 
   const billsServiceConfig = useApiConfig({
@@ -45,6 +62,57 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     method: 'get',
     url: 'get-airtime-data-network/airtime'
   });
+    const getCoinConfig = useApiConfig({
+      method: 'get',
+      url: 'all-coins'
+    });
+    const getCoinPricesConfig = useApiConfig({
+      method: 'get',
+      url: 'coin-prices'
+    });
+  
+    const getStableCoins = useApiConfig({
+      method: 'get',
+      url: 'stable-coins'
+    });
+  
+    const fetchCoinPrices = async () => {
+      await axios.request(getCoinPricesConfig)
+      .then((response) => {
+        setPrices(response.data)
+      })
+    };
+    const fetchStableCoin = async () => {
+      await axios.request(getStableCoins)
+      .then((response) => {
+        setStables(response.data.coin);
+      })
+    };
+  
+    const fetchCoins = async () => {
+      await axios.request(getCoinConfig)
+      .then((response) => {
+        setCoin(response.data.coin);
+      })
+    };
+  
+    const getCoinId = (coinCode: string): number => {
+      return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
+    };
+    
+    const getPrice = (coinCode: string) => {
+      const id = getCoinId(coinCode);
+      return prices.find(p => p.coin_id === id)?.selling;
+    };
+    const getBuyingPrice = (coinCode: string) => {
+      const id = getCoinId(coinCode);
+      return prices.find(p => p.coin_id === id)?.buying;
+    };
+    React.useEffect(() => {
+      fetchCoins();
+      fetchCoinPrices();
+      fetchStableCoin(); 
+    },[]);
 
   const fetchBillServices = async () => {
     const response = await axios.request(billsServiceConfig);
@@ -75,7 +143,9 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   });
 
   const { setActive } = activityIndex();
-
+    const [prices, setPrices] = useState<CoinPrice[]>([]);
+    const [coin, setCoin] = useState<Coins[]>([]);
+    const [stables, setStables] = useState<Stables[]>([]);
     const [cat0, setCat0] = useState("Airtime");  
     const [subTab, setSubTab] = useState(billServices ? billServices[0].cs : 'fiat');
     const [selectedNetwork, setSelectedNetwork] = useState(airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
@@ -83,7 +153,47 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     const [prop2, setprop2] = useState("BTC");
     const [amount1, setAmount1] = useState<string>("");
     const [amount2, setAmount2] = useState<string>("");
+    const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
     const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
+    const price = React.useMemo(() => {
+      if (subTab === 'crypto') {
+        return getPrice(prop2);
+      } else {
+        return getBuyingPrice(prop2);
+      }
+    }, [subTab, prop1, prop2, prices, coin]);
+  
+  //autofill for both inputs
+    useEffect(() => {
+        if (lastChanged !== 'amount1') return;
+        if (!amount1 || !prop1) return;
+        console.log(price);
+        if (price) {
+          let newAmount2 = '';
+          if (subTab === "crypto") {
+            newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+          } else if (subTab === 'fiat') {
+            newAmount2 = (parseFloat(amount1)).toFixed(2); // crypto → NGN
+          }
+          setAmount2(newAmount2);
+          console.log('running');
+          console.log(amount2);
+        }
+      }, [amount1, prop1, subTab, prices, lastChanged]);
+    
+    useEffect(() => {
+      if (lastChanged !== 'amount2') return;
+      if (!amount2 || !prop2) return;
+      if (price) {
+        let newAmount1 = '';
+        if (subTab === "crypto") {
+          newAmount1 = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+        } else if (subTab === 'fiat') {
+          newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
+        }
+        setAmount1(newAmount1);
+      }
+    }, [amount2, prop2, subTab, prices, lastChanged]);
 
     const navigate = useNavigate();
 
@@ -100,6 +210,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         type: subTab,
         service: cat0,
         amt_1: amount1,
+        amt_2: amount2,
         network: selectedNetwork
       };
 
@@ -108,14 +219,6 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
       navigate('/dashboard/bills_payment');
     };
 
-    const logoMap: Record<string, string> = {
-      BTC: '/images/BTC Circular.png',
-      ETH: '/images/ETH Circular.png',
-      SOL: '/images/SOL Circular.png',
-      USDT: 'images/USDT Circular.png',
-      NGN: '/images/NGN Circular.png',
-      MTN: '/images/MTN Circular.png',
-    };
 
   return (
     <form  onSubmit={handleBuyClick} >
@@ -167,7 +270,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                       <div className="flex gap-2">
                         <Input
                           value={amount1}
-                          onChange={(e) => setAmount1(e.target.value)}
+                          onChange={(e) => {setAmount1(e.target.value); setLastChanged('amount1');}}
                           placeholder="0.00"
                           className="flex-1 h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                         />
@@ -223,13 +326,13 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                       <div className="grid grid-cols-2">
                           <Input
                           value={amount2}
-                          onChange={(e) => setAmount2(e.target.value)}
+                          onChange={(e) => {setAmount2(e.target.value); setLastChanged('amount2');}}
                           placeholder="0.00"
                           className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                           />
                           <div className="flex items-center justify-end font-Inter">
                           <img
-                              src={logoMap[(subTab === "crypto" ? prop2 : prop1) as keyof typeof logoMap]}
+                              src={(subTab === "crypto" ? `${coin.find(option => option.coin === prop2)?.icon}` : `${stables.find(option => option.coin === prop1)?.icon}`)}
                               alt={`${
                               subTab === "crypto" ? prop2 : prop1
                               } logo`}
@@ -244,11 +347,18 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                               }
                               className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                           >
-                              {(subTab === "crypto" ? props2currency : props1).map((prop) => (
-                              <option key={prop} value={prop}>
-                                  {prop}
-                              </option>
-                              ))}
+                              {subTab === "crypto" ? 
+                                coin.map((c) => (
+                                <option key={c.id} value={c.coin} className="p-1">
+                                  {c.coin}
+                                </option>
+                              )): (stables.map((s) => (
+                                  <option key={s.id} value={s.coin} className="p-1">
+                                    {s.coin}
+                                  </option>
+                                ))
+                              )
+                              }
                           </select>
                           </div>
                       </div>
