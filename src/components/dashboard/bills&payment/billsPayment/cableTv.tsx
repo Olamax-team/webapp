@@ -14,6 +14,7 @@ import { useApiConfig } from "../../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { activityIndex } from "../../../../stores/generalStore";
 
 
 
@@ -24,11 +25,6 @@ type Inputs = {
   selectedNetwork:string;
   fiatPayment:string;
 
-};
-
-type cableProps = {
-  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 type cryptoServiceProps = {
@@ -43,7 +39,9 @@ type cableServicesProps = {
   icon: string;
 };
 
-const CableTv = ({setShowTransactionDetail, setSelectedBill}:cableProps) => {
+const CableTv = () => {
+
+  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   const billsServiceConfig = useApiConfig({
     method: 'get',

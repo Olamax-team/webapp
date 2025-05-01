@@ -14,6 +14,7 @@ import { useApiConfig } from "../../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { activityIndex } from "../../../../stores/generalStore";
   
 type Inputs = {
   inputAmount: string;
@@ -21,11 +22,6 @@ type Inputs = {
   selectedPayment: string;
   selectedNetwork:string;
   fiatPayment:string;
-};
-
-type electricityProps = {
-  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 type cryptoServiceProps = {
@@ -40,7 +36,9 @@ type electricBranchProps = {
   icon: string;
 };  
 
-const ElectricityBills = ({setShowTransactionDetail,setSelectedBill}:electricityProps) => {
+const ElectricityBills = () => {
+
+  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   const billsServiceConfig = useApiConfig({
     method: 'get',

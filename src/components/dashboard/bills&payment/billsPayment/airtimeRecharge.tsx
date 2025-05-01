@@ -2,18 +2,13 @@ import React, {useEffect, useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-// import btcLogo from '../../../../assets/images/BTC Circular.png'
-// import ETHLogo from '../../../../assets/images/ETH Circular.png'
-// import USDTLogo from '../../../../assets/images/USDT Circular.png'
-// import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-// import ngnlogo from '../../../../assets/images/NGN Circular.png';
-import { useApiConfig } from "../../../../hooks/api";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { activityIndex } from "../../../../stores/generalStore";
+import { useFetchStore } from "../../../../stores/fetch-store";
 
 
 type Inputs = {
@@ -24,119 +19,48 @@ type Inputs = {
   fiatPayment:string;
 };
 
-type airtimeProps = {
-  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>;
-};
+const AirtimeRecharge = () => {
 
-type cryptoServiceProps = {
-  cs: string;
-  act: string;
-};
+  const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
-type airtimeNetworkProps = {
-  network: string;
-  product_number: number;
-  icon: string;
-};
+  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
 
-type Coins = {
-  coin: string,
-  coin_name: string,
-  icon: string,
-  id: number,
-};
+  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllCoins } = useFetchStore();
 
-type Stables = {
-  coin: string,
-  coin_name: string,
-  icon: string,
-  id: number,
-};
+  const { data: stables } = useQuery({
+    queryKey: ['stable-coins'],
+    queryFn: fetchStableCoins
+  })
 
-type CoinPrice = {
-  id: number;
-  coin_id: number;
-  selling: string;
-  buying: string;
-  escrow: string;
-};
-const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeProps) => {
-
-  const [prices, setPrices] = useState<CoinPrice[]>([]);
-  const [coin, setCoin] = useState<Coins[]>([]);
-  const [stables, setStables] = useState<Stables[]>([]);
-    const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
-
-  const billsServiceConfig = useApiConfig({
-    method: 'get',
-    url: 'get-bills-services'
-  });
-
-  const networksConfig = useApiConfig({
-    method: 'get',
-    url: 'get-airtime-data-network/airtime'
-  });
-
-  const getCoinConfig = useApiConfig({
-    method: 'get',
-    url: 'all-coins'
-  });
-  const getCoinPricesConfig = useApiConfig({
-    method: 'get',
-    url: 'coin-prices'
-  });
-
-  const getStableCoins = useApiConfig({
-    method: 'get',
-    url: 'stable-coins'
-  });
-
-  const fetchCoinPrices = async () => {
-    await axios.request(getCoinPricesConfig)
-    .then((response) => {
-      setPrices(response.data)
-    })
-  };
-  const fetchStableCoin = async () => {
-    await axios.request(getStableCoins)
-    .then((response) => {
-      setStables(response.data.coin);
-    })
+  const { data:coin } = useQuery({
+    queryKey: ['all-coins'],
+    queryFn: fetchAllCoins
+  })
+  
+  const getCoinId = (coinCode: string): number | undefined => {
+    if (coin) {
+      return coin.find(c => c.coin === coinCode)?.id; // Return undefined if not found
+    }
+    return undefined; // Explicitly return undefined if coin is not defined
   };
 
-  const fetchCoins = async () => {
-    await axios.request(getCoinConfig)
-    .then((response) => {
-      setCoin(response.data.coin);
-    })
-  };
-
-  const getCoinId = (coinCode: string): number => {
-    return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
-  };
+  const { data:prices } = useQuery({
+    queryKey: ['coin-prices'],
+    queryFn: fetchAllCoinPrices
+  });
   
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
-    return prices.find(p => p.coin_id === id)?.selling;
+    if (prices) {
+      return prices.find(p => p.coin_id === id)?.selling;
+    }
   };
+
   const getBuyingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
-    return prices.find(p => p.coin_id === id)?.buying;};
-
-  React.useEffect(() => {
-    fetchCoins();
-    fetchCoinPrices();
-    fetchStableCoin(); 
-  },[]);
-
-  const fetchBillServices = async () => {
-    const response = await axios.request(billsServiceConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
+    if (prices) {
+      return prices.find(p => p.coin_id === id)?.buying;
     }
-    const data = response.data.bill_service as cryptoServiceProps[];
-    return data;
   };
 
   const { data:billServices, status:billServiceStatus} = useQuery({
@@ -144,40 +68,30 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
     queryFn: fetchBillServices,
   });
 
-  const fetchNetworkAirtime = async () => {
-    const response = await axios.request(networksConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.branches as airtimeNetworkProps[];
-    return data;
-  };
-
   const { data:airtimeNetworks, status:airtimeNetworkStatus } = useQuery({
     queryKey: ['airtime-networks'],
     queryFn: fetchNetworkAirtime,
   });
 
-  const frontPageData = JSON.parse(localStorage.getItem('airtimeData') || '{}');
-
   const { register, handleSubmit, setValue, formState: { errors }, reset, watch} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues:{
-      inputAmount:frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.amt_1 : "",
-      paymentAmount:frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.amt_2 :"",
+      inputAmount: "",
+      paymentAmount: "",
     }
-  }); 
+  });
+
   const inputAmount = watch("inputAmount");
   const paymentAmount = watch("paymentAmount");
   const [amount1, setAmount1] = useState<string>("");
   const [amount2, setAmount2] = useState<string>("");
-  const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
+  const [selectedNetwork, setSelectedNetwork] = useState(airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
   const [selectPayment, setSelectPayment] = useState('BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
   const airtimeDetails = useBillsStore();
   const [fiatPayment, setFiaPayment] = useState('NGN');
-  const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
+  const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
   //autofill for both inputs
     const price = React.useMemo(() => {
@@ -188,7 +102,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
       }
     }, [activeButton, inputAmount, paymentAmount, prices, coin]);
   useEffect(() => {
-    console.log(frontPageData);
+    
     if (lastChanged !== 'amount1') return;
     if (!amount1 || !fiatPayment) return;
   
@@ -220,19 +134,6 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
       setValue("inputAmount", newAmount1);
     }
   }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
-  // const paymentOptions = [
-  //   { value: 'BTC', logo: btcLogo },
-  //   { value: 'ETH', logo: ETHLogo },
-  //   { value: 'USDT', logo: USDTLogo },
-  //   { value: 'SOL', logo: SOLLogo },
-  // ];
-
-  // const fiatPaymentOptions = [
-  //   { value: 'NGN', logo: ngnlogo },
-  //   { value: 'USD', logo: ngnlogo },
-  //   { value: 'EUR', logo: ngnlogo },
-  //   { value: 'GBP', logo: ngnlogo },
-  // ];
 
   const handleSelectChange = (network: string) => {
     setSelectedNetwork(network);
@@ -250,7 +151,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    localStorage.removeItem('airtimeData');
+
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
       selectedNetwork: selectedNetwork,
@@ -357,7 +258,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
                 {activeButton === 'crypto' ? (
                   <>
                     <img
-                      src={coin.find(option => option.coin === selectPayment)?.icon}
+                      src={(coin ?? []).find(option => option.coin === selectPayment)?.icon}
                       alt={selectPayment}
                       className="size-6 mr-2"
                     />
@@ -366,7 +267,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
                 ) : (
                   <>
                     <img
-                      src={stables.find(option => option.coin === fiatPayment)?.icon}
+                      src={(stables ?? []).find(option => option.coin === fiatPayment)?.icon}
                       alt={fiatPayment}
                       className="size-6 mr-2"
                     />
@@ -379,7 +280,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
               {isPaymentDropdownOpen && (
                 <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                   {activeButton === 'crypto' ? (
-                    coin.map((c) => (
+                    coin && coin.length > 0 && coin.map((c) => (
                       <div
                         key={c.id}
                         className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
@@ -390,7 +291,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
                       </div>
                     ))
                   ) : (
-                    stables.map((s) => (
+                    stables && stables.length > 0 && stables.map((s) => (
                       <div
                         key={s.id}
                         className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
