@@ -41,12 +41,12 @@ const NameHeader = () => {
               setImageSrc(e.target.result as string);
 
               const formData = new FormData();
-              formData.append('image', file);
+              formData.append('user-image', file);
 
               try {
                 const imageUploadConfig = { 
                   method: 'post',
-                  url: 'https://your-api-endpoint.com/upload',
+                  url: 'https://api.olamax.io/api/change-profile-image',
                   data: formData,
                   headers: {
                     'Content-Type': 'multipart/form-data',
