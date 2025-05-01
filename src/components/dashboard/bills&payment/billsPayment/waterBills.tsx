@@ -15,6 +15,7 @@ import { useApiConfig } from "../../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { activityIndex } from "../../../../stores/generalStore";
 
 type Inputs = {
   inputAmount: string;
@@ -25,17 +26,13 @@ type Inputs = {
 
 };
 
-type waterProps = {
-  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
 type cryptoServiceProps = {
   cs: string;
   act: string;
 };
 
-const WaterBills = ({ setShowTransactionDetail, setSelectedBill }: waterProps) => {
+const WaterBills = () => {
+const { setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   const billsServiceConfig = useApiConfig({
     method: 'get',
@@ -110,7 +107,8 @@ const WaterBills = ({ setShowTransactionDetail, setSelectedBill }: waterProps) =
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const regdata = { ...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
-      selectedNetwork: selectedNetwork };
+      selectedNetwork: selectedNetwork 
+    };
     setShowTransactionDetail(true);
     setSelectedBill('water');
     waterBillDetails.setItem(regdata);

@@ -10,10 +10,10 @@ import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
 import ngnlogo from '../../../../assets/images/NGN Circular.png';
-import { useApiConfig } from "../../../../hooks/api";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { activityIndex } from "../../../../stores/generalStore";
+import { useFetchStore } from "../../../../stores/fetch-store";
 
 
 
@@ -26,51 +26,10 @@ type Inputs = {
 
 };
 
-type dataProps = {
-  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
-}
+const Datapurchase = () => {
 
-type cryptoServiceProps = {
-  cs: string;
-  act: string;
-};
-
-type dataNetworkProps = {
-  network: string;
-  product_number: number;
-  icon: string;
-};
-
-const Datapurchase = ({setShowTransactionDetail,setSelectedBill}:dataProps) => {
-
-  const billsServiceConfig = useApiConfig({
-    method: 'get',
-    url: 'get-bills-services'
-  });
-
-  const dataPurchaseConfig = useApiConfig({
-    method: 'get',
-    url: 'get-airtime-data-network/data'
-  });
-
-  const fetchBillServices = async () => {
-    const response = await axios.request(billsServiceConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.bill_service as cryptoServiceProps[];
-    return data;
-  };
-
-  const fetchDataPurchaseNetworks = async () => {
-    const response = await axios.request(dataPurchaseConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.branches as dataNetworkProps[];
-    return data;
-  };
+  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
+  const { fetchBillServices, fetchDataPurchaseNetworks } = useFetchStore();
 
   const { data:billServices, status:billServiceStatus} = useQuery({
     queryKey: ['bills-service'],
@@ -82,23 +41,21 @@ const Datapurchase = ({setShowTransactionDetail,setSelectedBill}:dataProps) => {
     queryFn: fetchDataPurchaseNetworks,
   });
 
-  const frontPageData = JSON.parse(localStorage.getItem('dataPurchaseData') || '{}');
-
   const { register, handleSubmit, formState: { errors }, reset} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues: {
-      inputAmount: frontPageData ? frontPageData.amt_1 : "",
+      inputAmount: "",
       paymentAmount: "",
     }
   });
 
-  const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : networkOptionsList ? networkOptionsList[0].network : 'MTN');
+  const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList ? networkOptionsList[0].network : 'MTN');
   const [selectPayment, setSelectPayment] = useState('BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
   const dataDetails = useBillsStore();
   const [fiatPayment, setFiaPayment] = useState('NGN');
-  const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
+  const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
   const handleChange = (payment: string) => {
     setFiaPayment(payment);
@@ -137,7 +94,7 @@ const Datapurchase = ({setShowTransactionDetail,setSelectedBill}:dataProps) => {
       selectedNetwork: selectedNetwork
     };
     setShowTransactionDetail(true); 
-    setSelectedBill('data')
+    setSelectedBill('data');
     dataDetails.setItem(regdata);
   };
 

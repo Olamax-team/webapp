@@ -1,25 +1,20 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import arrowIcon from '../../assets/images/arrowdown.svg';
-import { useApiConfig } from "../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { HiChevronDown } from "react-icons/hi";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../stores/generalStore";
 import { useNavigate } from "react-router-dom";
+import { useFetchStore } from "../../stores/fetch-store";
 
 interface BillsPaymentProps {
     categories: string[]; // Categories to map for dropdown
     billProps1: string[]; // Options for billProp1 dropdown
     props2currency: string[]; // Options for currency dropdown
     className?: string; // Additional class names for styling
-};
-
-type cryptoServiceProps = {
-    cs: string;
-    act: string;
 };
 
 type electricBranchProps = {
@@ -41,111 +36,163 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     props2currency,
     className = "",
 }) => {
+    const { fetchAllCoinPrices, fetchBillServices, fetchAllCoins, fetchStableCoins} = useFetchStore();
 
-const [cat, setCat] = useState<string>(categories[0] || "Electricity");
-const [currency, setCurrency] = useState<string>(props2currency[0] || "BTC");
-const [amount1, setAmount1] = useState<string>("");
-const [amount2, setAmount2] = useState<string>("");
+    const { data: stables } = useQuery({
+        queryKey: ['stable-coins'],
+        queryFn: fetchStableCoins
+    });
 
-const navigate = useNavigate();
+    const { data:coin } = useQuery({
+        queryKey: ['all-coins'],
+        queryFn: fetchAllCoins
+    });
+    
+    const getCoinId = (coinCode: string): number | undefined => {
+        if (coin) {
+          return coin.find(c => c.coin === coinCode)?.id; // Return undefined if not found
+        }
+        return undefined; // Explicitly return undefined if coin is not defined
+      };    
 
-const { setActive } = activityIndex();
-
-const billsServiceConfig = useApiConfig({
-    method: 'get',
-    url: 'get-bills-services'
-});
-
-const electricBranchesConfig = useApiConfig({
-    method: 'get',
-    url: 'get-electricity-branches/electricity/postpaid'
-});
-
-const tvServiceConfig = useApiConfig({
-    method: 'get',
-    url: 'get-tv'
-});
-
-const fetchBillServices = async () => {
-    const response = await axios.request(billsServiceConfig);
-    if (response.status !== 200) {
-        throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.bill_service as cryptoServiceProps[];
-    return data;
-};
-
-const fetchElectricBranches = async () => {
-    const response = await axios.request(electricBranchesConfig);
-    if (response.status !== 200) {
-        throw new Error('Something went wrong, try again later');
-    };
-    const data = response.data.branches as electricBranchProps[];
-    return data;
-};
-
-const fetchTvServices = async () => {
-    const response = await axios.request(tvServiceConfig);
-    if (response.status !== 200) {
-        throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.cable as cableServicesProps[];
-    return data;
-};
-
-const { data:billServices, status:billServiceStatus} = useQuery({
-    queryKey: ['bills-service'],
-    queryFn: fetchBillServices,
-});
-
-const { data:electicBranches, status:electricBranchesStatus} = useQuery({
-    queryKey: ['electric-branches'],
-    queryFn: fetchElectricBranches,
-});
-
-const { data:tvServices, status:tvServiceStatus } = useQuery({
-    queryKey: ['tv-services'],
-    queryFn: fetchTvServices,
-});
-
-const [subTab, setSubTab] = useState(billServices ? billServices[0].cs : 'fiat');
-const [selectedBranch, setSelectedBranch] = useState(electicBranches ? electicBranches[0].abrv : 'IBEDC');
-const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
-const [selectedTVNetwork, setSelectedTVNetwork] = useState(tvServices ? tvServices[0].abrv : 'DSTV');
-const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
-
-const handleSelectBranchChange = (branch: string) => {
-    setSelectedBranch(branch);
-    setIsBranchDropdownOpen(false);
-};
-
-const handleSelectNetworkChange = (network: string) => {
-    setSelectedTVNetwork(network);
-    setIsNetworkDropdownOpen(false);
-};
-
-const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const data  = {
-        type: subTab,
-        service: cat,
-        amt_1: amount1,
-        network: cat === 'Electricity' ? selectedBranch : selectedTVNetwork,
+    const { data:prices } = useQuery({
+        queryKey: ['coin-prices'],
+        queryFn: fetchAllCoinPrices
+    });
+    
+    const getPrice = (coinCode: string) => {
+        const id = getCoinId(coinCode);
+        if (prices) {
+            return prices.find(p => p.coin_id === id)?.selling;
+        }
     };
 
-    setActive(cat === 'Electricity' ? 2 : 3)
-    localStorage.setItem(cat === 'Electricity' ? "electricData" : "tvData", JSON.stringify(data));
-    navigate('/dashboard/bills_payment');
-}
+    const getBuyingPrice = (coinCode: string) => {
+        const id = getCoinId(coinCode);
+        if (prices) {
+            return prices.find(p => p.coin_id === id)?.buying;
+        }
+    };
+    
+    const fetchElectricBranches = async () => {
+        const response = await axios.request({  method: 'get',
+            maxBodyLength: Infinity,
+            url: 'https://api.olamax.io/api/get-electricity-branches/electricity/postpaid',
+            headers: {'Content-Type':'application/json'}
+        });
 
-  const logoMap: Record<string, string> = {
-    BTC: '/images/BTC Circular.png',
-    ETH: '/images/ETH Circular.png',
-    SOL: '/images/SOL Circular.png',
-    USDT: 'images/USDT Circular.png',
-    IBEDC: '/images/IBEDC Circular.png',
-  };
+        if (response.status !== 200) {
+            throw new Error('Something went wrong, try again later');
+        };
+        const data = response.data.branches as electricBranchProps[];
+        return data;
+    };
+    
+    const fetchTvServices = async () => {
+        const response = await axios.request({  method: 'get',
+            maxBodyLength: Infinity,
+            url: 'https://api.olamax.io/api/get-tv',
+            headers: {'Content-Type':'application/json'}
+        });
+        
+        if (response.status !== 200) {
+            throw new Error('Something went wrong, try again later');
+        }
+        const data = response.data.cable as cableServicesProps[];
+        return data;
+    };
+
+    const { data:billServices, status:billServiceStatus} = useQuery({
+        queryKey: ['bills-service'],
+        queryFn: fetchBillServices,
+    });
+    
+    const { data:electicBranches, status:electricBranchesStatus} = useQuery({
+        queryKey: ['electric-branches'],
+        queryFn: fetchElectricBranches,
+    });
+    
+    const { data:tvServices, status:tvServiceStatus } = useQuery({
+        queryKey: ['tv-services'],
+        queryFn: fetchTvServices,
+    });
+
+    const [cat, setCat] = useState<string>(categories[0] || "Electricity");
+    const [currency, setCurrency] = useState<string>(props2currency[0] || "BTC");
+
+    const [prop1, setprop1] = useState("NGN");
+    const [prop2, setprop2] = useState("BTC");
+    const [amount1, setAmount1] = useState<string>("");
+    const [amount2, setAmount2] = useState<string>("");
+
+    const [subTab, setSubTab] = useState(billServices ? billServices[0].cs : 'fiat');
+    const [selectedBranch, setSelectedBranch] = useState(electicBranches ? electicBranches[0].abrv : 'IBEDC');
+    const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
+    const [selectedTVNetwork, setSelectedTVNetwork] = useState(tvServices ? tvServices[0].abrv : 'DSTV');
+    const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
+
+    const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
+
+    const price = React.useMemo(() => {
+        if (subTab === 'crypto') {
+            return getPrice(prop2);
+        } else {
+            return getBuyingPrice(prop2);
+        }
+    }, [subTab, prop1, prop2, prices, coin]);
+
+    const navigate = useNavigate();
+
+    const { setActive, setSelectedBill } = activityIndex();
+
+    useEffect(() => {
+        if (lastChanged !== 'amount1') return;
+        if (!amount1 || !prop1) return;
+
+        if (price) {
+        let newAmount2 = '';
+        if (subTab === "crypto") {
+            newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+        } else if (subTab === 'fiat') {
+            newAmount2 = (parseFloat(amount1)).toFixed(2); // crypto → NGN
+        }
+        setAmount2(newAmount2);
+        console.log('running');
+        console.log(amount2);
+        }
+    }, [amount1, prop1, subTab, prices, lastChanged]);
+
+    useEffect(() => {
+    if (lastChanged !== 'amount2') return;
+    if (!amount2 || !prop2) return;
+    if (price) {
+        let newAmount1 = '';
+        if (subTab === "crypto") {
+        newAmount1 = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+        } else if (subTab === 'fiat') {
+        newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
+        }
+        setAmount1(newAmount1);
+    }
+    }, [amount2, prop2, subTab, prices, lastChanged]);
+
+    const handleSelectBranchChange = (branch: string) => {
+        setSelectedBranch(branch);
+        setIsBranchDropdownOpen(false);
+    };
+
+    const handleSelectNetworkChange = (network: string) => {
+        setSelectedTVNetwork(network);
+        setIsNetworkDropdownOpen(false);
+    };
+
+    const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        setActive(cat === 'Electricity' ? 2 : 3);
+        navigate('/dashboard/bills_payment');
+        setSelectedBill(cat === 'Electricity' ? 'electricity': 'cabletv');
+    }
 
 return (
     <>
@@ -199,7 +246,7 @@ return (
                                         <div className="flex gap-2">
                                             <Input
                                             value={amount1}
-                                            onChange={(e) => setAmount1(e.target.value)}
+                                            onChange={(e) => {setAmount1(e.target.value); setLastChanged('amount1');}}
                                             placeholder="0.00"
                                             className="flex-1 h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                                             />
@@ -289,26 +336,39 @@ return (
                                         <div className="grid grid-cols-2">
                                             <Input
                                             value={amount2}
-                                            onChange={(e) => setAmount2(e.target.value)}
+                                            onChange={(e) => {setAmount2(e.target.value); setLastChanged('amount2');}}
                                             placeholder="0.00"
                                             className="h-[35px] leading-[27px]  mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold"
                                             />
                                             <div className="flex items-center justify-end gap-1 font-Inter">
                                                 <img
-                                                    src={logoMap[currency as keyof typeof logoMap]}
-                                                    alt={`${currency} logo`}
+                                                    src={(subTab === "crypto" ? `${(coin ?? []).find(option => option.coin === prop2)?.icon}` : `${(stables ?? []).find(option => option.coin === prop1)?.icon}`)}
+                                                    alt={`${
+                                                    subTab === "crypto" ? prop2 : prop1
+                                                    } logo`}
                                                     className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                                                 />
                                                 <select
                                                     value={currency}
-                                                    onChange={(e) => setCurrency(e.target.value)}
+                                                    onChange={(e) =>
+                                                        subTab === "crypto"
+                                                            ? setprop2(e.target.value)
+                                                            : setprop1(e.target.value)
+                                                        }
                                                     className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-base max-w-20"
                                                 >
-                                                    {props2currency.map((curr) => (
-                                                    <option key={curr} value={curr}>
-                                                        {curr}
-                                                    </option>
-                                                    ))}
+                                                    {subTab === "crypto" ? 
+                                                        coin && coin.length> 0 && coin.map((c) => (
+                                                        <option key={c.id} value={c.coin} className="p-1">
+                                                        {c.coin}
+                                                        </option>
+                                                    )): (stables && stables.length > 0 && stables.map((s) => (
+                                                        <option key={s.id} value={s.coin} className="p-1">
+                                                            {s.coin}
+                                                        </option>
+                                                        ))
+                                                    )
+                                                    }
                                                 </select>
                                             </div>
                                         </div>
