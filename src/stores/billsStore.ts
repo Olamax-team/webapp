@@ -1,16 +1,14 @@
 import { create } from 'zustand'
 
 
-interface billsProps {
-    // selectedOption: string;      
+interface billsProps {    
     selectedNetwork: string; 
     selectPayment: string; 
     inputAmount: string;  
     paymentAmount: string; 
     fiatPayment:string;
+};
 
-
-}
 interface billsState {
     item:billsProps | null;                      
     setItem: (newItem:  billsProps) => void,

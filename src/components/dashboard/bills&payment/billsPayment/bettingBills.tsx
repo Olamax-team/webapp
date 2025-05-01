@@ -15,6 +15,7 @@ import { useApiConfig } from "../../../../hooks/api";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { activityIndex } from "../../../../stores/generalStore";
 
 
 type Inputs = {
@@ -25,17 +26,14 @@ type Inputs = {
   fiatPayment:string;
 };
 
-type bettingProps = {
-  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
-};
-
 type cryptoServiceProps = {
   cs: string;
   act: string;
 };
 
-const BettingBills = ({setShowTransactionDetail, setSelectedBill}:bettingProps) => {
+const BettingBills = () => {
+
+  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   const billsServiceConfig = useApiConfig({
     method: 'get',

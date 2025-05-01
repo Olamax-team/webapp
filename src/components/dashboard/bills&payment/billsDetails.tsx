@@ -6,13 +6,15 @@ import CableTvInput from '../bills&payment/billsInput/cableTvInput';
 import BettingInput from '../bills&payment/billsInput/bettingInput';
 import WaterInput from '../bills&payment/billsInput/waterInput';
 import CoweryInput from '../bills&payment/billsInput/coweryInput';
+import { activityIndex } from '../../../stores/generalStore';
 
 type billsDetailsProps = {
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>;
   activeInput: string;
 };
 
-const BillsDetails = ({setShowTransactionDetail, activeInput }: billsDetailsProps) => {
+const BillsDetails = ({activeInput }: billsDetailsProps) => {
+  const { setShowTransactionDetail } = activityIndex();
+
   const renderInput = () => {
     switch (activeInput) {
       case 'airtime':

@@ -27,13 +27,6 @@ type Coins = {
   id: number,
 };
 
-type Stables = {
-  coin: string,
-  coin_name: string,
-  icon: string,
-  id: number,
-};
-
 type CoinPrice = {
   id: number;
   coin_id: number;
@@ -55,18 +48,15 @@ const BuySell: React.FC<BuySellProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserDetails();
+  const { user } = useUserDetails();;
 
   const [subTab, setSubTab] = useState("sell");
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
-  const [amount1, setAmount1] = useState<string>("1");
+  const [amount1, setAmount1] = useState<string>( "1");
   const [amount2, setAmount2] = useState<string>("");
   const [btcPrice, setBtcPrice] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
-  const [prices, setPrices] = useState<CoinPrice[]>([]);
-  const [coin, setCoin] = useState<Coins[]>([]);
-  const [stables, setStables] = useState<Stables[]>([]);
 
   const tradeDetails = useTradeStore();
 
@@ -94,7 +84,7 @@ const BuySell: React.FC<BuySellProps> = ({
     url: 'coin-prices'
   });
 
-  const getStableCoins = useApiConfig({
+  const getStableCoinsConfig = useApiConfig({
     method: 'get',
     url: 'stable-coins'
   });
@@ -108,54 +98,69 @@ const BuySell: React.FC<BuySellProps> = ({
     return data;
   };
 
+  const fetchCoinPrice = async () => {
+    const response = await axios.request(getCoinPricesConfig)
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data as CoinPrice[];
+    return data;
+  };
+
+  const fetchAllCoins = async () => {
+    const response = await axios.request(getCoinConfig)
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.coin as Coins[];
+    return data;
+  };
+
+  const fetchStableCoins = async () => {
+    const response = await axios.request(getStableCoinsConfig)
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.coin as Coins[];
+    return data;
+  };
+
   const { data: cryptoService } = useQuery({
     queryKey: ['crypto-service'],
     queryFn: fetchCryptoService,
   });
 
-  const fetchCoinPrices = async () => {
-    await axios.request(getCoinPricesConfig)
-    .then((response) => {
-      setPrices(response.data)
-    })
-  };
+  const { data: prices } = useQuery({
+    queryKey: ['coin-prices'],
+    queryFn: fetchCoinPrice,
+  });
 
-  const fetchStableCoin = async () => {
-    await axios.request(getStableCoins)
-    .then((response) => {
-      setStables(response.data.coin);
-    })
-  };
+  const { data: coin } = useQuery({
+    queryKey: ['all-coins'],
+    queryFn: fetchAllCoins,
+  });
 
-  const fetchCoins = async () => {
-    await axios.request(getCoinConfig)
-    .then((response) => {
-      setCoin(response.data.coin);
-    })
-  };
+  const { data: stables } = useQuery({
+    queryKey: ['stable-coins'],
+    queryFn: fetchStableCoins,
+  });
 
   const getCoinId = (coinCode: string): number => {
-    return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
+    return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
   
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
-    return prices.find(p => p.coin_id === id)?.selling;
+    return (prices ?? []).find(p => p.coin_id === id)?.selling;
   };
   
   const getBuyingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
-    return prices.find(p => p.coin_id === id)?.buying;
+    return (prices ?? []).find(p => p.coin_id === id)?.buying;
   };
 
-  React.useEffect(() => {
-    fetchCoins();
-    fetchCryptoService();
-    fetchCoinPrices();
-    fetchStableCoin(); 
-  },[]);
-
   const price = subTab === "buy" ? getSellingPrice(prop2) : getBuyingPrice(prop2);
+
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
     if (!amount1 || !prop1) return;
@@ -218,15 +223,15 @@ const onSubmit = (data: any) => {
     fiatAmount: subTab === "buy" ? data.amount1 : data.amount2,
     cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
   };
+  
   tradeDetails.setItem(tradeData);
-    if (location.pathname === "/") {
-      // Navigate to dashboard
-      navigate("/dashboard", { state: { from: '/' } });
-    } else {
-      setShowTransactionDetail?.(true);
-      setTradeType?.(subTab);
-      tradeDetails.setItem(tradeData);
-    }
+  if (location.pathname === "/") {
+    navigate("/dashboard", { state: { from: '/' } });
+  } else {
+    setShowTransactionDetail?.(true);
+    setTradeType?.(subTab);
+    tradeDetails.setItem(tradeData);
+  }
 };
 
   return (
@@ -289,13 +294,13 @@ const onSubmit = (data: any) => {
                           >
                             {subTab === "buy"     
                             ?  (
-                                stables.map((s) => (
+                                (stables ?? []).map((s) => (
                                   <option key={s.id} value={s.coin} className="p-1">
                                     {s.coin}
                                   </option>
                                 ))
                               ) : 
-                              coin.map((c) => (
+                              (coin ?? []).map((c) => (
                                 <option key={c.id} value={c.coin} className="p-1">
                                   {c.coin}
                                 </option>
@@ -344,13 +349,13 @@ const onSubmit = (data: any) => {
                           }
                           className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-sm max-w-20 border-0"
                           >
-                          {subTab === "buy" ? coin.map((c) => (
+                          {subTab === "buy" ? (coin ?? []).map((c) => (
                                 <option key={c.id} value={c.coin} className="p-1">
                                   {c.coin}
                                 </option>
                               )) :
                               (
-                                stables.map((s) => (
+                                (stables ?? []).map((s) => (
                                   <option key={s.id} value={s.coin} className="p-1">
                                     {s.coin}
                                   </option>

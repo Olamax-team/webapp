@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import AirtimeRecharge from './billsPayment/airtimeRecharge';
 import Datapurchase from './billsPayment/datapurchase';
 import ElectricityBills from './billsPayment/electricityBills';
@@ -26,9 +26,7 @@ interface billProps {
 }
 
 const Bills = () => {
-  const { active } = activityIndex()
-  const [showTransactionDetail, setShowTransactionDetail] = useState(false);
-  const [selectedBill, setSelectedBill] = useState<string>('');  
+  const { active, showTransactionDetail, selectedBill } = activityIndex();
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
 
@@ -61,19 +59,19 @@ const Bills = () => {
   const renderBill = () => {
     switch (active) {
       case 0:
-        return <AirtimeRecharge setShowTransactionDetail={setShowTransactionDetail}   setSelectedBill={setSelectedBill}/>;
+        return <AirtimeRecharge />;
       case 1:
-        return <Datapurchase setShowTransactionDetail={setShowTransactionDetail}   setSelectedBill={setSelectedBill}  />;
+        return <Datapurchase />;
       case 2:
-        return <ElectricityBills  setShowTransactionDetail={setShowTransactionDetail}   setSelectedBill={setSelectedBill} />;
+        return <ElectricityBills />;
       case 3:
-        return <CableTv setShowTransactionDetail={setShowTransactionDetail}   setSelectedBill={setSelectedBill} />;
+        return <CableTv />;
       case 4:
-        return <WaterBills setShowTransactionDetail={setShowTransactionDetail}   setSelectedBill={setSelectedBill} />;
+        return <WaterBills />;
       case 5:
-        return <BettingBills setShowTransactionDetail={setShowTransactionDetail}   setSelectedBill={setSelectedBill} />;
+        return <BettingBills />;
       case 6:
-        return <CawryBills setShowTransactionDetail={setShowTransactionDetail}   setSelectedBill={setSelectedBill}    />;
+        return <CawryBills />;
       default:
         return null;
     }
@@ -155,15 +153,11 @@ const Bills = () => {
             <div className="px-8 py-6">
               <div className="">{renderBill()}</div>
             </div>
-
-           
           </div>
+
         </div>
       ) : (
-        <BillsDetails
-          activeInput = {selectedBill}
-          setShowTransactionDetail={setShowTransactionDetail} 
-        />
+        <BillsDetails activeInput = {selectedBill}/>
       )}
 
       <div className="w-full h-auto mt-10">

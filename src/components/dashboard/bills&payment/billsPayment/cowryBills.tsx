@@ -15,6 +15,7 @@ import { useApiConfig } from "../../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { activityIndex } from "../../../../stores/generalStore";
 
 
    
@@ -28,17 +29,14 @@ type Inputs = {
 
 };
 
-type cowryProps = {
-  setSelectedBill: React.Dispatch<React.SetStateAction<string>>;
-  setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>
-}
-
 type cryptoServiceProps = {
   cs: string;
   act: string;
 };
 
-const CowryBills = ({setShowTransactionDetail,setSelectedBill}:cowryProps) => {
+const CowryBills = () => {
+
+  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   const billsServiceConfig = useApiConfig({
     method: 'get',

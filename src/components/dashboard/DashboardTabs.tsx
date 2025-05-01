@@ -101,8 +101,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
 
 interface ServicesProps {
   services: { title: string; description: string; icon: JSX.Element }[];
-}
-
+};
 
 const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
   const navigate = useNavigate();
