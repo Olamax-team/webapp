@@ -12,11 +12,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useApiConfig } from "../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { activityIndex } from "../../../stores/generalStore";
 
 
 interface BuySellProps {
-  setTradeType?: React.Dispatch<React.SetStateAction<string>>; // Optional
-  setShowTransactionDetail?: React.Dispatch<React.SetStateAction<boolean>>; // Optional
   className?: string;
 };
 
@@ -42,8 +41,6 @@ type cryptoServiceProps = {
 
 const BuySell: React.FC<BuySellProps> = ({
   className,
-  setTradeType,
-  setShowTransactionDetail,
   
 }) => {
   const navigate = useNavigate();
@@ -53,10 +50,11 @@ const BuySell: React.FC<BuySellProps> = ({
   const [subTab, setSubTab] = useState("sell");
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
-  const [amount1, setAmount1] = useState<string>( "1");
-  const [amount2, setAmount2] = useState<string>("");
+  const [amount1, setAmount1] = useState<string>( "0");
+  const [amount2, setAmount2] = useState<string>("0");
   const [btcPrice, setBtcPrice] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
+  const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   const tradeDetails = useTradeStore();
 
@@ -163,8 +161,11 @@ const BuySell: React.FC<BuySellProps> = ({
 
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
-    if (!amount1 || !prop1) return;
-  
+    if (!amount1) {
+      setAmount2("");
+      setValue("amount2", "");
+      return;
+    }
     if (price) {
       let newAmount2 = '';
       if (subTab === "buy") {
@@ -181,7 +182,11 @@ const BuySell: React.FC<BuySellProps> = ({
 
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
-    if (!amount2 || !prop2) return;
+    if (!amount2) {
+      setAmount1("");
+      setValue("amount1", "");
+      return;
+    }
   
     if (price) {
       let newAmount1 = '';
@@ -224,12 +229,16 @@ const onSubmit = (data: any) => {
     cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
   };
   
-  tradeDetails.setItem(tradeData);
   if (location.pathname === "/") {
     navigate("/dashboard", { state: { from: '/' } });
+    setActive(subTab === 'buy' ? 0 : 1);
+    setShowTransactionDetail(true);
+    setSelectedBill(subTab === 'buy' ? 'buy' : 'sell');
+    tradeDetails.setItem(tradeData);
   } else {
-    setShowTransactionDetail?.(true);
-    setTradeType?.(subTab);
+    setActive(subTab === 'buy' ? 0 : 1);
+    setShowTransactionDetail(true);
+    setSelectedBill(subTab === 'buy' ? 'buy' : 'sell');
     tradeDetails.setItem(tradeData);
   }
 };

@@ -9,11 +9,10 @@ import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../stores/generalStore";
 import { useNavigate } from "react-router-dom";
 import { useFetchStore } from "../../stores/fetch-store";
+import useBillsStore from "../../stores/billsStore";
 
 interface BillsPaymentProps {
     categories: string[]; // Categories to map for dropdown
-    billProps1: string[]; // Options for billProp1 dropdown
-    props2currency: string[]; // Options for currency dropdown
     className?: string; // Additional class names for styling
 };
 
@@ -33,7 +32,6 @@ type cableServicesProps = {
 
 const BillsPayment: React.FC<BillsPaymentProps> = ({
     categories,
-    props2currency,
     className = "",
 }) => {
     const { fetchAllCoinPrices, fetchBillServices, fetchAllCoins, fetchStableCoins} = useFetchStore();
@@ -118,7 +116,7 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     });
 
     const [cat, setCat] = useState<string>(categories[0] || "Electricity");
-    const [currency, setCurrency] = useState<string>(props2currency[0] || "BTC");
+    // const [currency, setCurrency] = useState<string>(props2currency[0] || "BTC");
 
     const [prop1, setprop1] = useState("NGN");
     const [prop2, setprop2] = useState("BTC");
@@ -130,7 +128,7 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
     const [selectedTVNetwork, setSelectedTVNetwork] = useState(tvServices ? tvServices[0].abrv : 'DSTV');
     const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
-
+    const billDetails = useBillsStore();
     const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
     const price = React.useMemo(() => {
@@ -143,11 +141,14 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
 
     const navigate = useNavigate();
 
-    const { setActive, setSelectedBill } = activityIndex();
+  const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
 
     useEffect(() => {
         if (lastChanged !== 'amount1') return;
-        if (!amount1 || !prop1) return;
+        if (!amount1) {
+            setAmount2("");
+            return;
+          }
 
         if (price) {
         let newAmount2 = '';
@@ -164,7 +165,10 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
 
     useEffect(() => {
     if (lastChanged !== 'amount2') return;
-    if (!amount2 || !prop2) return;
+      if (!amount2) {
+        setAmount1("");
+        return;
+      }
     if (price) {
         let newAmount1 = '';
         if (subTab === "crypto") {
@@ -189,8 +193,19 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const billData = {
+            selectedNetwork:cat === 'Electricity' ?  selectedBranch : selectedTVNetwork ,
+            selectPayment: subTab === "fiat" ? "": prop2,
+            inputAmount: amount1,
+            paymentAmount: amount2,
+            fiatPayment:subTab === "fiat" ? prop1: "",
+      
+          };
+          
+          billDetails.setItem(billData);
         setActive(cat === 'Electricity' ? 2 : 3);
         navigate('/dashboard/bills_payment');
+        setShowTransactionDetail(true);
         setSelectedBill(cat === 'Electricity' ? 'electricity': 'cabletv');
     }
 
@@ -349,7 +364,7 @@ return (
                                                     className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                                                 />
                                                 <select
-                                                    value={currency}
+                                                    value={subTab === "crypto" ? prop2 : prop1}
                                                     onChange={(e) =>
                                                         subTab === "crypto"
                                                             ? setprop2(e.target.value)

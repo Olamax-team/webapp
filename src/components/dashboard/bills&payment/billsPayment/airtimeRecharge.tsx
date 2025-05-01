@@ -83,8 +83,8 @@ const AirtimeRecharge = () => {
 
   const inputAmount = watch("inputAmount");
   const paymentAmount = watch("paymentAmount");
-  const [amount1, setAmount1] = useState<string>("");
-  const [amount2, setAmount2] = useState<string>("");
+  const [amount1, setAmount1] = useState<string>("0");
+  const [amount2, setAmount2] = useState<string>("0");
   const [selectedNetwork, setSelectedNetwork] = useState(airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
   const [selectPayment, setSelectPayment] = useState('BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
@@ -111,7 +111,7 @@ const AirtimeRecharge = () => {
       if (activeButton === "crypto") {
         newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
       } else if (activeButton === 'fiat') {
-        newAmount2 = (parseFloat(amount1)).toFixed(2); // crypto → NGN
+        newAmount2 = (parseFloat(amount1)).toFixed(2); // NGN
       }
   // Updating Zustand state
       setAmount2(newAmount2);
