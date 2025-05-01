@@ -1,15 +1,15 @@
-import React, {useState,  } from "react";
+import React, {useEffect, useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-import btcLogo from '../../../../assets/images/BTC Circular.png'
-import ETHLogo from '../../../../assets/images/ETH Circular.png'
-import USDTLogo from '../../../../assets/images/USDT Circular.png'
-import SOLLogo from '../../../../assets/images/SOL Circular.png'
+// import btcLogo from '../../../../assets/images/BTC Circular.png'
+// import ETHLogo from '../../../../assets/images/ETH Circular.png'
+// import USDTLogo from '../../../../assets/images/USDT Circular.png'
+// import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-import ngnlogo from '../../../../assets/images/NGN Circular.png';
+// import ngnlogo from '../../../../assets/images/NGN Circular.png';
 import { useApiConfig } from "../../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -40,7 +40,33 @@ type airtimeNetworkProps = {
   icon: string;
 };
 
+type Coins = {
+  coin: string,
+  coin_name: string,
+  icon: string,
+  id: number,
+};
+
+type Stables = {
+  coin: string,
+  coin_name: string,
+  icon: string,
+  id: number,
+};
+
+type CoinPrice = {
+  id: number;
+  coin_id: number;
+  selling: string;
+  buying: string;
+  escrow: string;
+};
 const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeProps) => {
+
+  const [prices, setPrices] = useState<CoinPrice[]>([]);
+  const [coin, setCoin] = useState<Coins[]>([]);
+  const [stables, setStables] = useState<Stables[]>([]);
+    const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
   const billsServiceConfig = useApiConfig({
     method: 'get',
@@ -51,6 +77,58 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
     method: 'get',
     url: 'get-airtime-data-network/airtime'
   });
+
+  const getCoinConfig = useApiConfig({
+    method: 'get',
+    url: 'all-coins'
+  });
+  const getCoinPricesConfig = useApiConfig({
+    method: 'get',
+    url: 'coin-prices'
+  });
+
+  const getStableCoins = useApiConfig({
+    method: 'get',
+    url: 'stable-coins'
+  });
+
+  const fetchCoinPrices = async () => {
+    await axios.request(getCoinPricesConfig)
+    .then((response) => {
+      setPrices(response.data)
+    })
+  };
+  const fetchStableCoin = async () => {
+    await axios.request(getStableCoins)
+    .then((response) => {
+      setStables(response.data.coin);
+    })
+  };
+
+  const fetchCoins = async () => {
+    await axios.request(getCoinConfig)
+    .then((response) => {
+      setCoin(response.data.coin);
+    })
+  };
+
+  const getCoinId = (coinCode: string): number => {
+    return coin.find(c => c.coin === coinCode)?.id || 0; // Default to 0 if not found
+  };
+  
+  const getSellingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    return prices.find(p => p.coin_id === id)?.selling;
+  };
+  const getBuyingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    return prices.find(p => p.coin_id === id)?.buying;};
+
+  React.useEffect(() => {
+    fetchCoins();
+    fetchCoinPrices();
+    fetchStableCoin(); 
+  },[]);
 
   const fetchBillServices = async () => {
     const response = await axios.request(billsServiceConfig);
@@ -82,14 +160,17 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
 
   const frontPageData = JSON.parse(localStorage.getItem('airtimeData') || '{}');
 
-  const { register, handleSubmit, formState: { errors }, reset} = useForm<Inputs>({
+  const { register, handleSubmit, setValue, formState: { errors }, reset, watch} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues:{
       inputAmount:frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.amt_1 : "",
-      paymentAmount:"",
+      paymentAmount:frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.amt_2 :"",
     }
   }); 
-
+  const inputAmount = watch("inputAmount");
+  const paymentAmount = watch("paymentAmount");
+  const [amount1, setAmount1] = useState<string>("");
+  const [amount2, setAmount2] = useState<string>("");
   const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
   const [selectPayment, setSelectPayment] = useState('BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
@@ -98,19 +179,60 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
   const [fiatPayment, setFiaPayment] = useState('NGN');
   const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
 
-  const paymentOptions = [
-    { value: 'BTC', logo: btcLogo },
-    { value: 'ETH', logo: ETHLogo },
-    { value: 'USDT', logo: USDTLogo },
-    { value: 'SOL', logo: SOLLogo },
-  ];
+  //autofill for both inputs
+    const price = React.useMemo(() => {
+      if (activeButton === 'crypto') {
+        return getSellingPrice(selectPayment);
+      } else {
+        return getBuyingPrice(selectPayment);
+      }
+    }, [activeButton, inputAmount, paymentAmount, prices, coin]);
+  useEffect(() => {
+    console.log(frontPageData);
+    if (lastChanged !== 'amount1') return;
+    if (!amount1 || !fiatPayment) return;
+  
+    if (price) {
+      let newAmount2 = '';
+      if (activeButton === "crypto") {
+        newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newAmount2 = (parseFloat(amount1)).toFixed(2); // crypto → NGN
+      }
+  // Updating Zustand state
+      setAmount2(newAmount2);
+      setValue("paymentAmount", newAmount2);
+    }
+  }, [amount1, fiatPayment, activeButton, prices, coin, lastChanged]);
 
-  const fiatPaymentOptions = [
-    { value: 'NGN', logo: ngnlogo },
-    { value: 'USD', logo: ngnlogo },
-    { value: 'EUR', logo: ngnlogo },
-    { value: 'GBP', logo: ngnlogo },
-  ];
+  useEffect(() => {
+    if (lastChanged !== 'amount2') return;
+    if (!amount2 || !selectPayment) return;
+  
+    if (price) {
+      let newAmount1 = '';
+      if (activeButton === "crypto") {
+        newAmount1 = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
+      }
+      setAmount1(newAmount1);
+      setValue("inputAmount", newAmount1);
+    }
+  }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
+  // const paymentOptions = [
+  //   { value: 'BTC', logo: btcLogo },
+  //   { value: 'ETH', logo: ETHLogo },
+  //   { value: 'USDT', logo: USDTLogo },
+  //   { value: 'SOL', logo: SOLLogo },
+  // ];
+
+  // const fiatPaymentOptions = [
+  //   { value: 'NGN', logo: ngnlogo },
+  //   { value: 'USD', logo: ngnlogo },
+  //   { value: 'EUR', logo: ngnlogo },
+  //   { value: 'GBP', logo: ngnlogo },
+  // ];
 
   const handleSelectChange = (network: string) => {
     setSelectedNetwork(network);
@@ -165,8 +287,10 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
           <div className="flex justify-between p-3">
             <input
               {...register("inputAmount")}
+              value={amount1}
               type="text"
               placeholder="0.00"
+              onChange={(e) => {setAmount1(e.target.value);setLastChanged('amount1');}}
               className="xl:w-[143px] w-[100px] h-[30px] leading-[27px] mt-0 text-[14px] xl:h-[38px] xl:text-[16px]  bg-[#f5f5f5] border-none rounded-none focus:bg-[#f5f5f5]      focus:outline-none  outline-none font-bold font-Inter xl:leading-[34.5px]"
             />
 
@@ -219,8 +343,9 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
             <input
               {...register("paymentAmount")}
               type="text"
-            
+              value={amount2}
               placeholder="0.00000145"
+              onChange={(e) => {setAmount2(e.target.value);setLastChanged('amount2');}}
               className="xl:w-[143px] w-[100px] h-[25px] leading-[27px] mt-0 text-[16px] xl:h-[38px] xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
             />
 
@@ -232,7 +357,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
                 {activeButton === 'crypto' ? (
                   <>
                     <img
-                      src={paymentOptions.find(option => option.value === selectPayment)?.logo}
+                      src={coin.find(option => option.coin === selectPayment)?.icon}
                       alt={selectPayment}
                       className="size-6 mr-2"
                     />
@@ -241,7 +366,7 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
                 ) : (
                   <>
                     <img
-                      src={fiatPaymentOptions.find(option => option.value === fiatPayment)?.logo}
+                      src={stables.find(option => option.coin === fiatPayment)?.icon}
                       alt={fiatPayment}
                       className="size-6 mr-2"
                     />
@@ -254,25 +379,25 @@ const AirtimeRecharge = ({ setShowTransactionDetail, setSelectedBill }: airtimeP
               {isPaymentDropdownOpen && (
                 <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                   {activeButton === 'crypto' ? (
-                    paymentOptions.map((payment) => (
+                    coin.map((c) => (
                       <div
-                        key={payment.value}
+                        key={c.id}
                         className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleSelectedChange(payment.value)}
+                        onClick={() => handleSelectedChange(c.coin)}
                       >
-                        <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
-                        <span>{payment.value}</span>
+                        <img src={c.icon} alt={c.coin} className="size-6 mr-2" />
+                        <span>{c.coin}</span>
                       </div>
                     ))
                   ) : (
-                    fiatPaymentOptions.map((payment) => (
+                    stables.map((s) => (
                       <div
-                        key={payment.value}
+                        key={s.id}
                         className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleChange(payment.value)}
+                        onClick={() => handleChange(s.coin)}
                       >
-                        <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
-                        <span>{payment.value}</span>
+                        <img src={s.icon} alt={s.coin} className="size-6 mr-2" />
+                        <span>{s.coin}</span>
                       </div>
                     ))
                   )}
