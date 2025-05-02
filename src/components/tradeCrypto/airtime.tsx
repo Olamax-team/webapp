@@ -7,6 +7,7 @@ import { HiChevronDown } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { activityIndex } from "../../stores/generalStore";
 import { useFetchStore } from "../../stores/fetch-store";
+import useBillsStore from "../../stores/billsStore";
 
 
 interface airtimePaymentProps {
@@ -78,6 +79,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   const [amount2, setAmount2] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
+    const airtimeDetails = useBillsStore();
 
   const price = React.useMemo(() => {
     if (subTab === 'crypto') {
@@ -90,7 +92,10 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
 //autofill for both inputs
   useEffect(() => {
       if (lastChanged !== 'amount1') return;
-      if (!amount1 || !prop1) return;
+      if (!amount1) {
+        setAmount2("");
+        return;
+      }
       if (price) {
         let newAmount2 = '';
         if (subTab === "crypto") {
@@ -104,7 +109,10 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
-    if (!amount2 || !prop2) return;
+    if (!amount2) {
+      setAmount1("");
+      return;
+    }
     if (price) {
       let newAmount1 = '';
       if (subTab === "crypto") {
@@ -123,8 +131,19 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     setIsNetworkDropdownOpen(false);
   };
 
-  const handleBuyClick = (event: FormEvent<HTMLFormElement>) => {
+  const handleBuyClick = ( event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+  
+    const airtimeData = {
+      selectedNetwork: selectedNetwork,
+      selectPayment: subTab === "fiat" ? "": prop2,
+      inputAmount: amount1,
+      paymentAmount: amount2,
+      fiatPayment:subTab === "fiat" ? prop1: "",
+
+    };
+    
+    airtimeDetails.setItem(airtimeData);
 
     setActive(cat0 === 'Airtime' ? 0 : 1);
     navigate('/dashboard/bills_payment');

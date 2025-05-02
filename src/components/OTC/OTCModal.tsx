@@ -1,8 +1,18 @@
 import Modal from '../ui/modal'
 import { useOTCModal } from '../../lib/utils'
+import useUserDetails from '../../stores/userStore';
 
 const OTCModal = () => {
   const { isOpen, onClose } = useOTCModal();
+    const { user } = useUserDetails();
+    const isVerified = user?.account_status;
+    const OTCButton = () => {
+      if (isVerified === 'Verified') {
+        window.open("https://wa.me/+2347074322020", "_blank");
+      }else {
+        onClose();
+      }
+};
   return (
     <Modal 
       isOpen={isOpen} 
@@ -18,7 +28,8 @@ const OTCModal = () => {
         </p>
         <p>Are you eligible to proceed?</p>
         <div className="flex items-center justify-between gap-4">
-          <button className='w-full h-12 rounded-lg bg-primary text-white' onClick={() =>{onClose();}}>
+          <button className='w-full h-12 rounded-lg bg-primary text-white' 
+          onClick={() =>OTCButton()}>
             Yes
           </button>
           <button className='w-full h-12 rounded-lg border-textDark border text-textDark' onClick={() =>onClose()}>
