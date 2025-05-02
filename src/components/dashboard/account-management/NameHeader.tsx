@@ -9,11 +9,12 @@ import axios from 'axios';
 
 
 const NameHeader = () => {
-  const { user, fetchKycDetails, kycDetails } = useUserDetails();
+  const { user, fetchKycDetails, kycDetails, fetchKycStatus } = useUserDetails();
 
   React.useLayoutEffect(() => {
     if (user) {
       fetchKycDetails();
+      fetchKycStatus();
     }
   },[user]);
 
@@ -32,7 +33,7 @@ const NameHeader = () => {
     inputRef.current?.click();
   };
 
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => { // Make handleImageChange async
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => { 
     const file = event.target.files?.[0];
     if (file) {
         const reader = new FileReader();
@@ -41,7 +42,7 @@ const NameHeader = () => {
               setImageSrc(e.target.result as string);
 
               const formData = new FormData();
-              formData.append('user-image', file);
+              formData.append('user_image', file);
 
               try {
                 const imageUploadConfig = { 
@@ -56,7 +57,13 @@ const NameHeader = () => {
                 const response = await axios.request(imageUploadConfig);
 
                 if (response) {
-                  console.log(response)
+                  if (response.status === 200) {
+                    toast({
+                      title: 'Success',
+                      description: 'Profile image successfully uploaded',
+                      variant: 'success'
+                    })
+                  }
                 };
 
               } catch (error) {
@@ -72,12 +79,12 @@ const NameHeader = () => {
         };
         reader.readAsDataURL(file);
     }
-};
+  };
 
   return (
-    <div className="w-full h-[105px] lg:h-[130px] rounded-md bg-white p-4 lg:p-5 flex items-center justify-between">
+    <div className="w-full h-[125px] lg:h-[160px] rounded-md bg-white p-4 lg:p-5 flex items-center justify-between">
       <div className="flex gap-4 items-center">
-        <div className='rounded-full lg:size-[90px] size-[70px] relative cursor-pointer'>
+        <div className='rounded-full xl:size-[130px] lg:size-[110px] size-[90px] relative cursor-pointer'>
           <div className="opacity-0 hover:opacity-100 active:opacity-100 absolute left-0 top-0 w-full h-full rounded-full flex items-center justify-center bg-black/60 z-[300] text-white" onClick={handleImageClick}>
             <ImagePlusIcon className='lg:size-[45px] size-[35px]'/>
           </div>
