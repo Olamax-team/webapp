@@ -33,6 +33,7 @@ import OTCModal from '../OTC/OTCModal'
 import DonateConfirmationModal from '../olamaxFoundation/foundationModals/DonateConfirmationModal'
 import DonateCompletedModal from '../olamaxFoundation/foundationModals/DonateCompletedModal'
 import StartDeleteModal from '../modals/StartDeleteModal'
+import KYCConfirmationModal from '../OTC/KYCConfirmationModal'
 
 
 const ModalProvider = () => {
@@ -75,6 +76,7 @@ const ModalProvider = () => {
       <DonateCompletedModal/>
       <OTCModal/>
       <StartDeleteModal/>
+      <KYCConfirmationModal/>
     </React.Fragment>
   )
 }

@@ -1,14 +1,13 @@
+import { activityIndex } from "../../stores/generalStore";
 import BuyInput from "./tradeInput/buyInput";
 import SellInput from "./tradeInput/sellInput";
-import React from "react";
 
 type tradeDetailsProps = {
-    setShowTransactionDetail: React.Dispatch<React.SetStateAction<boolean>>;
     activeInput: string;
   };
 
-  const TradeDetails = ({ setShowTransactionDetail, activeInput }: tradeDetailsProps) => {
-
+  const TradeDetails = ({ activeInput }: tradeDetailsProps) => {
+  const {  setShowTransactionDetail } = activityIndex();
     const renderInput = () => {
       switch (activeInput) {
         case 'buy':

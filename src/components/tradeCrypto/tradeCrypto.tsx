@@ -10,8 +10,6 @@ import BuySell from "./buy/buySell";
 const TradeCrypto = () => {
   const [activeTab, setActiveTab] = useState("Buy & Sell Crypto");
   const categories = ["Electricity", "CableTV"];
-  const props2currency = ["BTC","ETH", "USDT", "SOL", "(Tron TRC20)" ];
-  const billProps1 = ["IBEDC","Cable"];
   const tabs = ["Buy & Sell Crypto", "Airtime & Data", "Bills & Payment"];
   const airtimeOptions = ["Airtime", "Data" ];
 
@@ -35,8 +33,6 @@ const TradeCrypto = () => {
       return (
         <BillsPayment
           categories={categories}
-          billProps1={billProps1}
-          props2currency={props2currency}
         />
       );
     default:
