@@ -18,8 +18,10 @@ export type userDetailProps = {
   loading: boolean;
   setLoading: (loading:boolean) => void;
   fetchKycDetails: () =>  void;
+  fetchUserDetails: () =>  void;
   fetchKycStatus: () =>  void;
   clearKycDetails: () => void;
+  clearUserDetails: () => void;
   clearKycStatus: () => void;
   kycDetails: kycDetailsProps | null;
   kycStatus: kycDetailsStatusProps | null;
@@ -36,6 +38,28 @@ export const useUserDetails = create<userDetailProps>()(
       setLoading: (loading) => set({ loading }),
       setUser: (user, token) => set({ user, token}),
       fetchKycDetails: async () => {
+        const { token } = get();
+        return axios.request({
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: 'https://api.olamax.io/api/get-kyc-details',
+          headers: {
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }).then((response) => {
+          if (response.status === 200) {
+            set({ kycDetails: response.data[0], loading: false });
+          };
+        }).catch((error) => {
+          if (axios.isAxiosError(error)) {
+            console.error("Error fetching data message:", error.response?.data.message || error.message);        
+          } else {
+            console.error("Unexpected error:", error);
+          }; 
+        });
+      },
+      fetchUserDetails: async () => {
         const { token } = get();
         return axios.request({
           method: 'get',
@@ -81,6 +105,7 @@ export const useUserDetails = create<userDetailProps>()(
       },
       clearUser: () => set({ user: null, token: null }),
       clearKycDetails: () => set({ kycDetails: null }),
+      clearUserDetails: () => set({ kycDetails: null }),
       clearKycStatus: () => set({ kycStatus: null }),
     }),
     {
