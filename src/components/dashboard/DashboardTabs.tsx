@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
 import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
@@ -7,6 +7,7 @@ import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
+import { activityIndex } from "../../stores/generalStore";
 
 interface UserInfoProps {
   name: string;
@@ -173,8 +174,7 @@ const DashboardTab: React.FC = () => {
   ];
 
   
-  const [showTransactionDetail, setShowTransactionDetail] = useState(false);
-  const [tradeType, setTradeType] = useState<string>('');
+  const {selectedBill, showTransactionDetail}= activityIndex();
 
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">
@@ -196,7 +196,7 @@ const DashboardTab: React.FC = () => {
             
             {/* Right Section */}
             <div className="w-full xl:w-[50%] h-auto px-4 xl:p-4 bg-white rounded-md">
-              <BuySell setTradeType={setTradeType} setShowTransactionDetail={setShowTransactionDetail} className="mb-4 xl:mb-0"/>
+              <BuySell className="mb-4 xl:mb-0"/>
             </div>
           </div>
           <div className="flex justify-center w-full">
@@ -207,8 +207,7 @@ const DashboardTab: React.FC = () => {
         </>
       ) : (
         <TradeDetails
-          activeInput={tradeType}
-          setShowTransactionDetail={setShowTransactionDetail}
+          activeInput={selectedBill}
           />
 
       )}

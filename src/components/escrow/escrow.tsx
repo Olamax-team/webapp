@@ -4,6 +4,8 @@ import btcEscrow from '../../assets/images/BitcoinEscrow.svg'
 import alertescrow from '../../assets/images/alertescrow.svg'
 import shieldCheck from '../../assets/images/shield-check.svg'
 import trustbuild from '../../assets/images/trustBuild.svg'
+import { useKYCConfirmationModal } from "../../lib/utils"
+import useUserDetails from "../../stores/userStore"
  
 
 const Escrow = () => {
@@ -24,6 +26,16 @@ const Escrow = () => {
             description:'Escrow services foster trust, particularly in high-value or international transactions where both parties may be unfamiliar with each other. Knowing there’s a secure intermediary encourages more confident trading and investment decisions.'
         }
     ]
+    const openKYCCONfirmation = useKYCConfirmationModal();
+    const { user } = useUserDetails();
+    const isVerified = user?.account_status;
+    const EscrowButton = () => {
+        if (isVerified === 'Verified') {
+            window.open("https://wa.me/+2347074322020", "_blank");
+        }else {
+            openKYCCONfirmation.onOpen();
+        }
+};
   return (
     <React.Fragment>
         <section className="p-5 xl:p-10 w-full h-auto">
@@ -32,7 +44,9 @@ const Escrow = () => {
                     <h2 className="font-DMSans font-bold text-[28px] lg:text-[32px] lg:leading-[48px] leading-[44px] text-[#121826] ">OLAMAX EXCHANGE </h2>
                    <h2  className="font-DMSans font-bold text-[28px] lg:text-[32px] lg:leading-[48px] leading-[44px] text-[#121826] "> <span  className="font-DMSans font-bold text-[28px] lg:text-[32px] lg:leading-[48px] leading-[44px] text-[#039AE4] ">Escrow</span> Service  </h2> 
                    <p className="font-Inter font-normal text-[14px] lg:text-[18px] leading-[26.6px] xl:leading-[30.6px]  text-[#000000]  ">  Service offers a secure and trusted solution for completing cryptocurrency transactions. Acting as a neutral third party, our escrow service holds funds until both buyer and seller meet all agreed terms.</p>
-                   <button className="mt-10 xl:w-[150px] w-[115px] h-[38px] rounded-sm text-[12px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]">
+                   <button 
+                   onClick={() => EscrowButton()}
+                   className="mt-10 xl:w-[150px] w-[115px] h-[38px] rounded-sm text-[12px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]">
                       Get Started
                     </button>
                 </div>

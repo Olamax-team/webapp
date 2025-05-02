@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react"
-import { useOTCModal } from "../../lib/utils";
-import { Link } from "react-router-dom";
+import { useKYCConfirmationModal, useOTCModal } from "../../lib/utils";
+import useUserDetails from "../../stores/userStore";
+// import { Link } from "react-router-dom";
 // import rectangleOTC from '../../assets/images/RectangleOTC.svg'
 // import btcOTC from '../../assets/images/BitcoinOTC.svg'
 // import alertOTC from '../../assets/images/alertOTC.svg'
@@ -27,15 +28,17 @@ const OTC = () => {
         }
     ]
 
-    const hasOpenedRef = useRef(false);
     const openOTCModal = useOTCModal();
-
-    useEffect(() => {
-        if ( !hasOpenedRef.current) {
-        openOTCModal.onOpen();
-        hasOpenedRef.current = true; 
-        }
-    }, [openOTCModal]);
+    const openKYCCONfirmation = useKYCConfirmationModal();
+    const { user } = useUserDetails();
+    const isVerified = user?.account_status;
+    const OTCButton = () => {
+            if (isVerified === 'Verified') {
+                openOTCModal.onOpen();
+            }else {
+                openKYCCONfirmation.onOpen();
+            }
+    };
   return (
     <React.Fragment>
         <section className="p-5 xl:p-10 w-full h-auto">
@@ -43,9 +46,9 @@ const OTC = () => {
                 <div className="w-full xl:w-[50%] p-5">
                     <h2 className="font-DMSans font-bold text-[28px] lg:text-[32px] lg:leading-[48px] leading-[44px] text-[#121826] ">OLAMAX EXCHANGE <span  className="font-DMSans font-bold text-[28px] lg:text-[32px] lg:leading-[48px] leading-[44px] text-[#039AE4] ">OTC</span> <br/> & Execution Service  </h2>
                    <p className="font-Inter font-normal text-[14px] lg:text-[18px] leading-[26.6px] xl:leading-[30.6px]  text-[#000000]">  Eligible for exclusive high-volume transactions—starting at $50,000 for USDT & USDC or 2 BTC for Bitcoin—the Olamax OTC Desk provides top market rates, rapid transaction processing, and dedicated support to streamline every step of your bulk crypto trades.</p>
-                    <a href="https://wa.me/+2347074322020" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center mt-10 xl:w-[150px] w-[115px] h-[38px] rounded-sm text-[12px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]">
+                    <button onClick={() => OTCButton()} className="flex items-center justify-center mt-10 xl:w-[150px] w-[115px] h-[38px] rounded-sm text-[12px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]">
                         Get Started
-                    </a>
+                    </button>
                 </div>
                 <div className="w-full h-auto xl:w-[50%] flex items-center justify-center ">
                     <img src="/images/OTC.svg" alt="btc"/>
