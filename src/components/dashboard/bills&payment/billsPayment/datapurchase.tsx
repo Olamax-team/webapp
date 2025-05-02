@@ -16,7 +16,6 @@ import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
 
 
-
 type Inputs = {
   inputAmount: string;
   paymentAmount: string;
