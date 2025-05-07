@@ -9,34 +9,13 @@ import BTC from "/images/BTC Circular.png";
 import { tradeSchema } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useApiConfig } from "../../../hooks/api";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { activityIndex } from "../../../stores/generalStore";
+import { useFetchStore } from "../../../stores/fetch-store";
 
 
 interface BuySellProps {
   className?: string;
-};
-
-type Coins = {
-  coin: string,
-  coin_name: string,
-  icon: string,
-  id: number,
-};
-
-type CoinPrice = {
-  id: number;
-  coin_id: number;
-  selling: string;
-  buying: string;
-  escrow: string;
-};
-
-type cryptoServiceProps = {
-  cs: string;
-  act: string;
 };
 
 const BuySell: React.FC<BuySellProps> = ({
@@ -50,8 +29,8 @@ const BuySell: React.FC<BuySellProps> = ({
   const [subTab, setSubTab] = useState("sell");
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
-  const [amount1, setAmount1] = useState<string>( "0");
-  const [amount2, setAmount2] = useState<string>("0");
+  // const [amount1, setAmount1] = useState<string>( "");
+  // const [amount2, setAmount2] = useState<string>("");
   const [btcPrice, setBtcPrice] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
   const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
@@ -63,79 +42,30 @@ const BuySell: React.FC<BuySellProps> = ({
     handleSubmit,
     setValue,
     formState: { errors },
+    watch
   } = useForm({
     resolver: zodResolver(tradeSchema),
   });
 
-  const getCryptoConfig = useApiConfig({
-    method: 'get',
-    url: 'crypto-service'
-  });
+  const amount1 = watch('amount1');
+  const amount2 = watch('amount2');
 
-  const getCoinConfig = useApiConfig({
-    method: 'get',
-    url: 'all-coins'
-  });
 
-  const getCoinPricesConfig = useApiConfig({
-    method: 'get',
-    url: 'coin-prices'
-  });
-
-  const getStableCoinsConfig = useApiConfig({
-    method: 'get',
-    url: 'stable-coins'
-  });
-
-  const fetchCryptoService = async () => {
-    const response = await axios.request(getCryptoConfig)
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.crypto_service as cryptoServiceProps[];
-    return data;
-  };
-
-  const fetchCoinPrice = async () => {
-    const response = await axios.request(getCoinPricesConfig)
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data as CoinPrice[];
-    return data;
-  };
-
-  const fetchAllCoins = async () => {
-    const response = await axios.request(getCoinConfig)
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.coin as Coins[];
-    return data;
-  };
-
-  const fetchStableCoins = async () => {
-    const response = await axios.request(getStableCoinsConfig)
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.coin as Coins[];
-    return data;
-  };
+  const { fetchAllBuyCoins, fetchAllCoinPrices, fetchCryptoServices, fetchStableCoins } = useFetchStore();
 
   const { data: cryptoService } = useQuery({
     queryKey: ['crypto-service'],
-    queryFn: fetchCryptoService,
+    queryFn: fetchCryptoServices,
   });
 
   const { data: prices } = useQuery({
     queryKey: ['coin-prices'],
-    queryFn: fetchCoinPrice,
+    queryFn: fetchAllCoinPrices,
   });
 
   const { data: coin } = useQuery({
     queryKey: ['all-coins'],
-    queryFn: fetchAllCoins,
+    queryFn: fetchAllBuyCoins,
   });
 
   const { data: stables } = useQuery({
@@ -162,7 +92,7 @@ const BuySell: React.FC<BuySellProps> = ({
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
     if (!amount1) {
-      setAmount2("");
+      // setAmount2("");
       setValue("amount2", "");
       return;
     }
@@ -175,7 +105,7 @@ const BuySell: React.FC<BuySellProps> = ({
       }
 
       // Syncing the calculated amount2 with react-hook-form
-      setAmount2(newAmount2);  // Updating Zustand state
+      // setAmount2(newAmount2);  // Updating Zustand state
       setValue("amount2", newAmount2);
     }
   }, [amount1, prop1, subTab, prices, coin, lastChanged]);
@@ -183,7 +113,7 @@ const BuySell: React.FC<BuySellProps> = ({
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
     if (!amount2) {
-      setAmount1("");
+      // setAmount1("");
       setValue("amount1", "");
       return;
     }
@@ -196,7 +126,7 @@ const BuySell: React.FC<BuySellProps> = ({
         newAmount1 = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // crypto → NGN
       }
 
-      setAmount1(newAmount1); 
+      // setAmount1(newAmount1); 
       setValue("amount1", newAmount1);
     }
   }, [amount2, prop2, subTab, prices, coin, lastChanged]);
@@ -281,7 +211,7 @@ const onSubmit = (data: any) => {
                         <Input
                           {...register("amount1")}
                           value={amount1}
-                          onChange={(e) => {setAmount1(e.target.value); setLastChanged('amount1');}}
+                          onChange={(e) => {setValue('amount1', e.target.value); setLastChanged('amount1');}}
                           placeholder="1"
                           className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold placeholder:text-black/50"
                         />
@@ -301,7 +231,7 @@ const onSubmit = (data: any) => {
                             }
                             className="rounded-md bg-bg px-2 py-1 font-medium text-base w-fit max-w-20"
                           >
-                            {subTab === "buy"     
+                            { subTab === "buy"     
                             ?  (
                                 (stables ?? []).map((s) => (
                                   <option key={s.id} value={s.coin} className="p-1">
@@ -338,7 +268,7 @@ const onSubmit = (data: any) => {
                         <Input
                           {...register("amount2")}
                           value={amount2}
-                          onChange={(e) => {setAmount2(e.target.value); setLastChanged('amount2');}}
+                          onChange={(e) => {setValue('amount2', e.target.value); setLastChanged('amount2');}}
                           placeholder='0.0001'
                           className="h-[35px] leading-[27px] mt-0 text-[16px] xl:text-[18px] xl:leading-[34.5px] pl-0 shadow-none bg-bg border-none rounded-none focus:outline-none font-bold placeholder:text-black/50"
                         />

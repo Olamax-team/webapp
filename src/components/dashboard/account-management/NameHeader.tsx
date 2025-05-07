@@ -1,11 +1,11 @@
-import useUserDetails from '../../../stores/userStore';
-import { HiOutlineDuplicate, HiOutlineShieldCheck } from 'react-icons/hi'
 import React from 'react';
 import { cn } from '../../../lib/utils';
-import { ImagePlusIcon } from 'lucide-react';
+import { ImagePlusIcon, Loader2 } from 'lucide-react';
 import { Input } from '../../ui/input';
 import { useToast } from '../../../hooks/use-toast';
+import { HiOutlineDuplicate, HiOutlineShieldCheck } from 'react-icons/hi'
 import axios from 'axios';
+import useUserDetails from '../../../stores/userStore';
 
 
 const NameHeader = () => {
@@ -25,8 +25,9 @@ const NameHeader = () => {
 
   const { toast } = useToast();
   const { token } = useUserDetails();
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const [imageSrc, setImageSrc] = React.useState<string | undefined>('/images/avatar_1.png');
+  const [imageSrc, setImageSrc] = React.useState<string | undefined>((kycDetails && kycDetails.prolife_image) ? kycDetails.prolife_image : '/images/avatar_1.png');
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleImageClick = () => {
@@ -44,6 +45,7 @@ const NameHeader = () => {
               const formData = new FormData();
               formData.append('user_image', file);
 
+              setIsLoading(true);
               try {
                 const imageUploadConfig = { 
                   method: 'post',
@@ -57,6 +59,7 @@ const NameHeader = () => {
                 const response = await axios.request(imageUploadConfig);
 
                 if (response) {
+                  console.log(response)
                   if (response.status === 200) {
                     toast({
                       title: 'Success',
@@ -64,6 +67,7 @@ const NameHeader = () => {
                       variant: 'success'
                     })
                   }
+                  setIsLoading(false)
                 };
 
               } catch (error) {
@@ -74,6 +78,7 @@ const NameHeader = () => {
                   variant: 'destructive'
                 });
                 setImageSrc('/images/avatar_1.png');
+                setIsLoading(false);
               }
           }
         };
@@ -85,9 +90,17 @@ const NameHeader = () => {
     <div className="w-full h-[125px] lg:h-[160px] rounded-md bg-white p-4 lg:p-5 flex items-center justify-between">
       <div className="flex gap-4 items-center">
         <div className='rounded-full xl:size-[130px] lg:size-[110px] size-[90px] relative cursor-pointer'>
-          <div className="opacity-0 hover:opacity-100 active:opacity-100 absolute left-0 top-0 w-full h-full rounded-full flex items-center justify-center bg-black/60 z-[300] text-white" onClick={handleImageClick}>
+          <div className="opacity-0 hover:opacity-100 absolute left-0 top-0 w-full h-full rounded-full flex items-center justify-center bg-black/60 z-[300] text-white" onClick={handleImageClick}>
             <ImagePlusIcon className='lg:size-[45px] size-[35px]'/>
           </div>
+          {isLoading &&
+            <div className="absolute left-0 top-0 w-full h-full rounded-full flex items-center justify-center bg-black/60 z-[300] text-white">
+              <div className='flex flex-col items-center text-sm'>
+                Uploading..
+                <Loader2 className='size-[30px] animate-spin'/>
+              </div>
+            </div>
+          }
           <img src={imageSrc} alt="profile" className='object-cover rounded-full h-full w-full'/>
           <Input
             type="file"
@@ -95,6 +108,7 @@ const NameHeader = () => {
             onChange={handleImageChange}
             ref={inputRef}
             className="hidden"
+            disabled={isLoading}
           />
         </div>
         <div>

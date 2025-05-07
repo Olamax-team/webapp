@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useToast } from '../../../hooks/use-toast';
 import useUserDetails from '../../../stores/userStore';
 import { useUploadDocumentModal } from '../../../lib/utils';
-import { Loader2Icon } from 'lucide-react';
+import { Loader2, Loader2Icon } from 'lucide-react';
 
 interface LivenessCheckProps {}
 
@@ -191,7 +191,12 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
             disabled={isRecording}
             className='text-sm lg:text-base px-4 py-2 bg-primary hover:bg-secondary text-white rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1'
           >
-            {isRecording ? 'Recording for 30s' : 'Start Liveness Check'}
+            {isRecording ? 
+              <div className="flex items-center gap-2">
+                Recording for 30s... <Loader2 className='animate-spin'/>
+              </div> :
+            'Start Liveness Check'
+            }
           </button>
           {isRecording && (
             <button onClick={stopRecording} className='text-sm lg:text-base px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1'>

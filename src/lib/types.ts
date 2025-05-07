@@ -17,6 +17,7 @@ export type kycDetailsProps = {
   referred_by: any;
   last_activity: string;
   nationality: string;
+  prolife_image: string;
 };
 
 export type kycDetailsStatusProps = {
@@ -53,28 +54,3 @@ export type kycDetailsStatusProps = {
   user_id: number
   verification_method: string;
 };
-
-// {
-//   "status": "success",
-//   "message": "coin found",
-//   "coin": {
-//       "id": 1,
-//       "blockchain_name": "ton",
-//       "created_at": "2025-02-05T18:08:32.000000Z",
-//       "updated_at": "2025-02-05T18:08:32.000000Z",
-//       "coin_id": 1
-//   },
-//   "limit": {
-//       "buying_limit": "4800.00",
-//       "selling_limit": "5000.00",
-//       "card_limit": "1000.00",
-//       "data_limit": "2000.00",
-//       "card_limit_active": 1,
-//       "data_limit_active": 1
-//   },
-//   "current_rate": 2.97,
-//   "transaction_charges": 0.005,
-//   "sell_naira_value": "1000.00",
-//   "buy_naira_value": "1000.00",
-//   "icon": ""
-// }

@@ -1,4 +1,4 @@
-import React, {useState,  } from "react";
+import React, {useEffect, useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
@@ -14,6 +14,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
+import axios from "axios";
+import { cn } from "../../../../lib/utils";
 
 
 type Inputs = {
@@ -22,13 +24,26 @@ type Inputs = {
   selectedPayment: string;
   selectedNetwork:string;
   fiatPayment:string;
+};
 
+type airtimeNetworkProps = {
+  network: string;
+  product_number: number;
+  icon: string;
+};
+
+type dataPackageProps = {
+  payment_item_name: string;
+  product_number: string;
+  amount: number
 };
 
 const Datapurchase = () => {
 
   const { setShowTransactionDetail, setSelectedBill } = activityIndex();
-  const { fetchBillServices, fetchDataPurchaseNetworks } = useFetchStore();
+  const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
+
+  
 
   const { data:billServices, status:billServiceStatus} = useQuery({
     queryKey: ['bills-service'],
@@ -40,7 +55,57 @@ const Datapurchase = () => {
     queryFn: fetchDataPurchaseNetworks,
   });
 
-  const { register, handleSubmit, formState: { errors }, reset} = useForm<Inputs>({
+  console.log(networkOptionsList)
+
+  const { data: coin } = useQuery({
+    queryKey: ['all-coins'],
+    queryFn: fetchAllBuyCoins,
+  });
+
+  const { data: stables } = useQuery({
+    queryKey: ['stable-coins'],
+    queryFn: fetchStableCoins,
+  });
+
+  console.log(coin);
+  console.log(stables)
+
+  const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0].network : 'MTN');
+  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0] : undefined);
+  const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
+  const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
+  const [isNetworkDataPackageOpen, setIsNetworkDataPackageOpen] = useState(false);
+  const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
+  const dataDetails = useBillsStore();
+  const [fiatPayment, setFiaPayment] = useState(stables && stables.length > 0 ? stables[0].coin : 'NGN');
+  const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
+
+  const fetchDataPackages = async () => {
+    const response = await axios.request({
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/subscription-packages/${selectedNetworkDetails?.product_number}`,
+      headers: {'Content-Type':'application/json'}
+    });
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.prices as dataPackageProps[];
+    return data;
+  }
+
+  const { data:dataPackages, status:dataPackageStatus} = useQuery({
+    queryKey: ['data-packages', selectedNetwork, selectedNetworkDetails?.product_number],
+    queryFn: fetchDataPackages,
+    enabled: selectedNetworkDetails && selectedNetworkDetails.product_number !== 0
+  });
+
+  const [selectedPackage, setSelectedPackage] = useState('');
+  const [selectedPackageDetails, setSelectedPackageDetails] = useState<dataPackageProps | undefined>(undefined);
+
+  const isReadyAndAvailable = dataPackageStatus === 'success' && dataPackages.length > 0;
+
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues: {
       inputAmount: "",
@@ -48,28 +113,52 @@ const Datapurchase = () => {
     }
   });
 
-  const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList ? networkOptionsList[0].network : 'MTN');
-  const [selectPayment, setSelectPayment] = useState('BTC');
-  const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
-  const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
-  const dataDetails = useBillsStore();
-  const [fiatPayment, setFiaPayment] = useState('NGN');
-  const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
+  useEffect(() => {
+    if (dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
+      setSelectedPackage(dataPackages[0].payment_item_name);
+      setSelectedPackageDetails(dataPackages[0]);
+      setValue('inputAmount', dataPackages[0].payment_item_name);
+      if (activeButton === 'fiat') {
+        setValue('paymentAmount', dataPackages[0].amount.toString())
+      } else {
+        setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
+      }
+    } else {
+      setSelectedPackage('Package Loading...')
+    }
+  }, [dataPackageStatus, dataPackages, activeButton])
 
   const handleChange = (payment: string) => {
     setFiaPayment(payment);
     setIsPaymentDropdownOpen(false);
   };
   
-  const handleSelectChange = (network: string) => {
-    setSelectedNetwork(network);
+  const handleSelectChange = (network:airtimeNetworkProps) => {
+    setSelectedNetwork(network.network);
+    setSelectedNetworkDetails(network);
     setIsNetworkDropdownOpen(false); 
   };
+
+  console.log(selectedNetworkDetails);
 
   const handleSelectedChange = (payment: string) => {
     setSelectPayment(payment);
     setIsPaymentDropdownOpen(false); 
   };
+
+  const handleSelectPackage = (package_name: dataPackageProps) => {
+    setSelectedPackage(package_name.payment_item_name);
+    setSelectedPackageDetails(package_name);
+    if (activeButton === 'fiat') {
+      setValue('paymentAmount', package_name.amount.toString())
+    } else {
+      setValue('paymentAmount', (package_name.amount / 1000).toFixed(6))
+    }
+    setValue('inputAmount', package_name.payment_item_name);
+    setIsNetworkDataPackageOpen(false);
+  };
+  
+  console.log(selectedPackageDetails);
    
   const fiatPaymentOptions = [
     { value: 'NGN', logo: ngnlogo },
@@ -87,7 +176,6 @@ const Datapurchase = () => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
 
-    localStorage.removeItem('dataPurchaseData');
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
       selectedNetwork: selectedNetwork
@@ -105,7 +193,7 @@ const Datapurchase = () => {
           <button
             key={item.cs}
             type="button"
-            onClick={() => {reset(); setActiveButton(item.cs)}}
+            onClick={() => setActiveButton(item.cs)}
             className={`${item.act === 'off' && 'hidden'} w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-semibold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex uppercase ${activeButton === item.cs ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
           >
             {item.cs}
@@ -122,34 +210,66 @@ const Datapurchase = () => {
           <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5] mt-3 xl:h-[96px]">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px]  xl:mt-[8px] xl:p-3  xl:leading-[21px]">Select plan</label>
             <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">You Pay</label>
-            <div className="flex justify-between px-3  ">
-              <input
-                {...register("inputAmount")}
-                type="text"
-                placeholder="500 MB-1Day"
-                className="xl:w-[143px] w-[100px] h-[25px] leading-[27px]  mt-0 text-[16px] xl:h-[38px] xl:text-[16px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
-                />
-              <div className="relative ">
+            <div className="flex justify-between px-3 gap-1">
+              <div className="relative flex-1">
                 <div
-                  className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0   "
-                  onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
+                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[120px] h-[25px] xl:w-full xl:h-[32px] rounded-sm flex items-center justify-between focus:outline-none focus:ring-0 p-1"
+                  onClick={() => setIsNetworkDataPackageOpen(!isNetworkDataPackageOpen)}
+                >
+                  <span>{dataPackageStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedPackage}</span>
+                  <HiChevronDown   className="size-6"/>             
+                </div>
+
+                { isNetworkDataPackageOpen && (
+                  <div className={cn("absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1", isReadyAndAvailable ? 'h-[250px] overflow-y-auto' : 'h-[70px]')}>
+                    { dataPackages && dataPackages.length > 0 && dataPackages.map((dataPackage) => (
+                      <div
+                        key={dataPackage.product_number}
+                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+                        onClick={() => handleSelectPackage(dataPackage)}
+                      >
+                        <span>{dataPackage.payment_item_name}</span>
+                      </div>
+                    ))}
+                    { dataPackageStatus === 'pending' && (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="animate-spin" />
+                      </div>
+                    )}
+                    { dataPackageStatus === 'success' && dataPackages.length < 1 && (
+                      <div className="flex items-center justify-center py-4">
+                        <p>DataPackages not available</p>
+                      </div>
+                    )}
+                    { dataPackageStatus === 'error' && (
+                      <div className="flex items-center justify-center w-full h-full px-2">
+                        <p>Error occured while loading data packages. Try again later.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="relative">
+                <div
+                  className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[120px] h-[25px] xl:w-[110px] xl:h-[32px] border border-none rounded-sm flex items-center justify-between  focus:outline-none focus:ring-0   "
+                  onClick={() => {setIsNetworkDropdownOpen(!isNetworkDropdownOpen); setIsNetworkDataPackageOpen(false)}}
                 >
                   <img
-                    src={networkOptionsList ? networkOptionsList.find(option => option.network === selectedNetwork)?.icon : '/images/MTN Circular.png'}
+                    src={networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList.find(option => option.network === selectedNetwork)?.icon : '/images/MTN Circular.png'}
                     alt={selectedNetwork}
                     className="size-6 mr-2 rounded-full"
                   />
-                  <span>{selectedNetwork}</span>
+                  <span>{networkOptionStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedNetwork}</span>
                   <HiChevronDown   className="size-6"/>             
                 </div>
 
                 { isNetworkDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                    {networkOptionsList && networkOptionsList.length > 0 && networkOptionsList.map((network) => (
+                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
+                    { networkOptionsList && networkOptionsList.length > 0 && networkOptionsList.map((network) => (
                       <div
                         key={network.product_number}
-                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleSelectChange(network.network)}
+                        className="flex items-center p-1 cursor-pointer hover:bg-gray-100 rounded-lg"
+                        onClick={() => handleSelectChange(network)}
                       >
                         <img src={network.icon} alt={network.network} className=" size-6 mr-2 rounded-full" />
                         <span>{network.network}</span>
@@ -188,7 +308,7 @@ const Datapurchase = () => {
                   className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
                   onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
                 >
-                  {activeButton === 'crypto' ? (
+                  { activeButton === 'crypto' ? (
                     <>
                       <img
                         src={paymentOptions.find(option => option.value === selectPayment)?.logo}
@@ -211,27 +331,27 @@ const Datapurchase = () => {
                 </div>
 
                 {isPaymentDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                     {activeButton === 'crypto' ? (
-                      paymentOptions.map((payment) => (
+                      coin && coin.length > 0 && coin.map((payment) => (
                         <div
-                          key={payment.value}
-                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSelectedChange(payment.value)}
+                          key={payment.id}
+                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+                          onClick={() => handleSelectedChange(payment.coin)}
                         >
-                          <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
-                          <span>{payment.value}</span>
+                          <img src={payment.icon} alt={payment.coin} className="size-6 mr-2" />
+                          <span>{payment.coin}</span>
                         </div>
                       ))
                     ) : (
-                      fiatPaymentOptions.map((payment) => (
+                      stables && stables.length > 0 && stables.map((payment) => (
                         <div
-                          key={payment.value}
-                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleChange(payment.value)}
+                          key={payment.id}
+                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+                          onClick={() => handleChange(payment.coin)}
                         >
-                          <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
-                          <span>{payment.value}</span>
+                          <img src={payment.icon} alt={payment.coin} className="size-6 mr-2" />
+                          <span>{payment.coin}</span>
                         </div>
                       ))
                     )}

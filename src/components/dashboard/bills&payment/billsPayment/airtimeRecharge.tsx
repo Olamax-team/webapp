@@ -198,7 +198,7 @@ const AirtimeRecharge = () => {
             <div className="relative">
               <div
                 className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
-                onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
+                onClick={() => {setIsNetworkDropdownOpen(!isNetworkDropdownOpen); setIsPaymentDropdownOpen(false)}}
               >
                 <img
                   src={airtimeNetworks && airtimeNetworks.find(option => option.network === selectedNetwork)?.icon}
@@ -209,11 +209,11 @@ const AirtimeRecharge = () => {
                 <HiChevronDown   className="size-6"/>            
               </div>
               { isNetworkDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <div className="absolute right-0 mt-2 w-fit bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                   { airtimeNetworks && airtimeNetworks.length > 0 && airtimeNetworks.map((network) => (
                     <div
                       key={network.product_number}
-                      className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
                       onClick={() => handleSelectChange(network.network)}
                     >
                       <img src={network.icon} alt={network.network} className="w-6 h-6 mr-2 rounded-full" />
@@ -253,7 +253,7 @@ const AirtimeRecharge = () => {
             <div className="relative">
               <div
                 className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
-                onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
+                onClick={() => {setIsPaymentDropdownOpen(!isPaymentDropdownOpen); setIsNetworkDropdownOpen(false)}}
               >
                 {activeButton === 'crypto' ? (
                   <>
@@ -278,12 +278,12 @@ const AirtimeRecharge = () => {
               </div>
 
               {isPaymentDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <div className="absolute left-0 mt-2 w-fit bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                   {activeButton === 'crypto' ? (
                     coin && coin.length > 0 && coin.map((c) => (
                       <div
                         key={c.id}
-                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
                         onClick={() => handleSelectedChange(c.coin)}
                       >
                         <img src={c.icon} alt={c.coin} className="size-6 mr-2" />

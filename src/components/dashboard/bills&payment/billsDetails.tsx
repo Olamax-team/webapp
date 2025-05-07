@@ -35,7 +35,6 @@ const BillsDetails = ({activeInput }: billsDetailsProps) => {
         return;
     }
   };
-  console.log(renderInput)
 
   return (
     <div className="flex flex-col h-auto w-full">

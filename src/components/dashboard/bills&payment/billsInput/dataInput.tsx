@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { numberSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
-import { useConfirmModal } from "../../../../lib/utils";
+import { formatNigerianPhoneNumber, useConfirmModal } from "../../../../lib/utils";
 import { Info } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
@@ -21,7 +21,7 @@ const DataInput = () => {
      
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(numberSchema),
-        defaultValues: {phoneNumber: kycStatus?.phone_number}
+        defaultValues: { phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : ''}
     });
 
     const onSubmit = (data: any) => {
@@ -29,12 +29,12 @@ const DataInput = () => {
             selectedNetwork:data.selectedNetwork,
             inputAmount:data.inputAmount, 
             selectPayment:data.selectPayment,
-             paymentAmount:data.paymentAmount,
-             fiatPayment:data.fiatPayment
+            paymentAmount:data.paymentAmount,
+            fiatPayment:data.fiatPayment
 
-            }
-            dataItem.setItem(upDatedData);
-            onOpen();
+        }
+        dataItem.setItem(upDatedData);
+        onOpen();
     };
 
     return (
@@ -79,8 +79,8 @@ const DataInput = () => {
             </div>
 
             <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[520px] h-auto mt-10 xl:mt-0 p-5 flex flex-col ">
-                   <h2 className="font-bold font-inter text-[14px] xl:text-[18px] leading-[27px]">
-                        Transaction Summary
+                <h2 className="font-bold font-inter text-[14px] xl:text-[18px] leading-[27px]">
+                    Transaction Summary
                 </h2>
 
 
@@ -103,12 +103,12 @@ const DataInput = () => {
                                 <div className="flex justify-between w-full font-Inter py-5">
                                     <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info   className="size-6" />
                                     </p>
-                                        <p><img src='' alt="" className="size-6" /></p>
+                                    <p><img src='' alt="" className="size-6" /></p>
                                 </div>
                         </div>
                         <div className=" border-t-2 border-[#0000001A] flex justify-between w-full font-Inter mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
-                            <strong>{dataItem.item?.inputAmount}</strong>
+                            <strong>{dataItem.item?.paymentAmount}</strong>
                         </div>
                     </div>
 

@@ -18,8 +18,18 @@ interface UserInfoProps {
   inviteLink: string;
 };
 
+interface service { 
+  title: string; 
+  description: string; 
+  icon: JSX.Element 
+};
+
+interface ServicesProps {
+  services: service[];
+};
+
 const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerified, email }) => {
-  //clipboard copy function
+  
   const copyToClipboard = () => {
     navigator.clipboard.writeText(uid);
     alert("copied!");
@@ -100,10 +110,6 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
   );
 };
 
-interface ServicesProps {
-  services: { title: string; description: string; icon: JSX.Element }[];
-};
-
 const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
   const navigate = useNavigate();
   const handleServiceClick = () => {
@@ -136,7 +142,9 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 };
 
 const DashboardTab: React.FC = () => {
+
   const { user:userDetail, fetchKycDetails, fetchKycStatus, kycDetails, kycStatus } = useUserDetails();
+  const {selectedBill, showTransactionDetail}= activityIndex();
 
   React.useEffect(() => {
     if (userDetail) {
@@ -172,9 +180,6 @@ const DashboardTab: React.FC = () => {
             </div>,
     },
   ];
-
-  
-  const {selectedBill, showTransactionDetail}= activityIndex();
 
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">
