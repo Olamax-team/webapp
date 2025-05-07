@@ -3,9 +3,7 @@ import { z } from 'zod';
 export const formValidationSchema = z.object({
   inputAmount: z
     .string()
-    .min(1, 'Required field')
-    .regex(/^[0-9]+(\.[0-9]{1,2})?$/, 'Invalid amount')
-    .refine(val => parseFloat(val) >= 1, { message: 'Amount must be at least 1' }),
+    .min(1, 'Required field'),
 
     paymentAmount: z
     .string()
@@ -57,7 +55,7 @@ export const formValidationSchema = z.object({
       .string()
       .min(1, 'Required field')
       .regex(/^[0-9]+(\.[0-9]{1,6})?$/, 'Invalid amount')
-      .refine(val => parseFloat(val) >= 0.000001, { message: 'Aamount must be at least 0.000001' }),
+      .refine(val => parseFloat(val) >= 0.000001, { message: 'Amount must be at least 0.000001' }),
     });
 
     export const buyInput = z.object({

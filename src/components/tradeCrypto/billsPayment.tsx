@@ -34,7 +34,7 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     categories,
     className = "",
 }) => {
-    const { fetchAllCoinPrices, fetchBillServices, fetchAllCoins, fetchStableCoins} = useFetchStore();
+    const { fetchAllCoinPrices, fetchBillServices, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
 
     const { data: stables } = useQuery({
         queryKey: ['stable-coins'],
@@ -43,7 +43,7 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
 
     const { data:coin } = useQuery({
         queryKey: ['all-coins'],
-        queryFn: fetchAllCoins
+        queryFn: fetchAllBuyCoins
     });
     
     const getCoinId = (coinCode: string): number | undefined => {
@@ -73,7 +73,8 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     };
     
     const fetchElectricBranches = async () => {
-        const response = await axios.request({  method: 'get',
+        const response = await axios.request({  
+            method: 'get',
             maxBodyLength: Infinity,
             url: 'https://api.olamax.io/api/get-electricity-branches/electricity/postpaid',
             headers: {'Content-Type':'application/json'}

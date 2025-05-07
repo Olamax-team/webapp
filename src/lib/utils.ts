@@ -42,6 +42,13 @@ export const timelineCreator = (date:string) => {
   return displayDate;
 };
 
+export const formatNigerianPhoneNumber = (phoneNumber:string) => {
+  if (phoneNumber && phoneNumber.startsWith('+234')) {
+    return "0" + phoneNumber.substring(4);
+  }
+  return phoneNumber;
+};
+
 export const useWhatNextPasswordModal = create<modalProps>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),

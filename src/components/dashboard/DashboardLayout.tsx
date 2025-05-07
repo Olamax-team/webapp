@@ -4,6 +4,7 @@ import { HiOutlineCash, HiOutlineClipboardList, HiOutlineIdentification, HiOutli
 import { IconType } from 'react-icons/lib';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { activityIndex } from '../../stores/generalStore';
 
 type dashboardLayoutProps = {
   children: React.ReactNode;
@@ -63,6 +64,9 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
 
     const [navIsFixed, setNavIsFixed] = React.useState(navbar);
 
+    const { setShowTransactionDetail, setSelectedBill, setActive } = activityIndex();
+
+
     const toggleNavbarState = React.useCallback(() => {
       if (window.scrollY >= 80) {
         setNavIsFixed(navbarFixed);
@@ -84,7 +88,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
    const DashboardNavLink = ({label, icon:Icon, path}:dashboardNavLinkProps) => {
     
     return (
-      <Link to={path ? path : ''} className={cn("md:w-[260px] lg:w-[250px] xl:w-[260px] 2xl:w-[290px] h-[60px] rounded-r-[30px] pl-[20px] xl:pl-[25px] 2xl:pl-[40px] flex item-center hover:bg-[#f5f5f5] group", pathname === path ? 'bg-[#f5f5f5]' : '')}>
+      <Link to={path ? path : ''} className={cn("md:w-[260px] lg:w-[250px] xl:w-[260px] 2xl:w-[290px] h-[60px] rounded-r-[30px] pl-[20px] xl:pl-[25px] 2xl:pl-[40px] flex item-center hover:bg-[#f5f5f5] group", pathname === path ? 'bg-[#f5f5f5]' : '')} onClick={() => {setShowTransactionDetail(false); setSelectedBill(''); setActive(0)}}>
         <div className={cn('my-auto flex items-center gap-3 group-hover:text-primary', pathname === path ? 'text-primary': '')}>
           {Icon && <Icon className='size-6'/>}
           <p className='font-medium'>{label && label}</p>
@@ -96,7 +100,7 @@ const DashboardLayout = ({children, className}:dashboardLayoutProps) => {
   const MobileNavLink = ({label, icon:Icon, path}:dashboardNavLinkProps) => {
     
     return (
-      <Link to={path ? path : ''} className='flex gap-3 items-center group'>
+      <Link to={path ? path : ''} className='flex gap-3 items-center group' onClick={() => {setShowTransactionDetail(false); setSelectedBill(''); setActive(0)}}>
         {Icon && <Icon className={cn('size-6 group-hover:text-primary', path === pathname ? 'text-primary' : '')}/>}
         <p className={cn('font-medium group-hover:text-primary', path === pathname ? 'text-primary' : '')}>{label}</p>    
       </Link>
