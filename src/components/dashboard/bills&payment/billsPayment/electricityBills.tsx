@@ -137,6 +137,7 @@ const ElectricityBills = () => {
     { value: 'USDT', logo: USDTLogo },
     { value: 'SOL', logo: SOLLogo },
   ];
+
   const fiatPaymentOptions = [
     { value: 'NGN', logo: ngnlogo },
     { value: 'USD', logo: ngnlogo },
@@ -205,11 +206,11 @@ const ElectricityBills = () => {
                   </div>
 
                 {isNetworkDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                     { electicBranches && electicBranches.length > 0 && electicBranches.map((network) => (
                       <div
                         key={network.abrv}
-                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                        className="flex items-center py-1 px-2 gap-2 cursor-pointer hover:bg-gray-100 rounded-lg"
                         onClick={() => handleSelectChange(network.abrv)}
                       >
                         <img src={network.icon} alt={network.abrv} className=" size-6 mr-2 rounded-full" />
@@ -247,7 +248,7 @@ const ElectricityBills = () => {
 
               <div className="relative">
                 <div
-                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
+                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 p-1"
                   onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
                 >
                   {activeButton === 'crypto' ? (
@@ -273,12 +274,12 @@ const ElectricityBills = () => {
                 </div>
 
                 {isPaymentDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                     {activeButton === 'crypto' ? (
                       paymentOptions.map((payment) => (
                         <div
                           key={payment.value}
-                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                          className="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100 rounded-lg"
                           onClick={() => handleSelectedChange(payment.value)}
                         >
                           <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
@@ -289,7 +290,7 @@ const ElectricityBills = () => {
                       fiatPaymentOptions.map((payment) => (
                         <div
                           key={payment.value}
-                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                          className="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100 rounded-lg"
                           onClick={() => handleChange(payment.value)}
                         >
                           <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />

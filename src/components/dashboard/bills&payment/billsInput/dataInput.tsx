@@ -61,9 +61,9 @@ const DataInput = () => {
                        {errors.phoneNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.phoneNumber as { message: string }).message} </p>
                     )}
 
-                    <div className="mt-8 flex item-center">
+                    <div className="mt-8 flex item-center gap-2">
                         <Info  className="size-6" />
-                        <p className="w-full  font-small text-[14px] xl:text-[16px] leading-[24px]">
+                        <p className="text-[#121826] font-normal text-[14px] font-Inter xl:text-[16px] xl:leading-[24px]">
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
                         </p>
                     </div>
@@ -97,18 +97,18 @@ const DataInput = () => {
                       <div className="border-t-2 border-[#0000001A] mt-3">
                                 <div className="flex justify-between w-full font-Inter py-5">
                                     <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Price</p>
-                                    <strong>{dataItem.item?.selectPayment || dataItem.item?.fiatPayment} {dataItem.item?.paymentAmount}</strong>
+                                    <strong>{dataItem.item?.selectPayment || dataItem.item?.fiatPayment} {dataItem.item?.paymentAmount}.00</strong>
                                 </div>
 
                                 <div className="flex justify-between w-full font-Inter py-5">
                                     <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info   className="size-6" />
                                     </p>
-                                    <p><img src='' alt="" className="size-6" /></p>
+                                    <p className="font-bold text-[16px] leading-[24px] text-[#121826]">__</p>
                                 </div>
                         </div>
                         <div className=" border-t-2 border-[#0000001A] flex justify-between w-full font-Inter mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
-                            <strong>{dataItem.item?.paymentAmount}</strong>
+                            <strong>{dataItem.item?.selectPayment || dataItem.item?.fiatPayment} {dataItem.item?.paymentAmount}.00</strong>
                         </div>
                     </div>
 

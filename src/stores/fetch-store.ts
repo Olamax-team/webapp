@@ -106,7 +106,7 @@ export const useFetchStore = create<FetchStore>(() => ({
     const response = await axios.request({
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://api.olamax.io/api/stable-coins',
+      url: 'https://api.olamax.io/api/stable-coins/buy',
       headers: {'Content-Type':'application/json',},
     });
 

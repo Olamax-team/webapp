@@ -19,11 +19,42 @@ type Inputs = {
   fiatPayment:string;
 };
 
+
+interface airtimeNetworkProps {
+  network: string;
+  product_number: number;
+  icon: string;
+};
+
+interface coinsProps {
+  coin: string;
+  coin_name: string;
+  icon: string;
+  status: string;
+  id: number;
+  method: string;
+  stable_coins: string;
+};
+
+
+// transaction_type: activeButton,
+// naira_amount: number;
+// coin_token_id: number;
+// blockchain_id: number;
+// coin_amount: number;
+// bills: selectedBill;
+// network: selectedNetwork;
+// package_product_number: selectedNetworkDetails.product_number;
+// electricity_type: string;
+// phone_number: string;
+// cable_number: string;
+// meter_number: string;
+
 const AirtimeRecharge = () => {
 
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
-  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
+  const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
 
   const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllCoins } = useFetchStore();
 
@@ -83,16 +114,26 @@ const AirtimeRecharge = () => {
 
   const inputAmount = watch("inputAmount");
   const paymentAmount = watch("paymentAmount");
+
   const [amount1, setAmount1] = useState<string>("0");
   const [amount2, setAmount2] = useState<string>("0");
+
   const [selectedNetwork, setSelectedNetwork] = useState(airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
-  const [selectPayment, setSelectPayment] = useState('BTC');
+  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => airtimeNetworks && airtimeNetworks.length > 0 ? airtimeNetworks[0] : undefined);
+
+  const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
+  const [selectPaymentDetails, setSelectPaymentDetails] = useState<coinsProps | undefined>(() => coin && coin.length > 0 ? coin[0] : undefined);
+
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
-  const airtimeDetails = useBillsStore();
-  const [fiatPayment, setFiaPayment] = useState('NGN');
+
+  const [fiatPayment, setFiaPayment] = useState(stables && stables.length > 0 ? stables[0].coin : 'NGN');
+  const [fiatPaymentDetails, setFiatPaymentDetails] = useState<coinsProps | undefined>(() => stables && stables.length > 0 ? stables[0] : undefined);
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
+  const airtimeDetails = useBillsStore();
+  
+0
   //autofill for both inputs
     const price = React.useMemo(() => {
       if (activeButton === 'crypto') {
@@ -135,18 +176,21 @@ const AirtimeRecharge = () => {
     }
   }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
 
-  const handleSelectChange = (network: string) => {
-    setSelectedNetwork(network);
+  const handleSelectChange = (network: airtimeNetworkProps) => {
+    setSelectedNetwork(network.network);
+    setSelectedNetworkDetails(network);
     setIsNetworkDropdownOpen(false);
   };
 
-  const handleSelectedChange = (payment: string) => {
-    setSelectPayment(payment);
+  const handleSelectedChange = (payment: coinsProps) => {
+    setSelectPayment(payment.coin);
+    setSelectPaymentDetails(payment)
     setIsPaymentDropdownOpen(false); 
   };
    
-  const handleChange = (payment: string) => {
-    setFiaPayment(payment);
+  const handleChange = (payment: coinsProps) => {
+    setFiaPayment(payment.coin);
+    setFiatPaymentDetails(payment)
     setIsPaymentDropdownOpen(false);
   };
 
@@ -158,6 +202,8 @@ const AirtimeRecharge = () => {
     };
     setShowTransactionDetail(true);
     setSelectedBill('airtime');
+
+    console.log('reg-data', regdata)
     airtimeDetails.setItem(regdata);
   };
 
@@ -214,7 +260,7 @@ const AirtimeRecharge = () => {
                     <div
                       key={network.product_number}
                       className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
-                      onClick={() => handleSelectChange(network.network)}
+                      onClick={() => handleSelectChange(network)}
                     >
                       <img src={network.icon} alt={network.network} className="w-6 h-6 mr-2 rounded-full" />
                       <span>{network.network}</span>
@@ -284,7 +330,7 @@ const AirtimeRecharge = () => {
                       <div
                         key={c.id}
                         className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
-                        onClick={() => handleSelectedChange(c.coin)}
+                        onClick={() => handleSelectedChange(c)}
                       >
                         <img src={c.icon} alt={c.coin} className="size-6 mr-2" />
                         <span>{c.coin}</span>
@@ -295,7 +341,7 @@ const AirtimeRecharge = () => {
                       <div
                         key={s.id}
                         className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleChange(s.coin)}
+                        onClick={() => handleChange(s)}
                       >
                         <img src={s.icon} alt={s.coin} className="size-6 mr-2" />
                         <span>{s.coin}</span>

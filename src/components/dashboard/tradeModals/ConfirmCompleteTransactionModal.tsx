@@ -10,8 +10,6 @@ const ConfirmCompleteTransaction = () => {
   const paymentDetails = useFiatPaymentDetailsModal();
   const { transactionId, setAccountDetails } = useTradeStore();
 
-  console.log('t_id', transactionId);
-
   const createBuyConfig = useApiConfig({
     method: 'post',
     url: 'create-buy-order',

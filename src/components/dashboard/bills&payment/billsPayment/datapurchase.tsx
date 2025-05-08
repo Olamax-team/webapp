@@ -38,9 +38,22 @@ type dataPackageProps = {
   amount: number
 };
 
+// transaction_type: activeButton,
+// naira_amount: number;
+// coin_token_id: number;
+// blockchain_id: number;
+// coin_amount: number;
+// bills: selectedBill;
+// network: selectedNetwork;
+// package_product_number: selectedNetworkDetails.product_number;
+// electricity_type: string;
+// phone_number: string;
+// cable_number: string;
+// meter_number: string;
+
 const Datapurchase = () => {
 
-  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
+  const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
   const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
 
   
@@ -72,6 +85,7 @@ const Datapurchase = () => {
 
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0].network : 'MTN');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0] : undefined);
+  
   const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isNetworkDataPackageOpen, setIsNetworkDataPackageOpen] = useState(false);

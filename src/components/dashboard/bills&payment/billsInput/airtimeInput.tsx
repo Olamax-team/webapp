@@ -2,15 +2,30 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { numberSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
-import { useConfirmModal } from "../../../../lib/utils";
+import { formatNigerianPhoneNumber, useConfirmModal } from "../../../../lib/utils";
 import { Info } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
 
 
+// transaction_type: activeButton,
+// naira_amount: number;
+// coin_token_id: number;
+// blockchain_id: number;
+// coin_amount: number;
+// bills: selectedBill;
+// network: selectedNetwork;
+// package_product_number: selectedNetworkDetails.product_number;
+// electricity_type: string;
+// phone_number: string;
+// cable_number: string;
+// meter_number: string;
+
+
 
 const AirtimeInput = () => {
     const airtimeData = useBillsStore();
+
     const {onOpen}  = useConfirmModal();
     
     const { user, fetchKycStatus, kycStatus } = useUserDetails();
@@ -23,8 +38,10 @@ const AirtimeInput = () => {
      
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(numberSchema),
-        defaultValues: {phoneNumber: kycStatus?.phone_number}
+        defaultValues: { phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : ''}
     });
+
+    console.log(airtimeData.item);
 
     const onSubmit = (data: any) => {
         const upDatedData = {
@@ -67,7 +84,7 @@ const AirtimeInput = () => {
                        {errors.phoneNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.phoneNumber as { message: string }).message} </p>
                     )}
 
-                    <div className="mt-8 flex item-center">
+                    <div className="mt-8 flex item-center gap-2">
                     <span className="flex justify-start"><Info size={24} /></span>
                     <p className="text-[#121826] font-normal text-[14px] font-Inter xl:text-[16px] xl:leading-[24px]">Please verify the wallet address before proceeding, we would not be held responsible if the details provided are incorrect.</p>
                     </div>
@@ -96,7 +113,7 @@ const AirtimeInput = () => {
 
                         <div className="flex justify-between w-full  font-Inter  border-t-2 border-[#0000001A] mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">You Recieve</p>
-                            <strong>{airtimeData.item?.inputAmount}</strong>
+                            <strong>{airtimeData.item?.selectPayment || airtimeData.item?.fiatPayment } {airtimeData.item?.inputAmount}.00</strong>
                         </div>
                       <div className="border-t-2 border-[#0000001A] mt-3">
                                 <div className="flex justify-between w-full font-Inter py-5">
@@ -105,15 +122,16 @@ const AirtimeInput = () => {
                                 </div>
 
                                 <div className="flex justify-between w-full font-Inter py-5">
-                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info   className="size-6" />
-                                    </p>
-                                        <p><img src='' alt="" className="size-6" /></p>
+                                    <div className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center gap-2">
+                                        Withdrawal Fee <Info className="size-6" />
+                                    </div>
+                                    <p className="font-bold"> __ </p>
                                 </div>
                         </div>
 
                         <div className="flex justify-between w-full font-Inter mt-3 py-5 border-t-2  border-[#0000001A]">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
-                            <strong>{airtimeData.item?.inputAmount}</strong>
+                            <strong>{airtimeData.item?.selectPayment || airtimeData.item?.fiatPayment } {airtimeData.item?.inputAmount}.00</strong>
                         </div>
                     </div>
 

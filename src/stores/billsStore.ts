@@ -7,6 +7,18 @@ interface billsProps {
     inputAmount: string;  
     paymentAmount: string; 
     fiatPayment:string;
+    transaction_type?: string;
+    naira_amount?: number;
+    coin_token_id?: number;
+    blockchain_id?: number;
+    coin_amount?: number;
+    bills?: string;
+    network?: string;
+    package_product_number?: number;
+    electricity_type?: string;
+    phone_number?: string;
+    cable_number?: string;
+    meter_number?: string;
 };
 
 interface billsState {
