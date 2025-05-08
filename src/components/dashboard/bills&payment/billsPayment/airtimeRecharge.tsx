@@ -141,11 +141,15 @@ const AirtimeRecharge = () => {
       } else {
         return getBuyingPrice(selectPayment);
       }
-    }, [activeButton, inputAmount, paymentAmount, prices, coin]);
+    }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
   useEffect(() => {
     
     if (lastChanged !== 'amount1') return;
-    if (!amount1 || !fiatPayment) return;
+    if (!amount1) {
+      setAmount2("");
+      setValue("paymentAmount", "");
+      return;
+  }
   
     if (price) {
       let newAmount2 = '';
@@ -162,7 +166,11 @@ const AirtimeRecharge = () => {
 
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
-    if (!amount2 || !selectPayment) return;
+    if (!amount2) {
+      setAmount1("");
+      setValue("inputAmount", "");
+      return;
+      }
   
     if (price) {
       let newAmount1 = '';

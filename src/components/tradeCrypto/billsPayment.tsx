@@ -10,6 +10,7 @@ import { activityIndex } from "../../stores/generalStore";
 import { useNavigate } from "react-router-dom";
 import { useFetchStore } from "../../stores/fetch-store";
 import useBillsStore from "../../stores/billsStore";
+import useUserDetails from "../../stores/userStore";
 
 interface BillsPaymentProps {
     categories: string[]; // Categories to map for dropdown
@@ -34,6 +35,9 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     categories,
     className = "",
 }) => {
+    
+    const { user } = useUserDetails();
+    
     const { fetchAllCoinPrices, fetchBillServices, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
 
     const { data: stables } = useQuery({
@@ -193,7 +197,10 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
 
     const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        if (!user) {
+            navigate("/log-in"); // Redirect to login if not logged in
+            return;
+          };
         const billData = {
             selectedNetwork:cat === 'Electricity' ?  selectedBranch : selectedTVNetwork ,
             selectPayment: subTab === "fiat" ? "": prop2,

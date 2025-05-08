@@ -81,7 +81,7 @@ const Datapurchase = () => {
   });
 
   console.log(coin);
-  console.log(stables)
+  console.log("stables",stables)
 
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0].network : 'MTN');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0] : undefined);
@@ -313,6 +313,7 @@ const Datapurchase = () => {
             <input
                 {...register("paymentAmount")}
                 type="text"
+                disabled
                 placeholder="0.00000078"
                 className="xl:w-[143px] w-[100px]  h-[25px] leading-[27px]  mt-0 text-[16px]   xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
                 />
