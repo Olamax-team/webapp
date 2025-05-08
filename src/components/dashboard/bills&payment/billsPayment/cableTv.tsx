@@ -1,20 +1,21 @@
-import React, {useState } from "react";
+import React, {useEffect, useMemo, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-import btcLogo from '../../../../assets/images/BTC Circular.png'
-import ETHLogo from '../../../../assets/images/ETH Circular.png'
-import USDTLogo from '../../../../assets/images/USDT Circular.png'
-import SOLLogo from '../../../../assets/images/SOL Circular.png'
+// import btcLogo from '../../../../assets/images/BTC Circular.png'
+// import ETHLogo from '../../../../assets/images/ETH Circular.png'
+// import USDTLogo from '../../../../assets/images/USDT Circular.png'
+// import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-import ngnlogo from '../../../../assets/images/NGN Circular.png';
+// import ngnlogo from '../../../../assets/images/NGN Circular.png';
 import { useApiConfig } from "../../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
+import { useFetchStore } from "../../../../stores/fetch-store";
 
 
 
@@ -42,6 +43,7 @@ type cableServicesProps = {
 const CableTv = () => {
 
   const { setShowTransactionDetail, setSelectedBill } = activityIndex();
+   const { fetchAllCoinPrices, fetchStableCoins, fetchAllCoins } = useFetchStore();
 
   const billsServiceConfig = useApiConfig({
     method: 'get',
@@ -70,6 +72,41 @@ const CableTv = () => {
     const data = response.data.bill_service as cryptoServiceProps[];
     return data;
   };
+    const { data: stables } = useQuery({
+      queryKey: ['stable-coins'],
+      queryFn: fetchStableCoins
+    })
+  
+    const { data:coin } = useQuery({
+      queryKey: ['all-coins'],
+      queryFn: fetchAllCoins
+    })
+     
+   const getCoinId = (coinCode: string): number | undefined => {
+     if (coin) {
+       return coin.find(c => c.coin === coinCode)?.id; // Return undefined if not found
+     }
+     return undefined; // Explicitly return undefined if coin is not defined
+   };
+ 
+   const { data:prices } = useQuery({
+     queryKey: ['coin-prices'],
+     queryFn: fetchAllCoinPrices
+   });
+ 
+   const getSellingPrice = (coinCode: string) => {
+     const id = getCoinId(coinCode);
+     if (prices) {
+       return prices.find(p => p.coin_id === id)?.selling;
+     }
+   };
+ 
+   const getBuyingPrice = (coinCode: string) => {
+     const id = getCoinId(coinCode);
+     if (prices) {
+       return prices.find(p => p.coin_id === id)?.buying;
+     }
+   }; 
 
   const { data:billServices, status:billServiceStatus } = useQuery({
     queryKey: ['bills-service'],
@@ -83,14 +120,18 @@ const CableTv = () => {
 
   const frontPageData = JSON.parse(localStorage.getItem('tvData') || '{}');
 
-  const { register, handleSubmit, formState: { errors }, reset} = useForm<Inputs>({
+  const { register, handleSubmit,setValue, formState: { errors }, reset,watch} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues:{
-      inputAmount: frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.amt_1 : "",
+      inputAmount: "",
       paymentAmount:"",
     }
   });
 
+  const inputAmount = watch("inputAmount");
+  const paymentAmount = watch("paymentAmount");
+  const [amount1, setAmount1] = useState<string>("0");
+  const [amount2, setAmount2] = useState<string>("0");
   const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : tvServices ? tvServices[0].abrv : 'DSTV');
   const [selectPayment, setSelectPayment] = useState('BTC');
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
@@ -98,7 +139,8 @@ const CableTv = () => {
   const cableDetails = useBillsStore();
   const [fiatPayment, setFiaPayment] = useState('NGN');
   const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
-
+  const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
+  
   const handleSelectChange = (network: string) => {
     setSelectedNetwork(network);
     setIsNetworkDropdownOpen(false);
@@ -113,19 +155,70 @@ const CableTv = () => {
     setIsPaymentDropdownOpen(false);
   };
 
-  const fiatPaymentOptions = [
-    { value: 'NGN', logo: ngnlogo },
-    { value: 'USD', logo: ngnlogo },
-    { value: 'EUR', logo: ngnlogo },
-    { value: 'GBP', logo: ngnlogo },
-  ];
+  // const fiatPaymentOptions = [
+  //   { value: 'NGN', logo: ngnlogo },
+  //   { value: 'USD', logo: ngnlogo },
+  //   { value: 'EUR', logo: ngnlogo },
+  //   { value: 'GBP', logo: ngnlogo },
+  // ];
 
-  const paymentOptions = [
-    { value: 'BTC', logo: btcLogo },
-    { value: 'ETH', logo: ETHLogo },
-    { value: 'USDT', logo: USDTLogo },
-    { value: 'SOL', logo: SOLLogo },
-  ];
+  // const paymentOptions = [
+  //   { value: 'BTC', logo: btcLogo },
+  //   { value: 'ETH', logo: ETHLogo },
+  //   { value: 'USDT', logo: USDTLogo },
+  //   { value: 'SOL', logo: SOLLogo },
+  // ];
+    //autofill for both inputs
+    const price = useMemo(() => {
+      if (activeButton === 'crypto') {
+        return getSellingPrice(selectPayment);
+      } else {
+        return getBuyingPrice(selectPayment);
+      }
+    }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, amount1, amount2, prices, coin]);
+    useEffect(() => {
+      
+      if (lastChanged !== 'amount1') return;
+      if (!amount1) {
+        setAmount2("");
+        setValue("paymentAmount", "");
+        return;
+    }
+      if (price) {
+        let newpaymentAmount = '';
+        if (activeButton === "crypto") {
+          //WE DONOT KNOW THE FORMULA YET
+          newpaymentAmount = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+        } else if (activeButton === 'fiat') {
+          newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
+        }
+    // Updating Zustand state
+        setAmount2(newpaymentAmount);
+        setValue("paymentAmount", newpaymentAmount);
+      }
+    }, [amount1, fiatPayment, activeButton, prices, coin, lastChanged]);
+  
+    useEffect(() => {
+      if (lastChanged !== 'amount2') return;
+      if (!amount2) {
+        setAmount1("");
+        setValue("inputAmount", "");
+        return;
+        }
+    
+      if (price) {
+        let newinputAmount = '';
+        if (activeButton === "crypto") {
+          //WE DONOT KNOW THE FORMULA YET
+          newinputAmount = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+        } else if (activeButton === 'fiat') {
+          newinputAmount = (parseFloat(amount2)).toFixed(2); 
+        }
+        setAmount1(newinputAmount);
+        setValue("inputAmount", newinputAmount);
+      }
+    }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
+    
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     localStorage.getItem('tvData');
@@ -170,6 +263,7 @@ const CableTv = () => {
               {...register("inputAmount")}
               type="text"
               placeholder="0.00"
+              onChange={(e) => {setAmount1(e.target.value);setLastChanged('amount1');}}
               className="xl:w-[143px] w-[100px]  h-[25px] leading-[27px]  mt-0 text-[16px]   xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter xl:leading-[34.5px]"
               />
     
@@ -224,20 +318,21 @@ const CableTv = () => {
               <input
                 {...register("paymentAmount")}
                 type="text"
-                
+                value={amount2}
                 placeholder="0.00"
+                onChange={(e) => {setAmount2(e.target.value);setLastChanged('amount2');}}
                 className="xl:w-[143px] w-[100px] h-[25px] text-[16px]  xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] xl:leading-[34.5px]"
               />
-    
+  
       <div className="relative">
           <div
-            className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
+            className="cursor-pointer bg-[#f55f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
             onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
           >
             {activeButton === 'crypto' ? (
               <>
                 <img
-                  src={paymentOptions.find(option => option.value === selectPayment)?.logo}
+                  src={coin && coin.length > 0 ? coin.find(option => option.coin === selectPayment)?.icon: `/images/${selectPayment} Circular.png`}
                   alt={selectPayment}
                   className="size-6 mr-2"
                 />
@@ -246,7 +341,7 @@ const CableTv = () => {
             ) : (
               <>
                 <img
-                  src={fiatPaymentOptions.find(option => option.value === fiatPayment)?.logo}
+                 src={stables && stables.length > 0 ? stables.find(option => option.coin === fiatPayment)?.icon : `/images/${fiatPayment} Circular.png`}
                   alt={fiatPayment}
                   className="size-6 mr-2"
                 />
@@ -259,25 +354,25 @@ const CableTv = () => {
           {isPaymentDropdownOpen && (
             <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
               {activeButton === 'crypto' ? (
-                paymentOptions.map((payment) => (
+                coin && coin.length > 0 && coin.map((payment) => (
                   <div
-                    key={payment.value}
+                    key={payment.id}
                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleSelectedChange(payment.value)}
+                    onClick={() => handleSelectedChange(payment.coin)}
                   >
-                    <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
-                    <span>{payment.value}</span>
+                    <img src={payment.icon} alt={payment.coin} className="size-6 mr-2" />
+                    <span>{payment.coin}</span>
                   </div>
                 ))
               ) : (
-                fiatPaymentOptions.map((payment) => (
+                stables && stables.length > 0 && stables.map((payment) => (
                   <div
-                    key={payment.value}
+                    key={payment.id}
                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleChange(payment.value)}
+                    onClick={() => handleChange(payment.coin)}
                   >
-                    <img src={payment.logo} alt={payment.value} className="size-6 mr-2" />
-                    <span>{payment.value}</span>
+                    <img src={payment.icon} alt={payment.coin} className="size-6 mr-2" />
+                    <span>{payment.coin}</span>
                   </div>
                 ))
               )}
