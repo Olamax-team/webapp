@@ -24,7 +24,7 @@ const BuySell: React.FC<BuySellProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserDetails();;
+  const { user } = useUserDetails();
 
   const [subTab, setSubTab] = useState("sell");
   const [prop1, setProp1] = useState("NGN");
