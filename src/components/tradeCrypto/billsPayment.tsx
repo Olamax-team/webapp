@@ -207,14 +207,13 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
             inputAmount: amount1,
             paymentAmount: amount2,
             fiatPayment:subTab === "fiat" ? prop1: "",
-      
-          };
+        };
           
-          billDetails.setItem(billData);
+        billDetails.setItem(billData);
         setActive(cat === 'Electricity' ? 2 : 3);
         navigate('/dashboard/bills_payment');
         setShowTransactionDetail(true);
-        setSelectedBill(cat === 'Electricity' ? 'electricity': 'cabletv');
+        setSelectedBill(cat === 'Electricity' ? 'electricity': 'cable');
     }
 
 return (

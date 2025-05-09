@@ -38,6 +38,16 @@ type dataPackageProps = {
   amount: number
 };
 
+interface coinsProps {
+  coin: string;
+  coin_name: string;
+  icon: string;
+  status: string;
+  id: number;
+  method: string;
+  stable_coins: string;
+};
+
 // transaction_type: activeButton,
 // naira_amount: number;
 // coin_token_id: number;
@@ -87,10 +97,14 @@ const Datapurchase = () => {
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0] : undefined);
   
   const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
+  const [selectPaymentDetails, setSelectPaymentDetails] = useState<coinsProps | undefined>(() => coin && coin.length > 0 ? coin[0] : undefined);
+
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isNetworkDataPackageOpen, setIsNetworkDataPackageOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
-  const dataDetails = useBillsStore();
+
+  const { setItem } = useBillsStore();
+
   const [fiatPayment, setFiaPayment] = useState(stables && stables.length > 0 ? stables[0].coin : 'NGN');
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
@@ -127,6 +141,8 @@ const Datapurchase = () => {
     }
   });
 
+  console.log(selectedPackageDetails)
+
   useEffect(() => {
     if (dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
       setSelectedPackage(dataPackages[0].payment_item_name);
@@ -153,10 +169,9 @@ const Datapurchase = () => {
     setIsNetworkDropdownOpen(false); 
   };
 
-  console.log(selectedNetworkDetails);
-
-  const handleSelectedChange = (payment: string) => {
-    setSelectPayment(payment);
+  const handleSelectedChange = (payment:coinsProps) => {
+    setSelectPayment(payment.coin);
+    setSelectPaymentDetails(payment)
     setIsPaymentDropdownOpen(false); 
   };
 
@@ -171,8 +186,6 @@ const Datapurchase = () => {
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
   };
-  
-  console.log(selectedPackageDetails);
    
   const fiatPaymentOptions = [
     { value: 'NGN', logo: ngnlogo },
@@ -188,15 +201,25 @@ const Datapurchase = () => {
     { value: 'SOL', logo: SOLLogo },
   ];
 
+  React.useEffect(() => {
+    setSelectedBill('data');
+  },[])
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
 
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
-      selectedNetwork: selectedNetwork
+      selectedNetwork: selectedNetwork,
+      transaction_type: activeButton,
+      naira_amount: Number(data.paymentAmount),
+      coin_token_id: activeButton === 'crypto' ? selectPaymentDetails?.id : undefined,
+      coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
+      bills: selectedBill,
+      network: selectedNetwork,
+      package_product_number: selectedPackageDetails?.product_number,
     };
     setShowTransactionDetail(true); 
-    setSelectedBill('data');
-    dataDetails.setItem(regdata);
+    setItem(regdata);
   };
 
   return (
@@ -352,7 +375,7 @@ const Datapurchase = () => {
                         <div
                           key={payment.id}
                           className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
-                          onClick={() => handleSelectedChange(payment.coin)}
+                          onClick={() => handleSelectedChange(payment)}
                         >
                           <img src={payment.icon} alt={payment.coin} className="size-6 mr-2" />
                           <span>{payment.coin}</span>

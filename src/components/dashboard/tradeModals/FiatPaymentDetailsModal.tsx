@@ -43,7 +43,7 @@ const Desktop = () => {
             </button>
           </div>
 
-          <div className="hidden lg:block w-full h-full">
+          <div className="hidden lg:block w-full h-full max-h-[720px]">
             <div className='flex flex-row w-full h-full'>
             {/* Left Section: Information Panel */}
               <div className={`bg-textDark text-white p-[42px] w-[40%] transition-all duration-300 h-screen`}>
@@ -57,7 +57,7 @@ const Desktop = () => {
               </div>
 
             {/* Right Section: Payment Details */}
-              <div className={`flex flex-col gap-5 md:w-[60%] w-full justify-center items-center pb-9 transition-all duration-300`}>
+              <div className={`flex flex-col gap-5 md:w-[60%] w-full justify-center items-center pb-9 transition-all duration-300 md:-mt-16`}>
                   <div className='w-full px-6 flex items-end justify-end'>
                     <button className='size-8 lg:size-9 rounded-full flex items-center justify-center bg-gray-200 flex-none' onClick={closeModal}>
                       <X className='lg:size-6 size-5'/>
@@ -182,7 +182,9 @@ const Mobile = () => {
 };
   const { toast } = useToast();
 
-  const { accountDetails } = useTradeStore();
+  const { accountDetails, isBill, clearAccountDetails, clearItem, clearTransactionId } = useTradeStore();
+
+  console.log(accountDetails)
 
   const completeBuyConfig = useApiConfig({
     method: 'post',
@@ -190,23 +192,38 @@ const Mobile = () => {
     formdata: {ref_number: accountDetails?.ref_number}
   });
 
+  const completeBillConfig = useApiConfig({
+    method: 'post',
+    url: 'complete-bill-transaction',
+    formdata: {ref_number: accountDetails?.ref_number}
+  });
+
   const completeBuyTransaction = async () => {
-    await axios.request(completeBuyConfig)
+    await axios.request(isBill ? completeBillConfig : completeBuyConfig)
     .then((response) => {
       if (response.status === 200) {
         console.log(response.data)
+        clearAccountDetails();
+        clearItem();
+        clearTransactionId();
         onClose(); 
         openPaymentConfirmation.onOpen(); 
       } else {
         console.log('Error:', response.statusText);
       }
-    }).catch((error) => {
+    }).catch((error:any) => {
       console.log(error);
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.[0]?.message || // Handle nested error messages
+        error.message ||
+        'An unexpected error occurred.';
       toast({
         title: 'Error',
-        description: error.response?.data[0].message || 'An error occurred while processing your request.',
+        description: errorMessage,
         variant: 'destructive',
-      })
+      });
     });
   }
 

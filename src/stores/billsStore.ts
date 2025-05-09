@@ -14,7 +14,7 @@ interface billsProps {
     coin_amount?: number;
     bills?: string;
     network?: string;
-    package_product_number?: number;
+    package_product_number?: number | string;
     electricity_type?: string;
     phone_number?: string;
     cable_number?: string;
@@ -22,15 +22,17 @@ interface billsProps {
 };
 
 interface billsState {
-    item:billsProps | null;                      
+    item:billsProps | null;                   
     setItem: (newItem:  billsProps) => void,
     clearItem: () =>void
 };
 
 const useBillsStore = create<billsState>((set) => ({         
-    item: null, 
+    item: null,
+    transactionId: null, 
+    accountDetails: null,
     setItem: (newItem) => set({item: newItem}),
-    clearItem: () => set({item: null})
+    clearItem: () => set({item: null}),
   }));
 
   export default useBillsStore;

@@ -49,6 +49,29 @@ export const formatNigerianPhoneNumber = (phoneNumber:string) => {
   return phoneNumber;
 };
 
+export const removeEmptyKeys = (obj: Record<string, any>): Record<string, any> => {
+  if (!obj || typeof obj !== 'object') {
+    return {};
+  }
+
+  const newObj: Record<string, any> = {};
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (
+        value !== null &&
+        value !== undefined &&
+        value !== '' &&
+        !(Array.isArray(value) && value.length === 0) &&
+        !(typeof value === 'object' && Object.keys(value).length === 0)
+      ) {
+        newObj[key] = value;
+      }
+    }
+  }
+  return newObj;
+}
+
 export const useWhatNextPasswordModal = create<modalProps>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),

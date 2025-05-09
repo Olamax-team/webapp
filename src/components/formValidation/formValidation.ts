@@ -16,7 +16,7 @@ export const formValidationSchema = z.object({
     export const billsSchema = z.object({
       billType: z
         .string()
-         .refine(val => ['prepaid', 'postpaid'].includes(val), {
+         .refine(val => ['Prepaid', 'Postpaid'].includes(val), {
           message: 'Invalid selection, please choose either Prepaid or Postpaid',
         }),
         
@@ -32,8 +32,29 @@ export const formValidationSchema = z.object({
       .regex(/^[0-9]+$/, 'Required field')
       .max(15, 'Phone number cannot exceed 15 digits')
       .min(10, 'Phone number cannot be less than 10 digits'),
+      blockChain: z.string().optional(),
 
     })
+
+    export type billSchemaValues = z.infer<typeof billsSchema>;
+
+    export const cableTvSchema = z.object({
+        cableNumber: z
+        .string()
+        .regex(/^[0-9]+$/, 'Required field') 
+        .max(15, 'Meter number cannot exceed 15 digits')
+        .min(10, 'Meter number cannot be less than 10 digits'),
+
+        phoneNumber: z
+      .string()
+      .regex(/^[0-9]+$/, 'Required field')
+      .max(15, 'Phone number cannot exceed 15 digits')
+      .min(10, 'Phone number cannot be less than 10 digits'),
+      blockChain: z.string().optional(),
+
+    })
+
+    export type cableTvSchemaValues = z.infer<typeof cableTvSchema>;
 
 
     export const numberSchema = z.object({
@@ -43,7 +64,10 @@ export const formValidationSchema = z.object({
       .max(15, 'Phone number cannot exceed 15 digits')
       .min(10, 'Phone number cannot be less than 10 digits'),
 
-    })
+      blockChain: z.string().optional(),
+    });
+
+    export type numberSchemaValues = z.infer<typeof numberSchema>;
 
     export const tradeSchema = z.object({
       amount1: z

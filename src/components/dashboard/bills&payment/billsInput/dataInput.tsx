@@ -1,17 +1,23 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { numberSchema } from "../../../formValidation/formValidation";
+import { numberSchema, numberSchemaValues } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
-import { formatNigerianPhoneNumber, useConfirmModal } from "../../../../lib/utils";
+import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmModal } from "../../../../lib/utils";
 import { Info } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useFetchStore } from "../../../../stores/fetch-store";
+import axios from "axios";
+import useTradeStore from "../../../../stores/tradeStore";
 
 const DataInput = () => {
-    const dataItem = useBillsStore();
-    const {onOpen}  = useConfirmModal()
+    const {item } = useBillsStore();
+    const { setTransactionId, setAccountDetails, setIsBill} = useTradeStore();
+    const {onOpen}  = useConfirmModal();
     
-    const { user, fetchKycStatus, kycStatus } = useUserDetails();
+    const { user, fetchKycStatus, kycStatus, token } = useUserDetails();
+    const { fetchCoinBlockChain } = useFetchStore();
     
     React.useEffect(() => {
         if (user) {
@@ -19,21 +25,58 @@ const DataInput = () => {
         };
     }, [user])
      
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors }, watch, setError } = useForm<numberSchemaValues>({
         resolver: zodResolver(numberSchema),
-        defaultValues: { phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : ''}
+        defaultValues: {
+            blockChain: '', 
+            phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : '',
+        }
     });
 
-    const onSubmit = (data: any) => {
-        const upDatedData = {
-            selectedNetwork:data.selectedNetwork,
-            inputAmount:data.inputAmount, 
-            selectPayment:data.selectPayment,
-            paymentAmount:data.paymentAmount,
-            fiatPayment:data.fiatPayment
+    const { data:blockChains } = useQuery({
+        queryKey: ['block-chains', item?.coin_token_id],
+        queryFn: () => item?.coin_token_id ? fetchCoinBlockChain(item.coin_token_id) : Promise.reject('coin token id is undefined')
+    });
 
+    const block_chain = watch('blockChain');
+    const selectedChain = blockChains?.find((item) => item.blockchain_name === block_chain);
+
+    const onSubmit = async (data:numberSchemaValues) => {
+        const newData = {
+            transaction_type: item?.transaction_type,
+            naira_amount: item?.naira_amount,
+            coin_token_id: item?.coin_token_id,
+            blockchain_id: selectedChain?.id,
+            coin_amount: item?.coin_amount,
+            bills: item?.bills,
+            network: item?.network,
+            package_product_number: item?.package_product_number,
+            phone_number: data.phoneNumber
         }
-        dataItem.setItem(upDatedData);
+        
+        if (item?.transaction_type === 'crypto' && newData.blockchain_id === undefined) {
+            setError('blockChain', {type: 'manual', message: 'Select a blockchain'})
+            return;
+        }
+        const finalData = removeEmptyKeys(newData);
+
+        const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: `https://api.olamax.io/api/start-bill-subscription`,
+            headers: {
+              'Content-Type':'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            data: finalData,
+        };
+
+        await axios.request(config)
+        .then((response) => {
+          setTransactionId(response.data.transaction_id);
+          setAccountDetails(response.data.bank_details.data);
+          setIsBill(true);
+        });
         onOpen();
     };
 
@@ -50,6 +93,24 @@ const DataInput = () => {
                         Complete Transaction
                     </p>
                 </div>
+                { item && item.transaction_type === 'crypto' &&
+                  <React.Fragment>
+                    <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center mt-6">
+                        <select
+                            {...register("blockChain")}
+                            className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white focus:outline-none outline-none focus:border-0 uppercase"
+                        >
+                            <option value="" className="text-sm uppercase">Select Blockchain</option>
+                            { blockChains && blockChains.length > 0 && blockChains.map((prop) => (
+                            <option key={prop.id} value={prop.blockchain_name} className="uppercase text-sm">
+                                {prop.blockchain_name}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                    {errors.blockChain && (<p className="text-red-500 text-sm mt-1"> {(errors.blockChain as { message: string }).message} </p>)}
+                  </React.Fragment>
+                }
                     <input
                         type="text"
                         placeholder="Your Phone Number"
@@ -87,28 +148,29 @@ const DataInput = () => {
                 <div className="mt-5">
                   <div className="text-sm text-[#212121]  p-4 space-y-4">
                         <div className="space-y-2  mt-3">
-                            <p className="font-medium text-[16px] leading-[24px]">{dataItem.item?.selectedNetwork}</p>
+                            <p className="font-medium text-[16px] leading-[24px]">{item?.selectedNetwork}</p>
                         </div>
 
                         <div className="flex justify-between w-full  font-Inter  border-t-2 border-[#0000001A] mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">You Recieve</p>
-                            <strong>{dataItem.item?.inputAmount}</strong>
+                            <strong>{item?.inputAmount}</strong>
                         </div>
                       <div className="border-t-2 border-[#0000001A] mt-3">
                                 <div className="flex justify-between w-full font-Inter py-5">
                                     <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Price</p>
-                                    <strong>{dataItem.item?.selectPayment || dataItem.item?.fiatPayment} {dataItem.item?.paymentAmount}.00</strong>
+                                    <strong>{item?.selectPayment || item?.fiatPayment} {item?.paymentAmount}.00</strong>
                                 </div>
 
                                 <div className="flex justify-between w-full font-Inter py-5">
-                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info   className="size-6" />
+                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center gap-2">
+                                        Withdrawal Fee <Info   className="size-6" />
                                     </p>
                                     <p className="font-bold text-[16px] leading-[24px] text-[#121826]">__</p>
                                 </div>
                         </div>
                         <div className=" border-t-2 border-[#0000001A] flex justify-between w-full font-Inter mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
-                            <strong>{dataItem.item?.selectPayment || dataItem.item?.fiatPayment} {dataItem.item?.paymentAmount}.00</strong>
+                            <strong>{item?.selectPayment || item?.fiatPayment} {item?.paymentAmount}.00</strong>
                         </div>
                     </div>
 

@@ -36,12 +36,11 @@ interface coinsProps {
   stable_coins: string;
 };
 
-
 // transaction_type: activeButton,
-// naira_amount: number;
-// coin_token_id: number;
+// naira_amount: inputAmount;
+// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
 // blockchain_id: number;
-// coin_amount: number;
+// coin_amount: Number(paymentAmount);
 // bills: selectedBill;
 // network: selectedNetwork;
 // package_product_number: selectedNetworkDetails.product_number;
@@ -56,7 +55,7 @@ const AirtimeRecharge = () => {
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
 
-  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllCoins } = useFetchStore();
+  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins } = useFetchStore();
 
   const { data: stables } = useQuery({
     queryKey: ['stable-coins'],
@@ -65,8 +64,11 @@ const AirtimeRecharge = () => {
 
   const { data:coin } = useQuery({
     queryKey: ['all-coins'],
-    queryFn: fetchAllCoins
+    queryFn: fetchAllBuyCoins
   })
+
+  console.log(coin);
+  console.log(stables);
   
   const getCoinId = (coinCode: string): number | undefined => {
     if (coin) {
@@ -131,9 +133,10 @@ const AirtimeRecharge = () => {
   const [fiatPaymentDetails, setFiatPaymentDetails] = useState<coinsProps | undefined>(() => stables && stables.length > 0 ? stables[0] : undefined);
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
-  const airtimeDetails = useBillsStore();
-  
-0
+  console.log('fiat-payment', fiatPaymentDetails);
+
+  const { setItem } = useBillsStore();
+
   //autofill for both inputs
     const price = React.useMemo(() => {
       if (activeButton === 'crypto') {
@@ -202,17 +205,27 @@ const AirtimeRecharge = () => {
     setIsPaymentDropdownOpen(false);
   };
 
+  React.useEffect(() => {
+    setSelectedBill('airtime');
+  },[])
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
 
-    const regdata = {...data,
+    const newData = {
+      ...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
       selectedNetwork: selectedNetwork,
-    };
+      transaction_type: activeButton,
+      naira_amount: Number(data.inputAmount),
+      coin_token_id: activeButton === 'crypto' ? selectPaymentDetails?.id : undefined,
+      coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
+      bills: selectedBill,
+      network: selectedNetwork,
+      package_product_number: selectedNetworkDetails?.product_number,
+    }
+    
     setShowTransactionDetail(true);
-    setSelectedBill('airtime');
-
-    console.log('reg-data', regdata)
-    airtimeDetails.setItem(regdata);
+    setItem(newData);
   };
 
   return (

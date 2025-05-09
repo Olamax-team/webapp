@@ -2,21 +2,13 @@ import React, {useEffect, useMemo, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-// import btcLogo from '../../../../assets/images/BTC Circular.png'
-// import ETHLogo from '../../../../assets/images/ETH Circular.png'
-// import USDTLogo from '../../../../assets/images/USDT Circular.png'
-// import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-// import ngnlogo from '../../../../assets/images/NGN Circular.png';
-import { useApiConfig } from "../../../../hooks/api";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
-
 
 
 type Inputs = {
@@ -25,12 +17,6 @@ type Inputs = {
   selectedPayment: string;
   selectedNetwork:string;
   fiatPayment:string;
-
-};
-
-type cryptoServiceProps = {
-  cs: string;
-  act: string;
 };
 
 type cableServicesProps = {
@@ -40,38 +26,34 @@ type cableServicesProps = {
   icon: string;
 };
 
+interface coinsProps {
+  coin: string;
+  coin_name: string;
+  icon: string;
+  status: string;
+  id: number;
+  method: string;
+  stable_coins: string;
+};
+
+// transaction_type: activeButton,
+// naira_amount: inputAmount;
+// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
+// blockchain_id: number;
+// coin_amount: Number(paymentAmount);
+// bills: selectedBill;
+// network: selectedNetwork;
+// package_product_number: selectedNetworkDetails.product_number;
+// electricity_type: string;
+// phone_number: string;
+// cable_number: string;
+// meter_number: string;
+
 const CableTv = () => {
 
-  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
-   const { fetchAllCoinPrices, fetchStableCoins, fetchAllCoins } = useFetchStore();
+  const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
+  const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices, fetchTvServices } = useFetchStore();
 
-  const billsServiceConfig = useApiConfig({
-    method: 'get',
-    url: 'get-bills-services'
-  });
-
-  const tvServiceConfig = useApiConfig({
-    method: 'get',
-    url: 'get-tv'
-  });
-
-  const fetchTvServices = async () => {
-    const response = await axios.request(tvServiceConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.cable as cableServicesProps[];
-    return data;
-  };
-
-  const fetchBillServices = async () => {
-    const response = await axios.request(billsServiceConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.bill_service as cryptoServiceProps[];
-    return data;
-  };
     const { data: stables } = useQuery({
       queryKey: ['stable-coins'],
       queryFn: fetchStableCoins
@@ -79,7 +61,7 @@ const CableTv = () => {
   
     const { data:coin } = useQuery({
       queryKey: ['all-coins'],
-      queryFn: fetchAllCoins
+      queryFn: fetchAllBuyCoins
     })
      
    const getCoinId = (coinCode: string): number | undefined => {
@@ -118,8 +100,6 @@ const CableTv = () => {
     queryFn: fetchTvServices,
   });
 
-  const frontPageData = JSON.parse(localStorage.getItem('tvData') || '{}');
-
   const { register, handleSubmit,setValue, formState: { errors }, reset,watch} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues:{
@@ -130,24 +110,33 @@ const CableTv = () => {
 
   const inputAmount = watch("inputAmount");
   const paymentAmount = watch("paymentAmount");
+
   const [amount1, setAmount1] = useState<string>("0");
   const [amount2, setAmount2] = useState<string>("0");
-  const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : tvServices ? tvServices[0].abrv : 'DSTV');
+
+  const [selectedNetwork, setSelectedNetwork] = useState(tvServices ? tvServices[0].abrv : 'DSTV');
+  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<cableServicesProps | undefined>(() => tvServices && tvServices.length > 0 ? tvServices[0] : undefined);
+
   const [selectPayment, setSelectPayment] = useState('BTC');
+  const [selectPaymentDetails, setSelectPaymentDetails] = useState<coinsProps | undefined>(() => coin && coin.length > 0 ? coin[0] : undefined);
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
-  const cableDetails = useBillsStore();
+
+  const { setItem } = useBillsStore();
+
   const [fiatPayment, setFiaPayment] = useState('NGN');
-  const [activeButton, setActiveButton] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.type : billServices ? billServices[0].cs : 'fiat');
+  const [activeButton, setActiveButton] = useState(billServices ? billServices[0].cs : 'fiat');
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
   
-  const handleSelectChange = (network: string) => {
-    setSelectedNetwork(network);
+  const handleSelectChange = (network: cableServicesProps) => {
+    setSelectedNetwork(network.abrv);
+    setSelectedNetworkDetails(network);
     setIsNetworkDropdownOpen(false);
   };
 
-  const handleSelectedChange = (payment: string) => {
-    setSelectPayment(payment);
+  const handleSelectedChange = (payment: coinsProps) => {
+    setSelectPayment(payment.coin);
+    setSelectPaymentDetails(payment);
     setIsPaymentDropdownOpen(false); 
   };
   const handleChange = (payment: string) => {
@@ -155,81 +144,79 @@ const CableTv = () => {
     setIsPaymentDropdownOpen(false);
   };
 
-  // const fiatPaymentOptions = [
-  //   { value: 'NGN', logo: ngnlogo },
-  //   { value: 'USD', logo: ngnlogo },
-  //   { value: 'EUR', logo: ngnlogo },
-  //   { value: 'GBP', logo: ngnlogo },
-  // ];
-
-  // const paymentOptions = [
-  //   { value: 'BTC', logo: btcLogo },
-  //   { value: 'ETH', logo: ETHLogo },
-  //   { value: 'USDT', logo: USDTLogo },
-  //   { value: 'SOL', logo: SOLLogo },
-  // ];
-    //autofill for both inputs
-    const price = useMemo(() => {
-      if (activeButton === 'crypto') {
-        return getSellingPrice(selectPayment);
-      } else {
-        return getBuyingPrice(selectPayment);
-      }
-    }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, amount1, amount2, prices, coin]);
-    useEffect(() => {
-      
-      if (lastChanged !== 'amount1') return;
-      if (!amount1) {
-        setAmount2("");
-        setValue("paymentAmount", "");
-        return;
+  //autofill for both inputs
+  const price = useMemo(() => {
+    if (activeButton === 'crypto') {
+      return getSellingPrice(selectPayment);
+    } else {
+      return getBuyingPrice(selectPayment);
     }
-      if (price) {
-        let newpaymentAmount = '';
-        if (activeButton === "crypto") {
-          //WE DONOT KNOW THE FORMULA YET
-          newpaymentAmount = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
-        } else if (activeButton === 'fiat') {
-          newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
-        }
-    // Updating Zustand state
-        setAmount2(newpaymentAmount);
-        setValue("paymentAmount", newpaymentAmount);
-      }
-    }, [amount1, fiatPayment, activeButton, prices, coin, lastChanged]);
-  
-    useEffect(() => {
-      if (lastChanged !== 'amount2') return;
-      if (!amount2) {
-        setAmount1("");
-        setValue("inputAmount", "");
-        return;
-        }
+  }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, amount1, amount2, prices, coin]);
+
+  useEffect(() => {
     
-      if (price) {
-        let newinputAmount = '';
-        if (activeButton === "crypto") {
-          //WE DONOT KNOW THE FORMULA YET
-          newinputAmount = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
-        } else if (activeButton === 'fiat') {
-          newinputAmount = (parseFloat(amount2)).toFixed(2); 
-        }
-        setAmount1(newinputAmount);
-        setValue("inputAmount", newinputAmount);
+    if (lastChanged !== 'amount1') return;
+    if (!amount1) {
+      setAmount2("");
+      setValue("paymentAmount", "");
+      return;
+  }
+    if (price) {
+      let newpaymentAmount = '';
+      if (activeButton === "crypto") {
+        //WE DONOT KNOW THE FORMULA YET
+        newpaymentAmount = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
       }
-    }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
+  // Updating Zustand state
+      setAmount2(newpaymentAmount);
+      setValue("paymentAmount", newpaymentAmount);
+    }
+  }, [amount1, fiatPayment, activeButton, prices, coin, lastChanged]);
+
+  useEffect(() => {
+    if (lastChanged !== 'amount2') return;
+    if (!amount2) {
+      setAmount1("");
+      setValue("inputAmount", "");
+      return;
+      }
+  
+    if (price) {
+      let newinputAmount = '';
+      if (activeButton === "crypto") {
+        //WE DONOT KNOW THE FORMULA YET
+        newinputAmount = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newinputAmount = (parseFloat(amount2)).toFixed(2); 
+      }
+      setAmount1(newinputAmount);
+      setValue("inputAmount", newinputAmount);
+    }
+  }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
+
+  useEffect(() => {
+    setSelectedBill('cable')
+  },[]);
     
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    localStorage.getItem('tvData');
 
-    const rechargeData = {...data,
+    const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
-      selectedNetwork: selectedNetwork, 
+      selectedNetwork:selectedNetwork,
+      transaction_type: activeButton,
+      naira_amount: Number(data.inputAmount),
+      coin_token_id: activeButton === 'crypto' ? selectPaymentDetails?.id : undefined,
+      coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
+      bills: selectedBill,
+      network: selectedNetwork,
+      package_product_number: selectedNetworkDetails?.product_number,
     };
+  
     setShowTransactionDetail(true); 
-    setSelectedBill('cabletv')
-    cableDetails.setItem(rechargeData);
+    setItem(regdata);
   };
 
   return (
@@ -269,7 +256,7 @@ const CableTv = () => {
     
             <div className="relative ">
               <div
-                className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px]  xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0  xl:ml-4 "
+                className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[115px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center  focus:outline-none focus:ring-0  xl:ml-4 "
                 onClick={() => setIsNetworkDropdownOpen(!isNetworkDropdownOpen)}
               >
                 <img
@@ -282,12 +269,12 @@ const CableTv = () => {
               </div>
     
               {isNetworkDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                   { tvServices && tvServices.length > 0 && tvServices.map((network) => (
                     <div
                       key={network.abrv}
-                      className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                      onClick={() => handleSelectChange(network.abrv)}
+                      className="flex items-center py-1 px-2 gap-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+                      onClick={() => handleSelectChange(network)}
                     >
                       <img src={network.icon} alt={network.abrv} className=" size-6 mr-2 rounded-full" />
                       <span>{network.abrv}</span>
@@ -314,15 +301,15 @@ const CableTv = () => {
           <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
           <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]  px-3 py-2  leading-[18px]">You Recieve</label>
     
-            <div className="flex justify-between px-3   ">
-              <input
-                {...register("paymentAmount")}
-                type="text"
-                value={amount2}
-                placeholder="0.00"
-                onChange={(e) => {setAmount2(e.target.value);setLastChanged('amount2');}}
-                className="xl:w-[143px] w-[100px] h-[25px] text-[16px]  xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] xl:leading-[34.5px]"
-              />
+          <div className="flex justify-between px-3   ">
+            <input
+              {...register("paymentAmount")}
+              type="text"
+              value={amount2}
+              placeholder="0.00"
+              onChange={(e) => {setAmount2(e.target.value);setLastChanged('amount2');}}
+              className="xl:w-[143px] w-[100px] h-[25px] text-[16px]  xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] xl:leading-[34.5px]"
+            />
   
       <div className="relative">
           <div
@@ -358,7 +345,7 @@ const CableTv = () => {
                   <div
                     key={payment.id}
                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleSelectedChange(payment.coin)}
+                    onClick={() => handleSelectedChange(payment)}
                   >
                     <img src={payment.icon} alt={payment.coin} className="size-6 mr-2" />
                     <span>{payment.coin}</span>
