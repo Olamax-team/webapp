@@ -194,7 +194,7 @@ const CableInput = () => {
                     />
                     {errors.cableNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.cableNumber as { message: string }).message} </p>)}
 
-                    <div className="mt-8 flex item-center">
+                    <div className="mt-8 flex item-center gap-2">
                         <Info  className="size-6" />
                         <p className="w-full  font-small text-[14px] xl:text-[16px] leading-[24px]">
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
@@ -231,10 +231,10 @@ const CableInput = () => {
                                     <strong>{item?.selectPayment || item?.fiatPayment} {item?.paymentAmount}</strong>
                                 </div>
 
-                                <div className="flex justify-between w-full font-Inter py-5">
-                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info   className="size-6" />
+                                <div className="flex justify-between w-full font-Inter py-5 gap-2">
+                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center gap-2">Withdrawal Fee <Info   className="size-6" />
                                     </p>
-                                        <p><img src='' alt="" className="size-6" /></p>
+                                    <p className="font-bold">__</p>
                                 </div>
                         </div>
 
