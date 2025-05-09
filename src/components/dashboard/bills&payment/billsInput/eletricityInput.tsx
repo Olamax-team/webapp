@@ -1,19 +1,44 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { billsSchema } from "../../../formValidation/formValidation";
+import { billSchemaValues, billsSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
-import { useConfirmModal } from "../../../../lib/utils";
+import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmModal } from "../../../../lib/utils";
 import { Info } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useFetchStore } from "../../../../stores/fetch-store";
+import { useApiConfig } from "../../../../hooks/api";
+import axios, { AxiosError } from "axios";
+import { useToast } from "../../../../hooks/use-toast";
+import useTradeStore from "../../../../stores/tradeStore";
   
-
+// transaction_type: activeButton,
+// naira_amount: inputAmount;
+// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
+// blockchain_id: number;
+// coin_amount: Number(paymentAmount);
+// bills: selectedBill;
+// network: selectedNetwork;
+// package_product_number: selectedNetworkDetails.product_number;
+// electricity_type: string;
+// phone_number: string;
+// cable_number: string;
+// meter_number: string;
 
 
 const ElectricityInput = () => {
-    const electricityData = useBillsStore();
-    const {onOpen}  = useConfirmModal()
-        const { user, fetchKycStatus, kycStatus } = useUserDetails();
+
+    const { item } = useBillsStore();
+    const { fetchCoinBlockChain } = useFetchStore();
+    const { setAccountDetails, setTransactionId, setIsBill } = useTradeStore();
+
+    const [userIsValid, setUserIsValid] = React.useState(false);
+
+    const {onOpen}  = useConfirmModal();
+
+    const { toast } = useToast();
+        const { user, fetchKycStatus, kycStatus, token } = useUserDetails();
         
         React.useEffect(() => {
             if (user) {
@@ -22,29 +47,119 @@ const ElectricityInput = () => {
         }, [user])
 
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors }, watch, setError } = useForm<billSchemaValues>({
         resolver: zodResolver(billsSchema),
         defaultValues: {
-            phoneNumber: kycStatus?.phone_number,
+            phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : '',
             billType: '',
             meterNumber: ''
         }
     });
 
-    const onSubmit = (data: any) => {
-        const upDatedData = {
-            selectedNetwork:data.selectedNetwork,
-            inputAmount:data.inputAmount, 
-            selectPayment:data.selectPayment,
-             paymentAmount:data.paymentAmount,
-             fiatPayment:data.fiatPayment
+    const meterNumber = watch('meterNumber');
+    const block_chain = watch('blockChain');
 
+    const { data:blockChains } = useQuery({
+        queryKey: ['block-chains', item?.coin_token_id],
+        queryFn: () => item?.coin_token_id ? fetchCoinBlockChain(item.coin_token_id) : Promise.reject('coin token id is undefined')
+    });
+
+    const selectedChain = blockChains?.find((item) => item.blockchain_name === block_chain);
+
+    const electricTypeConfig = useApiConfig({
+        method: 'get',
+        url: 'get-electricity-type'
+    });
+
+    const validateCustomerConfig = useApiConfig({
+        method: 'post',
+        url: 'validate-customer',
+        formdata: {
+            amount: item ? item.naira_amount : 0,
+            cable_prepaid_number: meterNumber,
+            bill: item ? item.bills : ''
+        }
+    });
+
+    const fetchElectricType = async (): Promise<{ type: string }[]> => {
+        const response = await axios.request(electricTypeConfig);
+        if (response.status !== 200) {
+            throw new Error('Something went wrong, try again later');
+        }
+        return response.data as { type: string }[];
+    };
+
+    const { data:electicTypes } = useQuery<Array<{ type: string }>>({
+        queryKey: ['electric-types'],
+        queryFn: fetchElectricType,
+    });
+
+    const checkUser = async () => {
+        await axios.request(validateCustomerConfig).then((response) => {
+            if (response.status !== 200) {
+                throw new Error('Something went wrong, try again later');
+            };
+
+            if (response.status === 200) {
+                setUserIsValid(true);
+            };
+        }).catch((error) => {
+            if (AxiosError) {
+                toast({
+                    title: 'Error',
+                    description: error.response.data.message,
+                    variant: 'destructive'
+                })
+                return;
             }
-            electricityData.setItem(upDatedData);
-            onOpen();
+        });
+    }
 
-        
-        };    
+    const onSubmit = async (data:billSchemaValues) => {
+        await checkUser();
+        if (userIsValid) {
+            const newData = {
+                transaction_type: item?.transaction_type,
+                naira_amount: item?.naira_amount,
+                coin_token_id: item?.coin_token_id,
+                blockchain_id: selectedChain?.id,
+                coin_amount: item?.coin_amount,
+                bills: item?.bills,
+                network: item?.network,
+                package_product_number: item?.package_product_number,
+                phone_number: data.phoneNumber,
+                meter_number: data.meterNumber,
+                electricity_type: data.billType
+            };
+    
+            
+            if (item?.transaction_type === 'crypto' && newData.blockchain_id === undefined) {
+                setError('blockChain', {type: 'manual', message: 'Select a blockchain'})
+                return;
+            };
+            
+            const finalData = removeEmptyKeys(newData)
+            const config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: `https://api.olamax.io/api/start-bill-subscription`,
+                headers: {
+                  'Content-Type':'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                data: finalData,
+            };
+    
+            await axios.request(config)
+            .then((response) => {
+              setTransactionId(response.data.transaction_id);
+              setAccountDetails(response.data.bank_details.data);
+              setIsBill(true);
+            });
+            onOpen();
+        }
+
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -59,42 +174,61 @@ const ElectricityInput = () => {
                         Complete Transaction
                     </p>
                 </div>
-
-
-                <div className="w-full xl:h-[60px] h-[48px] rounded-sm mt-5 bg-[#f5f5f5]">
+                { item && item.transaction_type === 'crypto' &&
+                  <React.Fragment>
+                    <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center mt-6">
                         <select
-                          id="electricity-bill"
-                          {...register("billType")} 
-                          className="w-full bg-white h-[60px] text-[#121826] border border-none rounded-sm shadow-sm focus:ring-white focus:border-white"
+                            {...register("blockChain")}
+                            className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white focus:outline-none outline-none focus:border-0 uppercase"
                         >
-                          <option value="">Select bill type</option> 
-                          <option value="prepaid">Prepaid</option>
-                          <option value="postpaid">Postpaid</option>
+                            <option value="" className="text-sm uppercase">Select Blockchain</option>
+                            { blockChains && blockChains.length > 0 && blockChains.map((prop) => (
+                            <option key={prop.id} value={prop.blockchain_name} className="uppercase text-sm">
+                                {prop.blockchain_name}
+                            </option>
+                            ))}
                         </select>
+                    </div>
+                    {errors.blockChain && (<p className="text-red-500 text-sm mt-1"> {(errors.blockChain as { message: string }).message} </p>)}
+                  </React.Fragment>
+                }
+                <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center mt-5">
+                    <select
+                        id="electricity-bill"
+                        {...register("billType")} 
+                        className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white focus:outline-none outline-none focus:border-0 uppercase"
+                    >
+                        <option value="" className="text-sm uppercase">Select Bill Type</option>
+                        { electicTypes && electicTypes?.length > 0 && electicTypes.map((prop, index) => (
+                        <option key={index} value={prop.type} className="uppercase text-sm">
+                            {prop.type}
+                        </option>
+                        ))}
+                    </select>
+                    {errors.billType && (
+                        <p className="text-red-500 text-sm mt-1"> {(errors.billType as { message: string }).message}</p>
+                        )}
+                </div>
 
-                        {errors.billType && (
-                          <p className="text-red-500 text-sm mt-1"> {(errors.billType as { message: string }).message}</p>
-                         )}
-                   </div>
-
-
-                <div className="w-full xl:-h-[60px] h-[48px] mt-16 rounded-sm xl-mt-8 bg-[#f5f5f5] ">
+                <div className="w-full xl:h-[60px] h-[48px] mt-5 rounded-sm xl:mt-5 bg-[#f5f5f5] ">
                     <input
                         type="text"
-                        placeholder="12349876522"
+                        placeholder="Enter your meter number"
                         maxLength={11}
                         minLength={10}
                        
-                        className="w-full h-[60px] px-3 py-2 text-[12px] xl:-text[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-white border border-none rounded-sm shadow-sm    focus:ring-[#f5f5f5]  focus:bg-[#f5f5f5]"
+                        className="w-full xl:h-[60px] h-[48px] px-3 py-2 text-[12px] xl:text-[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-white border border-none rounded-sm shadow-sm    focus:ring-[#f5f5f5]  focus:bg-[#f5f5f5]"
                         {...register("meterNumber")} 
                     />
                        {errors.meterNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.meterNumber as { message: string }).message} </p>
                     )}
-                    </div>
+                </div>
 
-                  <div className="mt-12 xl:mt-10 font-poppins text-[#000000] text-[16px] leading-[24px]"><h3>Tosin Adebayor</h3> </div>
+                    {/* <div className="mt-12 xl:mt-6 font-poppins text-[#000000] text-[16px] leading-[24px]">
+                        <h3>Tosin Adebayor</h3>
+                    </div> */}
 
-                  <div className="w-full xl:h-[60px] h-[48px] rounded-sm mt-10 bg-[#f5f5f5]">
+                  <div className="w-full xl:h-[60px] h-[48px] rounded-sm mt-6 bg-[#f5f5f5]">
                           <input
                             type="text" 
                             placeholder="Your Phone Number"
@@ -109,7 +243,7 @@ const ElectricityInput = () => {
                     </div>
 
 
-                    <div className="mt-12 xl:mt12 flex item-center">
+                    <div className="mt-12 xl:mt12 flex item-center gap-2">
                         <Info  className="size-6" />
                         <p className="w-full  font-small text-[14px] xl:text-[16px] leading-[24px]">
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
@@ -135,29 +269,29 @@ const ElectricityInput = () => {
                 <div className="mt-5">
                   <div className="text-sm text-[#212121]  p-4 space-y-4">
                         <div className="space-y-2  mt-3">
-                            <p className="font-medium text-[16px] leading-[24px]">{electricityData.item?.selectedNetwork}</p>
+                            <p className="font-medium text-[16px] leading-[24px]">{item?.selectedNetwork}</p>
                         </div>
 
                         <div className="flex justify-between w-full  font-Inter  border-t-2 border-[#0000001A] mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">You Recieve</p>
-                            <strong>{electricityData.item?.inputAmount}</strong>
+                            <strong>{item?.inputAmount}</strong>
                         </div>
                       <div className="border-t-2 border-[#0000001A] mt-3">
                                 <div className="flex justify-between w-full font-Inter py-5">
                                     <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Price</p>
-                                    <strong>{electricityData.item?.selectPayment || electricityData.item?.fiatPayment} {electricityData.item?.paymentAmount}</strong>
+                                    <strong>{item?.selectPayment || item?.fiatPayment} {item?.paymentAmount}</strong>
                                 </div>
 
-                                <div className="flex justify-between w-full font-Inter py-5">
-                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center">Withdrawal Fee <Info className="size-6" />
+                                <div className="flex justify-between w-full font-Inter py-5 ">
+                                    <p className="font-medium text-[16px] leading-[24px] text-[#121826] flex items-center gap-2">Withdrawal Fee <Info className="size-6" />
                                     </p>
-                                        <p><img src='' alt="" className="size-6" /></p>
+                                    <p className="font-bold">__</p>
                                 </div>
                         </div>
 
                         <div className="border-t-2 border-[#0000001A] flex justify-between w-full font-Inter mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
-                            <strong>{electricityData.item?.inputAmount}</strong>
+                            <strong>{item?.selectPayment || item?.fiatPayment} {item?.paymentAmount}</strong>
                         </div>
                     </div>
 

@@ -31,7 +31,7 @@ const CryptoPaymentDetailsModal = () => {
                     </button>
                 </div>
     
-               <div className="hidden lg:block w-full h-full">           
+               <div className="hidden lg:block w-full h-full max-h-[720px]">           
                     <div className="flex flex-row h-full w-full">
                         {/* Left Side: Information Panel */}
                         <div className="bg-textDark text-white p-[42px] w-[40%] h-screen">
@@ -44,7 +44,12 @@ const CryptoPaymentDetailsModal = () => {
                         </div>
                         </div>
                         {/* Right Panel */}
-                        <div className='flex flex-col gap-5 w-[60%] justify-center items-center pb-9'>
+                        <div className='flex flex-col gap-5 w-[60%] justify-center items-center pb-9 -mt-16'>
+                            <div className='w-full px-6 flex items-end justify-end'>
+                            <button className='size-8 lg:size-9 rounded-full flex items-center justify-center bg-gray-200 flex-none' onClick={closeModal}>
+                                <X className='lg:size-6 size-5'/>
+                            </button>
+                            </div>
                         <div className="size-[150px] md:size-[200px] mx-auto">
                             <img src={qrCode} className='w-full h-full object-center'/>
                         </div>

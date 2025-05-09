@@ -23,10 +23,12 @@ interface accountDetailsProps {
 
 interface tradeState {
     item:tradeProps | null;
+    isBill: boolean;
     transactionId: number | null;
     accountDetails: accountDetailsProps | null;                   
     setItem: (newItem:  tradeProps) => void;
     setTransactionId: (newId: number) => void;
+    setIsBill: (bill:boolean) => void,
     setAccountDetails: (newAccount: accountDetailsProps) => void;
     clearItem: () =>void;
     clearTransactionId: () => void;
@@ -35,11 +37,13 @@ interface tradeState {
 
 const useTradeStore = create<tradeState>((set) => ({         
     item: null,
+    isBill: false,
     transactionId: null,
     accountDetails: null,
     setItem: (newItem) => set({item: newItem}),
     setAccountDetails: (newAccountDetail) => set({accountDetails: newAccountDetail}),
     setTransactionId: (newId) => set({transactionId: newId}),
+    setIsBill: (bill) => set({isBill: bill}),
     clearItem: () => set({item: null}),
     clearAccountDetails: () => set({accountDetails: null}),
     clearTransactionId: () => set({transactionId: null}),

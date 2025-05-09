@@ -3,64 +3,20 @@ import useTradeStore from "../../../stores/tradeStore";
 import { HiOutlineClipboard } from "react-icons/hi";
 import { Info } from "lucide-react";
 import { Button } from "../../ui/button";
-import { useConfirmCompleteTransaction } from "../../../lib/utils";
+import { formatNigerianPhoneNumber, useConfirmCompleteTransaction } from "../../../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { buyInput, buyInputValues } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
 import React from "react";
-import { useApiConfig } from "../../../hooks/api";
-
-
-type blockChain = {
-  blockchain_name: string;
-  coin_id: number;
-  created_at: string;
-  id: string;
-  updated_at: string;
-};
-
-type coinType = {
-  id: number,
-  coin_name: string;
-  shorthand: string;
-  buy: string;
-  sell: string;
-  escrow: string;
-  status: string;
-  stable_coins: string;
-  created_at: string;
-  updated_at: string;
-};
-
-type limitType = {
-  buying_limit: string;
-  selling_limit: string;
-  card_limit: string;
-  data_limit: string;
-  card_limit_active: number;
-  data_limit_active: number;
-}
-
-type minTransaction = {
-  status: string;
-  message: string;
-  coin: coinType;
-  limit: limitType;
-  current_rate: number;
-  transaction_charges: number;
-  sell_naira_value: string;
-  buy_naira_value: string;
-  icon: string;
-}
+import { useQuery } from "@tanstack/react-query";
+import { useFetchStore } from "../../../stores/fetch-store";
 
 const BuyInput: React.FC = () => {
     
   const { user, kycStatus, fetchKycStatus, token } = useUserDetails();
   const { item, setTransactionId } = useTradeStore();
-
-  const [blockChains, setBlockChains] = React.useState<blockChain[]>([]);
-  const [minTransaction, setMinTransaction] = React.useState<minTransaction>();
+  const { fetchCoinBlockChain, fetchMinimumTransaction} = useFetchStore();
 
   const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
 
@@ -93,47 +49,25 @@ const BuyInput: React.FC = () => {
     defaultValues: {
       walletAddress: '',
       network: '',
-      phoneNumber: kycStatus?.phone_number || '',
+      phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : '',
       paymentMethod: 'bank'
     }
   });
 
-  const getBlockChain = useApiConfig({
-    method: 'get',
-    url: 'blockchains'
+  const { data:blockChains } = useQuery({
+    queryKey: ['block-chains', item?.cryptoType_id],
+    queryFn: () => item?.cryptoType_id ? fetchCoinBlockChain(item.cryptoType_id) : Promise.reject('cryptoType_id is undefined')
   });
 
-  const fetchBlockChain = async () => {
-    await axios.request( getBlockChain)
-    .then((response) => {
-      setBlockChains(response.data)
-    })
-  };
+  console.log(blockChains)
 
-  const getTransactionConfig = useApiConfig({
-    method: 'get',
-    url: `min-transaction/${item?.cryptoType_id}`
+  const { data:minTransaction } = useQuery({
+    queryKey: ['min-transaction', item?.cryptoType_id],
+    queryFn: () => item?.cryptoType_id ? fetchMinimumTransaction(item.cryptoType_id) : Promise.reject('cryptoType_id is undefined')
   });
-
-  const fetchMinTransaction = async () => {
-    await axios.request( getTransactionConfig)
-    .then((response) => {
-      setMinTransaction(response.data)
-    })
-  };
-
-  React.useEffect(() =>{
-    fetchBlockChain();
-    fetchMinTransaction();
-  },[]);
-
-  const formatPhoneNumber = (phoneNumber:string) => {
-    const tenDigits = phoneNumber?.slice(4, 14)
-    return `0${tenDigits}`;
-  };
 
   const watchedNetwork = watch('network');
-  const selectedBlockChainDetails = blockChains.find((item) => item.blockchain_name === watchedNetwork);
+  const selectedBlockChainDetails = blockChains?.find((item) => item.blockchain_name === watchedNetwork);
 
   const handleBuyInput = async (data:buyInputValues) => {
 
@@ -146,7 +80,7 @@ const BuyInput: React.FC = () => {
       blockchain_id: selectedBlockChainDetails?.id,
       transaction_type: 'transfer',
       transaction_charges: minTransaction ? minTransaction.transaction_charges : 0,
-      phone: formatPhoneNumber(data.phoneNumber),
+      phone: data.phoneNumber,
     };
 
     const buyConfig = {
@@ -178,7 +112,7 @@ const BuyInput: React.FC = () => {
             <p className="text-textDark font-medium xl:text-[14px] xl:leading-[21px]">Complete Transaction</p>
           </div>
 
-          <div className="mt-6 space-y-6">
+          <div className="mt-6 flex flex-col gap-6">
             {/* Wallet Address Input */}
             <div className="flex px-4 justify-between bg-white rounded-md">
             <input
@@ -192,7 +126,7 @@ const BuyInput: React.FC = () => {
               </button>
             </div>
             {errors.walletAddress && (
-              <p className="text-red-500">{(errors.walletAddress as { message: string }).message}</p>
+              <p className="text-red-500 text-sm -mt-4">{(errors.walletAddress as { message: string }).message}</p>
             )}
 
             {/* Network Selection */}
@@ -209,9 +143,7 @@ const BuyInput: React.FC = () => {
                 ))}
               </select>
             </div>
-            {errors.network && <p className="text-red-500 text-sm">{(errors.network as {message: string}).message}</p>}
-
-
+            {errors.network && <p className="text-red-500 text-sm -mt-4">{(errors.network as {message: string}).message}</p>}
 
             {/* Phone Number Input */}
             <input
@@ -221,7 +153,7 @@ const BuyInput: React.FC = () => {
               className="font-medium xl:text-[16px] xl:leading-[24px] w-full px-4 py-2 rounded-md h-[60px] outline-none"
             />
             {errors.phoneNumber && (
-              <p className="text-red-500 text-sm">{(errors.phoneNumber as {message: string}).message}</p>
+              <p className="text-red-500 text-sm -mt-4">{(errors.phoneNumber as {message: string}).message}</p>
             )}
 
             {/* Payment Method Selection */}
@@ -250,7 +182,6 @@ const BuyInput: React.FC = () => {
             <div className="flex items-center justify-center ">
               <Button 
               type="submit"
-              onClick={() => {}}
               className="xl:w-[150px] w-[96px] h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg">
                 Proceed
               </Button>
