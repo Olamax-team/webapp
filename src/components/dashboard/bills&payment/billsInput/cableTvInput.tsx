@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cableTvSchema, cableTvSchemaValues } from "../../../formValidation/formValidation"; 
 import useBillsStore from "../../../../stores/billsStore";
 import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmModal } from "../../../../lib/utils";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ import { useApiConfig } from "../../../../hooks/api";
 import axios, { AxiosError } from "axios";
 import { useToast } from "../../../../hooks/use-toast";
 import useTradeStore from "../../../../stores/tradeStore";
+import { HiArrowRight } from "react-icons/hi2";
 
 
 // transaction_type: activeButton,
@@ -39,6 +40,7 @@ const CableInput = () => {
     const { fetchCoinBlockChain } = useFetchStore();
 
     const [userIsValid, setUserIsValid] = React.useState(false);
+    const [isValidating, setIsValidating] = React.useState(false);
     
     React.useEffect(() => {
       if (user) {
@@ -77,28 +79,37 @@ const CableInput = () => {
     });
 
     const checkUser = async () => {
+      if (cableNumber === '' || cableNumber === undefined) {
+        setError('cableNumber', {type: 'manual', message: 'Your IUC / Cable number is required '})
+        return;
+      };
+      
+      setIsValidating(true);
       await axios.request(validateCustomerConfig).then((response) => {
           if (response.status !== 200) {
-              throw new Error('Something went wrong, try again later');
+            setIsValidating(false);
+            throw new Error('Something went wrong, try again later');
           };
 
           if (response.status === 200) {
-              setUserIsValid(true);
+            setIsValidating(false);
+            setUserIsValid(true);
           };
       }).catch((error) => {
           if (AxiosError) {
+            setIsValidating(false);
               toast({
                   title: 'Error',
                   description: error.response.data.message,
                   variant: 'destructive'
               })
-              return;
+            return;
           }
       });
     }
 
     const onSubmit = async (data:cableTvSchemaValues) => {
-      await checkUser();
+
       if (userIsValid) {
         const newData = {
           transaction_type: item?.transaction_type,
@@ -173,7 +184,6 @@ const CableInput = () => {
                     {errors.blockChain && (<p className="text-red-500 text-sm mt-1"> {(errors.blockChain as { message: string }).message} </p>)}
                   </React.Fragment>
                 }
-
                     <input
                       type="text"
                       placeholder="Your phone number"
@@ -184,15 +194,24 @@ const CableInput = () => {
                     />
                     {errors.phoneNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.phoneNumber as { message: string }).message} </p>)}
 
-                    <input
-                      type="text"
-                      placeholder="Enter IUC Number"
-                      maxLength={11}
-                      minLength={10}
-                      className="bg-white h-[60px] w-full px-3 py-2 font-medium text-[16px] leading-[24px] text-[#121826] border-none rounded-sm focus:outline-none mt-5"
-                      {...register("cableNumber")}
-                    />
-                    {errors.cableNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.cableNumber as { message: string }).message} </p>)}
+                    <div className="w-full xl:h-[60px] h-[48px] mt-5 rounded-sm xl:mt-5 bg-[#f5f5f5] ">
+                        <div className="w-full flex gap-2 h-full">
+                            <input
+                                type="text"
+                                placeholder="Enter your meter number"
+                                maxLength={11}
+                                minLength={10}
+                            
+                                className="flex-1 xl:h-[60px] h-[48px] px-3 py-2 text-[12px] xl:text-[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-white border border-none rounded-sm shadow-sm    focus:ring-[#f5f5f5]  focus:bg-[#f5f5f5]"
+                                {...register("cableNumber")} 
+                            />
+                            <button type="button" className="aspect-square flex-none h-full rounded-md bg-white flex items-center justify-center" onClick={checkUser} disabled={isValidating}>
+                                {isValidating ? <Loader2 className="lg:size-7 animate-spin"/> : <HiArrowRight className="lg:size-7"/>}
+                            </button>
+                        </div>
+    
+                        {errors.cableNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.cableNumber as { message: string }).message} </p>)}
+                    </div>
 
                     <div className="mt-8 flex item-center gap-2">
                         <Info  className="size-6" />
@@ -200,15 +219,16 @@ const CableInput = () => {
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
                         </p>
                     </div>
-
-                    <div className="mt-16 flex items-center justify-center">
-                        <button
-                            type="submit"
-                            className="lg:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
-                        >
-                            Proceed
-                        </button>
-                    </div>
+                    { userIsValid &&
+                      <div className="mt-16 flex items-center justify-center">
+                          <button
+                              type="submit"
+                              className="lg:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
+                          >
+                              Proceed
+                          </button>
+                      </div>
+                    }
             </div>
 
             <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[520px] h-auto mt-10 xl:mt-0 p-5 flex flex-col ">

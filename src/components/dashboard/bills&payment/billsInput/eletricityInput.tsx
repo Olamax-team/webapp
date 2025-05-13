@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { billSchemaValues, billsSchema } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
 import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmModal } from "../../../../lib/utils";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ import { useApiConfig } from "../../../../hooks/api";
 import axios, { AxiosError } from "axios";
 import { useToast } from "../../../../hooks/use-toast";
 import useTradeStore from "../../../../stores/tradeStore";
+import { HiArrowRight } from "react-icons/hi2";
   
 // transaction_type: activeButton,
 // naira_amount: inputAmount;
@@ -34,6 +35,7 @@ const ElectricityInput = () => {
     const { setAccountDetails, setTransactionId, setIsBill } = useTradeStore();
 
     const [userIsValid, setUserIsValid] = React.useState(false);
+    const [isValidating, setIsValidating] = React.useState(false);
 
     const {onOpen}  = useConfirmModal();
 
@@ -95,16 +97,26 @@ const ElectricityInput = () => {
     });
 
     const checkUser = async () => {
+
+        if (meterNumber === '' || meterNumber === undefined) {
+           setError('meterNumber', {type: 'manual', message: 'Meter number is required for validation'});
+           return;
+        };
+
+        setIsValidating(true);
         await axios.request(validateCustomerConfig).then((response) => {
             if (response.status !== 200) {
+                setIsValidating(false);
                 throw new Error('Something went wrong, try again later');
             };
 
             if (response.status === 200) {
+                setIsValidating(false)
                 setUserIsValid(true);
             };
         }).catch((error) => {
             if (AxiosError) {
+                setIsValidating(false);
                 toast({
                     title: 'Error',
                     description: error.response.data.message,
@@ -116,7 +128,7 @@ const ElectricityInput = () => {
     }
 
     const onSubmit = async (data:billSchemaValues) => {
-        await checkUser();
+
         if (userIsValid) {
             const newData = {
                 transaction_type: item?.transaction_type,
@@ -157,7 +169,7 @@ const ElectricityInput = () => {
               setIsBill(true);
             });
             onOpen();
-        }
+        };
 
     };
 
@@ -210,16 +222,36 @@ const ElectricityInput = () => {
                         )}
                 </div>
 
+                <div className="w-full xl:h-[60px] h-[48px] rounded-sm mt-6 bg-[#f5f5f5]">
+                        <input
+                        type="text" 
+                        placeholder="Your Phone Number"
+                            maxLength={15}
+                            minLength={10}  
+                                                    
+                        className="w-full h-[60px] px-3 py-2 text-[12px] xl:text-[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-white border border-none rounded-sm shadow-sm focus:ring-[#f5f5f5] focus:bg-[#f5f5f5]"
+                        {...register("phoneNumber", {
+                        })}
+                        />
+                        {errors.phoneNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.phoneNumber as { message: string }).message}</p>)}
+                </div>
+
                 <div className="w-full xl:h-[60px] h-[48px] mt-5 rounded-sm xl:mt-5 bg-[#f5f5f5] ">
-                    <input
-                        type="text"
-                        placeholder="Enter your meter number"
-                        maxLength={11}
-                        minLength={10}
-                       
-                        className="w-full xl:h-[60px] h-[48px] px-3 py-2 text-[12px] xl:text-[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-white border border-none rounded-sm shadow-sm    focus:ring-[#f5f5f5]  focus:bg-[#f5f5f5]"
-                        {...register("meterNumber")} 
-                    />
+                    <div className="w-full flex gap-2 h-full">
+                        <input
+                            type="text"
+                            placeholder="Enter your meter number"
+                            maxLength={11}
+                            minLength={10}
+                        
+                            className="flex-1 xl:h-[60px] h-[48px] px-3 py-2 text-[12px] xl:text-[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-white border border-none rounded-sm shadow-sm    focus:ring-[#f5f5f5]  focus:bg-[#f5f5f5]"
+                            {...register("meterNumber")} 
+                        />
+                        <button type="button" className="aspect-square flex-none h-full rounded-md bg-white flex items-center justify-center" onClick={checkUser} disabled={isValidating}>
+                            {isValidating ? <Loader2 className="lg:size-7 animate-spin"/> : <HiArrowRight className="lg:size-7"/>}
+                        </button>
+                    </div>
+
                        {errors.meterNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.meterNumber as { message: string }).message} </p>
                     )}
                 </div>
@@ -228,20 +260,6 @@ const ElectricityInput = () => {
                         <h3>Tosin Adebayor</h3>
                     </div> */}
 
-                  <div className="w-full xl:h-[60px] h-[48px] rounded-sm mt-6 bg-[#f5f5f5]">
-                          <input
-                            type="text" 
-                            placeholder="Your Phone Number"
-                             maxLength={15}
-                             minLength={10}  
-                                                       
-                            className="w-full h-[60px] px-3 py-2 text-[12px] xl:text-[16px] xl:leading-[24px] leading-[18px] font-medium text-[#121826] font-Inter bg-white border border-none rounded-sm shadow-sm focus:ring-[#f5f5f5] focus:bg-[#f5f5f5]"
-                            {...register("phoneNumber", {
-                            })}
-                          />
-                          {errors.phoneNumber && (<p className="text-red-500 text-sm mt-1"> {(errors.phoneNumber as { message: string }).message}</p>)}
-                    </div>
-
 
                     <div className="mt-12 xl:mt12 flex item-center gap-2">
                         <Info  className="size-6" />
@@ -249,15 +267,16 @@ const ElectricityInput = () => {
                             Please verify the information provided before proceeding, we would not be held responsible if the details provided are incorrect.
                         </p>
                     </div>
-
-                    <div className="mt-16 flex items-center justify-center">
-                        <button
-                            type="submit"
-                            className="lg:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
-                        >
-                            Proceed
-                        </button>
-                    </div>
+                    { userIsValid &&
+                        <div className="mt-16 flex items-center justify-center">
+                            <button
+                                type="submit"
+                                className="lg:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
+                            >
+                                Proceed
+                            </button>
+                        </div>
+                    }
             </div>
 
             <div className="bg-[#ffffff] rounded-md xl:w-[50%] w-full xl:h-[520px] h-auto mt-10 xl:mt-0 p-5 flex flex-col ">

@@ -4,9 +4,17 @@ import strokes from '../../assets/images/strokes-removebg-preview.png';
 import strokesmall from '../../assets/images/strokessmall.svg'
 import useUserDetails from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 const Crypto = () => {
-  const { user } = useUserDetails();
+  const { user, kycDetails, fetchKycDetails } = useUserDetails();
+
+  React.useEffect(() => {
+    if (user) {
+      fetchKycDetails()
+    }
+  }, [user]);
+
   const navigate = useNavigate();
 
   return (
@@ -34,7 +42,7 @@ const Crypto = () => {
               </h2>
               <div className="flex flex-col justify-between">
                 <p className="mb-12">Trade Bitcoin, Ethereum, Tether (USDT), Stellar, Ripple, Matic, USDC and your favorite cryptocurrencies on the OLAMAX trading platform</p>
-                <Button className="w-[160px] h-[38px] md:w-[200px] md:h-[44px] bg-secondary text-[13px] md:text-[15px] leading-normal font-semibold hover:bg-secondary/80" onClick={() =>{ user ? navigate('/dashboard')  : navigate('/sign-up') }}>Start Crypto Trading !</Button>
+                <Button className="w-[160px] h-[38px] md:w-[200px] md:h-[44px] bg-secondary text-[13px] md:text-[15px] leading-normal font-semibold hover:bg-secondary/80" onClick={() =>{ (user && kycDetails && kycDetails.status === 'Verified' ) ? navigate('/dashboard')  : (user && kycDetails && kycDetails.status === 'Unverified' ) ? navigate('/dashboard/identity_verification')  : navigate('/sign-up') }}>Start Crypto Trading !</Button>
               </div>
             </div>
           </div>

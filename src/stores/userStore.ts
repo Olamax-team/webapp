@@ -103,7 +103,7 @@ export const useUserDetails = create<userDetailProps>()(
           }; 
         });
       },
-      clearUser: () => set({ user: null, token: null }),
+      clearUser: () => set({ user: null, token: null, kycDetails: null, kycStatus: null }),
       clearKycDetails: () => set({ kycDetails: null }),
       clearUserDetails: () => set({ kycDetails: null }),
       clearKycStatus: () => set({ kycStatus: null }),
