@@ -24,13 +24,12 @@ const BuySell: React.FC<BuySellProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserDetails();
+  const { user, fetchKycDetails, kycDetails, token } = useUserDetails();
 
   const [subTab, setSubTab] = useState("sell");
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
-  // const [amount1, setAmount1] = useState<string>( "");
-  // const [amount2, setAmount2] = useState<string>("");
+
   const [btcPrice, setBtcPrice] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
   const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
@@ -140,11 +139,27 @@ const BuySell: React.FC<BuySellProps> = ({
     }
   }, [prices]); 
 
+
+  useEffect(() =>{
+    if (user && token) {
+      fetchKycDetails();
+    }
+  },[user, token])
+
 const onSubmit = (data: any) => {
+
   if (!user) {
     navigate("/log-in"); // Redirect to login if not logged in
     return;
   };
+
+  if (user && kycDetails) {
+    if (kycDetails.status === 'Unverified') {
+      navigate("/dashboard/identity_verification"); 
+      return;
+    }
+  }
+
 
   const fiatID = subTab === "buy" ? getCoinId(prop1) : getCoinId(prop2);
   const cryptoID = subTab === "buy" ? getCoinId(prop2) : getCoinId(prop1);
@@ -175,6 +190,7 @@ const onSubmit = (data: any) => {
 
   return (
       <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>
+
         {/* Sub-Tabs for Buy and Sell */}
         <div className="ml-1 xl:ml-2">
           <div className="font-poppins flex items-start space-x-4 text-[16px] leading-[24px] text-textDark">
@@ -200,6 +216,7 @@ const onSubmit = (data: any) => {
         ) ? (
             <form  onSubmit={handleSubmit(onSubmit)}>
               <div className="mt-5 mx-1 xl:mx-2">
+
                 {/* First prop Input */}
                 <div className="flex justify-center space-x-4">
                   <div className="font-Inter flex items-center w-full h-[64px] xl:h-[96px] justify-between bg-bg p-3 rounded-md text-textDark">

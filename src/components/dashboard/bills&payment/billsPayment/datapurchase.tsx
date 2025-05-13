@@ -16,6 +16,8 @@ import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
 import axios from "axios";
 import { cn } from "../../../../lib/utils";
+import useUserDetails from "../../../../stores/userStore";
+import { useNavigate } from "react-router-dom";
 
 
 type Inputs = {
@@ -62,6 +64,10 @@ interface coinsProps {
 // meter_number: string;
 
 const Datapurchase = () => {
+
+  const { user, fetchKycDetails, kycDetails } = useUserDetails();
+
+  const navigate = useNavigate();
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
   const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
@@ -205,7 +211,20 @@ const Datapurchase = () => {
     setSelectedBill('data');
   },[])
 
+  useEffect(() => {
+      if (user) {
+          fetchKycDetails(); 
+      }
+  }, [user])
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+
+    if (user && kycDetails) {
+      if (kycDetails.status === 'Unverified') {
+        navigate("/dashboard/identity_verification"); 
+        return;
+      }
+    }
 
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,

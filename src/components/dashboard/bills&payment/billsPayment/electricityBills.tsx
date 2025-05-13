@@ -16,6 +16,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
+import useUserDetails from "../../../../stores/userStore";
+import { useNavigate } from "react-router-dom";
   
 type Inputs = {
   inputAmount: string;
@@ -57,6 +59,10 @@ interface coinsProps {
 
 
 const ElectricityBills = () => {
+
+  const { user, fetchKycDetails, kycDetails } = useUserDetails();
+
+  const navigate = useNavigate();
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
 
@@ -232,8 +238,21 @@ const ElectricityBills = () => {
   React.useEffect(() => {
     setSelectedBill('electricity');
   },[])
+
+  useEffect(() => {
+      if (user) {
+          fetchKycDetails(); 
+      }
+  }, [user])
   
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+
+    if (user && kycDetails) {
+      if (kycDetails.status === 'Unverified') {
+        navigate("/dashboard/identity_verification"); 
+        return;
+      }
+    }
 
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,

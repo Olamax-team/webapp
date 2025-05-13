@@ -9,6 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
+import useUserDetails from "../../../../stores/userStore";
+import { useNavigate } from "react-router-dom";
 
 
 type Inputs = {
@@ -50,6 +52,9 @@ interface coinsProps {
 // meter_number: string;
 
 const AirtimeRecharge = () => {
+
+  const { user, fetchKycDetails, kycDetails } = useUserDetails();
+  const navigate = useNavigate();
 
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
@@ -207,9 +212,22 @@ const AirtimeRecharge = () => {
 
   React.useEffect(() => {
     setSelectedBill('airtime');
-  },[])
+  },[]);
+
+  React.useEffect(() => {
+    if (user) {
+      fetchKycDetails();
+    }
+  }, [user])
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+
+      if (user && kycDetails) {
+        if (kycDetails.status === 'Unverified') {
+          navigate("/dashboard/identity_verification"); 
+          return;
+        }
+      }
 
     const newData = {
       ...data,
