@@ -1,10 +1,9 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { useApiConfig } from "../../hooks/api";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { useFetchStore } from "../../stores/fetch-store";
 
 interface liveRateCoin {
   coin: string;
@@ -69,21 +68,8 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
     )
   };
 
-  const liveRateConfig = useApiConfig({
-    url:'price-ticker',
-    method:'get',
-  });
 
-  const fetchLiveRates = async () => {
-    const response = await axios.request(liveRateConfig);
-  
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-  
-    const data = response.data as liveRateCoin[];
-    return data;
-  };
+  const { fetchLiveRates } = useFetchStore();
 
   const { data, status } = useQuery({
     queryKey: ['live-rates'],
