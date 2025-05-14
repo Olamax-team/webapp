@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, ChevronDown,Menu, UserIcon, X} from 'lucide-react';
+import { Bell, ChevronDown,Menu, X} from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '../ui/button';
 import { cn, useOpenMobile, useOpenNotification } from '../../lib/utils';
@@ -289,7 +289,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
               }
               <DropdownMenu>
                 <DropdownMenuTrigger className='cursor-pointer focus:outline-none'>
-                  {(kycDetails && kycDetails.prolife_image) ? <ImageAvatar style='md:size-[56px] size-[40px] bg-gray-200' image={kycDetails.prolife_image}/> : (kycDetails && kycDetails.lname && kycDetails.fname) ? <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase tracking-wider'>{placeholder}</div> : <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase border rounded-full'><HiOutlineUser className='size-8 text-black/50'/></div>  }
+                  {(kycDetails && kycDetails.prolife_image) ? <ImageAvatar style='md:size-[56px] size-[40px] bg-gray-200' image={kycDetails.prolife_image}/> : (kycDetails && kycDetails.lname && kycDetails.fname) ? <div className='md:size-[56px] rounded-full bg-primary text-white size-[40px] flex items-center justify-center uppercase tracking-wider'>{placeholder}</div> : <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase border rounded-full'><HiOutlineUser className='size-8 text-black/50'/></div>  }
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
                   <DropdownMenuLabel>{kycDetails ? kycDetails.email : user.email}</DropdownMenuLabel>
