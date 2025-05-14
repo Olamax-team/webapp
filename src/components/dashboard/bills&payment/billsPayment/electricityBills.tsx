@@ -207,6 +207,7 @@ const ElectricityBills = () => {
     if (price) {
       let newpaymentAmount = '';
       if (activeButton === "crypto") {
+        //WE DONOT KNOW THE FORMULA YET
         newpaymentAmount = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
@@ -228,6 +229,7 @@ const ElectricityBills = () => {
     if (price) {
       let newinputAmount = '';
       if (activeButton === "crypto") {
+        //WE DONOT KNOW THE FORMULA YET
         newinputAmount = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newinputAmount = (parseFloat(amount2)).toFixed(2); 
