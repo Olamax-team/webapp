@@ -156,6 +156,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
       setAmount2(package_name.amount.toString())
       setValue('paymentAmount', package_name.amount.toString())
     } else {
+        //WE DONOT KNOW THE FORMULA YET
       setAmount2((package_name.amount / 1000).toFixed(6))
       setValue('paymentAmount', (package_name.amount / 1000).toFixed(6))
     }
@@ -171,6 +172,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         setAmount1(dataPackages[0].payment_item_name);
         setValue('inputAmount', dataPackages[0].payment_item_name);
         if (subTab === 'crypto') {
+            //WE DONOT KNOW THE FORMULA YET
             setAmount2((dataPackages[0].amount / 1000).toFixed(6))
             setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
         } else {
