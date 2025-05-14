@@ -83,7 +83,7 @@ const BuySell: React.FC<BuySellProps> = ({
     return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
     const getCoinValue = (coinCode: string): string => {
-    return (liveRates ?? []).find(c => c.symbol === coinCode)?.price || "null"; 
+    return (liveRates ?? []).find(c => c.symbol === coinCode)?.price || ""; 
   };
   
   const getSellingPrice = (coinCode: string) => {
@@ -135,9 +135,9 @@ const BuySell: React.FC<BuySellProps> = ({
     if (price) {
       let newAmount1 = '';
       if (subTab === "buy") {
-        newAmount1 = (parseFloat(amount1) / parseFloat(price) / parseFloat(coinValue.replace(/,/g, ""))).toFixed(6); // NGN → crypto
+        newAmount1 = (parseFloat(amount2) * parseFloat(price) * parseFloat(coinValue.replace(/,/g, ""))).toFixed(2) // crypto → NGN
       } else if (subTab === 'sell') {
-        newAmount1 = (parseFloat(amount1) * parseFloat(price) * parseFloat(coinValue.replace(/,/g, ""))).toFixed(2) // crypto → NGN
+        newAmount1 = (parseFloat(amount2) / parseFloat(price) / parseFloat(coinValue.replace(/,/g, ""))).toFixed(6); // NGN → crypto
       }
 
       // setAmount1(newAmount1); 
