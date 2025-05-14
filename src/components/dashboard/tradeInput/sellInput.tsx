@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useTradeStore from "../../../stores/tradeStore";
 import { Info } from "lucide-react";
 import { Button } from "../../ui/button";
-import { useConfirmCompleteTransaction } from "../../../lib/utils";
+import { formatNigerianPhoneNumber, useConfirmCompleteTransaction } from "../../../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { sellInput } from "../../formValidation/formValidation";
+import { sellInput, sellInputValues } from "../../formValidation/formValidation";
+import useUserDetails from "../../../stores/userStore";
 
 const SellInput: React.FC = () => {
-    
+    const { user, kycStatus, fetchKycStatus } = useUserDetails();
     const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
     const bankNames = ["UBA", "GTB", "First Bank", "Kuda MFB"]
     const tradeData = useTradeStore();
 
+    useEffect(() =>{
+      if (user) {
+        fetchKycStatus();
+      }
+    },[user]);
     const {
       register,
       handleSubmit,
@@ -23,13 +29,19 @@ const SellInput: React.FC = () => {
         bankName: "",
         accountNumber: "",
         accountName: "",
-        phoneNumber: "",
+        phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : '',
       },
     });
     
 
-    const handleSellInput= (data: any) => {
-      console.log("Form data: ", data);
+    const handleSellInput= (data: sellInputValues) => {
+      const transactionData = {
+        bankName: data.bankName,
+        accountNumber: data.accountNumber,
+        accountName: data.accountName,
+        phoneNumber: data.phoneNumber,
+      }
+      console.log("Form data: ", transactionData);
       openConfirmCompleteTransaction.onOpen();
     }
 
@@ -88,17 +100,18 @@ const SellInput: React.FC = () => {
                     )}
 
                     {/* Phone Number Input */}
-                    <div className="flex px-4 justify-between bg-white rounded-md">
+                    <div className="flex px-4 justify-center bg-white rounded-md">
+                      <span className="flex items-center justify-center item-center w-fit font-medium xl:text-[16px] xl:leading-[24px] px-4 py-2 rounded-md h-[60px] outline-none">+234</span>
                       <input
                         type="tel"
                         placeholder="Your Phone Number"
                         {...register("phoneNumber")}
                         className="font-medium xl:text-[16px] xl:leading-[24px] w-full px-4 py-2 rounded-md h-[60px] outline-none"
                       />
-                      {errors.phoneNumber && (
-                        <p className="text-red-500 text-sm">{(errors.phoneNumber as {message: string}).message}</p>
-                      )}
                     </div>
+                    {errors.phoneNumber && (
+                      <p className="text-red-500 text-sm">{(errors.phoneNumber as {message: string}).message}</p>
+                    )}
 
 
                     {/* Warning Message */}
@@ -111,12 +124,6 @@ const SellInput: React.FC = () => {
                     <div className="flex items-center justify-center ">
                     <Button 
                     type="submit"
-                    onClick={() => handleSellInput({
-                      bankName: "GTB",
-                      accountNumber: "1234567890",
-                      accountName: "John Doe",
-                      phoneNumber: "08123456789"
-                    })}
                     className="xl:w-[150px] w-[96px] h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg">
                         Proceed
                     </Button>

@@ -146,12 +146,15 @@ const BuyInput: React.FC = () => {
             {errors.network && <p className="text-red-500 text-sm -mt-4">{(errors.network as {message: string}).message}</p>}
 
             {/* Phone Number Input */}
-            <input
-              type="tel"
-              placeholder="Your Phone Number"
-              {...register("phoneNumber")}
-              className="font-medium xl:text-[16px] xl:leading-[24px] w-full px-4 py-2 rounded-md h-[60px] outline-none"
-            />
+            <div className="flex px-4 justify-center bg-white rounded-md">
+              <span className="flex items-center justify-center item-center w-fit font-medium xl:text-[16px] xl:leading-[24px] px-4 py-2 rounded-md h-[60px] outline-none">+234</span>
+              <input
+                type="tel"
+                placeholder="Your Phone Number"
+                {...register("phoneNumber")}
+                className="font-medium xl:text-[16px] xl:leading-[24px] w-full px-4 py-2 rounded-md h-[60px] outline-none"
+              />
+            </div>
             {errors.phoneNumber && (
               <p className="text-red-500 text-sm -mt-4">{(errors.phoneNumber as {message: string}).message}</p>
             )}
