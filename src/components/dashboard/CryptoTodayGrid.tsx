@@ -2,12 +2,10 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
-// import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { useApiConfig } from "../../hooks/api";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { useFetchStore } from "../../stores/fetch-store";
 
 // Define the type for a single crypto item
 
@@ -108,21 +106,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     )
   };
 
-    const liveRateConfig = useApiConfig({
-      url:'price-ticker',
-      method:'get',
-    });
-  
-    const fetchLiveRates = async () => {
-      const response = await axios.request(liveRateConfig);
-    
-      if (response.status !== 200) {
-        throw new Error('Something went wrong, try again later');
-      }
-    
-      const data = response.data as liveRateCoin[];
-      return data;
-    };
+  const { fetchLiveRates } = useFetchStore();
   
     const { data, status } = useQuery({
       queryKey: ['live-rates'],

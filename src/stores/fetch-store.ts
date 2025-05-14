@@ -81,6 +81,18 @@ type cableServicesProps = {
 };
 
 
+type liveRateCoin = {
+  coin: string;
+  symbol: string;
+  price: string;
+  icon: string;
+  change: string;
+  percentageChange: string;
+  arrow: string;
+  color: string;
+}
+
+
 interface FetchStore {
   fetchBillServices: () => Promise<cryptoServiceProps[]>;
   fetchCryptoServices: () => Promise<cryptoServiceProps[]>;
@@ -94,6 +106,7 @@ interface FetchStore {
   fetchCoinBlockChain: (id:number) => Promise<blockChain[]>;
   fetchMinimumTransaction: (id:number) => Promise<minTransaction>;
   fetchTvServices: () => Promise<cableServicesProps[]>;
+  fetchLiveRates: () => Promise<liveRateCoin[]>;
 };
 
 
@@ -274,6 +287,20 @@ export const useFetchStore = create<FetchStore>(() => ({
       throw new Error('Something went wrong, try again later');
     }
     const data = response.data.cable as cableServicesProps[];
+    return data;
+  },
+
+  fetchLiveRates: async () => {
+    const response = await axios.request({
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/price-ticker`,
+      headers: {'Content-Type':'application/json'}
+    });
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data as liveRateCoin[];
     return data;
   },
 
