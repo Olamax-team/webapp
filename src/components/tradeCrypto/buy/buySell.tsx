@@ -50,11 +50,16 @@ const BuySell: React.FC<BuySellProps> = ({
   const amount2 = watch('amount2');
 
 
-  const { fetchAllBuyCoins, fetchAllCoinPrices, fetchCryptoServices, fetchStableCoins } = useFetchStore();
+  const { fetchAllBuyCoins, fetchLiveRates, fetchAllCoinPrices, fetchCryptoServices, fetchStableCoins } = useFetchStore();
 
   const { data: cryptoService } = useQuery({
     queryKey: ['crypto-service'],
     queryFn: fetchCryptoServices,
+  });
+
+  const { data: liveRates } = useQuery({
+    queryKey: ['live-rates'],
+    queryFn: fetchLiveRates,
   });
 
   const { data: prices } = useQuery({
@@ -75,6 +80,9 @@ const BuySell: React.FC<BuySellProps> = ({
   const getCoinId = (coinCode: string): number => {
     return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
+    const getCoinValue = (coinCode: string): string => {
+    return (liveRates ?? []).find(c => c.symbol === coinCode)?.price || "null"; 
+  };
   
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
@@ -87,7 +95,10 @@ const BuySell: React.FC<BuySellProps> = ({
   };
 
   const price = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
-console.log("Price: ", prices);
+  const coinValue = getCoinValue(prop2);
+  const BtcPrice = subTab === "buy" ? getBuyingPrice("BTC") : getSellingPrice("BTC");
+console.log("Price: ", price);
+console.log("coinvalue: ", coinValue);
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
     if (!amount1) {
@@ -98,16 +109,16 @@ console.log("Price: ", prices);
     if (price) {
       let newAmount2 = '';
       if (subTab === "buy") {
-        newAmount2 = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+        newAmount2 = (parseFloat(amount1) / parseFloat(price) / parseFloat(coinValue.replace(/,/g, ""))).toFixed(6); 
       } else if (subTab === 'sell') {
-        newAmount2 = (parseFloat(amount1) * parseFloat(price)).toFixed(2); // crypto → NGN
+        newAmount2 = (parseFloat(amount1) * parseFloat(price) * parseFloat(coinValue.replace(/,/g, ""))).toFixed(2); // crypto → NGN
       }
 
       // Syncing the calculated amount2 with react-hook-form
       // setAmount2(newAmount2);  // Updating Zustand state
       setValue("amount2", newAmount2);
     }
-  }, [amount1, prop1, subTab, prices, coin, lastChanged]);
+  }, [amount1, prop1, prop2, subTab, prices, coin, lastChanged]);
 
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
@@ -120,23 +131,26 @@ console.log("Price: ", prices);
     if (price) {
       let newAmount1 = '';
       if (subTab === "buy") {
-        newAmount1 = (parseFloat(amount2) / parseFloat(price)).toFixed(6); // NGN → crypto
+        newAmount1 = (parseFloat(amount1) / parseFloat(price) / parseFloat(coinValue.replace(/,/g, ""))).toFixed(6); // NGN → crypto
       } else if (subTab === 'sell') {
-        newAmount1 = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // crypto → NGN
+        newAmount1 = (parseFloat(amount1) * parseFloat(price) * parseFloat(coinValue.replace(/,/g, ""))).toFixed(2) // crypto → NGN
       }
 
       // setAmount1(newAmount1); 
       setValue("amount1", newAmount1);
     }
-  }, [amount2, prop2, subTab, prices, coin, lastChanged]);
+  }, [amount2, prop2,prop1, subTab, prices, coin, lastChanged]);
   
   useEffect(() => {
-    const BtcPrice = getSellingPrice("BTC");
+    
+    const BTCPriceInUSD = getCoinValue(prop2);
     if (BtcPrice) {
       let BTCP = "";
-      BTCP = parseFloat(BtcPrice).toFixed(2);
-      setBtcPrice(BTCP);
-    }
+    BTCP = (
+      parseFloat(BTCPriceInUSD.replace(/,/g, "")) * parseFloat(BtcPrice)
+    ).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          setBtcPrice(BTCP);
+        }
   }, [prices]); 
 
 
