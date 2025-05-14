@@ -23,7 +23,7 @@ const BillsDetails = ({activeInput }: billsDetailsProps) => {
         return <DataInput />;
       case 'electricity':
         return <ElectricityInput />;
-      case 'cabletv':
+      case 'cable':
         return <CableTvInput />;
       case 'betting':
         return <BettingInput />;

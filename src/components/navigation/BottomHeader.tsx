@@ -1,6 +1,6 @@
 import React from 'react';
-import { Bell, ChevronDown,Menu, X} from 'lucide-react';
-import { Link } from 'react-router-dom'
+import { Bell, ChevronDown,Menu, UserIcon, X} from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from '../ui/button';
 import { cn, useOpenMobile, useOpenNotification } from '../../lib/utils';
 import ImageAvatar from '../ui/image-avatar';
@@ -8,6 +8,7 @@ import { moreList, supportList, tradeCryptoList } from '../../assets/constants';
 import useUserDetails from '../../stores/userStore';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import axios from 'axios';
+import { HiOutlineUser } from 'react-icons/hi2';
 
 type menuItemProps = {
   image: string;
@@ -24,23 +25,33 @@ type dropDownMenuProps = {
 
 type bottomProps = {
   notifications: boolean;
-}
+};
 
 
 const BottomHeader = ({notifications}:bottomProps) => {
+
+  const location = useLocation();
+
   const openMobile = useOpenMobile();
   const openNotification = useOpenNotification();
   const [openTrade, setOpenTrade] = React.useState(false);
   const [openSupport, setOpenSupport] = React.useState(false);
   const [openMore, setOpenMore] = React.useState(false);
 
-  const { user, token , clearUser, kycDetails, fetchKycDetails} = useUserDetails();
+  const { user, token , clearUser, kycDetails, fetchKycDetails } = useUserDetails();
 
   React.useLayoutEffect(() => {
     if (user) {
       fetchKycDetails();
     };
   }, [user]);
+
+  const userFirstName = kycDetails ? kycDetails.fname : '';
+  const userLastName = kycDetails ? kycDetails.lname : '';
+
+  const placeholder = userFirstName.charAt(0) + userLastName.charAt(0);
+
+  console.log(kycDetails);
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -268,21 +279,23 @@ const BottomHeader = ({notifications}:bottomProps) => {
               <Link to={'/dashboard'}>
                 <span className='text-primary text-sm md:text-base'>My Account</span>
               </Link>
-              <button className='size-[32px] md:size-[40px] bg-bg rounded-full flex items-center justify-center' onClick={openNotification.isOpen ? () =>openNotification.onClose() : () =>openNotification.onOpen()}>
-                <div className='size-[20px] flex items-center justify-center relative'>
-                  <Bell className='size-4 md:size-7'/>
-                  {notifications && <div className="absolute bg-primary size-[9px] rounded-full top-0 right-[2px]" />}
-                </div>
-              </button>
+              { location.pathname === '/' &&
+                <button className='size-[32px] md:size-[40px] bg-bg rounded-full flex items-center justify-center' onClick={openNotification.isOpen ? () =>openNotification.onClose() : () =>openNotification.onOpen()}>
+                  <div className='size-[20px] flex items-center justify-center relative'>
+                    <Bell className='size-4 md:size-7'/>
+                    {notifications && <div className="absolute bg-primary size-[9px] rounded-full top-0 right-[2px]" />}
+                  </div>
+                </button>
+              }
               <DropdownMenu>
-                <DropdownMenuTrigger className='cursor-pointer'>
-                  <ImageAvatar style='md:size-[56px] size-[40px]' image={'/images/avatar_1.png'}/>
+                <DropdownMenuTrigger className='cursor-pointer focus:outline-none'>
+                  {(kycDetails && kycDetails.prolife_image) ? <ImageAvatar style='md:size-[56px] size-[40px] bg-gray-200' image={kycDetails.prolife_image}/> : (kycDetails && kycDetails.lname && kycDetails.fname) ? <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase tracking-wider'>{placeholder}</div> : <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase border rounded-full'><HiOutlineUser className='size-8 text-black/50'/></div>  }
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
                   <DropdownMenuLabel>{kycDetails ? kycDetails.email : user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <button type="button" onClick={signOut}>Log Out</button>
+                  <DropdownMenuItem onClick={signOut}>
+                    Log Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

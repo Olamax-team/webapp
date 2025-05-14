@@ -49,7 +49,8 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   className,
   airtimeOptions,
 }) => {
-  const { user } = useUserDetails();
+
+  const { user, fetchKycDetails, kycDetails } = useUserDetails();
   const navigate = useNavigate();
 
   const {
@@ -126,6 +127,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     queryFn: fetchDataPackages,
     enabled: !!selectedNetworkDetails?.product_number
   });
+  
   const isReadyAndAvailable = dataPackageStatus === 'success' && dataPackages.length > 0;
 
   // ===== Price Calculation =====
@@ -162,7 +164,6 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
   };
-  console.log("selectedPackageDetails", selectedPackageDetails);
 
     useEffect(() => {
         if (cat0==="Data" && dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
@@ -182,6 +183,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         setSelectedPackage('Package Loading...')
         }
     }, [dataPackageStatus, dataPackages, subTab])
+
     //autofill for both inputs
     useEffect(() => {
         if (lastChanged !== 'amount1') return;
@@ -202,6 +204,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         }
         }, [amount1, prop1, subTab, prices, lastChanged]);
 
+
     useEffect(() => {
         if (lastChanged !== 'amount2') return;
         if (!amount2) {
@@ -220,6 +223,16 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         setValue("inputAmount", newAmount1);
         }
     }, [amount2, prop2, subTab, prices, lastChanged]);
+
+
+    useEffect(() => {
+        if (user) {
+           fetchKycDetails(); 
+        }
+    }, [user])
+
+
+    console.log(selectedPackageDetails);
     
     const handleSelectChange = (network: AirtimeNetwork) => {
         setSelectedNetwork(network.network);
@@ -232,6 +245,14 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
             navigate("/log-in"); // Redirect to login if not logged in
             return;
           };
+
+        if (user && kycDetails) {
+            if (kycDetails.status === 'Unverified') {
+                navigate("/dashboard/identity_verification"); 
+                return;
+            }
+        };
+
         const Payload = {
           selectedNetwork,
           selectPayment: subTab === "fiat" ? "" : prop2,

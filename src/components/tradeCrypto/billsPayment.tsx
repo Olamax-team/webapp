@@ -36,7 +36,7 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
     className = "",
 }) => {
     
-    const { user } = useUserDetails();
+    const { user, fetchKycDetails, kycDetails } = useUserDetails();
     
     const { fetchAllCoinPrices, fetchBillServices, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
 
@@ -146,7 +146,7 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
 
     const navigate = useNavigate();
 
-  const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
+    const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
 
     useEffect(() => {
         if (lastChanged !== 'amount1') return;
@@ -195,26 +195,38 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({
         setIsNetworkDropdownOpen(false);
     };
 
+    useEffect(() => {
+        if (user) {
+            fetchKycDetails(); 
+        }
+    }, [user])
+
     const handleBillPay = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!user) {
             navigate("/log-in"); // Redirect to login if not logged in
             return;
-          };
+        };
+
+        if (user && kycDetails) {
+            if (kycDetails.status === 'Unverified') {
+                navigate("/dashboard/identity_verification"); 
+                return;
+            }
+        };
         const billData = {
             selectedNetwork:cat === 'Electricity' ?  selectedBranch : selectedTVNetwork ,
             selectPayment: subTab === "fiat" ? "": prop2,
             inputAmount: amount1,
             paymentAmount: amount2,
             fiatPayment:subTab === "fiat" ? prop1: "",
-      
-          };
+        };
           
-          billDetails.setItem(billData);
+        billDetails.setItem(billData);
         setActive(cat === 'Electricity' ? 2 : 3);
         navigate('/dashboard/bills_payment');
         setShowTransactionDetail(true);
-        setSelectedBill(cat === 'Electricity' ? 'electricity': 'cabletv');
+        setSelectedBill(cat === 'Electricity' ? 'electricity': 'cable');
     }
 
 return (

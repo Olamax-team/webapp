@@ -16,6 +16,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
+import useUserDetails from "../../../../stores/userStore";
+import { useNavigate } from "react-router-dom";
   
 type Inputs = {
   inputAmount: string;
@@ -25,55 +27,50 @@ type Inputs = {
   fiatPayment:string;
 };
 
-type cryptoServiceProps = {
-  cs: string;
-  act: string;
-};
-
 type electricBranchProps = {
   electricity: string;
   product_number: number;
   abrv:string;
   icon: string;
-};  
+}; 
+
+interface coinsProps {
+  coin: string;
+  coin_name: string;
+  icon: string;
+  status: string;
+  id: number;
+  method: string;
+  stable_coins: string;
+};
+
+// transaction_type: activeButton,
+// naira_amount: inputAmount;
+// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
+// blockchain_id: number;
+// coin_amount: Number(paymentAmount);
+// bills: selectedBill;
+// network: selectedNetwork;
+// package_product_number: selectedNetworkDetails.product_number;
+// electricity_type: string;
+// phone_number: string;
+// cable_number: string;
+// meter_number: string;
+
 
 const ElectricityBills = () => {
 
-  const { setShowTransactionDetail, setSelectedBill } = activityIndex();
+  const { user, fetchKycDetails, kycDetails } = useUserDetails();
 
-  const billsServiceConfig = useApiConfig({
-    method: 'get',
-    url: 'get-bills-services'
-  });
+  const navigate = useNavigate();
 
-  const electricTypeConfig = useApiConfig({
-    method: 'get',
-    url: 'get-electricity-type'
-  });
+  const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
 
   const electricBranchesConfig = useApiConfig({
     method: 'get',
     url: 'get-electricity-branches/electricity/postpaid'
   });
- const { fetchAllCoinPrices, fetchStableCoins, fetchAllCoins } = useFetchStore();
-  
- const fetchBillServices = async () => {
-    const response = await axios.request(billsServiceConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.bill_service as cryptoServiceProps[];
-    return data;
-  };
-
-  const fetchElectricType = async () => {
-    const response = await axios.request(electricTypeConfig);
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    };
-    const data = response.data.electricity_type as any;
-    return data;
-  };
+ const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices } = useFetchStore();
 
   const fetchElectricBranches = async () => {
     const response = await axios.request(electricBranchesConfig);
@@ -91,7 +88,7 @@ const ElectricityBills = () => {
  
    const { data:coin } = useQuery({
      queryKey: ['all-coins'],
-     queryFn: fetchAllCoins
+     queryFn: fetchAllBuyCoins
    })
     
   const getCoinId = (coinCode: string): number | undefined => {
@@ -124,19 +121,10 @@ const ElectricityBills = () => {
     queryFn: fetchBillServices,
   });
 
-  const { data:electicTypes, status:electricTypeStatus} = useQuery({
-    queryKey: ['electric-types'],
-    queryFn: fetchElectricType,
-  });
-
   const { data:electicBranches, status:electricBranchesStatus} = useQuery({
     queryKey: ['electric-branches'],
     queryFn: fetchElectricBranches,
   });
-
-  console.log(electicTypes, electricTypeStatus);
-
-  const frontPageData = JSON.parse(localStorage.getItem('electricData') || '{}');
 
   const { register, handleSubmit,setValue, formState: { errors }, reset, watch} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
@@ -144,29 +132,39 @@ const ElectricityBills = () => {
       inputAmount: "",
     paymentAmount: "",
     }
-  }); 
+  });
 
   const inputAmount = watch("inputAmount");
   const paymentAmount = watch("paymentAmount");
+
   const [amount1, setAmount1] = useState<string>("0");
   const [amount2, setAmount2] = useState<string>("0");
-  const [selectedNetwork, setSelectedNetwork] = useState(frontPageData && Object.keys(frontPageData).length > 0 ? frontPageData.network : electicBranches ? electicBranches[0].abrv : 'IBEDC');
-  const [selectPayment, setSelectPayment] = useState('BTC');
+  
+  const [selectedNetwork, setSelectedNetwork] = useState(electicBranches ? electicBranches[0].abrv : 'IBEDC');
+  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<electricBranchProps | undefined>(() => electicBranches && electicBranches.length > 0 ? electicBranches[0] : undefined);
+
+  const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
+  const [selectPaymentDetails, setSelectPaymentDetails] = useState<coinsProps | undefined>(() => coin && coin.length > 0 ? coin[0] : undefined);
+
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
-  const electicityDetails = useBillsStore();
+
+  const { setItem } = useBillsStore();
+
   const [fiatPayment, setFiaPayment] = useState('NGN');
   const [activeButton, setActiveButton] = useState(billServices ? billServices[0].cs : 'fiat');
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
-  const handleSelectChange = (network: string) => {
-    setSelectedNetwork(network);
+  const handleSelectChange = (network: electricBranchProps) => {
+    setSelectedNetwork(network.abrv);
+    setSelectedNetworkDetails(network)
     setIsNetworkDropdownOpen(false); 
   };
 
-  const handleSelectedChange = (payment: string) => {
+  const handleSelectedChange = (payment:coinsProps) => {
     setLastChanged('amount2')
-    setSelectPayment(payment);
+    setSelectPayment(payment.coin);
+    setSelectPaymentDetails(payment);
     setIsPaymentDropdownOpen(false); 
   };
   const handleChange = (payment: string) => {
@@ -238,18 +236,40 @@ const ElectricityBills = () => {
       setValue("inputAmount", newinputAmount);
     }
   }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
+
+  React.useEffect(() => {
+    setSelectedBill('electricity');
+  },[])
+
+  useEffect(() => {
+      if (user) {
+          fetchKycDetails(); 
+      }
+  }, [user])
   
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    localStorage.removeItem('electricData');
 
-    const regdata ={...data,
+    if (user && kycDetails) {
+      if (kycDetails.status === 'Unverified') {
+        navigate("/dashboard/identity_verification"); 
+        return;
+      }
+    }
+
+    const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
-      selectedNetwork:selectedNetwork
+      selectedNetwork:selectedNetwork,
+      transaction_type: activeButton,
+      naira_amount: Number(data.inputAmount),
+      coin_token_id: activeButton === 'crypto' ? selectPaymentDetails?.id : undefined,
+      coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
+      bills: selectedBill,
+      network: selectedNetwork,
+      package_product_number: selectedNetworkDetails?.product_number,
     };
   
     setShowTransactionDetail(true); 
-    setSelectedBill('electricity')
-    electicityDetails.setItem(regdata);
+    setItem(regdata);
   };
 
   return (
@@ -302,12 +322,12 @@ const ElectricityBills = () => {
                   </div>
 
                 {isNetworkDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                     { electicBranches && electicBranches.length > 0 && electicBranches.map((network) => (
                       <div
                         key={network.abrv}
-                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleSelectChange(network.abrv)}
+                        className="flex items-center py-1 px-2 gap-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+                        onClick={() => handleSelectChange(network)}
                       >
                         <img src={network.icon} alt={network.abrv} className=" size-6 mr-2 rounded-full" />
                         <span>{network.abrv}</span>
@@ -346,7 +366,7 @@ const ElectricityBills = () => {
 
               <div className="relative">
                 <div
-                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0"
+                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[100px] h-[25px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 p-1"
                   onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
                 >
                   {activeButton === 'crypto' ? (
@@ -372,13 +392,13 @@ const ElectricityBills = () => {
                 </div>
 
                 {isPaymentDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                     {activeButton === 'crypto' ? (
                      coin && coin.length > 0 && coin.map((payment) => (
                         <div
                           key={payment.id}
                           className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSelectedChange(payment.coin)}
+                          onClick={() => handleSelectedChange(payment)}
                         >
                           <img src={payment.icon} alt={payment.coin} className="size-6 mr-2" />
                           <span>{payment.coin}</span>

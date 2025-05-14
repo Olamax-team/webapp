@@ -8,7 +8,7 @@ type Props = {
 const ImageAvatar = ({image, style}: Props) => {
   return (
     <div className={cn('rounded-full', style)}>
-      <img src={image} alt="profile" className='object-cover rounded-full h-full w-full'/>
+      <img src={image} alt="profile" className='object-cover rounded-full h-full w-full text-sm'/>
     </div>
   )
 }

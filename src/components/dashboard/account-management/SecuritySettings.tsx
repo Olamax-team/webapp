@@ -65,6 +65,18 @@ const SecuritySettings = () => {
       </div>
       <div className="w-full bg-[#f5f5f5] lg:h-[100px] h-[75px] rounded p-4 lg:p-5 flex items-center justify-between">
         <div className="h-[40px] lg:h-[50px] flex lg:gap-5 gap-4">
+          <div className="size-[40px] lg:size-[50px] rounded-full bg-yellow-300/50 flex items-center justify-center text-yellow-600 flex-none">
+            <HiInformationCircle className="size-5 lg:size-6"/>
+          </div>
+          <div className="font-Inter">
+            <h2 className="lg:text-lg md:text-base text-sm font-bold text-yellow-600">Disable account</h2>
+            <p className="text-xs md:text-sm lg:text-base text-yellow-500">Close your account temporarily</p>
+          </div>
+        </div>
+        <button className="text-yellow-500 lg:text-base md:text-xm text-xs" >Disable Account</button>
+      </div>
+      <div className="w-full bg-[#f5f5f5] lg:h-[100px] h-[75px] rounded p-4 lg:p-5 flex items-center justify-between">
+        <div className="h-[40px] lg:h-[50px] flex lg:gap-5 gap-4">
           <div className="size-[40px] lg:size-[50px] rounded-full bg-red-300/50 flex items-center justify-center text-red-600 flex-none">
             <HiInformationCircle className="size-5 lg:size-6"/>
           </div>
