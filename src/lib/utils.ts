@@ -44,7 +44,7 @@ export const timelineCreator = (date:string) => {
 
 export const formatNigerianPhoneNumber = (phoneNumber:string) => {
   if (phoneNumber && phoneNumber.startsWith('+234')) {
-    return "0" + phoneNumber.substring(4);
+    return phoneNumber.substring(4);
   }
   return phoneNumber;
 };

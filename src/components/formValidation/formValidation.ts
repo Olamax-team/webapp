@@ -93,14 +93,12 @@ export const formValidationSchema = z.object({
 
     
     export const sellInput = z.object({
-      bankName: z.enum(["UBA", "GTB", "First Bank", "Kuda MFB"], {
-        errorMap: () => ({ message: "Please select a Bank" }),
-      }),
+      bankName: z.string().nonempty("Bank Name is required"),
       accountNumber: z
       .string()
       .regex(/^[0-9]+$/, 'Required field')
       .min(10, 'Phone number cannot be less than 10 digits'),
-      acountName: z
+      accountName: z
       .string()
       .regex(/^[0-9]+$/, 'Required field')
       .min(1, 'Required field'),
@@ -111,5 +109,6 @@ export const formValidationSchema = z.object({
         .min(10, 'Phone number cannot be less than 10 digits'),
 
     });
+    export type sellInputValues = z.infer<typeof sellInput>;
 
 
