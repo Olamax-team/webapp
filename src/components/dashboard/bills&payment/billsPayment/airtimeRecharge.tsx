@@ -54,26 +54,41 @@ interface coinsProps {
 const AirtimeRecharge = () => {
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
+  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchLiveRates } = useFetchStore();
+
+  const { data:billServices, status:billServiceStatus} = useQuery({
+    queryKey: ['bills-service'],
+    queryFn: fetchBillServices,
+  });
+
+  const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
+
   const navigate = useNavigate();
 
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
 
-  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins } = useFetchStore();
-
   const { data: stables } = useQuery({
     queryKey: ['stable-coins'],
     queryFn: fetchStableCoins
   })
 
-  const { data:coin } = useQuery({
+  const { data:dataCoin } = useQuery({
     queryKey: ['all-coins'],
     queryFn: fetchAllBuyCoins
-  })
+  });
 
-  console.log(coin);
-  console.log(stables);
+  const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
+
+
+  const {data:liveRates } = useQuery({
+    queryKey: ['live-rates'],
+    queryFn: fetchLiveRates,
+  });
+
+  console.log(liveRates);
+
   
   const getCoinId = (coinCode: string): number | undefined => {
     if (coin) {
@@ -84,7 +99,8 @@ const AirtimeRecharge = () => {
 
   const { data:prices } = useQuery({
     queryKey: ['coin-prices'],
-    queryFn: fetchAllCoinPrices
+    queryFn: fetchAllCoinPrices,
+    enabled: activeButton === 'crypto'
   });
   
   const getSellingPrice = (coinCode: string) => {
@@ -100,11 +116,6 @@ const AirtimeRecharge = () => {
       return prices.find(p => p.coin_id === id)?.buying;
     }
   };
-
-  const { data:billServices, status:billServiceStatus} = useQuery({
-    queryKey: ['bills-service'],
-    queryFn: fetchBillServices,
-  });
 
   const { data:airtimeNetworks, status:airtimeNetworkStatus } = useQuery({
     queryKey: ['airtime-networks'],
@@ -125,18 +136,17 @@ const AirtimeRecharge = () => {
   const [amount1, setAmount1] = useState<string>("0");
   const [amount2, setAmount2] = useState<string>("0");
 
-  const [selectedNetwork, setSelectedNetwork] = useState(airtimeNetworks ? airtimeNetworks[0].network : 'MTN');
+  const [selectedNetwork, setSelectedNetwork] = useState((airtimeNetworks && airtimeNetworks.length > 0) ? airtimeNetworks[0].network : 'MTN');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => airtimeNetworks && airtimeNetworks.length > 0 ? airtimeNetworks[0] : undefined);
 
-  const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
+  const [selectPayment, setSelectPayment] = useState((coin && coin.length > 0) ? coin[0].coin : 'BTC');
   const [selectPaymentDetails, setSelectPaymentDetails] = useState<coinsProps | undefined>(() => coin && coin.length > 0 ? coin[0] : undefined);
 
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
 
-  const [fiatPayment, setFiaPayment] = useState(stables && stables.length > 0 ? stables[0].coin : 'NGN');
+  const [fiatPayment, setFiaPayment] = useState((stables && stables.length > 0) ? stables[0].coin : 'NGN');
   const [fiatPaymentDetails, setFiatPaymentDetails] = useState<coinsProps | undefined>(() => stables && stables.length > 0 ? stables[0] : undefined);
-  const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
   console.log('fiat-payment', fiatPaymentDetails);
 
@@ -150,6 +160,7 @@ const AirtimeRecharge = () => {
         return getBuyingPrice(selectPayment);
       }
     }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
+    
   useEffect(() => {
     
     if (lastChanged !== 'amount1') return;
@@ -191,6 +202,25 @@ const AirtimeRecharge = () => {
       setValue("inputAmount", newAmount1);
     }
   }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
+
+  const getCoinSellingPriceInNaira = (coinCode:string) => {
+    if (coinCode) {
+      let currentCoin;
+      let price;
+      if (liveRates && liveRates.length > 0) {
+        currentCoin = liveRates.find((item) => item.symbol === coinCode);
+        if (currentCoin) {
+          price = parseFloat(currentCoin.price.replace(/,/g, ""));
+          price = price * 1000;
+        };
+
+        return price;
+      }
+    } else return;
+  }
+
+  const currentCoinPrice = selectPayment ? getCoinSellingPriceInNaira(selectPayment) : undefined;
+  console.log(currentCoinPrice);
 
   const handleSelectChange = (network: airtimeNetworkProps) => {
     setSelectedNetwork(network.network);
@@ -365,7 +395,7 @@ const AirtimeRecharge = () => {
               {isPaymentDropdownOpen && (
                 <div className="absolute left-0 mt-2 w-fit bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
                   {activeButton === 'crypto' ? (
-                    coin && coin.length > 0 && coin.map((c) => (
+                    coin && coin.length > 0 && coin.filter((item) => item.coin !== 'NGN').map((c) => (
                       <div
                         key={c.id}
                         className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"

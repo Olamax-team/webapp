@@ -82,7 +82,8 @@ const BuySell: React.FC<BuySellProps> = ({
   const getCoinId = (coinCode: string): number => {
     return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
-    const getCoinValue = (coinCode: string): string => {
+  
+  const getCoinValue = (coinCode: string): string => {
     return (liveRates ?? []).find(c => c.symbol === coinCode)?.price || ""; 
   };
   
@@ -95,6 +96,8 @@ const BuySell: React.FC<BuySellProps> = ({
     const id = getCoinId(coinCode);
     return (prices ?? []).find(p => p.coin_id === id)?.buying;
   };
+
+  console.log(liveRates);
 
   const price = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
   const coinValue = getCoinValue(prop2);

@@ -86,10 +86,12 @@ const ElectricityBills = () => {
      queryFn: fetchStableCoins
    })
  
-   const { data:coin } = useQuery({
+   const { data:dataCoin } = useQuery({
      queryKey: ['all-coins'],
      queryFn: fetchAllBuyCoins
    })
+
+   const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
     
   const getCoinId = (coinCode: string): number | undefined => {
     if (coin) {
@@ -97,6 +99,7 @@ const ElectricityBills = () => {
     }
     return undefined; // Explicitly return undefined if coin is not defined
   };
+  
 
   const { data:prices } = useQuery({
     queryKey: ['coin-prices'],
@@ -143,7 +146,7 @@ const ElectricityBills = () => {
   const [selectedNetwork, setSelectedNetwork] = useState(electicBranches ? electicBranches[0].abrv : 'IBEDC');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<electricBranchProps | undefined>(() => electicBranches && electicBranches.length > 0 ? electicBranches[0] : undefined);
 
-  const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
+  const [selectPayment, setSelectPayment] = useState((coin && coin.length > 0) ? coin[0].coin : 'BTC');
   const [selectPaymentDetails, setSelectPaymentDetails] = useState<coinsProps | undefined>(() => coin && coin.length > 0 ? coin[0] : undefined);
 
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
