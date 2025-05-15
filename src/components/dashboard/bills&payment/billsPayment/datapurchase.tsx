@@ -14,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
-import axios from "axios";
 import { cn } from "../../../../lib/utils";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +69,7 @@ const Datapurchase = () => {
   const navigate = useNavigate();
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
-  const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
+  const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins, fetchPackages } = useFetchStore();
 
   
 
@@ -86,23 +85,22 @@ const Datapurchase = () => {
 
   console.log(networkOptionsList)
 
-  const { data: coin } = useQuery({
+  const { data: dataCoin } = useQuery({
     queryKey: ['all-coins'],
     queryFn: fetchAllBuyCoins,
   });
+
+  const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
 
   const { data: stables } = useQuery({
     queryKey: ['stable-coins'],
     queryFn: fetchStableCoins,
   });
 
-  console.log(coin);
-  console.log("stables",stables)
-
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0].network : 'MTN');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0] : undefined);
   
-  const [selectPayment, setSelectPayment] = useState(coin && coin.length > 0 ? coin[0].coin : 'BTC');
+  const [selectPayment, setSelectPayment] = useState((coin && coin.length > 0) ? coin[0].coin : 'BTC');
   const [selectPaymentDetails, setSelectPaymentDetails] = useState<coinsProps | undefined>(() => coin && coin.length > 0 ? coin[0] : undefined);
 
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
@@ -114,25 +112,12 @@ const Datapurchase = () => {
   const [fiatPayment, setFiaPayment] = useState(stables && stables.length > 0 ? stables[0].coin : 'NGN');
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
-  const fetchDataPackages = async () => {
-    const response = await axios.request({
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `https://api.olamax.io/api/subscription-packages/${selectedNetworkDetails?.product_number}`,
-      headers: {'Content-Type':'application/json'}
-    });
-    if (response.status !== 200) {
-      throw new Error('Something went wrong, try again later');
-    }
-    const data = response.data.prices as dataPackageProps[];
-    return data;
-  }
-
   const { data:dataPackages, status:dataPackageStatus} = useQuery({
     queryKey: ['data-packages', selectedNetwork, selectedNetworkDetails?.product_number],
-    queryFn: fetchDataPackages,
+    queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
     enabled: selectedNetworkDetails && selectedNetworkDetails.product_number !== 0
   });
+
 
   const [selectedPackage, setSelectedPackage] = useState('');
   const [selectedPackageDetails, setSelectedPackageDetails] = useState<dataPackageProps | undefined>(undefined);
@@ -212,9 +197,9 @@ const Datapurchase = () => {
   },[])
 
   useEffect(() => {
-      if (user) {
-          fetchKycDetails(); 
-      }
+    if (user) {
+      fetchKycDetails(); 
+    }
   }, [user])
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -348,11 +333,11 @@ const Datapurchase = () => {
           </div>
 
           <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5]   xl:h-[96px] mt-5">
-          <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
-          <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Recieve</label>
+            <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
+            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Recieve</label>
 
             <div className="flex justify-between px-3 ">
-            <input
+              <input
                 {...register("paymentAmount")}
                 type="text"
                 disabled

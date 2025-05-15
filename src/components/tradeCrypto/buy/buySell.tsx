@@ -27,11 +27,10 @@ const BuySell: React.FC<BuySellProps> = ({
   const { user, fetchKycDetails, kycDetails, token } = useUserDetails();
 
   const [subTab, setSubTab] = useState("sell");
-  const [prop1, setProp1] = useState("NGN");
-  const [prop2, setProp2] = useState("BTC");
 
   const [btcPrice, setBtcPrice] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
+
   const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   const tradeDetails = useTradeStore();
@@ -77,10 +76,14 @@ const BuySell: React.FC<BuySellProps> = ({
     queryFn: fetchStableCoins,
   });
 
+  const [prop1, setProp1] = useState("NGN");
+  const [prop2, setProp2] = useState("BTC");
+
   const getCoinId = (coinCode: string): number => {
     return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
-    const getCoinValue = (coinCode: string): string => {
+  
+  const getCoinValue = (coinCode: string): string => {
     return (liveRates ?? []).find(c => c.symbol === coinCode)?.price || ""; 
   };
   
@@ -94,11 +97,15 @@ const BuySell: React.FC<BuySellProps> = ({
     return (prices ?? []).find(p => p.coin_id === id)?.buying;
   };
 
+  console.log(liveRates);
+
   const price = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
   const coinValue = getCoinValue(prop2);
   const BtcPrice = subTab === "buy" ? getBuyingPrice("BTC") : getSellingPrice("BTC");
-console.log("Price: ", price);
-console.log("coinvalue: ", coinValue);
+
+  console.log("Price: ", price);
+  console.log("coinvalue: ", coinValue);
+
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
     if (!amount1) {
@@ -153,6 +160,8 @@ console.log("coinvalue: ", coinValue);
         }
   }, [prices]); 
 
+  console.log(btcPrice)
+
 
   useEffect(() =>{
     if (user && token) {
@@ -160,47 +169,50 @@ console.log("coinvalue: ", coinValue);
     }
   },[user, token])
 
-const onSubmit = (data: any) => {
+  const onSubmit = (data: any) => {
 
-  if (!user) {
-    navigate("/log-in"); // Redirect to login if not logged in
-    return;
-  };
-
-  if (user && kycDetails) {
-    if (kycDetails.status === 'Unverified') {
-      navigate("/dashboard/identity_verification"); 
+    if (!user) {
+      navigate("/log-in"); // Redirect to login if not logged in
       return;
+    };
+
+    if (user && kycDetails) {
+      if (kycDetails.status === 'Unverified') {
+        navigate("/dashboard/identity_verification"); 
+        return;
+      }
     }
-  }
 
 
-  const fiatID = subTab === "buy" ? getCoinId(prop1) : getCoinId(prop2);
-  const cryptoID = subTab === "buy" ? getCoinId(prop2) : getCoinId(prop1);
+    const fiatID = subTab === "buy" ? getCoinId(prop1) : getCoinId(prop2);
+    const cryptoID = subTab === "buy" ? getCoinId(prop2) : getCoinId(prop1);
 
-  const tradeData = {
-    fiatType_id: fiatID,
-    cryptoType_id: cryptoID,
-    tradeType: subTab,
-    fiatType: prop1,
-    cryptoType: prop2,
-    fiatAmount: subTab === "buy" ? data.amount1 : data.amount2,
-    cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
+    const tradeData = {
+      fiatType_id: fiatID,
+      cryptoType_id: cryptoID,
+      tradeType: subTab,
+      fiatType: prop1,
+      cryptoType: prop2,
+      fiatAmount: subTab === "buy" ? data.amount1 : data.amount2,
+      cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
+    };
+    
+    if (location.pathname === "/") {
+      navigate("/dashboard", { state: { from: '/' } });
+      setActive(subTab === 'buy' ? 0 : 1);
+      setShowTransactionDetail(true);
+      setSelectedBill(subTab === 'buy' ? 'buy' : 'sell');
+      tradeDetails.setItem(tradeData);
+    } else {
+      setActive(subTab === 'buy' ? 0 : 1);
+      setShowTransactionDetail(true);
+      setSelectedBill(subTab === 'buy' ? 'buy' : 'sell');
+      tradeDetails.setItem(tradeData);
+    }
   };
-  
-  if (location.pathname === "/") {
-    navigate("/dashboard", { state: { from: '/' } });
-    setActive(subTab === 'buy' ? 0 : 1);
-    setShowTransactionDetail(true);
-    setSelectedBill(subTab === 'buy' ? 'buy' : 'sell');
-    tradeDetails.setItem(tradeData);
-  } else {
-    setActive(subTab === 'buy' ? 0 : 1);
-    setShowTransactionDetail(true);
-    setSelectedBill(subTab === 'buy' ? 'buy' : 'sell');
-    tradeDetails.setItem(tradeData);
-  }
-};
+
+
+
 
   return (
       <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>
@@ -353,7 +365,7 @@ const onSubmit = (data: any) => {
                   alt={`BTC logo`}
                   className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                 />
-                1 BTC = {btcPrice} Naira
+                1 BTC = NGN {btcPrice}
               </div>
           </form>
         ) : cryptoService?.some(
