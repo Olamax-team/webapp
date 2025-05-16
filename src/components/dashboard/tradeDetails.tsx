@@ -8,6 +8,7 @@ type tradeDetailsProps = {
 
   const TradeDetails = ({ activeInput }: tradeDetailsProps) => {
   const {  setShowTransactionDetail } = activityIndex();
+  
     const renderInput = () => {
       switch (activeInput) {
         case 'buy':

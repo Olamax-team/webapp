@@ -10,11 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useFetchStore } from "../../../../stores/fetch-store";
 import axios from "axios";
 import useTradeStore from "../../../../stores/tradeStore";
+import { useToast } from "../../../../hooks/use-toast";
 
 const DataInput = () => {
     const {item } = useBillsStore();
     const { setTransactionId, setAccountDetails, setIsBill} = useTradeStore();
     const {onOpen}  = useConfirmModal();
+    const { toast } = useToast();
     
     const { user, fetchKycStatus, kycStatus, token } = useUserDetails();
     const { fetchCoinBlockChain } = useFetchStore();
@@ -73,11 +75,21 @@ const DataInput = () => {
 
         await axios.request(config)
         .then((response) => {
-          setTransactionId(response.data.transaction_id);
-          setAccountDetails(response.data.bank_details.data);
-          setIsBill(true);
+            if (response.status === 200) {
+                setTransactionId(response.data.transaction_id);
+                setAccountDetails(response.data.bank_details.data);
+                setIsBill(true);
+                onOpen();
+            }
+        }).catch((error) => {
+            if (error) {
+                toast({
+                    title: 'Error',
+                    description: error.response.data.message,
+                    variant: 'destructive'
+                });
+            }
         });
-        onOpen();
     };
 
     return (

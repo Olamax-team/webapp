@@ -51,8 +51,6 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
   const placeholder = userFirstName.charAt(0) + userLastName.charAt(0);
 
-  console.log(kycDetails);
-
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
 

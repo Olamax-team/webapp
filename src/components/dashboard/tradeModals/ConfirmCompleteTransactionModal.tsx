@@ -1,5 +1,5 @@
 import Modal from '../../ui/modal'
-import { useConfirmCompleteTransaction, useFiatPaymentDetailsModal } from '../../../lib/utils'
+import { useConfirmCompleteTransaction, useCryptoPaymentDetailsModal, useFiatPaymentDetailsModal } from '../../../lib/utils'
 import useTradeStore from '../../../stores/tradeStore';
 import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
@@ -7,8 +7,8 @@ import axios from 'axios';
 const ConfirmCompleteTransaction = () => {
 
   const { isOpen, onClose } = useConfirmCompleteTransaction();
-  const paymentDetails = useFiatPaymentDetailsModal();
-  const { transactionId, setAccountDetails } = useTradeStore();
+  const { transactionId, setAccountDetails, item } = useTradeStore();
+  const paymentDetails = item?.tradeType === 'sell' ? useCryptoPaymentDetailsModal() : useFiatPaymentDetailsModal();
 
   const createBuyConfig = useApiConfig({
     method: 'post',
