@@ -9,17 +9,19 @@ import useUserDetails from '../../../stores/userStore';
 
 
 const NameHeader = () => {
-  const { user, fetchKycDetails, kycDetails, fetchKycStatus } = useUserDetails();
+  const { user, fetchKycStatus, fetchUserDetails, userDetails } = useUserDetails();
 
   React.useLayoutEffect(() => {
     if (user) {
-      fetchKycDetails();
       fetchKycStatus();
+      fetchUserDetails();
     }
   },[user]);
 
+  console.log(userDetails);
+
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(kycDetails? kycDetails.uid : '');
+    navigator.clipboard.writeText(userDetails? userDetails.uid : '');
     alert("copied!");
   };
 
@@ -27,7 +29,7 @@ const NameHeader = () => {
   const { token } = useUserDetails();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const [imageSrc, setImageSrc] = React.useState<string | undefined>((kycDetails && kycDetails.prolife_image) ? kycDetails.prolife_image : '/images/avatar_1.png');
+  const [imageSrc, setImageSrc] = React.useState<string | undefined>((userDetails && userDetails.profile_image) ? userDetails.profile_image : '/images/avatar_1.png');
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleImageClick = () => {
@@ -112,16 +114,16 @@ const NameHeader = () => {
           />
         </div>
         <div>
-          <h2 className='font-bold lg:text-lg text-sm'>{kycDetails ? `${kycDetails.fname + ' ' + kycDetails.lname}` : user?.email}</h2>
+          <h2 className='font-bold lg:text-lg text-sm'>{userDetails ? `${userDetails.first_name + ' ' + userDetails.last_name}` : user?.email}</h2>
           <button className='flex gap-3 items-center' onClick={copyToClipboard}>
-            <h2 className='md:text-sm text-xs'>{kycDetails?.uid}</h2>
+            <h2 className='md:text-sm text-xs'>{userDetails?.uid}</h2>
             <HiOutlineDuplicate className='lg:size-6 size-5'/>
           </button>
         </div>
       </div>
-      <div className={cn('flex items-center gap-2 ', kycDetails && kycDetails.status === 'Verified' ? 'text-[#34A853]': 'text-orange-500')}>
+      <div className={cn('flex items-center gap-2 ', userDetails && userDetails.status === 'Verified' ? 'text-[#34A853]': 'text-orange-500')}>
         <HiOutlineShieldCheck className='lg:size-6 size-5'/>
-        <h2 className='text-xs md:text-sm lg:text-base'>{kycDetails ? kycDetails.status : 'Unverified'}</h2>
+        <h2 className='text-xs md:text-sm lg:text-base'>{userDetails ? userDetails.status : 'Unverified'}</h2>
       </div>
     </div>
   )

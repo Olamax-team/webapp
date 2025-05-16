@@ -23,7 +23,7 @@ const BuySell: React.FC<BuySellProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, fetchKycDetails, kycDetails, token } = useUserDetails();
+  const { user, fetchKycDetails, token } = useUserDetails();
 
   const [subTab, setSubTab] = useState("sell");
 
@@ -71,12 +71,12 @@ const BuySell: React.FC<BuySellProps> = ({
     queryFn: fetchAllBuyCoins,
   });
 
+  const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
+
   const { data: stables } = useQuery({
     queryKey: ['stable-coins'],
     queryFn: fetchStableCoins,
   });
-
-  const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
   
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
@@ -104,8 +104,6 @@ console.log('min trans',minTransaction);
     const id = getCoinId(coinCode);
     return (prices ?? []).find(p => p.coin_id === id)?.buying;
   };
-
-  console.log(liveRates);
 
   const dollarPrice = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
 
@@ -204,8 +202,6 @@ console.log('min trans',minTransaction);
         }
   }, [prices, prop2]); 
 
-  console.log(rate)
-
 
   useEffect(() =>{
     if (user && token) {
@@ -213,19 +209,19 @@ console.log('min trans',minTransaction);
     }
   },[user, token])
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
 
     if (!user) {
       navigate("/log-in"); // Redirect to login if not logged in
       return;
     };
 
-    if (user && kycDetails) {
-      if (kycDetails.status === 'Unverified') {
-        navigate("/dashboard/identity_verification"); 
-        return;
-      }
-    }
+    // if (user && kycDetails) {
+    //   if (kycDetails.status === 'Unverified') {
+    //     navigate("/dashboard/identity_verification"); 
+    //     return;
+    //   }
+    // }
 
 
     const fiatID = subTab === "buy" ? getCoinId(prop1) : getCoinId(prop2);
@@ -240,7 +236,7 @@ console.log('min trans',minTransaction);
       fiatAmount: subTab === "buy" ? data.amount1 : data.amount2,
       cryptoAmount: subTab === "buy" ? data.amount2 : data.amount1,
     };
-    
+
     if (location.pathname === "/") {
       navigate("/dashboard", { state: { from: '/' } });
       setActive(subTab === 'buy' ? 0 : 1);
@@ -253,6 +249,7 @@ console.log('min trans',minTransaction);
       setSelectedBill(subTab === 'buy' ? 'buy' : 'sell');
       tradeDetails.setItem(tradeData);
     }
+
   };
 
 

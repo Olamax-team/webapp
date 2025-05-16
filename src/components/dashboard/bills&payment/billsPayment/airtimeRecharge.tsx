@@ -10,7 +10,7 @@ import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
 import useUserDetails from "../../../../stores/userStore";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 
 type Inputs = {
@@ -53,7 +53,7 @@ interface coinsProps {
 
 const AirtimeRecharge = () => {
 
-  const { user, fetchKycDetails, kycDetails } = useUserDetails();
+  const { user, fetchKycDetails } = useUserDetails();
   const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchLiveRates } = useFetchStore();
 
   const { data:billServices, status:billServiceStatus} = useQuery({
@@ -63,7 +63,7 @@ const AirtimeRecharge = () => {
 
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
@@ -86,8 +86,6 @@ const AirtimeRecharge = () => {
     queryKey: ['live-rates'],
     queryFn: fetchLiveRates,
   });
-
-  console.log(liveRates);
 
   
   const getCoinId = (coinCode: string): number | undefined => {
@@ -252,12 +250,12 @@ const AirtimeRecharge = () => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
 
-      if (user && kycDetails) {
-        if (kycDetails.status === 'Unverified') {
-          navigate("/dashboard/identity_verification"); 
-          return;
-        }
-      }
+      // if (user && kycDetails) {
+      //   if (kycDetails.status === 'Unverified') {
+      //     navigate("/dashboard/identity_verification"); 
+      //     return;
+      //   }
+      // }
 
     const newData = {
       ...data,

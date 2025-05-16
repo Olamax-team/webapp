@@ -38,11 +38,12 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const [openSupport, setOpenSupport] = React.useState(false);
   const [openMore, setOpenMore] = React.useState(false);
 
-  const { user, token , clearUser, kycDetails, fetchKycDetails } = useUserDetails();
+  const { user, token , clearUser, kycDetails, fetchKycDetails, fetchUserDetails, userDetails} = useUserDetails();
 
   React.useLayoutEffect(() => {
     if (user) {
       fetchKycDetails();
+      fetchUserDetails();
     };
   }, [user]);
 
@@ -50,8 +51,6 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const userLastName = kycDetails ? kycDetails.lname : '';
 
   const placeholder = userFirstName.charAt(0) + userLastName.charAt(0);
-
-  console.log(kycDetails);
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -289,7 +288,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
               }
               <DropdownMenu>
                 <DropdownMenuTrigger className='cursor-pointer focus:outline-none'>
-                  {(kycDetails && kycDetails.prolife_image) ? <ImageAvatar style='md:size-[56px] size-[40px] bg-gray-200' image={kycDetails.prolife_image}/> : (kycDetails && kycDetails.lname && kycDetails.fname) ? <div className='md:size-[56px] rounded-full bg-primary text-white size-[40px] flex items-center justify-center uppercase tracking-wider'>{placeholder}</div> : <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase border rounded-full'><HiOutlineUser className='size-8 text-black/50'/></div>  }
+                  {(userDetails && userDetails.profile_image) ? <ImageAvatar style='md:size-[56px] size-[40px] bg-gray-200' image={userDetails.profile_image}/> : (kycDetails && kycDetails.lname && kycDetails.fname) ? <div className='md:size-[56px] rounded-full bg-primary text-white size-[40px] flex items-center justify-center uppercase tracking-wider'>{placeholder}</div> : <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase border rounded-full'><HiOutlineUser className='size-8 text-black/50'/></div>  }
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
                   <DropdownMenuLabel>{kycDetails ? kycDetails.email : user.email}</DropdownMenuLabel>

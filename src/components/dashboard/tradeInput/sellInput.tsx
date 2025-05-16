@@ -7,12 +7,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { sellInput, sellInputValues } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
+import { useApiConfig } from "../../../hooks/api";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { useFetchStore } from "../../../stores/fetch-store";
+import { useToast } from "../../../hooks/use-toast";
 
 const SellInput: React.FC = () => {
-    const { user, kycStatus, fetchKycStatus } = useUserDetails();
+
+    const { user, kycStatus, fetchKycStatus, token } = useUserDetails();
+    const { fetchCoinBlockChain } = useFetchStore();
     const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
-    const bankNames = ["UBA", "GTB", "First Bank", "Kuda MFB"]
     const tradeData = useTradeStore();
+
+    const { toast } = useToast();
 
     useEffect(() =>{
       if (user) {
@@ -30,19 +38,79 @@ const SellInput: React.FC = () => {
         accountNumber: "",
         accountName: "",
         phoneNumber: kycStatus?.phone_number ? formatNigerianPhoneNumber(kycStatus.phone_number) : '',
+        blockChain: ""
       },
     });
-    
 
-    const handleSellInput= (data: sellInputValues) => {
-      const transactionData = {
-        bankName: data.bankName,
-        accountNumber: data.accountNumber,
-        accountName: data.accountName,
-        phoneNumber: data.phoneNumber,
+
+    const bankListConfig = useApiConfig({
+      method: 'get',
+      url: 'get-bank-list'
+    });
+
+  
+    const fetchBankList = async () => {
+      const response = await axios.request(bankListConfig);
+      if (response.status !== 200) {
+        throw new Error('Something went wrong, try again later');
+      };
+      const data = response.data.bank_list as {bank:string}[];
+      return data;
+    };
+
+
+    const { data:bankNames } = useQuery({
+      queryKey: ['bank-list'],
+      queryFn: fetchBankList
+    });
+
+
+    const { data:blockChains } = useQuery({
+      queryKey: ['block-chains', tradeData.item?.cryptoType_id],
+      queryFn: () => tradeData.item?.fiatType_id? fetchCoinBlockChain(tradeData.item.fiatType_id) : Promise.reject('coin token id is undefined')
+    });
+  
+
+    const handleSellInput= async (data: sellInputValues) => {
+
+      const newData = {
+        coin_shorthand: tradeData.item?.cryptoType,
+        naira_value: parseFloat(tradeData.item?.fiatAmount ?? "0"),
+        amount: parseFloat(tradeData.item?.cryptoAmount ?? "0"),
+        bank_type: data.bankName,
+        account_number: data.accountNumber,
+        account_name: data.accountName,
+        phone_number: data.phoneNumber,
+        coin_network: data.blockChain
+      };
+  
+      const startTransactionConfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://api.olamax.io/api/start-selling-transaction`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: newData
       }
-      console.log("Form data: ", transactionData);
-      openConfirmCompleteTransaction.onOpen();
+  
+      await axios.request(startTransactionConfig)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+          openConfirmCompleteTransaction.onOpen();
+        }
+      }).catch((error) => {
+        if (error) {
+          toast({
+            title: 'Error',
+            description: error.response.data.error || error.response.data.message,
+            variant: 'destructive'
+          })
+          console.log(error.response.data.error || error.response.data.message)
+        }
+      })
     }
 
     const fee= 0;
@@ -56,62 +124,88 @@ const SellInput: React.FC = () => {
                     <p className="text-textDark font-medium xl:text-[14px] xl:leading-[21px]">Complete Transaction</p>
                 </div>
 
-                <div className="mt-6 space-y-6">
-                  {/* bankName Selection */}
-                  <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
-                    <select
-                    {...register ("bankName")}
-                    className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white"
-                    >
-                    <option value="">Select Bank</option>
-                    {bankNames.map((prop) => (
-                    <option key={prop} value={prop}>
-                        {prop}
-                    </option>
-                    ))}
-                    </select>
+                <div className="mt-6 space-y-4">
+                  <div>
+                    <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center mt-6">
+                        <select
+                            {...register("blockChain")}
+                            className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white focus:outline-none outline-none focus:border-0 uppercase"
+                        >
+                            <option value="" className="text-sm uppercase">Select Blockchain</option>
+                            { blockChains && blockChains.length > 0 && blockChains.map((prop) => (
+                            <option key={prop.id} value={prop.blockchain_name} className="uppercase text-sm">
+                                {prop.blockchain_name}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                    {errors.blockChain && (<p className="text-red-500 text-sm mt-1"> {(errors.blockChain as { message: string }).message} </p>)}
                   </div>
-                  {errors.bankName && <p className="text-red-500 text-sm">{(errors.bankName as {message: string}).message}</p>}
+
+                  {/* bankName Selection */}
+                  <div>
+                    <div className="w-full px-4 py-2 rounded-md bg-white h-[60px] justify-center">
+                      <select
+                      {...register ("bankName")}
+                      className="font-medium xl:text-[16px] xl:leading-[24px] w-full mt-3 rounded-md bg-white p-1 outline-none focus:outline-none"
+                      >
+                      <option value="">Select Bank</option>
+                      {bankNames && bankNames.length > 0 && bankNames.map((prop) => (
+                      <option key={prop.bank} value={prop.bank}>
+                          {prop.bank}
+                      </option>
+                      ))}
+                      </select>
+                    </div>
+                    {errors.bankName && <p className="text-red-500 text-sm mt-1">{(errors.bankName as {message: string}).message}</p>}
+                  </div>
 
                     {/* Account Number Input */}
-                    <div className="flex px-4 justify-between bg-white rounded-md">
-                    <input
-                        type="text"
-                        placeholder="Bank Account Number"
-                        {...register ("accountNumber")}
-                        className="font-medium xl:text-[16px] xl:leading-[24px] w-full py-2 pr-10 text-textDark h-[60px] outline-none"
-                    />
+                    <div>
+                      <div className="flex px-4 justify-between bg-white rounded-md">
+                      <input
+                          type="text"
+                          placeholder="Bank Account Number"
+                          {...register ("accountNumber")}
+                          className="font-medium xl:text-[16px] xl:leading-[24px] w-full py-2 pr-10 text-textDark h-[60px] outline-none"
+                      />
+                      </div>
+                      {errors.accountNumber && (
+                        <p className="text-red-500 text-sm mt-1">{(errors.accountNumber as {message: string}).message}</p>
+                      )}
                     </div>
-                    {errors.accountNumber && (
-                      <p className="text-red-500 text-sm">{(errors.accountNumber as {message: string}).message}</p>
-                    )}
 
                     {/* Account Name Input */}
-                    <div className="flex px-4 justify-between bg-white rounded-md">
-                    <input
-                        type="text"                            
-                        placeholder="Account Name"
-                        {...register ("accountName")}
-                        className="font-medium xl:text-[16px] xl:leading-[24px] w-full py-2 pr-10 text-textDark h-[60px] outline-none"
-                    />
+                    <div>
+                      <div className="flex px-4 justify-between bg-white rounded-md">
+                      <input
+                          type="text"                            
+                          placeholder="Account Name"
+                          {...register ("accountName")}
+                          className="font-medium xl:text-[16px] xl:leading-[24px] w-full py-2 pr-10 text-textDark h-[60px] outline-none"
+                      />
+                      </div>
+                      {errors.accountName && (
+                        <p className="text-red-500 text-sm mt-1">{(errors.accountName as {message: string}).message}</p>
+                      )}
+
                     </div>
-                    {errors.accountName && (
-                      <p className="text-red-500 text-sm">{(errors.accountName as {message: string}).message}</p>
-                    )}
 
                     {/* Phone Number Input */}
-                    <div className="flex px-4 justify-center bg-white rounded-md">
-                      <span className="flex items-center justify-center item-center w-fit font-medium xl:text-[16px] xl:leading-[24px] px-4 py-2 rounded-md h-[60px] outline-none">+234</span>
-                      <input
-                        type="tel"
-                        placeholder="Your Phone Number"
-                        {...register("phoneNumber")}
-                        className="font-medium xl:text-[16px] xl:leading-[24px] w-full px-4 py-2 rounded-md h-[60px] outline-none"
-                      />
+                    <div>
+                      <div className="flex px-4 justify-center bg-white rounded-md">
+                        <span className="flex items-center justify-center item-center w-fit font-medium xl:text-[16px] xl:leading-[24px] px-4 py-2 rounded-md h-[60px] outline-none">+234</span>
+                        <input
+                          type="tel"
+                          placeholder="Your Phone Number"
+                          {...register("phoneNumber")}
+                          className="font-medium xl:text-[16px] xl:leading-[24px] w-full px-4 py-2 rounded-md h-[60px] outline-none"
+                        />
+                      </div>
+                      {errors.phoneNumber && (
+                        <p className="text-red-500 text-sm mt-1">{(errors.phoneNumber as {message: string}).message}</p>
+                      )}
                     </div>
-                    {errors.phoneNumber && (
-                      <p className="text-red-500 text-sm">{(errors.phoneNumber as {message: string}).message}</p>
-                    )}
 
 
                     {/* Warning Message */}

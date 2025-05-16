@@ -94,13 +94,13 @@ export const formValidationSchema = z.object({
     
     export const sellInput = z.object({
       bankName: z.string().nonempty("Bank Name is required"),
+      blockChain: z.string().nonempty("Blockchain network is required"),
       accountNumber: z
       .string()
       .regex(/^[0-9]+$/, 'Required field')
       .min(10, 'Phone number cannot be less than 10 digits'),
       accountName: z
       .string()
-      .regex(/^[0-9]+$/, 'Required field')
       .min(1, 'Required field'),
       phoneNumber: z
         .string()

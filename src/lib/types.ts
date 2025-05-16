@@ -54,3 +54,36 @@ export type kycDetailsStatusProps = {
   user_id: number
   verification_method: string;
 };
+
+
+export type userDataProps = {
+  id: number;
+  uid: string;
+  email: string;
+  phone_number: string;
+  status: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  profile_image: string;
+  available_bonus: string;
+  total_bonus: string;
+  verification_method: string,
+  is_blocked: number,
+  is_suspended: number,
+  is_deactivated: number,
+  referral_code: string;
+  referral_balance: string;
+  newbie_bonus: string;
+  newbie_seen: string;
+  total_referred_users: number,
+  unverified_referred_users: number,
+  date_of_birth: string;
+  gender: string;
+  created_at: string;
+  updated_at: string;
+  referred_by: number
+  last_activity: string;
+  nationality: string;
+  profile_picture: string;
+}

@@ -143,11 +143,21 @@ const CableInput = () => {
 
         await axios.request(config)
         .then((response) => {
-          setTransactionId(response.data.transaction_id);
-          setAccountDetails(response.data.bank_details.data);
-          setIsBill(true);
+            if (response.status === 200) {
+                setTransactionId(response.data.transaction_id);
+                setAccountDetails(response.data.bank_details.data);
+                setIsBill(true);
+                onOpen();
+            }
+        }).catch((error) => {
+            if (error) {
+                toast({
+                    title: 'Error',
+                    description: error.response.data.message,
+                    variant: 'destructive'
+                });
+            }
         });
-        onOpen();
       }
 
     };
