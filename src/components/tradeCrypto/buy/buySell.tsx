@@ -77,8 +77,6 @@ const BuySell: React.FC<BuySellProps> = ({
     queryKey: ['stable-coins'],
     queryFn: fetchStableCoins,
   });
-
-  const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
   
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
@@ -106,14 +104,6 @@ console.log('min trans',minTransaction);
     const id = getCoinId(coinCode);
     return (prices ?? []).find(p => p.coin_id === id)?.buying;
   };
-
-<<<<<<< HEAD
-  const price = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
-  const coinValue = getCoinValue(prop2);
-  const BtcPrice = subTab === "buy" ? getBuyingPrice("BTC") : getSellingPrice("BTC");
-
-=======
-  console.log(liveRates);
 
   const dollarPrice = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
 
@@ -155,7 +145,6 @@ console.log('min trans',minTransaction);
   console.log("Dollar Equivalent",currentCoinPriceInDollar);
   console.log("Price: ", dollarPrice);
 
->>>>>>> 7c9b0925cea33f5eaf2e37b7938bc78ae2cfc61d
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
     if (!amount1) {
@@ -213,11 +202,6 @@ console.log('min trans',minTransaction);
         }
   }, [prices, prop2]); 
 
-<<<<<<< HEAD
-=======
-  console.log(rate)
-
->>>>>>> 7c9b0925cea33f5eaf2e37b7938bc78ae2cfc61d
 
   useEffect(() =>{
     if (user && token) {
