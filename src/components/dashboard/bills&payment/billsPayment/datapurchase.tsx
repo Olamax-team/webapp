@@ -248,17 +248,17 @@ const Datapurchase = () => {
           <div className="flex bg-[#f5f5f5] w-full xl:-h-[60px] h-[48px] rounded-sm mt-5 items-center">
             <h3 className="px-3 py-2" >Data Purchase</h3>
           </div>
-          <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5] mt-3 xl:h-[96px]">
+          <div className="w-full  rounded-sm bg-[#f5f5f5] mt-3 ">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px]  xl:mt-[8px] xl:p-3  xl:leading-[21px]">Select plan</label>
             <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">You Pay</label>
-            <div className="flex justify-between px-3 gap-1">
+            <div className=" px-3 h-[96px]  lg:h-[105px]">
               <div className="relative flex-1">
                 <div
-                  className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[120px] h-[25px] xl:w-full xl:h-[32px] rounded-sm flex items-center justify-between focus:outline-none focus:ring-0 p-1"
+                  className="cursor-pointer bg-white  xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-full h-[40px] xl:w-full xl:h-[40px] rounded-sm flex items-center justify-between focus:outline-none focus:ring-0 p-1"
                   onClick={() => setIsNetworkDataPackageOpen(!isNetworkDataPackageOpen)}
                 >
-                  <span>{dataPackageStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedPackage}</span>
-                  <HiChevronDown   className="size-6"/>             
+                  <span className="flex gap-5">{dataPackageStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedPackage} <HiChevronDown   className="size-6"/>             
+                  </span>
                 </div>
 
                 { isNetworkDataPackageOpen && (
@@ -266,7 +266,7 @@ const Datapurchase = () => {
                     { dataPackages && dataPackages.length > 0 && dataPackages.map((dataPackage) => (
                       <div
                         key={dataPackage.product_number}
-                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+                        className="flex items-center px-4 py-2 cursor-pointer   hover:bg-gray-100 rounded-lg"
                         onClick={() => handleSelectPackage(dataPackage)}
                       >
                         <span>{dataPackage.payment_item_name}</span>
@@ -292,7 +292,7 @@ const Datapurchase = () => {
               </div>
               <div className="relative">
                 <div
-                  className="cursor-pointer   bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-[120px] h-[25px] xl:w-[110px] xl:h-[32px] border border-none rounded-sm flex items-center justify-between  focus:outline-none focus:ring-0   "
+                  className="cursor-pointer   bg-white xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] lg:mt-4 mt-3 w-full h-[40px]  xl:h-[40px] border border-none rounded-sm flex items-center justify-between  focus:outline-none focus:ring-0   "
                   onClick={() => {setIsNetworkDropdownOpen(!isNetworkDropdownOpen); setIsNetworkDataPackageOpen(false)}}
                 >
                   <img
@@ -300,8 +300,8 @@ const Datapurchase = () => {
                     alt={selectedNetwork}
                     className="size-6 mr-2 rounded-full"
                   />
-                  <span>{networkOptionStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedNetwork}</span>
-                  <HiChevronDown   className="size-6"/>             
+                  <span className="flex">{networkOptionStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedNetwork} <HiChevronDown   className="size-6"/>             
+                  </span>
                 </div>
 
                 { isNetworkDropdownOpen && (
@@ -328,11 +328,11 @@ const Datapurchase = () => {
           </div>
           {errors.inputAmount && <p className="text-red-500 text-xs">{errors.inputAmount?.message}</p>}
 
-          <div className=" flex justify-center  items-center m-5 ">
+          <div className=" flex justify-center mt-10 lg:mt-5 items-center m-5 ">
             <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] xl:w-[32px] xl:h-[32px]" />
           </div>
 
-          <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5]   xl:h-[96px] mt-5">
+          <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5] lg:mt-5  xl:h-[96px] mt-8">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
             <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Recieve</label>
 
