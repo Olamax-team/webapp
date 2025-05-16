@@ -5,7 +5,6 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import arrowIcon from '/images/arrowdown.svg';
 import useTradeStore from "../../../stores/tradeStore";
-import BTC from "/images/BTC Circular.png";
 import { tradeSchema } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -28,7 +27,7 @@ const BuySell: React.FC<BuySellProps> = ({
 
   const [subTab, setSubTab] = useState("sell");
 
-  const [btcPrice, setBtcPrice] = useState<string>("");
+  const [rate, setRate] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
   const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
@@ -49,12 +48,13 @@ const BuySell: React.FC<BuySellProps> = ({
   const amount2 = watch('amount2');
 
 
-  const { fetchAllBuyCoins, fetchLiveRates, fetchAllCoinPrices, fetchCryptoServices, fetchStableCoins } = useFetchStore();
+  const { fetchAllBuyCoins, fetchMinimumTransaction, fetchLiveRates, fetchAllCoinPrices, fetchCryptoServices, fetchStableCoins } = useFetchStore();
 
   const { data: cryptoService } = useQuery({
     queryKey: ['crypto-service'],
     queryFn: fetchCryptoServices,
   });
+
 
   const { data: liveRates } = useQuery({
     queryKey: ['live-rates'],
@@ -66,7 +66,7 @@ const BuySell: React.FC<BuySellProps> = ({
     queryFn: fetchAllCoinPrices,
   });
 
-  const { data: coin } = useQuery({
+  const { data: dataCoin } = useQuery({
     queryKey: ['all-coins'],
     queryFn: fetchAllBuyCoins,
   });
@@ -76,17 +76,25 @@ const BuySell: React.FC<BuySellProps> = ({
     queryFn: fetchStableCoins,
   });
 
+  const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
+  
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
 
   const getCoinId = (coinCode: string): number => {
     return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
-  
-  const getCoinValue = (coinCode: string): string => {
-    return (liveRates ?? []).find(c => c.symbol === coinCode)?.price || ""; 
-  };
-  
+
+const { data: minTransaction } = useQuery({
+  queryKey: [coin?.find((c) => c.coin === prop2)?.id],
+  queryFn: ({ queryKey }) =>
+    queryKey[0] !== undefined
+      ? fetchMinimumTransaction(queryKey[0] as number)
+      : Promise.reject('coin id is undefined'),
+  enabled: coin?.find((c) => c.coin === prop2)?.id !== undefined,
+});
+console.log('min trans',minTransaction);
+
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
     return (prices ?? []).find(p => p.coin_id === id)?.selling;
@@ -99,12 +107,45 @@ const BuySell: React.FC<BuySellProps> = ({
 
   console.log(liveRates);
 
-  const price = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
-  const coinValue = getCoinValue(prop2);
-  const BtcPrice = subTab === "buy" ? getBuyingPrice("BTC") : getSellingPrice("BTC");
+  const dollarPrice = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
 
-  console.log("Price: ", price);
-  console.log("coinvalue: ", coinValue);
+  const getCoinSellingPriceInNaira = (coinCode:string) => {
+    if (coinCode) {
+      let currentCoin;
+      let price;
+      if (liveRates && liveRates.length > 0) {
+        currentCoin = liveRates.find((item) => item.symbol === coinCode);
+        if (currentCoin) {
+          price = parseFloat(currentCoin.price.replace(/,/g, ""));
+            price = price * parseFloat(String(dollarPrice));
+        };
+
+        return price;
+      }
+    } else return;
+  }
+  const getCoinSellingPriceInDollar = (coinCode:string) => {
+  if (coinCode) {
+    let currentCoin;
+    let price;
+    if (liveRates && liveRates.length > 0) {
+      currentCoin = liveRates.find((item) => item.symbol === coinCode);
+      if (currentCoin) {
+        price = parseFloat(currentCoin.price.replace(/,/g, ""));
+        if (typeof dollarPrice === 'number' && !isNaN(dollarPrice)) {
+          price = price;
+        }
+      };
+
+      return price;
+    }
+  } else return;}
+
+  const currentCoinPriceInNaira =  getCoinSellingPriceInNaira(prop2);
+  const currentCoinPriceInDollar =  getCoinSellingPriceInDollar(prop2);
+  console.log("Naira Equivalent",currentCoinPriceInNaira);
+  console.log("Dollar Equivalent",currentCoinPriceInDollar);
+  console.log("Price: ", dollarPrice);
 
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
@@ -113,12 +154,12 @@ const BuySell: React.FC<BuySellProps> = ({
       setValue("amount2", "");
       return;
     }
-    if (price) {
+    if (dollarPrice) {
       let newAmount2 = '';
       if (subTab === "buy") {
-        newAmount2 = (parseFloat(amount1) / parseFloat(price) / parseFloat(coinValue.replace(/,/g, ""))).toFixed(6); 
+        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPriceInNaira))).toFixed(6); 
       } else if (subTab === 'sell') {
-        newAmount2 = (parseFloat(amount1) * parseFloat(price) * parseFloat(coinValue.replace(/,/g, ""))).toFixed(2); // crypto → NGN
+        newAmount2 = (parseFloat(amount1) * parseFloat(String(currentCoinPriceInNaira))).toFixed(2); // crypto → NGN
       }
 
       // Syncing the calculated amount2 with react-hook-form
@@ -135,12 +176,12 @@ const BuySell: React.FC<BuySellProps> = ({
       return;
     }
   
-    if (price) {
+    if (dollarPrice) {
       let newAmount1 = '';
       if (subTab === "buy") {
-        newAmount1 = (parseFloat(amount2) * parseFloat(price) * parseFloat(coinValue.replace(/,/g, ""))).toFixed(2) // crypto → NGN
+        newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPriceInNaira))).toFixed(2);// crypto → NGN
       } else if (subTab === 'sell') {
-        newAmount1 = (parseFloat(amount2) / parseFloat(price) / parseFloat(coinValue.replace(/,/g, ""))).toFixed(6); // NGN → crypto
+        newAmount1 = (parseFloat(amount2) / parseFloat(String(currentCoinPriceInNaira))).toFixed(6); // NGN → crypto
       }
 
       // setAmount1(newAmount1); 
@@ -150,17 +191,20 @@ const BuySell: React.FC<BuySellProps> = ({
   
   useEffect(() => {
     
-    const BTCPriceInUSD = getCoinValue(prop2);
-    if (BtcPrice) {
-      let BTCP = "";
-    BTCP = (
-      parseFloat(BTCPriceInUSD.replace(/,/g, "")) * parseFloat(BtcPrice)
-    ).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          setBtcPrice(BTCP);
+    if (dollarPrice) {
+      let coinRate = "";
+    if (currentCoinPriceInNaira !== undefined) {
+      coinRate = (
+        currentCoinPriceInNaira
+      ).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      setRate(coinRate);
+    } else {
+      setRate("");
+    }
         }
-  }, [prices]); 
+  }, [prices, prop2]); 
 
-  console.log(btcPrice)
+  console.log(rate)
 
 
   useEffect(() =>{
@@ -260,7 +304,8 @@ const BuySell: React.FC<BuySellProps> = ({
                         />
                         <div className="flex items-center justify-start gap-1 font-Inter w-fit">
                         <img
-                          src={(subTab === "buy" ? `/images/${prop1} Circular.png` : `/images/${prop2} Circular.png`)}
+                          src={subTab === "buy" ?  (stables?.find((s) => s.coin === prop1)?.icon) || `/images/${prop1} Circular.png` : (coin?.find((c) => c.coin === prop2)?.icon) || `/images/${prop2} Circular.png`}
+                          // src={(subTab === "buy" ? `/images/${prop1} Circular.png` : `/images/${prop2} Circular.png`)}
                           alt={`${subTab === "buy" ? prop1 : prop2} logo`}
                           className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                         />
@@ -282,11 +327,11 @@ const BuySell: React.FC<BuySellProps> = ({
                                   </option>
                                 ))
                               ) : 
-                              (coin ?? []).map((c) => (
+                              (coin && coin.length > 0 && coin.map((c) => (
                                 <option key={c.id} value={c.coin} className="p-1">
                                   {c.coin}
                                 </option>
-                              ))}
+                              )))}
                           </select>
                         </div>
                       </div>
@@ -318,7 +363,8 @@ const BuySell: React.FC<BuySellProps> = ({
 
                         <div className="flex items-center justify-start gap-1 font-Inter w-fit">
                           <img
-                            src={(subTab === "buy" ? `/images/${prop2} Circular.png`: `/images/${prop1} Circular.png` )}
+                            src={subTab === "buy" ? (coin?.find((c) => c.coin === prop2)?.icon) || `/images/${prop2} Circular.png` : (stables?.find((s) => s.coin === prop1)?.icon) || `/images/${prop1} Circular.png`}
+                            // src={(subTab === "buy" ? `/images/${prop2} Circular.png`: `/images/${prop1} Circular.png` )}
                             alt={`${subTab === "buy" ? prop2 : prop1} logo`}
                             className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                           />
@@ -326,16 +372,16 @@ const BuySell: React.FC<BuySellProps> = ({
                             value={subTab === "buy" ? prop2 : prop1}
                           onChange={(e) =>
                             subTab === "buy"
-                              ? setProp2(e.target.value)
+                              ? setProp2(e.target.value) 
                               : setProp1(e.target.value)
                           }
                           className="rounded-md bg-bg px-2 py-1 w-fit font-medium text-sm max-w-20 border-0"
                           >
-                          {subTab === "buy" ? (coin ?? []).map((c) => (
+                          {subTab === "buy" ? (coin && coin.length > 0 && coin.map((c) => (
                                 <option key={c.id} value={c.coin} className="p-1">
                                   {c.coin}
                                 </option>
-                              )) :
+                              ))) :
                               (
                                 (stables ?? []).map((s) => (
                                   <option key={s.id} value={s.coin} className="p-1">
@@ -361,11 +407,11 @@ const BuySell: React.FC<BuySellProps> = ({
               </div>
               <div className="flex font-Inter font-[500px] xl:mt-1 gap-1 justify-center items-center text-center text-[14px] leading-[21px] xl:text-[16px] xl:leading-[26px] text-[#545454]">
                 <img
-                  src={BTC}
-                  alt={`BTC logo`}
+                  src={`/images/${prop2} Circular.png`}
+                  alt={`${prop2} logo`}
                   className="w-[24px] xl:w-[32px] h-[24px] xl:h-[32px]"
                 />
-                1 BTC = NGN {btcPrice}
+                1 {prop2} = NGN {rate}
               </div>
           </form>
         ) : cryptoService?.some(
