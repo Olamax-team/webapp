@@ -90,7 +90,7 @@ const AirtimeInput = () => {
 
         await axios.request(config)
         .then((response) => {
-            if (response.status === 200) {
+            if (response.status === 201) {
                 setTransactionId(response.data.transaction_id);
                 setAccountDetails(response.data.bank_details.data);
                 setIsBill(true);

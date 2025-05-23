@@ -254,11 +254,12 @@ const Datapurchase = () => {
             <div className=" px-3 h-[96px]  lg:h-[105px]">
               <div className="relative flex-1">
                 <div
-                  className="cursor-pointer bg-white  xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] w-full h-[40px] xl:w-full xl:h-[40px] rounded-sm flex items-center justify-between focus:outline-none focus:ring-0 p-1"
+                  className="cursor-pointer bg-white  xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] h-[40px] xl:w-full xl:h-[40px] rounded-sm flex items-center justify-between focus:outline-none focus:ring-0 p-1 w-full"
                   onClick={() => setIsNetworkDataPackageOpen(!isNetworkDataPackageOpen)}
                 >
-                  <span className="flex gap-5">{dataPackageStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedPackage} <HiChevronDown   className="size-6"/>             
+                  <span className="flex gap-5 flex-1">{dataPackageStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedPackage} 
                   </span>
+                  <HiChevronDown   className="size-6"/>             
                 </div>
 
                 { isNetworkDataPackageOpen && (

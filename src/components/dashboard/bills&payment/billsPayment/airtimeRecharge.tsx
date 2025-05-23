@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
 import useUserDetails from "../../../../stores/userStore";
+import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 
 
@@ -38,22 +39,9 @@ interface coinsProps {
   stable_coins: string;
 };
 
-// transaction_type: activeButton,
-// naira_amount: inputAmount;
-// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
-// blockchain_id: number;
-// coin_amount: Number(paymentAmount);
-// bills: selectedBill;
-// network: selectedNetwork;
-// package_product_number: selectedNetworkDetails.product_number;
-// electricity_type: string;
-// phone_number: string;
-// cable_number: string;
-// meter_number: string;
-
 const AirtimeRecharge = () => {
 
-  const { user, fetchKycDetails } = useUserDetails();
+  const { user, fetchKycDetails, kycDetails } = useUserDetails();
   const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchLiveRates } = useFetchStore();
 
   const { data:billServices, status:billServiceStatus} = useQuery({
@@ -63,7 +51,7 @@ const AirtimeRecharge = () => {
 
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
@@ -250,12 +238,12 @@ const AirtimeRecharge = () => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
 
-      // if (user && kycDetails) {
-      //   if (kycDetails.status === 'Unverified') {
-      //     navigate("/dashboard/identity_verification"); 
-      //     return;
-      //   }
-      // }
+      if (user && kycDetails) {
+        if (kycDetails.status === 'Unverified') {
+          navigate("/dashboard/identity_verification"); 
+          return;
+        }
+      }
 
     const newData = {
       ...data,
@@ -319,7 +307,7 @@ const AirtimeRecharge = () => {
                   className="size-5 mr-1 rounded-full"
                 />
                 <span>{selectedNetwork}</span>
-                <HiChevronDown   className="size-6"/>            
+                <HiChevronDown className="size-6"/>            
               </div>
               { isNetworkDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-fit bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">

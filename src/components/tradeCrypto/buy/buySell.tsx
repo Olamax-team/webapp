@@ -21,9 +21,11 @@ const BuySell: React.FC<BuySellProps> = ({
   className,
   
 }) => {
+
   const navigate = useNavigate();
+
   const location = useLocation();
-  const { user, fetchKycDetails, token } = useUserDetails();
+  const { user, fetchKycDetails, token, fetchUserDetails, userDetails } = useUserDetails();
 
   const [subTab, setSubTab] = useState("sell");
 
@@ -93,7 +95,6 @@ const { data: minTransaction } = useQuery({
       : Promise.reject('coin id is undefined'),
   enabled: coin?.find((c) => c.coin === prop2)?.id !== undefined,
 });
-console.log('min trans',minTransaction);
 
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
@@ -141,9 +142,7 @@ console.log('min trans',minTransaction);
 
   const currentCoinPriceInNaira =  getCoinSellingPriceInNaira(prop2);
   const currentCoinPriceInDollar =  getCoinSellingPriceInDollar(prop2);
-  console.log("Naira Equivalent",currentCoinPriceInNaira);
-  console.log("Dollar Equivalent",currentCoinPriceInDollar);
-  console.log("Price: ", dollarPrice);
+
 
   useEffect(() => {
     if (lastChanged !== 'amount1') return;
@@ -164,7 +163,7 @@ console.log('min trans',minTransaction);
       // setAmount2(newAmount2);  // Updating Zustand state
       setValue("amount2", newAmount2);
     }
-  }, [amount1, prop1, prop2, subTab, prices, coin, lastChanged]);
+  }, [amount1, prop1, prop2, subTab, dollarPrice, lastChanged, prices]);
 
   useEffect(() => {
     if (lastChanged !== 'amount2') return;
@@ -185,7 +184,7 @@ console.log('min trans',minTransaction);
       // setAmount1(newAmount1); 
       setValue("amount1", newAmount1);
     }
-  }, [amount2, prop2,prop1, subTab, prices, coin, lastChanged]);
+  }, [amount2, prop2, prop1, subTab, prices, lastChanged, dollarPrice]);
   
   useEffect(() => {
     
@@ -206,6 +205,7 @@ console.log('min trans',minTransaction);
   useEffect(() =>{
     if (user && token) {
       fetchKycDetails();
+      fetchUserDetails();
     }
   },[user, token])
 
@@ -216,8 +216,8 @@ console.log('min trans',minTransaction);
       return;
     };
 
-    // if (user && kycDetails) {
-    //   if (kycDetails.status === 'Unverified') {
+    // if (user && userDetails) {
+    //   if (userDetails.status === 'Unverified') {
     //     navigate("/dashboard/identity_verification"); 
     //     return;
     //   }

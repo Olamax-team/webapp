@@ -73,8 +73,8 @@ export const formValidationSchema = z.object({
       amount1: z
       .string()
       .min(1, 'Required field')
-      .regex(/^[0-9]+(\.[0-9]{1,2})?$/, 'Invalid amount')
-      .refine(val => parseFloat(val) >= 1, { message: 'Amount must be at least 1' }),
+      .regex(/^[0-9]+(\.[0-9]{1,4})?$/, 'Invalid amount')
+      .refine(val => parseFloat(val) >= 0.0001, { message: 'Amount must be at least 1' }),
       amount2: z
       .string()
       .min(1, 'Required field')

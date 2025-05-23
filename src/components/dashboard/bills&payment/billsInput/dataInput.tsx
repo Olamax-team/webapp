@@ -75,13 +75,15 @@ const DataInput = () => {
 
         await axios.request(config)
         .then((response) => {
-            if (response.status === 200) {
+            console.log(response)
+            if (response.status === 201) {
                 setTransactionId(response.data.transaction_id);
                 setAccountDetails(response.data.bank_details.data);
                 setIsBill(true);
                 onOpen();
             }
         }).catch((error) => {
+            console.log(error)
             if (error) {
                 toast({
                     title: 'Error',

@@ -74,7 +74,7 @@ const SellInput: React.FC = () => {
     const handleSellInput= async (data: sellInputValues) => {
 
       const newData = {
-        coin_shorthand: tradeData.item?.cryptoType,
+        coin_shorthand: tradeData.item?.cryptoType.toLowerCase(),
         naira_value: parseFloat(tradeData.item?.fiatAmount ?? "0"),
         amount: parseFloat(tradeData.item?.cryptoAmount ?? "0"),
         bank_type: data.bankName,
@@ -94,14 +94,19 @@ const SellInput: React.FC = () => {
         },
         data: newData
       }
+
+      console.log('startTransactionConfig', startTransactionConfig);
   
       await axios.request(startTransactionConfig)
       .then((response) => {
         if (response.status === 200) {
-          console.log(response);
+          console.log('t-response', response.data);
+          tradeData.setSellDetails(response.data);
+          tradeData.setCoinNetwork(data.blockChain);
           openConfirmCompleteTransaction.onOpen();
-        }
+        };
       }).catch((error) => {
+        console.log(error);
         if (error) {
           toast({
             title: 'Error',
