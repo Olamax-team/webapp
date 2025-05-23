@@ -13,19 +13,6 @@ import axios, { AxiosError } from "axios";
 import { useToast } from "../../../../hooks/use-toast";
 import useTradeStore from "../../../../stores/tradeStore";
 import { HiArrowRight } from "react-icons/hi2";
-  
-// transaction_type: activeButton,
-// naira_amount: inputAmount;
-// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
-// blockchain_id: number;
-// coin_amount: Number(paymentAmount);
-// bills: selectedBill;
-// network: selectedNetwork;
-// package_product_number: selectedNetworkDetails.product_number;
-// electricity_type: string;
-// phone_number: string;
-// cable_number: string;
-// meter_number: string;
 
 
 const ElectricityInput = () => {
@@ -88,13 +75,15 @@ const ElectricityInput = () => {
         if (response.status !== 200) {
             throw new Error('Something went wrong, try again later');
         }
-        return response.data as { type: string }[];
+        return response.data.electricity_type as { type: string }[];
     };
 
     const { data:electicTypes } = useQuery<Array<{ type: string }>>({
         queryKey: ['electric-types'],
         queryFn: fetchElectricType,
     });
+
+    console.log(electicTypes)
 
     const checkUser = async () => {
 

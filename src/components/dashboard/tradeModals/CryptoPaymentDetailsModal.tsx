@@ -6,6 +6,9 @@ import useTradeStore from '../../../stores/tradeStore';
 import UploadModal from '../../ui/upload-modal';
 import { useCallback, useState } from 'react';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import { useApiConfig } from '../../../hooks/api';
+import axios from 'axios';
+import { useToast } from '../../../hooks/use-toast';
 
 const CryptoPaymentDetailsModal = () => {
     const { isOpen, onClose } = useCryptoPaymentDetailsModal();
@@ -17,6 +20,40 @@ const CryptoPaymentDetailsModal = () => {
         onClose();
     }, 300)
     }, [onClose]);
+
+    const tradeData = useTradeStore();
+
+    const { toast } = useToast();
+
+    const confirmDepositConfig = useApiConfig({
+        method: 'post',
+        url: 'confirm-deposited-address',
+        formdata: {
+            coin_network: tradeData.coinNetwork?.toLowerCase(),
+            coin_shorthand: tradeData.item?.cryptoType.toLowerCase(),
+        }
+    });
+
+    const confirmDeposit = async () => {
+        await axios.request(confirmDepositConfig)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response.data.data);
+            onClose();
+            openPaymentConfirmation.onOpen()
+          }
+        }).catch((error) => {
+            if (error) {
+                console.log(error);
+                toast({
+                  title: 'Error',
+                  description: error.response.data.message || 'Something went wrong! Try again later',
+                  variant: 'destructive'
+                })
+            }
+        })
+    }
+
 
     const Desktop = () => {
         return (
@@ -75,12 +112,12 @@ const CryptoPaymentDetailsModal = () => {
                             </div>
                             <div className='space-y-2'>
                                 <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Network</p>
-                                <p className="text-left text-[14px] leading-[21px]">{tradeData.item?.cryptoType}</p>
+                                <p className="text-left text-[14px] leading-[21px] uppercase">{tradeData.coinNetwork}</p>
                             </div>
                             </div>
                         </div>
                         <div>
-                            <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {onClose(); openPaymentConfirmation.onOpen()}}>
+                            <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={confirmDeposit}>
                             I Have Made Payment
                             </button>
                         </div>
@@ -90,6 +127,7 @@ const CryptoPaymentDetailsModal = () => {
             </>
         )
     };
+
     const Mobile = () =>{
         return (
             <>
@@ -135,12 +173,12 @@ const CryptoPaymentDetailsModal = () => {
                         </div>
                         <div className='space-y-2'>
                             <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Network</p>
-                            <p className="text-left text-[14px] leading-[21px]">{tradeData.item?.cryptoType}</p>
+                            <p className="text-left text-[14px] leading-[21px] uppercase">{tradeData.coinNetwork}</p>
                         </div>
                         </div>
                     </div>
                     <div>
-                        <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={() => {onClose(); openPaymentConfirmation.onOpen()}}>
+                        <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={confirmDeposit}>
                         I Have Made Payment
                         </button>
                     </div>
@@ -149,15 +187,15 @@ const CryptoPaymentDetailsModal = () => {
                 }
             </>
         )
-    }
+    };
+
     const openPaymentConfirmation = usePaymentConfirmationModal();
-    const walletAdd = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
+    const walletAdd = tradeData.sellDetails?.address
   // Copy account number to clipboard
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(walletAdd);
+        navigator.clipboard.writeText(walletAdd ?? '');
         alert("Account number copied!");
     };
-    const tradeData = useTradeStore();
 
   return (
     <UploadModal

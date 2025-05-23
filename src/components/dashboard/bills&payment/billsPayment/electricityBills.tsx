@@ -2,14 +2,9 @@ import React, {  useEffect, useMemo, useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-// import btcLogo from '../../../../assets/images/BTC Circular.png'
-// import ETHLogo from '../../../../assets/images/ETH Circular.png'
-// import USDTLogo from '../../../../assets/images/USDT Circular.png'
-// import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-// import ngnlogo from '../../../../assets/images/NGN Circular.png';
 import { useApiConfig } from "../../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -70,6 +65,7 @@ const ElectricityBills = () => {
     method: 'get',
     url: 'get-electricity-branches/electricity/postpaid'
   });
+
  const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices } = useFetchStore();
 
   const fetchElectricBranches = async () => {
@@ -246,7 +242,7 @@ const ElectricityBills = () => {
 
   useEffect(() => {
       if (user) {
-          fetchKycDetails(); 
+        fetchKycDetails(); 
       }
   }, [user])
   
