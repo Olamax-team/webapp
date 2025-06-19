@@ -256,7 +256,7 @@ const AirtimeRecharge = () => {
       bills: selectedBill,
       network: selectedNetwork,
       package_product_number: selectedNetworkDetails?.product_number,
-    }
+    };
     
     setShowTransactionDetail(true);
     setItem(newData);

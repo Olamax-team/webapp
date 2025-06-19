@@ -58,7 +58,7 @@ const StartVerification = () => {
 
   const checkStatus = () => {
     if (user && kycStatus) {
-      if (kycStatus.status === 'Verified') {
+      if (kycStatus.status === 'verified') {
         identityVerified.onOpen();
       } else {
         verificationInProgress.onOpen();

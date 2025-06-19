@@ -18,7 +18,7 @@ const AirtimeInput = () => {
     const { item } = useBillsStore();
     const { setTransactionId, setAccountDetails, setIsBill } = useTradeStore();
 
-    const {onOpen}  = useConfirmModal();
+    const { onOpen }  = useConfirmModal();
     const { toast } = useToast();
     
     const { user, fetchKycStatus, kycStatus, token } = useUserDetails();
@@ -88,11 +88,13 @@ const AirtimeInput = () => {
             data: finalData,
         };
 
+        console.log(config)
+
         await axios.request(config)
         .then((response) => {
             if (response.status === 201) {
                 setTransactionId(response.data.transaction_id);
-                setAccountDetails(response.data.bank_details.data);
+                setAccountDetails(response.data.transaction_details.data);
                 setIsBill(true);
                 onOpen();
             }
@@ -100,7 +102,7 @@ const AirtimeInput = () => {
             if (error) {
                 toast({
                     title: 'Error',
-                    description: error.response.data.message,
+                    description: error.response?.data || 'An error occurred while processing your request. Please try again later.',
                     variant: 'destructive'
                 });
             }
@@ -180,7 +182,7 @@ const AirtimeInput = () => {
 
                         <div className="flex justify-between w-full  font-Inter  border-t-2 border-[#0000001A] mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">You Recieve</p>
-                            <strong>{item?.selectPayment || item?.fiatPayment } {item?.inputAmount}.00</strong>
+                            <strong>{item?.fiatPayment } {item?.inputAmount}.00</strong>
                         </div>
                       <div className="border-t-2 border-[#0000001A] mt-3">
                                 <div className="flex justify-between w-full font-Inter py-5">
@@ -198,7 +200,7 @@ const AirtimeInput = () => {
 
                         <div className="flex justify-between w-full font-Inter mt-3 py-5 border-t-2  border-[#0000001A]">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
-                            <strong>{item?.selectPayment || item?.fiatPayment } {item?.paymentAmount}</strong>
+                            <strong>{item?.fiatPayment } {item?.paymentAmount}</strong>
                         </div>
                     </div>
 

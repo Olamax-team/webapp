@@ -5,7 +5,7 @@ import { loginSchema, loginValues } from '../lib/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom';
-import { documentTitle } from '../lib/utils';
+import { documentTitle, useConfirmVerificationModal } from '../lib/utils';
 import axios from 'axios';
 import useUserDetails from '../stores/userStore';
 import { useToast } from '../hooks/use-toast';
@@ -19,6 +19,8 @@ const LoginPage = () => {
   const { setUser, setLoading, loading } = useUserDetails();
   const { setItem } = useLocalStorage();
   const { toast } = useToast();
+
+  const openConfirmVerification = useConfirmVerificationModal();
 
   const defaultLoginValues = {
     email: '',
@@ -64,6 +66,9 @@ const LoginPage = () => {
           variant: 'success'
         });
         setLoading(false);
+        if (response.data.data.user.is_verified === 'Unverified') {
+          openConfirmVerification.onOpen();
+        }
         navigate('/dashboard');
       };
     }).catch((error) => {

@@ -96,6 +96,8 @@ const { data: minTransaction } = useQuery({
   enabled: coin?.find((c) => c.coin === prop2)?.id !== undefined,
 });
 
+console.log(minTransaction);
+
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
     return (prices ?? []).find(p => p.coin_id === id)?.selling;
@@ -142,6 +144,8 @@ const { data: minTransaction } = useQuery({
 
   const currentCoinPriceInNaira =  getCoinSellingPriceInNaira(prop2);
   const currentCoinPriceInDollar =  getCoinSellingPriceInDollar(prop2);
+
+  console.log(currentCoinPriceInDollar);
 
 
   useEffect(() => {
@@ -216,12 +220,12 @@ const { data: minTransaction } = useQuery({
       return;
     };
 
-    // if (user && userDetails) {
-    //   if (userDetails.status === 'Unverified') {
-    //     navigate("/dashboard/identity_verification"); 
-    //     return;
-    //   }
-    // }
+    if (user && userDetails) {
+      if (userDetails.status === 'Unverified') {
+        navigate("/dashboard/identity_verification"); 
+        return;
+      }
+    }
 
 
     const fiatID = subTab === "buy" ? getCoinId(prop1) : getCoinId(prop2);

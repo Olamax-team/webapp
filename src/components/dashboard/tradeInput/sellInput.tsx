@@ -100,7 +100,6 @@ const SellInput: React.FC = () => {
       await axios.request(startTransactionConfig)
       .then((response) => {
         if (response.status === 200) {
-          console.log('t-response', response.data);
           tradeData.setSellDetails(response.data);
           tradeData.setCoinNetwork(data.blockChain);
           openConfirmCompleteTransaction.onOpen();

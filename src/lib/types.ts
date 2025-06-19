@@ -86,4 +86,4 @@ export type userDataProps = {
   last_activity: string;
   nationality: string;
   profile_picture: string;
-}
+};

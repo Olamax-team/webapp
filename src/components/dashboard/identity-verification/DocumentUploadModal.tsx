@@ -113,6 +113,7 @@ const DocumentUploadModal = () => {
       modalStyle='rounded-md'
       setShowModal={setShowModal}
       showModal={showModal}
+
     >
       <div className="flex overflow-hidden flex-col lg:flex-row">
         <Desktop/>
