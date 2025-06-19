@@ -1,4 +1,4 @@
-import { useCryptoPaymentDetailsModal, usePaymentConfirmationModal,  } from '../../../lib/utils'
+import { useCryptoPaymentDetailsModal, usePaymentConfirmationModal, useTransactionPendingModal,  } from '../../../lib/utils'
 import qrCode from '../../../assets/images/QR.png'
 import logo from '../../../assets/images/OLAMAX Logo 4.svg'
 import { HiOutlineDuplicate } from 'react-icons/hi';
@@ -10,8 +10,31 @@ import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
 import { useToast } from '../../../hooks/use-toast';
 
+
+
+// {
+//     "status": "pending",
+//     "message": "Transaction is pending. Balance has not yet reflected.",
+//     "transaction": {
+//         "amount": "0.01",
+//         "naira_value": "20000.00",
+//         "status": "pending",
+//         "details": {
+//             "id": 3,
+//             "sell_transaction_id": 3,
+//             "account_name": "Raji Abubakar",
+//             "account_number": "0022334455",
+//             "bank_name": "uniapp",
+//             "phone_number": "09025265463",
+//             "created_at": "2025-05-29T09:29:46.000000Z",
+//             "updated_at": "2025-05-29T09:29:46.000000Z"
+//         }
+//     }
+// }
+
 const CryptoPaymentDetailsModal = () => {
     const { isOpen, onClose } = useCryptoPaymentDetailsModal();
+    const pending = useTransactionPendingModal();
     const [showModal, setShowModal] = useState(isOpen);
     const [open, setOpen] = useState(false)
     const closeModal = useCallback(() => {
@@ -32,15 +55,21 @@ const CryptoPaymentDetailsModal = () => {
             coin_network: tradeData.coinNetwork?.toLowerCase(),
             coin_shorthand: tradeData.item?.cryptoType.toLowerCase(),
         }
-    });
+    }); 
 
     const confirmDeposit = async () => {
         await axios.request(confirmDepositConfig)
         .then((response) => {
+            console.log(response);
           if (response.status === 200) {
-            console.log(response.data.data);
-            onClose();
-            openPaymentConfirmation.onOpen()
+            if (response.data.status === 'pending') {
+                tradeData.setPendingDetails(response.data);
+                onClose();
+                pending.onOpen();
+            } else {
+                onClose();
+                openPaymentConfirmation.onOpen();
+            }
           }
         }).catch((error) => {
             if (error) {

@@ -121,7 +121,7 @@ const NameHeader = () => {
           </button>
         </div>
       </div>
-      <div className={cn('flex items-center gap-2 ', userDetails && userDetails.status === 'Verified' ? 'text-[#34A853]': 'text-orange-500')}>
+      <div className={cn('flex items-center gap-2 ', userDetails && userDetails.status === 'verified' ? 'text-[#34A853]': 'text-orange-500')}>
         <HiOutlineShieldCheck className='lg:size-6 size-5'/>
         <h2 className='text-xs md:text-sm lg:text-base'>{userDetails ? userDetails.status : 'Unverified'}</h2>
       </div>

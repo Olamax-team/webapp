@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import BuySell from "../tradeCrypto/buy/buySell";
 import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
-import { HiOutlineDeviceMobile, HiOutlineDuplicate, HiOutlineLightBulb } from "react-icons/hi";
+import { HiOutlineDeviceMobile, HiOutlineDuplicate, HiOutlineLightBulb, HiOutlineShieldCheck } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
 import { useConfirmVerificationModal } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
@@ -39,14 +39,17 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
 
     const openConfirmVerification = useConfirmVerificationModal();
 
-    const hasOpenedRef = useRef(false);
+    const hasOpenedRef = React.useRef(false);
 
-    useEffect(() => {
-      if (isVerified === 'Unverified' && !hasOpenedRef.current) {
+    React.useEffect(() => {
+      if (user && user.account_status === 'Unverified' && !hasOpenedRef.current) {
         openConfirmVerification.onOpen();
         hasOpenedRef.current = true; 
+      } else {
+        openConfirmVerification.onClose();
       }
-    }, [isVerified, openConfirmVerification]);
+    }, [isVerified, user, openConfirmVerification.onOpen, openConfirmVerification.onClose]);
+
   return (
     <div className="flex flex-col w-full h-auto">
       
@@ -73,14 +76,14 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
             </div>
         </div>
         <div className="font-Inter w-full h-auto">
-        {user && user.account_status === 'Verified' ? (
+        {user && user.account_status === 'verified' ? (
           <>
             <div className="flex flex-col">
               <p className="mb-1 text-[14px] leading-[21px] font-normal text-textDark">
                 Identity Verification
               </p>
               <div className="flex gap-1 items-start">
-                <ShieldCheck className="w-[24px] h-[24px] text-[#34A853]" />
+                <HiOutlineShieldCheck className="w-[24px] h-[24px] text-[#34A853]" />
                 <span className="text-[16px] leading-[24px] font-medium text-[#34A853]">
                   {user.account_status}
                 </span>
@@ -153,6 +156,8 @@ const DashboardTab: React.FC = () => {
     }
   },[userDetail]);
 
+  console.log(userDetail);
+
   const baseLink = 'https://app.olamax.io/';
 
   const user = {
@@ -160,7 +165,7 @@ const DashboardTab: React.FC = () => {
     email: kycDetails ? kycDetails.email : userDetail?.email,
     lastLogin: userDetail?.last_login_location || '',
     uid: userDetail?.UID || '',
-    isVerified: userDetail?.account_status || 'Unverified',
+    isVerified: userDetail ? userDetail.account_status : 'Unverified',
     inviteLink: `${baseLink}sign-up?referralCode=${kycDetails?.referral_code}`
   };
   

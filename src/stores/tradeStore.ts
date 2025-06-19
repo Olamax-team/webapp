@@ -1,5 +1,27 @@
 import { create } from 'zustand'
 
+interface transactionProps {
+    id: number;
+    sell_transaction_id: number;
+    account_name: string;
+    account_number: string;
+    bank_name:  string;
+    phone_number:  string;
+    created_at:  string;
+    updated_at:  string;
+};
+
+interface pendingDetailsProps {
+    status: string;
+    message: string;
+    transaction: {
+        amount: string;
+        naira_value: string;
+        status: string;
+        details: transactionProps
+    }
+};
+
 
 interface tradeProps {
     fiatType_id:  number;
@@ -30,6 +52,8 @@ interface sellDetailsProps {
 interface tradeState {
     item:tradeProps | null;
     isBill: boolean;
+    pendingDetails: pendingDetailsProps | null;
+    setPendingDetails : (detail:pendingDetailsProps) => void;
     transactionId: number | null;
     accountDetails: accountDetailsProps | null; 
     sellDetails:  sellDetailsProps | null;
@@ -53,6 +77,8 @@ const useTradeStore = create<tradeState>((set) => ({
     accountDetails: null,
     sellDetails: null,
     coinNetwork: null,
+    pendingDetails: null,
+    setPendingDetails: (detail: pendingDetailsProps) => set({pendingDetails: detail}),
     setCoinNetwork: (newNetwork) => set({coinNetwork: newNetwork}), 
     setItem: (newItem) => set({item: newItem}),
     setAccountDetails: (newAccountDetail) => set({accountDetails: newAccountDetail}),

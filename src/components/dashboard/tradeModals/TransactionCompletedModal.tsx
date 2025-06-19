@@ -5,6 +5,8 @@ import useTradeStore from '../../../stores/tradeStore';
 const TransactionCompletedModal = () => {
   const { isOpen, onClose } = useTransactionCompletedModal();
   const tradeData = useTradeStore();
+
+  
   return (
     <Modal 
       isOpen={isOpen} 
