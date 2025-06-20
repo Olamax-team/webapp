@@ -87,3 +87,29 @@ export type userDataProps = {
   nationality: string;
   profile_picture: string;
 };
+
+// interface TransactionDetails {
+//   id: number;
+//   sell_transaction_id: number;
+//   account_name: string;
+//   account_number: string;
+//   bank_name: string;
+//   phone_number: string;
+//   created_at: string; // ISO date string
+//   updated_at: string; // ISO date string
+// }
+
+// interface Transaction {
+//   amount: string;
+//   naira_value: string;
+//   status: string;
+//   details: TransactionDetails;
+// }
+
+// type TransactionStatus = 'pending' | 'complete' | 'verified';
+
+// export interface TransactionResponse {
+//   status: TransactionStatus;
+//   message: string;
+//   transaction: Transaction;
+// }

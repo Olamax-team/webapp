@@ -11,17 +11,18 @@ interface transactionProps {
     updated_at:  string;
 };
 
+interface pendingTransactionProps {
+    amount: string;
+    naira_value: string;
+    status: string;
+    details: transactionProps
+}
+
 interface pendingDetailsProps {
     status: string;
     message: string;
-    transaction: {
-        amount: string;
-        naira_value: string;
-        status: string;
-        details: transactionProps
-    }
+    transaction: pendingTransactionProps
 };
-
 
 interface tradeProps {
     fiatType_id:  number;
@@ -47,6 +48,8 @@ interface sellDetailsProps {
     address: string;
     network: string;
     currency: string;
+    qrcode: string | null;
+    sellingId: number;
 }
 
 interface tradeState {
