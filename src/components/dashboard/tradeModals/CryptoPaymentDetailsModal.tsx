@@ -10,28 +10,6 @@ import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
 import { useToast } from '../../../hooks/use-toast';
 
-
-
-// {
-//     "status": "pending",
-//     "message": "Transaction is pending. Balance has not yet reflected.",
-//     "transaction": {
-//         "amount": "0.01",
-//         "naira_value": "20000.00",
-//         "status": "pending",
-//         "details": {
-//             "id": 3,
-//             "sell_transaction_id": 3,
-//             "account_name": "Raji Abubakar",
-//             "account_number": "0022334455",
-//             "bank_name": "uniapp",
-//             "phone_number": "09025265463",
-//             "created_at": "2025-05-29T09:29:46.000000Z",
-//             "updated_at": "2025-05-29T09:29:46.000000Z"
-//         }
-//     }
-// }
-
 const CryptoPaymentDetailsModal = () => {
     const { isOpen, onClose } = useCryptoPaymentDetailsModal();
     const pending = useTransactionPendingModal();
@@ -52,8 +30,7 @@ const CryptoPaymentDetailsModal = () => {
         method: 'post',
         url: 'confirm-deposited-address',
         formdata: {
-            coin_network: tradeData.coinNetwork?.toLowerCase(),
-            coin_shorthand: tradeData.item?.cryptoType.toLowerCase(),
+            sellingId: tradeData.sellDetails?.sellingId,
         }
     }); 
 

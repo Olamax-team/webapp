@@ -94,18 +94,15 @@ const SellInput: React.FC = () => {
         },
         data: newData
       }
-
-      console.log('startTransactionConfig', startTransactionConfig);
   
       await axios.request(startTransactionConfig)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           tradeData.setSellDetails(response.data);
           tradeData.setCoinNetwork(data.blockChain);
           openConfirmCompleteTransaction.onOpen();
         };
       }).catch((error) => {
-        console.log(error);
         if (error) {
           toast({
             title: 'Error',

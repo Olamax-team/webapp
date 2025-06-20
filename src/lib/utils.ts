@@ -316,3 +316,9 @@ export const useTransactionPendingModal = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+export const usePendingTransactionDetailsModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+

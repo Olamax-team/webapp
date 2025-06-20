@@ -41,6 +41,8 @@ const CableInput = () => {
 
     const [userIsValid, setUserIsValid] = React.useState(false);
     const [isValidating, setIsValidating] = React.useState(false);
+
+    console.log(item);
     
     React.useEffect(() => {
       if (user) {
@@ -270,7 +272,7 @@ const CableInput = () => {
 
                         <div className=" border-t-2 border-[#0000001A] flex justify-between w-full font-Inter mt-3 py-5">
                             <p className="font-medium text-[16px] leading-[24px] text-[#121826]">Total</p>
-                            <strong>{item?.inputAmount}</strong>
+                            <strong>{item?.naira_amount}</strong>
                         </div>
                     </div>
 
