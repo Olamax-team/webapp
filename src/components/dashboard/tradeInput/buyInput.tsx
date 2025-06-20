@@ -81,6 +81,8 @@ const BuyInput: React.FC = () => {
       phone: data.phoneNumber,
     };
 
+    console.log("Transaction Data: ", transactionData);
+
     const buyConfig = {
       method: 'post',
       maxBodyLength: Infinity,
