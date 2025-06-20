@@ -8,6 +8,8 @@ import callCenter from '../../assets/images/callsCenter.svg';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import strokeleft from '../../assets/images/strokesLeft.svg'
 import strokeright from '../../assets/images/strokesRight.svg'
+import useUserDetails from '../../stores/userStore';
+import { useNavigate } from 'react-router-dom';
 
 export const ReferralPrograme = () => {
     const [openQuestion, setOpenQuestion] = useState<number | null>(null);
@@ -15,6 +17,9 @@ export const ReferralPrograme = () => {
     const toggleQuestion = (index: number) => {
         setOpenQuestion(openQuestion === index ? null : index);
     };
+
+    const { user, token } = useUserDetails();
+    const navigate = useNavigate();
 
     const ReferralSteps = [
         {
@@ -47,9 +52,14 @@ export const ReferralPrograme = () => {
                             Invite friends to experience the Olamax advantage in crypto trading, and earn rewards each time they trade. Share the benefits, help others join a secure platform, and enjoy bonuses that grow with every successful referral!
                         </p>
 
-                        <button className="mt-10 xl:w-[150px] w-[115px] h-[38px] rounded-sm text-[12px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]">
+                        <button className="mt-10 xl:w-[150px] w-[115px] h-[38px] rounded-sm text-[12px] leading-[19.5px] font-Inter xl:h-[54px] xl:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]" onClick={() => {
+                            if (!user || !token) {
+                                navigate('/log-in');
+                                
+                            }
+                        }}>
                             Get Started
-                        </button>
+                        </button >
                     </div>
                     <div className='xl:w-[50%] flex items-center justify-center'>
                         <img src={refer} className='w-[400px] h-[400px]' />

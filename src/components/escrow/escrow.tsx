@@ -6,9 +6,11 @@ import shieldCheck from '../../assets/images/shield-check.svg'
 import trustbuild from '../../assets/images/trustBuild.svg'
 import { useKYCConfirmationModal } from "../../lib/utils"
 import useUserDetails from "../../stores/userStore"
+import { useNavigate } from "react-router-dom"
  
 
 const Escrow = () => {
+    const navigate = useNavigate();
     const escrowBenefit = [
         {
             icon:shieldCheck,
@@ -27,13 +29,19 @@ const Escrow = () => {
         }
     ]
     const openKYCCONfirmation = useKYCConfirmationModal();
-    const { user } = useUserDetails();
+    const { user , token } = useUserDetails();
     const isVerified = user?.account_status;
+
     const EscrowButton = () => {
-        if (isVerified === 'Verified') {
-            window.open("https://wa.me/+2347074322020", "_blank");
-        }else {
-            openKYCCONfirmation.onOpen();
+        if (user && token) {
+            if (isVerified === 'verified') {
+                window.open("https://wa.me/+2347074322020", "_blank");
+            } else {
+                openKYCCONfirmation.onOpen();
+            }
+            
+        } else {
+            navigate('/log-in');
         }
 };
   return (

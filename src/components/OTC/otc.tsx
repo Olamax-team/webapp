@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react"
+import React from "react"
 import { useKYCConfirmationModal, useOTCModal } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
+import { useNavigate } from "react-router-dom";
 // import { Link } from "react-router-dom";
 // import rectangleOTC from '../../assets/images/RectangleOTC.svg'
 // import btcOTC from '../../assets/images/BitcoinOTC.svg'
@@ -30,14 +31,22 @@ const OTC = () => {
 
     const openOTCModal = useOTCModal();
     const openKYCCONfirmation = useKYCConfirmationModal();
-    const { user } = useUserDetails();
+    const { user , token } = useUserDetails();
+    const navigate = useNavigate();
+
     const isVerified = user?.account_status;
+    
     const OTCButton = () => {
+        if (user && token) {
             if (isVerified === 'Verified') {
                 openOTCModal.onOpen();
-            }else {
+            } else {
                 openKYCCONfirmation.onOpen();
             }
+            
+        } else {
+            navigate('/log-in');
+        }
     };
   return (
     <React.Fragment>
