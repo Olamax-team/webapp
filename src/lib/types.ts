@@ -21,38 +21,39 @@ export type kycDetailsProps = {
 };
 
 export type kycDetailsStatusProps = {
-  back : string;
-  dateOfBirth: string;
-  documents_id: number;
-  email: string;
-  fname: string;
-  front: string;
-  gender: string;
-  hold: string;
-  nationality: string;
-  kyc_dateOfBirth: string;
-  kyc_documents_created_at: string;
-  kyc_documents_status: string;
-  kyc_documents_updated_at: string;
-  kyc_documents_video_status: string;
-  kyc_fname: string;
-  kyc_gender: string;
-  kyc_lname: string;
-  kyc_phone_number: string;
-  kyc_picture: string;
-  kyc_user_details_created_at: string;
-  kyc_user_details_id: number;
-  kyc_user_details_status: string;
-  kyc_user_details_updated_at: string;
-  lname: string;
-  mname: string;
-  phone_number: string;
-  referral_code: string
-  short_video: string;
-  status: string;
+  user_id: number;
   uid: string;
-  user_id: number
-  verification_method: string;
+  email: string;
+  referral_code: string;
+  verification_method: string | null;
+  fname: string | null;
+  mname: string | null;
+  prolife_image: string | null; // Note: Is this meant to be "profile_image"?
+  lname: string | null;
+  status: "Unverified" | "Verified" | string; // Adjust enum if needed
+  phone_number: string | null;
+  gender: string | null;
+  dateOfBirth: string | null; // Could be Date if parsed
+  nationality: string | null;
+  documents_id: number | null;
+  front: string | null;
+  back: string | null;
+  hold: string | null;
+  short_video: string | null;
+  kyc_documents_created_at: string | null;
+  kyc_documents_updated_at: string | null;
+  kyc_documents_video_status: string | null;
+  kyc_documents_status: string | null;
+  kyc_user_details_id: number | null;
+  kyc_user_details_status: string | null;
+  kyc_fname: string | null;
+  kyc_lname: string | null;
+  kyc_gender: string | null;
+  kyc_dateOfBirth: string | null;
+  kyc_phone_number: string | null;
+  kyc_picture: string | null;
+  kyc_user_details_created_at: string | null;
+  kyc_user_details_updated_at: string | null;
 };
 
 

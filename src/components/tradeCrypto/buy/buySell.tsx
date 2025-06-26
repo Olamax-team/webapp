@@ -274,8 +274,6 @@ console.log(minTransaction);
   };
 
 
-
-
   return (
       <div className= {`space-y-6 xl:space-y-6 justify-center w-full ${className || ""}`}>
 
