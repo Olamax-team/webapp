@@ -48,7 +48,7 @@ const StartVerification = () => {
         }
       } else setStepTwoChecked(false);
 
-      if (kycStatus.short_video) {
+      if (kycStatus.short_video !== null) {
         if (checkObjectPresence(video_status, kycStatus)) {
           setStepThreeChecked(true)
         }
@@ -65,8 +65,6 @@ const StartVerification = () => {
       }
     }
   }
-
-
 
   return (
     <div className="bg-white rounded px-3 py-4 lg:px-4 lg:py-5 mt-3">

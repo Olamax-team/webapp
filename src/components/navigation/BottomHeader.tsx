@@ -40,6 +40,14 @@ const BottomHeader = ({notifications}:bottomProps) => {
 
   const { user, token , clearUser, kycDetails, fetchKycDetails, fetchUserDetails, userDetails} = useUserDetails();
 
+  function hasProfileImage(imageUrl: string): boolean {
+    const base = 'https://api.olamax.io/storage/app/public/';
+    return imageUrl.startsWith(base) && imageUrl.length > base.length;
+  }
+
+  const profileImagePresent = hasProfileImage(userDetails?.profile_image ?? '');
+  const allNamePresent = userDetails && userDetails?.first_name !== null || userDetails?.last_name !== null
+
   React.useLayoutEffect(() => {
     if (user) {
       fetchKycDetails();
@@ -50,7 +58,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const userFirstName = kycDetails ? kycDetails.fname : '';
   const userLastName = kycDetails ? kycDetails.lname : '';
 
-  const placeholder = userFirstName.charAt(0) + userLastName.charAt(0);
+  const placeholder = (userFirstName && userLastName) ? (userFirstName?.charAt(0) + userLastName?.charAt(0)) : (userDetails?.email ? userDetails.email.charAt(0) + userDetails?.email.charAt(1) : '');
 
   // navbar styles for normal
   const navbar = 'bg-bgSurface w-full h-[64px] lg:h-[100px] shadow shadow-[4px_4px_4px_0_rgba(0, 0, 0, 0.3)]';
@@ -288,7 +296,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
               }
               <DropdownMenu>
                 <DropdownMenuTrigger className='cursor-pointer focus:outline-none'>
-                  {(userDetails && userDetails.profile_image) ? <ImageAvatar style='md:size-[56px] size-[40px] bg-gray-200' image={userDetails.profile_image}/> : (kycDetails && kycDetails.lname && kycDetails.fname) ? <div className='md:size-[56px] rounded-full bg-primary text-white size-[40px] flex items-center justify-center uppercase tracking-wider'>{placeholder}</div> : <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase border rounded-full'><HiOutlineUser className='size-8 text-black/50'/></div>  }
+                  {(userDetails && profileImagePresent) ? <ImageAvatar style='md:size-[56px] size-[40px] bg-gray-200' image={userDetails.profile_image}/> : (userDetails && !profileImagePresent && allNamePresent) ? <div className='md:size-[56px] rounded-full bg-primary text-white size-[40px] flex items-center justify-center uppercase tracking-wider 2xl:text-xl lg:text-lg text-base'>{placeholder}</div> : <div className='md:size-[56px] size-[40px] flex items-center justify-center uppercase border rounded-full'><HiOutlineUser className='size-8 text-black/50'/></div>  }
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-fit z-[500] mr-4 lg:mr-0">
                   <DropdownMenuLabel>{kycDetails ? kycDetails.email : user.email}</DropdownMenuLabel>
