@@ -286,61 +286,6 @@ const AirtimeRecharge = () => {
           <h3 className="px-3 py-2" >Airtime Recharge</h3>
         </div>
 
-        <div className="w-full rounded-sm bg-[#f5f5f5f5] mt-3 xl:h-[96px]">
-          <label htmlFor="airtimeAmount" className="hidden xl:block font-Inter text-[#121826] xl:mt-[8px] xl:font-normal xl:text-[14px] xl:p-3 xl:leading-[21px]">Airtime Amount</label>
-          <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">Airtime Amount</label>
-          <div className="flex justify-between p-3">
-            <input
-              {...register("inputAmount")}
-              value={amount1}
-              type="text"
-              placeholder="0.00"
-              onChange={(e) => {setAmount1(e.target.value);setLastChanged('amount1');}}
-              className="xl:w-[143px] w-[100px] h-[30px] leading-[27px] mt-0 text-[14px] xl:h-[38px] xl:text-[16px]  bg-[#f5f5f5] border-none rounded-none focus:bg-[#f5f5f5]      focus:outline-none  outline-none font-bold font-Inter xl:leading-[34.5px]"
-            />
-
-            <div className="relative">
-              <div
-                className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
-                onClick={() => {setIsNetworkDropdownOpen(!isNetworkDropdownOpen); setIsPaymentDropdownOpen(false)}}
-              >
-                <img
-                  src={airtimeNetworks && airtimeNetworks.find(option => option.network === selectedNetwork)?.icon}
-                  alt={selectedNetwork}
-                  className="size-5 mr-1 rounded-full"
-                />
-                <span>{selectedNetwork}</span>
-                <HiChevronDown className="size-6"/>            
-              </div>
-              { isNetworkDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-fit bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
-                  { airtimeNetworks && airtimeNetworks.length > 0 && airtimeNetworks.map((network) => (
-                    <div
-                      key={network.product_number}
-                      className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
-                      onClick={() => handleSelectChange(network)}
-                    >
-                      <img src={network.icon} alt={network.network} className="w-6 h-6 mr-2 rounded-full" />
-                      <span>{network.network}</span>
-                    </div>
-                  ))}
-
-                  { airtimeNetworkStatus === 'pending' && (
-                    <div className="flex items-center justify-center py-4">
-                      <Loader2 className="animate-spin" />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        {errors.inputAmount && <p className="text-red-500 text-xs">{errors.inputAmount?.message}</p>}
-
-        <div className=" flex justify-center  items-center m-5">
-          <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] xl:w-[32px] xl:h-[32px]" />
-        </div>
-
         <div className="w-full h[64px] rounded-sm bg-[#f5f5f5] xl:h-[96px] mt-5">
           <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]  px-3 py-2  leading-[18px]">You Pay</label>
           <label htmlFor="paymentAmount" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5 xl:p-3 xl:leading-[21px]">You Pay</label>
@@ -412,6 +357,63 @@ const AirtimeRecharge = () => {
           </div>
         </div>
         {errors.paymentAmount && <p className="text-red-500 text-xs">{errors.paymentAmount?.message}</p>}
+
+
+
+        <div className=" flex justify-center  items-center m-5">
+          <img src={arrowIcon} alt="Arrow" className="w-[25.6px] h-[22.4px]   text-[#039AE4] xl:w-[32px] xl:h-[32px]" />
+        </div>
+
+        <div className="w-full rounded-sm bg-[#f5f5f5f5] mt-3 xl:h-[96px]">
+          <label htmlFor="airtimeAmount" className="hidden xl:block font-Inter text-[#121826] xl:mt-[8px] xl:font-normal xl:text-[14px] xl:p-3 xl:leading-[21px]">You Receive</label>
+          <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">You Receive</label>
+          <div className="flex justify-between p-3">
+            <input
+              {...register("inputAmount")}
+              value={amount1}
+              type="text"
+              placeholder="0.00"
+              onChange={(e) => {setAmount1(e.target.value);setLastChanged('amount1');}}
+              className="xl:w-[143px] w-[100px] h-[30px] leading-[27px] mt-0 text-[14px] xl:h-[38px] xl:text-[16px]  bg-[#f5f5f5] border-none rounded-none focus:bg-[#f5f5f5]      focus:outline-none  outline-none font-bold font-Inter xl:leading-[34.5px]"
+            />
+
+            <div className="relative">
+              <div
+                className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+                onClick={() => {setIsNetworkDropdownOpen(!isNetworkDropdownOpen); setIsPaymentDropdownOpen(false)}}
+              >
+                <img
+                  src={airtimeNetworks && airtimeNetworks.find(option => option.network === selectedNetwork)?.icon}
+                  alt={selectedNetwork}
+                  className="size-5 mr-1 rounded-full"
+                />
+                <span>{selectedNetwork}</span>
+                <HiChevronDown className="size-6"/>            
+              </div>
+              { isNetworkDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-fit bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-1">
+                  { airtimeNetworks && airtimeNetworks.length > 0 && airtimeNetworks.map((network) => (
+                    <div
+                      key={network.product_number}
+                      className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg"
+                      onClick={() => handleSelectChange(network)}
+                    >
+                      <img src={network.icon} alt={network.network} className="w-6 h-6 mr-2 rounded-full" />
+                      <span>{network.network}</span>
+                    </div>
+                  ))}
+
+                  { airtimeNetworkStatus === 'pending' && (
+                    <div className="flex items-center justify-center py-4">
+                      <Loader2 className="animate-spin" />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        {errors.inputAmount && <p className="text-red-500 text-xs">{errors.inputAmount?.message}</p>}
       </React.Fragment> }
 
       { billServiceStatus === 'pending' && 

@@ -11,7 +11,6 @@ import AirtimeRecharge from "../dashboard/bills&payment/billsPayment/airtimeRech
 import Datapurchase from "../dashboard/bills&payment/billsPayment/datapurchase";
 import { Loader2 } from "lucide-react";
 import BillsDetails from "../dashboard/bills&payment/billsDetails";
-import { useNavigate } from "react-router-dom";
 
 
 // ===== Types =====
@@ -31,12 +30,11 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   airtimeOptions,
 }) => {
   const { active, showTransactionDetail, selectedBill } = activityIndex();
-  const { user, fetchKycDetails,kycDetails } = useUserDetails();
+  const { user, fetchKycDetails } = useUserDetails();
 
   const {
     fetchBillServices,
   } = useFetchStore();
-const navigate = useNavigate();
 
   // ===== Effect Hooks =====
   // Fetch KYC details when user is available
@@ -48,29 +46,23 @@ useEffect(() => {
 
 const BillsIink = ({ index }: billsLinkProps) => {
   const { setActive } = activityIndex();
-  const [open, setOpen] = useState(false);
 
   return (
     <select
       key={index}
       value={cat0}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
       onChange={(e) => {
         setCat0(e.target.value);
         setActive(index);
       }}
       className="ml-auto p-2 bg-white text-textDark rounded-md text-right"
     >
-      {!open ? (
-        <option value={cat0}>{cat0}</option>
-      ) : (
-        airtimeOptions.map((prop) => (
+      
+        {airtimeOptions.map((prop) => (
           <option key={prop} value={prop} className="text-center">
             {prop}
           </option>
-        ))
-      )}
+        ))}
     </select>
   );
 };

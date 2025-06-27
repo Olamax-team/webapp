@@ -9,7 +9,6 @@ import CableTv from "../dashboard/bills&payment/billsPayment/cableTv";
 import CowryBills from "../dashboard/bills&payment/billsPayment/cowryBills";
 import WaterBills from "../dashboard/bills&payment/billsPayment/waterBills";
 import useUserDetails from "../../stores/userStore";
-import { useNavigate } from "react-router-dom";
 import { useFetchStore } from "../../stores/fetch-store";
 
 interface BillsPaymentProps {
@@ -23,9 +22,8 @@ type billsLinkProps = {
 const BillsPayment:React.FC<BillsPaymentProps> = ({
   className,
 })  => {
-  const { user, fetchKycDetails,kycDetails } = useUserDetails();
+  const { user, fetchKycDetails } = useUserDetails();
 const {fetchBills,} = useFetchStore();
-const navigate = useNavigate();
 
   // ===== Effect Hooks =====
   // Fetch KYC details when user is available
@@ -37,28 +35,22 @@ useEffect(() => {
 
 const BillsIink = ({ index }: billsLinkProps) => {
   const { setActive } = activityIndex();
-  const [open, setOpen] = useState(false);
 
   return (
     <select
       key={index}
       value={cat0}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
       onChange={(e) => {
         setCat0(e.target.value);
         setActive(index);
       }}
       className="ml-auto p-2 bg-white text-textDark rounded-md text-right"
-    >
-      {!open ? (
-        <option value={cat0}>{cat0}</option>
-      ) : (
-        categories.map((prop) => (
+    > 
+        {categories.map((prop) => (
           <option key={prop} value={prop} className="text-center">
             {prop}
           </option>
-        ))
+        )
       )}
     </select>
   );
