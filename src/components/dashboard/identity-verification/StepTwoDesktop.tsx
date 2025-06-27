@@ -116,7 +116,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
       const imageUrl = URL.createObjectURL(file);
       return (
         <div className='w-fit relative'>
-          <img src={imageUrl} alt="Uploaded Image" style={{ maxWidth: '210px', maxHeight: '210px' }} className='rounded-md'/>
+          <img src={imageUrl} alt="Uploaded Image" style={{ maxWidth: '120px', maxHeight: '120px' }} className='rounded-md'/>
           <button type='button' className="size-7 bg-white absolute bottom-2 right-2 flex items-center justify-center rounded-md" onClick={onClick}>
             <X className=' text-red-500'/>
           </button>

@@ -98,9 +98,16 @@ type packageProps = {
   amount: number
 };
 
+type billsProps = {
+  service: string;
+  icon: string;
+  label: string
+};
+
 
 interface FetchStore {
   fetchBillServices: () => Promise<cryptoServiceProps[]>;
+  fetchBills: () => Promise<billsProps[]>;
   fetchCryptoServices: () => Promise<cryptoServiceProps[]>;
   fetchNetworkAirtime: () => Promise<airtimeNetworkProps []>;
   fetchAllCoins: () => Promise<coinsProps[]>;
@@ -322,6 +329,20 @@ export const useFetchStore = create<FetchStore>(() => ({
       throw new Error('Something went wrong, try again later');
     }
     const data = response.data.prices as packageProps[];
+    return data;
+  },
+
+    fetchBills: async () => {
+    const response = await axios.request({
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://api.olamax.io/api/get-bills',
+      headers: {'Content-Type':'application/json',},
+    });
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data.services as billsProps[];
     return data;
   },
 

@@ -186,7 +186,7 @@ const ElectricityBills = () => {
   // ];
 
   //autofill for both inputs
-  const price = useMemo(() => {
+  const dollarPrice = useMemo(() => {
     if (activeButton === 'crypto') {
       return getSellingPrice(selectPayment);
     } else {
@@ -201,11 +201,11 @@ const ElectricityBills = () => {
       setValue("paymentAmount", "");
       return;
   }
-    if (price) {
+    if (dollarPrice) {
       let newpaymentAmount = '';
       if (activeButton === "crypto") {
         //WE DONOT KNOW THE FORMULA YET
-        newpaymentAmount = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
+        newpaymentAmount = (parseFloat(amount1) / parseFloat(dollarPrice)).toFixed(6); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
       }
@@ -223,11 +223,11 @@ const ElectricityBills = () => {
       return;
       }
   
-    if (price) {
+    if (dollarPrice) {
       let newinputAmount = '';
       if (activeButton === "crypto") {
         //WE DONOT KNOW THE FORMULA YET
-        newinputAmount = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
+        newinputAmount = (parseFloat(amount2) * parseFloat(dollarPrice)).toFixed(2); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newinputAmount = (parseFloat(amount2)).toFixed(2); 
       }
@@ -247,7 +247,10 @@ const ElectricityBills = () => {
   }, [user])
   
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-
+    if (!user) {
+      navigate("/log-in");
+      return;
+    }
     if (user && kycDetails) {
       if (kycDetails.status === 'Unverified') {
         navigate("/dashboard/identity_verification"); 
@@ -295,7 +298,7 @@ const ElectricityBills = () => {
           </div>
           <div className="h-[64px] rounded-sm bg-[#f5f5f5] mt-3 w-full xl:h-[96px]">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:mt-[8px] xl:font-normal xl:text-[14px] xl:p-3 xl:leading-[21px]"> Enter Amount </label>
-            <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Pay</label>
+            <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Receive</label>
             <div className="flex justify-between px-3">
               <input
                 {...register("inputAmount")}
@@ -351,7 +354,7 @@ const ElectricityBills = () => {
 
           <div className="h-[64px] rounded-sm bg-[#f5f5f5] w-full xl:h-[96px] mt-5">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5 xl:p-3 xl:leading-[21px]">You Pay</label>
-            <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] p-2 leading-[18px]">You Recieve</label>
+            <label htmlFor="payment" className="block xl:hidden text-[#121826] font-Inter text-[12px] p-2 leading-[18px]">You Pay</label>
 
             <div className="flex justify-between px-3">
               <input
