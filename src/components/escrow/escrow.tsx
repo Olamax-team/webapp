@@ -31,7 +31,7 @@ const Escrow = () => {
     const isVerified = user?.account_status;
     const EscrowButton = () => {
         if (isVerified === 'Verified') {
-            window.open("https://wa.me/+2347074322020", "_blank");
+            window.open("/", "_blank");
         }else {
             openKYCCONfirmation.onOpen();
         }

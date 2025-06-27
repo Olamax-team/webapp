@@ -203,7 +203,10 @@ const Datapurchase = () => {
   }, [user])
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-
+    if (!user) {
+      navigate("/log-in");
+      return;
+    }
     if (user && kycDetails) {
       if (kycDetails.status === 'Unverified') {
         navigate("/dashboard/identity_verification"); 
@@ -250,7 +253,7 @@ const Datapurchase = () => {
           </div>
           <div className="w-full  rounded-sm bg-[#f5f5f5] mt-3 ">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px]  xl:mt-[8px] xl:p-3  xl:leading-[21px]">Select plan</label>
-            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">You Pay</label>
+            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">You Receive</label>
             <div className=" px-3 h-[96px]  lg:h-[105px]">
               <div className="relative flex-1">
                 <div
@@ -335,7 +338,7 @@ const Datapurchase = () => {
 
           <div className="w-full h-[64px] rounded-sm bg-[#f5f5f5] lg:mt-5  xl:h-[96px] mt-8">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
-            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Recieve</label>
+            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2  leading-[18px]">You Pay</label>
 
             <div className="flex justify-between px-3 ">
               <input

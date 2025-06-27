@@ -53,7 +53,7 @@ const DataInput = () => {
             bills: item?.bills,
             network: item?.network,
             package_product_number: item?.package_product_number,
-            phone_number: data.phoneNumber
+            phone_number: data?.phoneNumber
         }
         
         if (item?.transaction_type === 'crypto' && newData.blockchain_id === undefined) {
@@ -77,8 +77,8 @@ const DataInput = () => {
         .then((response) => {
             console.log(response)
             if (response.status === 201) {
-                setTransactionId(response.data.transaction_id);
-                setAccountDetails(response.data.bank_details.data);
+                setTransactionId(response.data?.transaction_id);
+                setAccountDetails(response.data?.transaction_details.data);
                 setIsBill(true);
                 onOpen();
             }
