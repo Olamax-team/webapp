@@ -269,7 +269,10 @@ const CableTv = () => {
     
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-
+    if (!user) {
+      navigate("/log-in");
+      return;
+    }
     if (user && kycDetails) {
       if (kycDetails.status === 'Unverified') {
         navigate("/dashboard/identity_verification"); 
@@ -319,7 +322,7 @@ const CableTv = () => {
 
           <div className="w-full  rounded-sm bg-[#f5f5f5] mt-3 ">
             <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px]  xl:mt-[8px] xl:p-3  xl:leading-[21px]">Select plan</label>
-            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">You Pay</label>
+            <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px] px-3 py-2 leading-[18px]">Select Plan</label>
             <div className=" px-3 h-[96px]  lg:h-[105px] ">
               <div className="relative flex-1">
                 <div
@@ -403,12 +406,13 @@ const CableTv = () => {
     
           <div className=" h-[64px] rounded-sm bg-[#f5f5f5]  w-full xl:h-[96px] mt-10">
           <label htmlFor="payment" className="hidden xl:block font-Inter text-[#121826] xl:font-normal xl:text-[14px] xl:mt-5  xl:p-3  xl:leading-[21px]">You Pay</label>
-          <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]  px-3 py-2  leading-[18px]">You Recieve</label>
+          <label htmlFor="payment" className=" block xl:hidden  text-[#121826] font-Inter text-[12px]  px-3 py-2  leading-[18px]">You Pay</label>
     
           <div className="flex justify-between px-3">
             <input
               {...register("paymentAmount")}
               type="text"
+              disabled
               placeholder="0.00"
               className="xl:w-[143px] w-[100px] h-[25px] text-[16px]  xl:h-[32px]  xl:text-[18px] text-[#121826] bg-[#f5f5f5] border-none rounded-none focus:outline-none font-bold font-Inter leading-[27px] xl:leading-[34.5px]"
             />

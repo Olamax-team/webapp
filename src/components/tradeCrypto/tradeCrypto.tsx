@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import IndicatorButtonGroup from "./indicator";
 import CryptoMarketToday from "./cryptoMarketToday";
-import BillsPayment from "./billsPayment";
-import AirtimePayment from "./airtime1";
+import BillsPayment from "./billsPayment1";
+import AirtimePayment from "./airtime2";
 import BuySell from "./buy/buySell";
 
 
 const TradeCrypto = () => {
   const [activeTab, setActiveTab] = useState("Buy & Sell Crypto");
-  const categories = ["Electricity", "CableTV"];
+  // const categories = ["Electricity", "CableTV"];
   const tabs = ["Buy & Sell Crypto", "Airtime & Data", "Bills & Payment"];
   const airtimeOptions = ["Airtime", "Data" ];
 
@@ -17,7 +17,6 @@ const TradeCrypto = () => {
     const selectedTab = tabs[index];
     setActiveTab(selectedTab);
   };
-
 
   const renderContent = () => {
     switch (activeTab) {
@@ -31,9 +30,7 @@ const TradeCrypto = () => {
       );
     case "Bills & Payment":
       return (
-        <BillsPayment
-          categories={categories}
-        />
+        <BillsPayment/>
       );
     default:
       return null;
@@ -48,7 +45,7 @@ return (
           onButtonClick={handleTabClick}
           buttonClassName="pl-0 pb-6 font-Inter xl:font-poppins text-[13px] xl:text-[16px] leading-[19.5px] xl:leading-[24px] text-textDark "
         />
-      <div className="flex my-3 xl:grid xl:grid-cols-2 xl:gap-20 flex-wrap">
+      <div className="flex my-3 xl:grid xl:grid-cols-2 xl:gap-20 flex-wrap items-start justify-start">
         {/* Left Section */}
         <div className="mx-auto my-auto items-center w-full">
           <Card className="rounded-lg w-full h-auto">

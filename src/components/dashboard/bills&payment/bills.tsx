@@ -5,7 +5,6 @@ import ElectricityBills from './billsPayment/electricityBills';
 import CableTv from './billsPayment/cableTv';
 import WaterBills from './billsPayment/waterBills';
 import BettingBills from './billsPayment/bettingBills';
-import CawryBills from './billsPayment/cowryBills';
 import BillsIink from './billsPayment/billsIink';
 import BillsDetails from './billsDetails';
 import TransactionHistory from './billsPayment/transactionHistory';
@@ -18,6 +17,7 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { activityIndex } from '../../../stores/generalStore';
+import CowryBills from './billsPayment/cowryBills';
 
 interface billProps {
   service: string;
@@ -71,7 +71,7 @@ const Bills = () => {
       case 5:
         return <BettingBills />;
       case 6:
-        return <CawryBills />;
+        return <CowryBills />;
       default:
         return null;
     }
