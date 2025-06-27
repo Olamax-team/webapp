@@ -1,4 +1,4 @@
-import { useCryptoPaymentDetailsModal, usePaymentConfirmationModal,  } from '../../../lib/utils'
+import { useCryptoPaymentDetailsModal, usePaymentConfirmationModal, useTransactionPendingModal,  } from '../../../lib/utils'
 import qrCode from '../../../assets/images/QR.png'
 import logo from '../../../assets/images/OLAMAX Logo 4.svg'
 import { HiOutlineDuplicate } from 'react-icons/hi';
@@ -12,6 +12,7 @@ import { useToast } from '../../../hooks/use-toast';
 
 const CryptoPaymentDetailsModal = () => {
     const { isOpen, onClose } = useCryptoPaymentDetailsModal();
+    const pending = useTransactionPendingModal();
     const [showModal, setShowModal] = useState(isOpen);
     const [open, setOpen] = useState(false)
     const closeModal = useCallback(() => {
@@ -29,18 +30,23 @@ const CryptoPaymentDetailsModal = () => {
         method: 'post',
         url: 'confirm-deposited-address',
         formdata: {
-            coin_network: tradeData.coinNetwork?.toLowerCase(),
-            coin_shorthand: tradeData.item?.cryptoType.toLowerCase(),
+            sellingId: tradeData.sellDetails?.sellingId,
         }
-    });
+    }); 
 
     const confirmDeposit = async () => {
         await axios.request(confirmDepositConfig)
         .then((response) => {
+            console.log(response);
           if (response.status === 200) {
-            console.log(response.data.data);
-            onClose();
-            openPaymentConfirmation.onOpen()
+            if (response.data.status === 'pending') {
+                tradeData.setPendingDetails(response.data);
+                onClose();
+                pending.onOpen();
+            } else {
+                onClose();
+                openPaymentConfirmation.onOpen();
+            }
           }
         }).catch((error) => {
             if (error) {

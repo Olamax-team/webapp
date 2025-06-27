@@ -11,6 +11,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { activityIndex } from "../../../stores/generalStore";
 import { useFetchStore } from "../../../stores/fetch-store";
+import { useToast } from "../../../hooks/use-toast";
 
 
 interface BuySellProps {
@@ -26,6 +27,7 @@ const BuySell: React.FC<BuySellProps> = ({
 
   const location = useLocation();
   const { user, fetchKycDetails, token, fetchUserDetails, userDetails } = useUserDetails();
+  const { toast } = useToast();
 
   const [subTab, setSubTab] = useState("sell");
 
@@ -96,6 +98,8 @@ const { data: minTransaction } = useQuery({
   enabled: coin?.find((c) => c.coin === prop2)?.id !== undefined,
 });
 
+console.log(minTransaction);
+
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
     return (prices ?? []).find(p => p.coin_id === id)?.selling;
@@ -123,6 +127,7 @@ const { data: minTransaction } = useQuery({
       }
     } else return;
   }
+
   const getCoinSellingPriceInDollar = (coinCode:string) => {
   if (coinCode) {
     let currentCoin;
@@ -142,6 +147,8 @@ const { data: minTransaction } = useQuery({
 
   const currentCoinPriceInNaira =  getCoinSellingPriceInNaira(prop2);
   const currentCoinPriceInDollar =  getCoinSellingPriceInDollar(prop2);
+
+  console.log(currentCoinPriceInDollar);
 
 
   useEffect(() => {
@@ -216,16 +223,30 @@ const { data: minTransaction } = useQuery({
       return;
     };
 
-    // if (user && userDetails) {
-    //   if (userDetails.status === 'Unverified') {
-    //     navigate("/dashboard/identity_verification"); 
-    //     return;
-    //   }
-    // }
+    if (user && userDetails) {
+      if (userDetails.status === 'Unverified') {
+        navigate("/dashboard/identity_verification"); 
+        return;
+      }
+    }
 
 
-    const fiatID = subTab === "buy" ? getCoinId(prop1) : getCoinId(prop2);
-    const cryptoID = subTab === "buy" ? getCoinId(prop2) : getCoinId(prop1);
+    const fiatID = subTab === "buy"
+      ? (stables && stables.length > 0 ? stables[0].id : 0)
+      : getCoinId(prop2);
+    const cryptoID = subTab === "buy"
+      ? getCoinId(prop2)
+      : (stables && stables.length > 0 ? stables[0].id : 0);
+
+    // Ensure IDs are valid numbers before proceeding
+    if (!fiatID || !cryptoID) {
+      toast({
+        title: "Error",
+        description: "Unable to determine fiat or crypto type. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const tradeData = {
       fiatType_id: fiatID,
@@ -251,8 +272,6 @@ const { data: minTransaction } = useQuery({
     }
 
   };
-
-
 
 
   return (

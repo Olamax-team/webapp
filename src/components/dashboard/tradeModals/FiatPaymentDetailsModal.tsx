@@ -184,7 +184,7 @@ const FiatPaymentDetailsModal = () => {
 
   const { accountDetails, isBill, clearAccountDetails, clearItem, clearTransactionId } = useTradeStore();
 
-  console.log(accountDetails)
+  console.log(accountDetails);
 
   const completeBuyConfig = useApiConfig({
     method: 'post',
@@ -214,11 +214,7 @@ const FiatPaymentDetailsModal = () => {
     }).catch((error:any) => {
       console.log(error);
       console.error(error);
-      const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.[0]?.message || // Handle nested error messages
-        error.message ||
-        'An unexpected error occurred.';
+      const errorMessage = error.response?.data?.message || error.response?.data?.[0]?.message || error.message || 'An unexpected error occurred.';
       toast({
         title: 'Error',
         description: errorMessage,

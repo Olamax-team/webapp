@@ -21,12 +21,12 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
   const [bvn, setBvn] = React.useState('');
   const [nin, setNin] = React.useState('');
 
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const formData = new FormData();
 
   const { toast } = useToast();
-  const { token, user, kycStatus, fetchKycStatus, fetchKycDetails } = useUserDetails();
+  const { token, user, kycStatus, fetchKycStatus } = useUserDetails();
 
   const [availableKyc, setAvailableKyc] = React.useState<kyc[]>([])
 
@@ -58,7 +58,6 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
 
       fetchKyc();
       fetchKycStatus();
-      fetchKycDetails();
     }
   },[user]);
 
@@ -66,6 +65,8 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
 
     const handleDocumentSelect = (value:string) => {
       setDocumentType(value);
+      setBvn('');
+      setNin('');
     };
 
     return (
@@ -77,7 +78,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
           <SelectGroup>
           {availableKyc === undefined || availableKyc === null && <Loader2 className='animate-spin'/>}
             {availableKyc && availableKyc.map((item) => (
-              <SelectItem value={item.method}>{item.name}</SelectItem>
+              <SelectItem value={item.method} key={item.name}>{item.name}</SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
@@ -162,17 +163,32 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         return;
       };
 
-      if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn) || nin.trim().length < 11 || nin.trim().length > 11 || !isNumeric(nin)) {
-        toast({
-          title: 'Error',
-          description: documentType === 'bvn' ? 'Invalid BVN number!!!': 'Invalid NIN number!!!',
-          variant: 'destructive'
-        });
-        return;
+      if (documentType === 'bvn') {
+        if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn)) {
+          toast({
+            title: 'Error',
+            description:'Invalid BVN number!!!',
+            variant: 'destructive'
+          });
+          setBvn('');
+          return;
+        }
+      }
 
-      } else {
-        setIsLoading(true);
-        axios.request(config)
+      if (documentType === 'nin') {
+        if (nin.trim().length < 11 || nin.trim().length > 11 || !isNumeric(nin)) {
+          toast({
+            title: 'Error',
+            description:'Invalid NIN number!!!',
+            variant: 'destructive'
+          });
+          setNin('')
+          return;
+        }
+      }
+
+      setIsLoading(true);
+      axios.request(config)
         .then((response) => {
           if (response.status === 200) {
             toast({
@@ -202,7 +218,6 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
             console.error("Unexpected error:", error);
           };
         });
-      }
     } else {
 
       formData.append('method', documentType);
@@ -268,8 +283,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         });
       };
     };
-  };
-
+  };  
     const document_status = { kyc_documents_status: 'pending' };
   
     React.useEffect(() => {
@@ -297,17 +311,28 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
           {documentType && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Identity Type</label>}
           <DocumentSelect/>
         </div>
-        { documentType === 'bvn' || documentType === 'nin' ?
+        { documentType === 'bvn' ?
           <React.Fragment>
-            <h2 className='text-sm'>{documentType === 'bvn' ? 'Confirming your BVN helps us verify your identity and protect your account from fraud.': 'Confirming your NIN helps us verify your identity and protect your account from fraud.'}</h2>
+            <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud</h2>
             <AuthInput
-              inputValue={documentType === 'bvn' ? bvn : nin}
-              onChange={documentType === 'bvn' ? (e) => setBvn(e.target.value) : (e) => setNin(e.target.value)} 
-              label={documentType === 'bvn' ? 'BVN': 'NIN'}
+              inputValue={bvn}
+              value={bvn}
+              onChange={(e) => setBvn(e.target.value)} 
+              label='BVN'
               inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
             />
           </React.Fragment>
-        : 
+        : documentType === 'nin' ?
+          <React.Fragment>
+            <h2 className='text-sm'>Confirming your NIN helps us verify your identity and protect your account from fraud.</h2>
+            <AuthInput
+              inputValue={nin}
+              value={nin}
+              onChange={(e) => setNin(e.target.value)} 
+              label='NIN'
+              inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+            />
+          </React.Fragment> :
           <React.Fragment>
             <div className='flex flex-col gap-2'>
               <h2 className='text-sm'>Document Front Side</h2>
@@ -353,13 +378,21 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
             </div>
           </React.Fragment>
         }
-        { documentType === 'bvn' || documentType === 'nin' ?
+        { documentType === 'bvn' ?
           <div className='lg:p-2 lg:mt-2 mt-5'>
             <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
-            {isLoading ? `${documentType === 'bvn' ? 'Verifying BVN...' : 'Verifying NIN...'}` : 'Proceed'}
+            {isLoading ? `${'Verifying BVN...'}` : 'Proceed'}
               {isLoading && <Loader2 className='animate-spin'/>}
             </button>
           </div> :
+          documentType === 'nin' ?
+            <div className='lg:p-2 lg:mt-2 mt-5'>
+              <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
+              {isLoading ? `${'Verifying NIN...'}` : 'Proceed'}
+                {isLoading && <Loader2 className='animate-spin'/>}
+              </button>
+            </div>
+          :
           <div className='lg:p-2 lg:mt-2 mt-5'>
             <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
               {isLoading ? 'Uploading documents...' : 'Proceed'}

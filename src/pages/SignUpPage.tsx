@@ -64,7 +64,7 @@ const SignUpPage = () => {
       setLoading(true);
       axios.request(config)
       .then((response) => {
-        if (response.data.status === 'success') {
+        if (response && response.status === 201) {
           toast({
             title: 'Success',
             description: response.data.message,
@@ -74,6 +74,7 @@ const SignUpPage = () => {
           navigate('/verify-email', {replace: true})
         }
       }).catch((error) => {
+        console.log(error)
         if (axios.isAxiosError(error)) {
           toast({
             title: 'Error',
@@ -91,8 +92,8 @@ const SignUpPage = () => {
           setLoading(false);
           console.error("Unexpected error:", error);
         };
-      })
-    };
+      }).finally(() => setLoading(false))
+    }
 
     const continueWithGoogle = async () => {
       window.location.href = "https://api.olamax.io/auth/google"

@@ -48,7 +48,7 @@ const StartVerification = () => {
         }
       } else setStepTwoChecked(false);
 
-      if (kycStatus.short_video) {
+      if (kycStatus.short_video !== null) {
         if (checkObjectPresence(video_status, kycStatus)) {
           setStepThreeChecked(true)
         }
@@ -58,15 +58,13 @@ const StartVerification = () => {
 
   const checkStatus = () => {
     if (user && kycStatus) {
-      if (kycStatus.status === 'Verified') {
+      if (kycStatus.status === 'verified') {
         identityVerified.onOpen();
       } else {
         verificationInProgress.onOpen();
       }
     }
   }
-
-
 
   return (
     <div className="bg-white rounded px-3 py-4 lg:px-4 lg:py-5 mt-3">

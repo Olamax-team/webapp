@@ -34,6 +34,9 @@ import DonateConfirmationModal from '../olamaxFoundation/foundationModals/Donate
 import DonateCompletedModal from '../olamaxFoundation/foundationModals/DonateCompletedModal'
 import StartDeleteModal from '../modals/StartDeleteModal'
 import KYCConfirmationModal from '../OTC/KYCConfirmationModal'
+import TransactionPendingModal from '../dashboard/tradeModals/TransactionPendingModal'
+import IdentityVerifiedModal from '../modals/IdentityVerifiedModal'
+import PendingTransactionDetailsModal from '../dashboard/tradeModals/PendingTransactionDetailsModal'
 
 
 const ModalProvider = () => {
@@ -77,6 +80,10 @@ const ModalProvider = () => {
       <OTCModal/>
       <StartDeleteModal/>
       <KYCConfirmationModal/>
+      <TransactionPendingModal/>
+      <IdentityVerifiedModal/>
+      <ConfirmModal/>
+      <PendingTransactionDetailsModal/>
     </React.Fragment>
   )
 }

@@ -12,16 +12,17 @@ import { CustomSelectSearch } from '../../ui/custom-select-search';
 
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
-  const { user, kycDetails, fetchKycDetails, token, fetchKycStatus, kycStatus } = useUserDetails();
+  const { user, token, fetchKycStatus, kycStatus, fetchUserDetails, userDetails } = useUserDetails();
 
-  const [lname, setLName] = React.useState(kycDetails ? kycDetails.lname : '');
-  const [fname, setFName] = React.useState(kycDetails ? kycDetails.fname : '');
-  const [dateOfBirth, setDateOfBirth] = React.useState<string| null>(kycDetails ? kycDetails.dateOfBirth : null);
+  const [lname, setLName] = React.useState(userDetails ? userDetails.last_name : '');
+  const [fname, setFName] = React.useState(userDetails ? userDetails.first_name : '');
+  const [mname, setMName] = React.useState(userDetails ? userDetails.middle_name : '');
+  const [dateOfBirth, setDateOfBirth] = React.useState<string| null>(userDetails ? userDetails.date_of_birth : null);
 
 
   React.useLayoutEffect(() => {
     if (user) {
-      fetchKycDetails();
+      fetchUserDetails();
       fetchKycStatus();
     }
   }, [user]);
@@ -30,9 +31,11 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     setDateOfBirth(event.target.value);
   };
 
-  const [gender, setGender] = React.useState(kycDetails ? kycDetails.gender : '');
-  const [nationality, setNationality] = React.useState(kycDetails ? kycDetails.nationality : '');
-  const [phoneNumber, setPhoneNumber] = React.useState(kycDetails ? kycDetails.phone_number : '');
+  console.log(userDetails?.gender)
+
+  const [gender, setGender] = React.useState(userDetails && userDetails.gender !== null ? userDetails.gender : '');
+  const [nationality, setNationality] = React.useState(userDetails ? userDetails.nationality : '');
+  const [phoneNumber, setPhoneNumber] = React.useState(userDetails ? userDetails.phone_number : '');
 
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -48,7 +51,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
 
   const onNext = () => {
 
-    if (currentStep === 2) {
+    if (currentStep === 3) {
       return;
     };
 
@@ -163,9 +166,9 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Bio-Data</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-3 gap-2 lg:p-2">
         <AuthInput
-          inputValue={kycDetails ? kycDetails.lname : lname}
-          onChange={(e) => setLName(e.target.value)}
+          inputValue={lname}
           value={lname}
+          onChange={(e) => setLName(e.target.value)}
           label='Last Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
           name='lname'
@@ -179,6 +182,15 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
           name='fname'
           id='fname'
+        />
+        <AuthInput
+          inputValue={mname}
+          value={mname}
+          onChange={(e) => setMName(e.target.value)}
+          label='Middle Name'
+          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+          name='mname'
+          id='mname'
         />
         <div className="relative">
           {/* {dateOfBirth && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Date of Birth</label>} */}

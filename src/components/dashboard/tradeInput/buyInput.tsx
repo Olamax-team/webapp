@@ -59,8 +59,6 @@ const BuyInput: React.FC = () => {
     queryFn: () => item?.cryptoType_id ? fetchCoinBlockChain(item.cryptoType_id) : Promise.reject('cryptoType_id is undefined')
   });
 
-  console.log(blockChains)
-
   const { data:minTransaction } = useQuery({
     queryKey: ['min-transaction', item?.cryptoType_id],
     queryFn: () => item?.cryptoType_id ? fetchMinimumTransaction(item.cryptoType_id) : Promise.reject('cryptoType_id is undefined')
@@ -82,6 +80,8 @@ const BuyInput: React.FC = () => {
       transaction_charges: minTransaction ? minTransaction.transaction_charges : 0,
       phone: data.phoneNumber,
     };
+
+    console.log("Transaction Data: ", transactionData);
 
     const buyConfig = {
       method: 'post',

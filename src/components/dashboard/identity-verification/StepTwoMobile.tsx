@@ -61,14 +61,14 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
       fetchKycDetails();
     }
   },[user]);
-
-  console.log(availableKyc);
  
   const DocumentSelect = () => {
 
     const handleDocumentSelect = (value:string) => {
       setDocumentType(value);
     };
+
+    console.log(availableKyc);
 
     return (
       <Select onValueChange={(value) => handleDocumentSelect(value)} defaultValue={documentType}>
@@ -141,6 +141,137 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
     return true;
   }
 
+  // const handleSubmit = () => {
+  //   if (documentType === 'bvn' || documentType === 'nin') {
+
+  //     const kycData = {
+  //       method: documentType == 'bvn' ? 'bvn' : 'nin',
+  //       identityNumber:documentType == 'bvn' ?  bvn : nin
+  //     };
+
+  //     if (currentStep === 3) {
+  //       return;
+  //     };
+
+  //     const config = {
+  //       method: 'post',
+  //       maxBodyLength: Infinity,
+  //       url: 'https://api.olamax.io/api/start-kyc-verification',
+  //       headers: {
+  //         'Content-Type':'application/json',
+  //         'Authorization': `Bearer ${token}`
+  //       },
+  //       data: kycData,
+  //     };
+
+  //     if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn) || nin.trim().length < 11 || nin.trim().length > 11 || !isNumeric(nin)) {
+  //       toast({
+  //         title: 'Error',
+  //         description: documentType === 'bvn' ? 'Invalid BVN number!!!': 'Invalid NIN number!!!',
+  //         variant: 'destructive'
+  //       });
+  //       return;
+  //     } else {
+  //       setIsLoading(true);
+  //       axios.request(config)
+  //       .then((response) => {
+  //         if (response.status === 200) {
+  //           toast({
+  //             title: 'Success',
+  //             description: response.data.message,
+  //             variant: 'success'
+  //           });
+  //           setIsLoading(false);
+  //           setCurrentStep((prevNum) => prevNum + 1)
+  //         };
+  //       }).catch((error) => {
+  //         if (axios.isAxiosError(error)) {
+  //           toast({
+  //             title: 'Error',
+  //             description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+  //             variant: 'destructive'
+  //           });
+  //           setIsLoading(false);
+  //           console.error("Error fetching data message:", error.response?.data.message || error.message);        
+  //         } else {
+  //           toast({
+  //             title: 'Error',
+  //             description: 'Something went wrong!! Try again later',
+  //             variant: 'destructive'
+  //           });
+  //           setIsLoading(false);
+  //           console.error("Unexpected error:", error);
+  //         };
+  //       });
+  //     }
+  //   } else {
+
+  //     formData.append('method', documentType);
+
+  //     if (frontImage) {
+  //       formData.append('front', frontImage, frontImage.name)
+  //     };
+  //     if (backImage) {
+  //       formData.append('back', backImage, backImage.name)
+  //     };
+  //     if (holdingImage) {
+  //       formData.append('hold', holdingImage, holdingImage.name)
+  //     };
+
+  //     const config = {
+  //       method: 'post',
+  //       maxBodyLength: Infinity,
+  //       url: 'https://api.olamax.io/api/upload-document',
+  //       headers: {
+  //         'Content-Type':'multipart/form-data',
+  //         'Authorization': `Bearer ${token}`
+  //       },
+  //       data: formData,
+  //     };
+
+  //     if (documentType === '' || backImage === null || frontImage === null || holdingImage === null) {
+  //       toast({
+  //         title: 'Error',
+  //         description: 'All fields are required!!!',
+  //         variant: 'destructive'
+  //       });
+  //       return;
+        
+  //     } else {
+  //       setIsLoading(true);
+  //       axios.request(config)
+  //       .then((response) => {
+  //         if (response.status === 200) {
+  //           toast({
+  //             title: 'Success',
+  //             description: response.data.message,
+  //             variant: 'success'
+  //           });
+  //           setIsLoading(false);
+  //           setCurrentStep((prevNum) => prevNum + 1)
+  //         };
+  //       }).catch((error) => {
+  //         if (axios.isAxiosError(error)) {
+  //           toast({
+  //             title: 'Error',
+  //             description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+  //             variant: 'destructive'
+  //           });
+  //           setIsLoading(false);
+  //           console.error("Error fetching data message:", error.response?.data.message || error.message);        
+  //         } else {
+  //           toast({
+  //             title: 'Error',
+  //             description: 'Something went wrong!! Try again later',
+  //             variant: 'destructive'
+  //           });
+  //           setIsLoading(false);
+  //           console.error("Unexpected error:", error);
+  //         };
+  //       });
+  //     };
+  //   };
+  // };
   const handleSubmit = () => {
     if (documentType === 'bvn' || documentType === 'nin') {
 
@@ -149,31 +280,47 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
         identityNumber:documentType == 'bvn' ?  bvn : nin
       };
 
-      if (currentStep === 3) {
-        return;
-      };
-
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'https://api.olamax.io/api/start-kyc-verification',
         headers: {
           'Content-Type':'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
         },
         data: kycData,
       };
 
-      if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn) || nin.trim().length < 11 || nin.trim().length > 11 || !isNumeric(nin)) {
-        toast({
-          title: 'Error',
-          description: documentType === 'bvn' ? 'Invalid BVN number!!!': 'Invalid NIN number!!!',
-          variant: 'destructive'
-        });
+      if (currentStep === 3) {
         return;
-      } else {
-        setIsLoading(true);
-        axios.request(config)
+      };
+
+      if (documentType === 'bvn') {
+        if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn)) {
+          toast({
+            title: 'Error',
+            description:'Invalid BVN number!!!',
+            variant: 'destructive'
+          });
+          setBvn('');
+          return;
+        }
+      }
+
+      if (documentType === 'nin') {
+        if (nin.trim().length < 11 || nin.trim().length > 11 || !isNumeric(nin)) {
+          toast({
+            title: 'Error',
+            description:'Invalid NIN number!!!',
+            variant: 'destructive'
+          });
+          setNin('')
+          return;
+        }
+      }
+
+      setIsLoading(true);
+      axios.request(config)
         .then((response) => {
           if (response.status === 200) {
             toast({
@@ -203,11 +350,9 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
             console.error("Unexpected error:", error);
           };
         });
-      }
     } else {
 
       formData.append('method', documentType);
-
       if (frontImage) {
         formData.append('front', frontImage, frontImage.name)
       };
@@ -236,7 +381,6 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
           variant: 'destructive'
         });
         return;
-        
       } else {
         setIsLoading(true);
         axios.request(config)
@@ -248,7 +392,7 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
               variant: 'success'
             });
             setIsLoading(false);
-            setCurrentStep((prevNum) => prevNum + 1)
+            setCurrentStep((prevNum) => prevNum + 1);
           };
         }).catch((error) => {
           if (axios.isAxiosError(error)) {
@@ -302,17 +446,28 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
           {documentType && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Identity Type</label>}
           <DocumentSelect/>
         </div>
-        {documentType === 'bvn' || documentType === 'nin' ?
+        { documentType === 'bvn' ?
           <React.Fragment>
-            <h2 className='text-sm'>{documentType === 'bvn' ? 'Confirming your BVN helps us verify your identity and protect your account from fraud.': 'Confirming your NIN helps us verify your identity and protect your account from fraud.'}</h2>
+            <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud</h2>
             <AuthInput
-              inputValue={documentType === 'bvn' ? bvn : nin}
-              onChange={documentType === 'bvn' ? (e) => setBvn(e.target.value) : (e) => setNin(e.target.value)} 
-              label={documentType === 'bvn' ? 'BVN': 'NIN'}
+              inputValue={bvn}
+              value={bvn}
+              onChange={(e) => setBvn(e.target.value)} 
+              label='BVN'
               inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
             />
           </React.Fragment>
-        : 
+        : documentType === 'nin' ?
+          <React.Fragment>
+            <h2 className='text-sm'>Confirming your NIN helps us verify your identity and protect your account from fraud.</h2>
+            <AuthInput
+              inputValue={nin}
+              value={nin}
+              onChange={(e) => setNin(e.target.value)} 
+              label='NIN'
+              inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+            />
+          </React.Fragment> :
           <React.Fragment>
             <div className='flex flex-col gap-2'>
               <h2 className='text-sm'>Document Front Side</h2>
@@ -328,6 +483,7 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
                 </label>
               }
             </div>
+            {documentType === ''}
             <div className='flex flex-col gap-2'> 
               <h2 className='text-sm'>Document Back Side</h2>
               { backImage ?
@@ -358,13 +514,21 @@ const StepTwoMobile = ({setCurrentStep, currentStep}:{currentStep:number; setCur
             </div>
           </React.Fragment>
         }
-        { documentType === 'bvn' || documentType === 'nin' ?
+        { documentType === 'bvn' ?
           <div className='lg:p-2 lg:mt-2 mt-5'>
             <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? `${documentType === 'bvn' ? 'Verifying BVN...' : 'Verifying NIN...'}` : 'Proceed'}
+            {isLoading ? `${'Verifying BVN...'}` : 'Proceed'}
               {isLoading && <Loader2 className='animate-spin'/>}
             </button>
           </div> :
+          documentType === 'nin' ?
+            <div className='lg:p-2 lg:mt-2 mt-5'>
+              <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
+              {isLoading ? `${'Verifying NIN...'}` : 'Proceed'}
+                {isLoading && <Loader2 className='animate-spin'/>}
+              </button>
+            </div>
+          :
           <div className='lg:p-2 lg:mt-2 mt-5'>
             <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
               {isLoading ? 'Uploading documents...' : 'Proceed'}

@@ -78,7 +78,7 @@ const DataInput = () => {
             console.log(response)
             if (response.status === 201) {
                 setTransactionId(response.data?.transaction_id);
-                setAccountDetails(response.data?.transaction_details.data);
+                setAccountDetails(response.data?.transaction_details?.data);
                 setIsBill(true);
                 onOpen();
             }
@@ -87,7 +87,7 @@ const DataInput = () => {
             if (error) {
                 toast({
                     title: 'Error',
-                    description: error.response.data.message,
+                    description: error.response?.data.message,
                     variant: 'destructive'
                 });
             }
