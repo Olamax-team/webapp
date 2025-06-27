@@ -9,10 +9,14 @@ import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
 import { useToast } from '../../../hooks/use-toast';
+import useBillsStore from '../../../stores/billsStore';
 
 const CryptoPaymentDetailsModal = () => {
     const { isOpen, onClose } = useCryptoPaymentDetailsModal();
     const pending = useTransactionPendingModal();
+
+    const { item } = useBillsStore();
+
     const [showModal, setShowModal] = useState(isOpen);
     const [open, setOpen] = useState(false)
     const closeModal = useCallback(() => {
@@ -58,8 +62,47 @@ const CryptoPaymentDetailsModal = () => {
                 })
             }
         })
-    }
+    };
 
+    const completeBuyConfig = useApiConfig({
+        method: 'post',
+        url: 'complete-buy-order-transaction',
+        formdata: {ref_number: tradeData.cryptoTradeDetails?.ref}
+    });
+    
+      const completeBillConfig = useApiConfig({
+        method: 'post',
+        url: 'complete-bill-transaction',
+        formdata: { ref_number: tradeData.cryptoTradeDetails?.ref}
+      });
+
+    const completeBuyTransaction = async () => {
+        
+    await axios.request(item?.bills === 'airtime' ? completeBuyConfig :  item?.bills === 'data' ? completeBuyConfig  : completeBillConfig)
+    .then((response) => {
+        console.log(response)
+        if (response.status === 200) {
+        console.log(response.data)
+        tradeData.clearAccountDetails();
+        tradeData.clearItem();
+        tradeData.clearTransactionId();
+        tradeData.clearCryptoTradeDetails();
+        onClose(); 
+        openPaymentConfirmation.onOpen(); 
+        } else {
+        console.log('Error:', response.statusText);
+        }
+    }).catch((error:any) => {
+        console.log(error);
+        console.error(error);
+        const errorMessage = error.response?.data?.message || error.response?.data?.[0]?.message || error.message || 'An unexpected error occurred.';
+        toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+        });
+    });
+    }
 
     const Desktop = () => {
         return (
@@ -118,12 +161,12 @@ const CryptoPaymentDetailsModal = () => {
                             </div>
                             <div className='space-y-2'>
                                 <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Network</p>
-                                <p className="text-left text-[14px] leading-[21px] uppercase">{tradeData.coinNetwork}</p>
+                                <p className="text-left text-[14px] leading-[21px] uppercase">{coinNetwork}</p>
                             </div>
                             </div>
                         </div>
                         <div>
-                            <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={confirmDeposit}>
+                            <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={tradeData.isBill ? completeBuyTransaction : confirmDeposit }>
                             I Have Made Payment
                             </button>
                         </div>
@@ -179,12 +222,12 @@ const CryptoPaymentDetailsModal = () => {
                         </div>
                         <div className='space-y-2'>
                             <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Network</p>
-                            <p className="text-left text-[14px] leading-[21px] uppercase">{tradeData.coinNetwork}</p>
+                            <p className="text-left text-[14px] leading-[21px] uppercase">{coinNetwork}</p>
                         </div>
                         </div>
                     </div>
                     <div>
-                        <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={confirmDeposit}>
+                        <button className='font-poppins w-[250px] h-[54px] rounded-lg bg-primary hover:bg-secondary text-white mt-6' onClick={tradeData.isBill ? completeBuyTransaction :  confirmDeposit}>
                         I Have Made Payment
                         </button>
                     </div>
@@ -196,7 +239,8 @@ const CryptoPaymentDetailsModal = () => {
     };
 
     const openPaymentConfirmation = usePaymentConfirmationModal();
-    const walletAdd = tradeData.sellDetails?.address
+    const coinNetwork = tradeData.isBill ? tradeData.cryptoTradeDetails?.network : tradeData.coinNetwork;
+    const walletAdd = tradeData.isBill ? tradeData.cryptoTradeDetails?.address : tradeData.sellDetails?.address
   // Copy account number to clipboard
     const copyToClipboard = () => {
         navigator.clipboard.writeText(walletAdd ?? '');

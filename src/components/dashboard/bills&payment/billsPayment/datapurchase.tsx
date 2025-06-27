@@ -69,7 +69,7 @@ const Datapurchase = () => {
   const navigate = useNavigate();
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
-  const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins, fetchPackages } = useFetchStore();
+  const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins, fetchPackages, fetchLiveRates, fetchAllCoinPrices } = useFetchStore();
 
   
 
@@ -82,8 +82,6 @@ const Datapurchase = () => {
     queryKey: ['data-networks'],
     queryFn: fetchDataPurchaseNetworks,
   });
-
-  console.log(networkOptionsList)
 
   const { data: dataCoin } = useQuery({
     queryKey: ['all-coins'],
@@ -113,9 +111,9 @@ const Datapurchase = () => {
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
   const { data:dataPackages, status:dataPackageStatus} = useQuery({
-    queryKey: ['data-packages', selectedNetwork, selectedNetworkDetails?.product_number],
+    queryKey: ['data-packages', selectedNetwork],
     queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
-    enabled: selectedNetworkDetails && selectedNetworkDetails.product_number !== 0
+    enabled: networkOptionsList && networkOptionsList.length > 0 && networkOptionsList[0].network !== ''
   });
 
 
@@ -124,15 +122,13 @@ const Datapurchase = () => {
 
   const isReadyAndAvailable = dataPackageStatus === 'success' && dataPackages.length > 0;
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<Inputs>({
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
     defaultValues: {
       inputAmount: "",
       paymentAmount: "",
     }
   });
-
-  console.log(selectedPackageDetails)
 
   useEffect(() => {
     if (dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
@@ -142,6 +138,7 @@ const Datapurchase = () => {
       if (activeButton === 'fiat') {
         setValue('paymentAmount', dataPackages[0].amount.toString())
       } else {
+        // setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
         setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
       }
     } else {
@@ -166,17 +163,77 @@ const Datapurchase = () => {
     setIsPaymentDropdownOpen(false); 
   };
 
+  const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
+
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
+
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
+
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
+
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
   const handleSelectPackage = (package_name: dataPackageProps) => {
     setSelectedPackage(package_name.payment_item_name);
     setSelectedPackageDetails(package_name);
     if (activeButton === 'fiat') {
       setValue('paymentAmount', package_name.amount.toString())
     } else {
-      setValue('paymentAmount', (package_name.amount / 1000).toFixed(6))
+      setValue('paymentAmount', (package_name.amount / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000)).toFixed(6))
     }
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
   };
+
+    const {data:liveRates } = useQuery({
+      queryKey: ['live-rates'],
+      queryFn: fetchLiveRates,
+    });
+    
+    const getCoinId = (coinCode: string): number | undefined => {
+      if (coin) {
+        return coin.find(c => c.coin === coinCode)?.id; // Return undefined if not found
+      }
+      return undefined; // Explicitly return undefined if coin is not defined
+    };
+
+    const { data:prices } = useQuery({
+      queryKey: ['coin-prices'],
+      queryFn: fetchAllCoinPrices,
+      enabled: activeButton === 'crypto'
+    });
+
+  const inputAmount = watch("inputAmount");
+  const paymentAmount = watch("paymentAmount");
+
+  const getSellingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    if (prices) {
+      return prices.find(p => p.coin_id === id)?.selling;
+    }
+  };
+
+  const getBuyingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    if (prices) {
+      return prices.find(p => p.coin_id === id)?.buying;
+    }
+  };
+
+  const dollarPrice = React.useMemo(() => {
+    if (activeButton === 'crypto') {
+      return getSellingPrice(selectPayment);
+    } else {
+      return getBuyingPrice(selectPayment);
+    }
+  }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
+
+  const currentRate = getCoinSellingPriceInNaira(selectPayment);
    
   const fiatPaymentOptions = [
     { value: 'NGN', logo: ngnlogo },
@@ -218,11 +275,12 @@ const Datapurchase = () => {
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
       selectedNetwork: selectedNetwork,
       transaction_type: activeButton,
-      naira_amount: Number(data.paymentAmount),
+      naira_amount: Number(selectedPackageDetails?.amount),
       coin_token_id: activeButton === 'crypto' ? selectPaymentDetails?.id : undefined,
       coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
       bills: selectedBill,
       network: selectedNetwork,
+      current_rate: currentRate?.priceInUsd,
       package_product_number: selectedPackageDetails?.product_number,
     };
     setShowTransactionDetail(true); 

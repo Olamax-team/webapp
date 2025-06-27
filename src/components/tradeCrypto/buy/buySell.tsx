@@ -89,16 +89,13 @@ const BuySell: React.FC<BuySellProps> = ({
     return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
 
-const { data: minTransaction } = useQuery({
-  queryKey: [coin?.find((c) => c.coin === prop2)?.id],
-  queryFn: ({ queryKey }) =>
-    queryKey[0] !== undefined
-      ? fetchMinimumTransaction(queryKey[0] as number)
-      : Promise.reject('coin id is undefined'),
-  enabled: coin?.find((c) => c.coin === prop2)?.id !== undefined,
-});
+  const { data: minTransaction } = useQuery({
+    queryKey: [coin?.find((c) => c.coin === prop2)?.id],
+    queryFn: ({ queryKey }) => queryKey[0] !== undefined ? fetchMinimumTransaction(queryKey[0] as number) : Promise.reject('coin id is undefined'),
+    enabled: coin?.find((c) => c.coin === prop2)?.id !== undefined,
+  });
 
-console.log(minTransaction);
+  console.log(minTransaction);
 
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
@@ -112,41 +109,58 @@ console.log(minTransaction);
 
   const dollarPrice = subTab === "buy" ? getBuyingPrice(prop2) : getSellingPrice(prop2);
 
-  const getCoinSellingPriceInNaira = (coinCode:string) => {
-    if (coinCode) {
-      let currentCoin;
-      let price;
-      if (liveRates && liveRates.length > 0) {
-        currentCoin = liveRates.find((item) => item.symbol === coinCode);
-        if (currentCoin) {
-          price = parseFloat(currentCoin.price.replace(/,/g, ""));
-            price = price * parseFloat(String(dollarPrice));
-        };
+    const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
 
-        return price;
-      }
-    } else return;
-  }
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
 
-  const getCoinSellingPriceInDollar = (coinCode:string) => {
-  if (coinCode) {
-    let currentCoin;
-    let price;
-    if (liveRates && liveRates.length > 0) {
-      currentCoin = liveRates.find((item) => item.symbol === coinCode);
-      if (currentCoin) {
-        price = parseFloat(currentCoin.price.replace(/,/g, ""));
-        if (typeof dollarPrice === 'number' && !isNaN(dollarPrice)) {
-          price = price;
-        }
-      };
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
 
-      return price;
-    }
-  } else return;}
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
 
-  const currentCoinPriceInNaira =  getCoinSellingPriceInNaira(prop2);
-  const currentCoinPriceInDollar =  getCoinSellingPriceInDollar(prop2);
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
+  // const getCoinSellingPriceInNaira = (coinCode:string) => {
+  //   if (coinCode) {
+  //     let currentCoin;
+  //     let price;
+  //     if (liveRates && liveRates.length > 0) {
+  //       currentCoin = liveRates.find((item) => item.symbol === coinCode);
+  //       if (currentCoin) {
+  //         price = parseFloat(currentCoin.price.replace(/,/g, ""));
+  //           price = price * parseFloat(String(dollarPrice));
+  //       };
+
+  //       return price;
+  //     }
+  //   } else return;
+  // }
+
+  // const getCoinSellingPriceInDollar = (coinCode:string) => {
+  // if (coinCode) {
+  //   let currentCoin;
+  //   let price;
+  //   if (liveRates && liveRates.length > 0) {
+  //     currentCoin = liveRates.find((item) => item.symbol === coinCode);
+  //     if (currentCoin) {
+  //       price = parseFloat(currentCoin.price.replace(/,/g, ""));
+  //       if (typeof dollarPrice === 'number' && !isNaN(dollarPrice)) {
+  //         price = price;
+  //       }
+  //     };
+
+  //     return price;
+  //   }
+  // } else return;}
+
+  const coinPrice = getCoinSellingPriceInNaira(prop2)
+
+  const currentCoinPriceInNaira =  coinPrice?.priceInNaira
+  const currentCoinPriceInDollar =  coinPrice?.priceInUsd;
 
   console.log(currentCoinPriceInDollar);
 

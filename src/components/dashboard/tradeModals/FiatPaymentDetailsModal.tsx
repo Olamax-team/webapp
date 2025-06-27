@@ -184,8 +184,6 @@ const FiatPaymentDetailsModal = () => {
 
   const { accountDetails, isBill, clearAccountDetails, clearItem, clearTransactionId } = useTradeStore();
 
-  console.log(accountDetails);
-
   const completeBuyConfig = useApiConfig({
     method: 'post',
     url: 'complete-buy-order-transaction',
@@ -201,6 +199,7 @@ const FiatPaymentDetailsModal = () => {
   const completeBuyTransaction = async () => {
     await axios.request(isBill ? completeBillConfig : completeBuyConfig)
     .then((response) => {
+      console.log(response)
       if (response.status === 200) {
         console.log(response.data)
         clearAccountDetails();

@@ -11,7 +11,6 @@ import AirtimeRecharge from "../dashboard/bills&payment/billsPayment/airtimeRech
 import Datapurchase from "../dashboard/bills&payment/billsPayment/datapurchase";
 import { Loader2 } from "lucide-react";
 import BillsDetails from "../dashboard/bills&payment/billsDetails";
-import { useNavigate } from "react-router-dom";
 
 
 // ===== Types =====
@@ -31,12 +30,11 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   airtimeOptions,
 }) => {
   const { active, showTransactionDetail, selectedBill } = activityIndex();
-  const { user, fetchKycDetails,kycDetails } = useUserDetails();
+  const { user, fetchKycDetails } = useUserDetails();
 
   const {
     fetchBillServices,
   } = useFetchStore();
-const navigate = useNavigate();
 
   // ===== Effect Hooks =====
   // Fetch KYC details when user is available

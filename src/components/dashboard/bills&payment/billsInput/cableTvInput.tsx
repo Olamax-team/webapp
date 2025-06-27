@@ -32,7 +32,7 @@ const CableInput = () => {
 
     const { item } = useBillsStore();
     const { onOpen }  = useConfirmModal();
-    const { setAccountDetails, setTransactionId, setIsBill } = useTradeStore();
+    const { setAccountDetails, setTransactionId, setIsBill, setCryptoTradeDetails } = useTradeStore();
 
     const { toast } = useToast();
 
@@ -122,6 +122,7 @@ const CableInput = () => {
           bills: item?.bills,
           network: item?.network,
           package_product_number: item?.package_product_number,
+          current_rate: item?.current_rate,
           phone_number: data.phoneNumber,
           cable_number: data.cableNumber,
         };
@@ -147,7 +148,10 @@ const CableInput = () => {
         .then((response) => {
             if (response.status === 200) {
                 setTransactionId(response.data.transaction_id);
-                setAccountDetails(response.data.bank_details.data);
+                { item?.transaction_type === 'fiat' ? 
+                    setAccountDetails(response.data.transaction_details.data) :
+                    setCryptoTradeDetails(response.data.transaction_details)
+                }
                 setIsBill(true);
                 onOpen();
             }

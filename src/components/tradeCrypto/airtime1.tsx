@@ -45,8 +45,7 @@ type AirtimeNetwork = {
 };
 
 // ===== Component =====
-const AirtimePayment: React.FC<airtimePaymentProps> = ({
-  className,
+const AirtimePayment: React.FC<airtimePaymentProps> = ({className,
   airtimeOptions,
 }) => {
 
@@ -71,20 +70,22 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   const { data: coin, status: coinStatus } = useQuery({ queryKey: ['all-coins'], queryFn: fetchAllCoins });
   const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills-service'], queryFn: fetchBillServices });
   const { data: airtimeNetworks, status:airtimeNetworkStatus } = useQuery({ queryKey: ['airtime-networks'], queryFn: fetchNetworkAirtime });
-  const { data: networkOptionsList, status:networkOptionStatus } = useQuery({ queryKey: ['data-networks'], queryFn: fetchDataPurchaseNetworks }); console.log("netoption",networkOptionsList)
+  const { data: networkOptionsList, status:networkOptionStatus } = useQuery({ queryKey: ['data-networks'], queryFn: fetchDataPurchaseNetworks });
   const { data: prices } = useQuery({ queryKey: ['coin-prices'], queryFn: fetchAllCoinPrices });
+
+  React.useEffect(() => {
+    if (networkOptionsList && networkOptionsList.length > 0) {
+      setSelectedNetwork(networkOptionsList[0].network)  
+    }
+  }, [networkOptionsList])
 
   // ===== Local State =====
   const [cat0, setCat0] = useState("Airtime");
   const [subTab, setSubTab] = useState(billServices?.[0]?.cs ?? "fiat");
 
-  const [selectedNetwork, setSelectedNetwork] = useState<string>(
-    networkOptionsList?.[0]?.network ?? "MTN"
-  );
+  const [selectedNetwork, setSelectedNetwork] = useState<string>(networkOptionsList ? networkOptionsList[0].network : "MTN");
 
-  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<AirtimeNetwork | undefined>(
-    networkOptionsList?.[0]
-  );
+  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<AirtimeNetwork | undefined>(networkOptionsList ? networkOptionsList[0] : undefined);
 
   const [selectedPackage, setSelectedPackage] = useState('');
   const [selectedPackageDetails, setSelectedPackageDetails] = useState<dataPackageProps | undefined>();
@@ -123,9 +124,9 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   };
 
   const { data: dataPackages, status: dataPackageStatus } = useQuery({
-    queryKey: ['data-packages', selectedNetwork, selectedNetworkDetails?.product_number],
+    queryKey: ['data-packages', selectedNetwork],
     queryFn: fetchDataPackages,
-    enabled: !!selectedNetworkDetails?.product_number
+    enabled: networkOptionsList && networkOptionsList.length > 0 && networkOptionsList[0].network !== ''
   });
   
   const isReadyAndAvailable = dataPackageStatus === 'success' && dataPackages.length > 0;
@@ -166,23 +167,23 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   };
 
     useEffect(() => {
-        if (cat0==="Data" && dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
+        if (cat0 === "Data" && dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
         setSelectedPackage(dataPackages[0].payment_item_name);
         setSelectedPackageDetails(dataPackages[0]);
         setAmount1(dataPackages[0].payment_item_name);
         setValue('inputAmount', dataPackages[0].payment_item_name);
-        if (subTab === 'crypto') {
-            //WE DONOT KNOW THE FORMULA YET
-            setAmount2((dataPackages[0].amount / 1000).toFixed(6))
-            setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
+            if (subTab === 'crypto') {
+                //WE DONOT KNOW THE FORMULA YET
+                setAmount2((dataPackages[0].amount / 1000).toFixed(6))
+                setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
+            } else {
+                setAmount2(dataPackages[0].amount.toString())
+                setValue('paymentAmount', dataPackages[0].amount.toString())
+            }
         } else {
-            setAmount2(dataPackages[0].amount.toString())
-            setValue('paymentAmount', dataPackages[0].amount.toString())
+            setSelectedPackage('Package Loading...')
         }
-        } else {
-        setSelectedPackage('Package Loading...')
-        }
-    }, [dataPackageStatus, dataPackages, subTab])
+    }, [dataPackageStatus, dataPackages, subTab, cat0, dataPackages?.length])
 
     //autofill for both inputs
     useEffect(() => {
@@ -230,9 +231,6 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
            fetchKycDetails(); 
         }
     }, [user])
-
-
-    console.log(selectedPackageDetails);
     
     const handleSelectChange = (network: AirtimeNetwork) => {
         setSelectedNetwork(network.network);
@@ -254,13 +252,17 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         };
 
         const Payload = {
-          selectedNetwork,
-          selectPayment: subTab === "fiat" ? "" : prop2,
-          inputAmount: amount1,
-          paymentAmount: amount2,
-          fiatPayment: subTab === "fiat" ? prop1 : "",
+            transaction_type: subTab,
+            selectedNetwork: selectedNetwork,
+            selectPayment: subTab === "fiat" ? prop1 : prop2,
+            inputAmount: amount1,
+            paymentAmount: amount2,
+            naira_amount: cat0 === 'Airtime' ? Number(data.inputAmount) : Number(data.paymentAmount),
+            package_product_number: cat0 === 'Airtime' ? selectedNetworkDetails?.product_number : selectedPackageDetails?.product_number,
+            network: selectedNetwork,
+            bills: cat0 === 'Airtime' ? 'airtime' : 'data'
         };
-        console.log('pay',Payload);
+
         setActive(cat0 === 'Airtime' ? 0 : 1);
         navigate('/dashboard/bills_payment');
         setShowTransactionDetail(true);
@@ -280,7 +282,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                             <button
                             key={item.cs}
                             type="button"
-                            onClick={() => {setSubTab(item.cs)}}
+                            onClick={() => {setSubTab(item.cs); }}
                             className={`${item.act === 'off' && 'hidden'} mt-[30px] w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-semibold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex uppercase ${subTab === item.cs ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
                             >
                             {item.cs}
@@ -344,6 +346,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                                         <p>DataPackages not available</p>
                                     </div>
                                     )}
+
                                     { dataPackageStatus === 'error' && (
                                     <div className="flex items-center justify-center w-full h-full px-2">
                                         <p>Error occured while loading data packages. Try again later.</p>

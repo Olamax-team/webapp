@@ -11,7 +11,6 @@ import { activityIndex } from "../../../../stores/generalStore";
 import { useFetchStore } from "../../../../stores/fetch-store";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
 
 
 type Inputs = {
@@ -42,7 +41,7 @@ interface coinsProps {
 const AirtimeRecharge = () => {
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
-  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchLiveRates } = useFetchStore();
+  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchLiveRates, fetchPackages } = useFetchStore();
 
   const { data:billServices, status:billServiceStatus} = useQuery({
     queryKey: ['bills-service'],
@@ -69,12 +68,10 @@ const AirtimeRecharge = () => {
 
   const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
 
-
   const {data:liveRates } = useQuery({
     queryKey: ['live-rates'],
     queryFn: fetchLiveRates,
   });
-
   
   const getCoinId = (coinCode: string): number | undefined => {
     if (coin) {
@@ -88,7 +85,8 @@ const AirtimeRecharge = () => {
     queryFn: fetchAllCoinPrices,
     enabled: activeButton === 'crypto'
   });
-  
+
+
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
     if (prices) {
@@ -137,6 +135,14 @@ const AirtimeRecharge = () => {
   console.log('fiat-payment', fiatPaymentDetails);
 
   const { setItem } = useBillsStore();
+
+  const { data:packageData } = useQuery({
+    queryKey: ['package-details', selectedNetworkDetails?.product_number],
+    queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
+    enabled: selectedNetworkDetails?.product_number !== undefined
+  });
+
+  const packageDetails = packageData?.[0];
 
   //autofill for both inputs
     const dollarPrice = React.useMemo(() => {
@@ -189,24 +195,50 @@ const AirtimeRecharge = () => {
     }
   }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
 
-  const getCoinSellingPriceInNaira = (coinCode:string) => {
-    if (coinCode) {
-      let currentCoin;
-      let price;
-      if (liveRates && liveRates.length > 0) {
-        currentCoin = liveRates.find((item) => item.symbol === coinCode);
-        if (currentCoin) {
-          price = parseFloat(currentCoin.price.replace(/,/g, ""));
-          price = price * parseFloat(String(dollarPrice)); // Convert to Naira
-        };
+  // const getCoinSellingPriceInNaira = (coinCode:string) => {
+  //   if (coinCode) {
+  //     let currentCoin;
+  //     let price;
+  //     if (liveRates && liveRates.length > 0) {
+  //       currentCoin = liveRates.find((item) => item.symbol === coinCode);
+  //       if (currentCoin) {
+  //         price = parseFloat(currentCoin.price.replace(/,/g, ""));
+  //         price = price * parseFloat(String(dollarPrice)); // Convert to Naira
+  //       };
 
-        return price;
-      }
-    } else return;
-  }
+  //       return price;
+  //     }
+  //   } else return;
+  // }
 
-  const currentCoinPrice = selectPayment ? getCoinSellingPriceInNaira(selectPayment) : undefined;
-  console.log(currentCoinPrice);
+  const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
+
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
+
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
+
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
+
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
+  const currentCoinPrice = React.useMemo(() => {
+    if (!selectPayment) return undefined;
+    const nairaValue = getCoinSellingPriceInNaira(selectPayment)
+    return nairaValue?.priceInNaira;
+  }, [selectPayment, liveRates, dollarPrice]);
+
+  React.useEffect(() => {
+    const nairaValue = getCoinSellingPriceInNaira(selectPayment);
+    const dollarValue = getCoinSellingPriceInNaira(selectPayment);
+    const price = selectPayment ? nairaValue?.priceInNaira : undefined;
+    console.log(price);
+    console.log(dollarValue?.priceInUsd);
+  }, [selectPayment, liveRates, dollarPrice]);
 
   const handleSelectChange = (network: airtimeNetworkProps) => {
     setSelectedNetwork(network.network);
@@ -236,6 +268,8 @@ const AirtimeRecharge = () => {
     }
   }, [user])
 
+  const currentRate = getCoinSellingPriceInNaira(selectPayment);
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
       if (!user) {
         navigate("/log-in");
@@ -258,7 +292,8 @@ const AirtimeRecharge = () => {
       coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
       bills: selectedBill,
       network: selectedNetwork,
-      package_product_number: selectedNetworkDetails?.product_number,
+      current_rate: currentRate?.priceInUsd,
+      package_product_number: packageDetails?.product_number,
     };
     
     setShowTransactionDetail(true);
