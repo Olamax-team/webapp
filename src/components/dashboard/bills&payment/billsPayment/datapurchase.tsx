@@ -83,8 +83,6 @@ const Datapurchase = () => {
     queryFn: fetchDataPurchaseNetworks,
   });
 
-  console.log(networkOptionsList)
-
   const { data: dataCoin } = useQuery({
     queryKey: ['all-coins'],
     queryFn: fetchAllBuyCoins,
@@ -113,9 +111,9 @@ const Datapurchase = () => {
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
   const { data:dataPackages, status:dataPackageStatus} = useQuery({
-    queryKey: ['data-packages', selectedNetwork, selectedNetworkDetails?.product_number],
+    queryKey: ['data-packages', selectedNetwork],
     queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
-    enabled: selectedNetworkDetails && selectedNetworkDetails.product_number !== 0
+    enabled: networkOptionsList && networkOptionsList.length > 0 && networkOptionsList[0].network !== ''
   });
 
 
@@ -131,8 +129,6 @@ const Datapurchase = () => {
       paymentAmount: "",
     }
   });
-
-  console.log(selectedPackageDetails)
 
   useEffect(() => {
     if (dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {

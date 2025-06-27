@@ -62,6 +62,8 @@ const DataInput = () => {
         }
         const finalData = removeEmptyKeys(newData);
 
+        console.log(finalData)
+
         const config = {
             method: 'post',
             maxBodyLength: Infinity,

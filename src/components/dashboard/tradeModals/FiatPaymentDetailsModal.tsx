@@ -201,6 +201,7 @@ const FiatPaymentDetailsModal = () => {
   const completeBuyTransaction = async () => {
     await axios.request(isBill ? completeBillConfig : completeBuyConfig)
     .then((response) => {
+      console.log(response)
       if (response.status === 200) {
         console.log(response.data)
         clearAccountDetails();

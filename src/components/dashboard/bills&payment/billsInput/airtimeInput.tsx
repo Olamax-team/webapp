@@ -88,10 +88,9 @@ const AirtimeInput = () => {
             data: finalData,
         };
 
-        console.log(config)
-
         await axios.request(config)
         .then((response) => {
+            console.log(response)
             if (response.status === 201) {
                 setTransactionId(response.data.transaction_id);
                 setAccountDetails(response.data.transaction_details.data);
@@ -102,7 +101,7 @@ const AirtimeInput = () => {
             if (error) {
                 toast({
                     title: 'Error',
-                    description: error.response?.data || 'An error occurred while processing your request. Please try again later.',
+                    description: error.response?.data.message || 'An error occurred while processing your request. Please try again later.',
                     variant: 'destructive'
                 });
             }
