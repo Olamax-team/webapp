@@ -45,8 +45,7 @@ type AirtimeNetwork = {
 };
 
 // ===== Component =====
-const AirtimePayment: React.FC<airtimePaymentProps> = ({
-  className,
+const AirtimePayment: React.FC<airtimePaymentProps> = ({className,
   airtimeOptions,
 }) => {
 
@@ -232,9 +231,6 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
            fetchKycDetails(); 
         }
     }, [user])
-
-
-    console.log(selectedPackageDetails);
     
     const handleSelectChange = (network: AirtimeNetwork) => {
         setSelectedNetwork(network.network);
@@ -286,7 +282,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                             <button
                             key={item.cs}
                             type="button"
-                            onClick={() => {setSubTab(item.cs)}}
+                            onClick={() => {setSubTab(item.cs); }}
                             className={`${item.act === 'off' && 'hidden'} mt-[30px] w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-semibold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex uppercase ${subTab === item.cs ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
                             >
                             {item.cs}

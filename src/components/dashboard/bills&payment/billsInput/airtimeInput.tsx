@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { numberSchema, numberSchemaValues } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
 import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmModal } from "../../../../lib/utils";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
 import { useFetchStore } from "../../../../stores/fetch-store";
@@ -16,13 +16,14 @@ import useTradeStore from "../../../../stores/tradeStore";
 
 const AirtimeInput = () => {
     const { item } = useBillsStore();
-    const { setTransactionId, setAccountDetails, setIsBill } = useTradeStore();
+    const { setTransactionId, setAccountDetails, setIsBill, setCryptoTradeDetails } = useTradeStore();
 
     const { onOpen }  = useConfirmModal();
     const { toast } = useToast();
     
     const { user, fetchKycStatus, kycStatus, token } = useUserDetails();
     const { fetchCoinBlockChain } = useFetchStore();
+    const [isLoading, setIsLoading] = React.useState(false);
     
     React.useEffect(() => {
         if (user) {
@@ -57,6 +58,7 @@ const AirtimeInput = () => {
             bills: item?.bills,
             network: item?.network,
             package_product_number: item?.package_product_number,
+            current_rate: item?.current_rate,
             phone_number: data.phoneNumber
         }
 
@@ -77,6 +79,8 @@ const AirtimeInput = () => {
 
         const finalData = removeEmptyKeys(newData);
 
+        console.log(finalData)
+
         const config = {
             method: 'post',
             maxBodyLength: Infinity,
@@ -88,12 +92,16 @@ const AirtimeInput = () => {
             data: finalData,
         };
 
+        setIsLoading(true);
         await axios.request(config)
         .then((response) => {
             console.log(response)
             if (response.status === 201) {
                 setTransactionId(response.data.transaction_id);
-                setAccountDetails(response.data.transaction_details.data);
+                { item?.transaction_type === 'fiat' ? 
+                    setAccountDetails(response.data.transaction_details.data) :
+                    setCryptoTradeDetails(response.data.transaction_details)
+                }
                 setIsBill(true);
                 onOpen();
             }
@@ -105,7 +113,7 @@ const AirtimeInput = () => {
                     variant: 'destructive'
                 });
             }
-        });
+        }).finally(() => setIsLoading(false))
     };
 
     return (
@@ -159,11 +167,13 @@ const AirtimeInput = () => {
 
                <div className="mt-16 flex items-center justify-center">
                     <button
+                        disabled={isLoading}
                       type="submit"
-                        className="lg:w-[150px] w-[96px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4]"
+                        className="lg:w-[220px] w-[180px] h-[38px] rounded-sm text-[13px] leading-[19.5px] font-Inter lg:h-[54px] lg:rounded-[10px] px-[25px] py-[10px] xl:font-poppins xl:text-[16px] xl:leading-[24px] text-[#ffffff] bg-[#039AE4] flex items-center justify-center gap-3"
                        
                     >
-                        Proceed
+                        { isLoading ? 'Proceeding...' : 'Proceed'}
+                        { isLoading && <Loader2 className="animate-spin"/> }
                     </button>
             </div>
          </div>

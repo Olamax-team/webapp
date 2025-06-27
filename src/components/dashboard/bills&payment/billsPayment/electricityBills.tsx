@@ -66,7 +66,7 @@ const ElectricityBills = () => {
     url: 'get-electricity-branches/electricity/postpaid'
   });
 
- const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices } = useFetchStore();
+ const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices, fetchLiveRates, fetchPackages } = useFetchStore();
 
   const fetchElectricBranches = async () => {
     const response = await axios.request(electricBranchesConfig);
@@ -87,7 +87,12 @@ const ElectricityBills = () => {
      queryFn: fetchAllBuyCoins
    })
 
-   const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
+  const {data:liveRates } = useQuery({
+    queryKey: ['live-rates'],
+    queryFn: fetchLiveRates,
+  });
+
+  const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
     
   const getCoinId = (coinCode: string): number | undefined => {
     if (coin) {
@@ -150,6 +155,14 @@ const ElectricityBills = () => {
 
   const { setItem } = useBillsStore();
 
+  const { data:packageData } = useQuery({
+    queryKey: ['package-details', selectedNetworkDetails?.product_number],
+    queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
+    enabled: selectedNetworkDetails?.product_number !== undefined
+  });
+
+  const packageDetails = packageData?.[0];
+
   const [fiatPayment, setFiaPayment] = useState('NGN');
   const [activeButton, setActiveButton] = useState(billServices ? billServices[0].cs : 'fiat');
   const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
@@ -193,6 +206,25 @@ const ElectricityBills = () => {
       return getBuyingPrice(selectPayment);
     }
   }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, amount1, amount2, prices, coin]);
+
+  
+  const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
+
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
+
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
+
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
+
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
+  const currentRate = getCoinSellingPriceInNaira(selectPayment);
+
   useEffect(() => {
     
     if (lastChanged !== 'amount1') return;
@@ -205,7 +237,7 @@ const ElectricityBills = () => {
       let newpaymentAmount = '';
       if (activeButton === "crypto") {
         //WE DONOT KNOW THE FORMULA YET
-        newpaymentAmount = (parseFloat(amount1) / parseFloat(dollarPrice)).toFixed(6); // NGN → crypto
+        newpaymentAmount = (parseFloat(amount1) / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000)).toFixed(6); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
       }
@@ -267,7 +299,8 @@ const ElectricityBills = () => {
       coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
       bills: selectedBill,
       network: selectedNetwork,
-      package_product_number: selectedNetworkDetails?.product_number,
+      current_rate: currentRate?.priceInUsd,
+      package_product_number: packageDetails?.product_number,
     };
   
     setShowTransactionDetail(true); 

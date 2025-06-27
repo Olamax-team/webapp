@@ -184,8 +184,6 @@ const FiatPaymentDetailsModal = () => {
 
   const { accountDetails, isBill, clearAccountDetails, clearItem, clearTransactionId } = useTradeStore();
 
-  console.log(accountDetails);
-
   const completeBuyConfig = useApiConfig({
     method: 'post',
     url: 'complete-buy-order-transaction',

@@ -19,7 +19,7 @@ const ElectricityInput = () => {
 
     const { item } = useBillsStore();
     const { fetchCoinBlockChain } = useFetchStore();
-    const { setAccountDetails, setTransactionId, setIsBill } = useTradeStore();
+    const { setAccountDetails, setTransactionId, setIsBill, setCryptoTradeDetails } = useTradeStore();
 
     const [userIsValid, setUserIsValid] = React.useState(false);
     const [isValidating, setIsValidating] = React.useState(false);
@@ -130,6 +130,7 @@ const ElectricityInput = () => {
                 package_product_number: item?.package_product_number,
                 phone_number: data.phoneNumber,
                 meter_number: data.meterNumber,
+                current_rate: item?.current_rate,
                 electricity_type: data.billType
             };
     
@@ -155,7 +156,10 @@ const ElectricityInput = () => {
             .then((response) => {
                 if (response.status === 200) {
                     setTransactionId(response.data.transaction_id);
-                    setAccountDetails(response.data.bank_details.data);
+                    { item?.transaction_type === 'fiat' ? 
+                        setAccountDetails(response.data.transaction_details.data) :
+                        setCryptoTradeDetails(response.data.transaction_details)
+                    }
                     setIsBill(true);
                     onOpen();
                 }

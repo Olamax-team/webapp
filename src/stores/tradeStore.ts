@@ -44,13 +44,28 @@ interface accountDetailsProps {
     ref_number: string;
 };
 
+export interface cryptoTradeDetailsProps {
+  id: number;
+  currency: string;
+  network: string;
+  created_at: string;
+  updated_at: string;
+  virtual_account_id: number;
+  derivation_key: number;
+  ref: string;
+  address: string;
+  user_id: number;
+  qrcode: string | null;
+};
+
+
 interface sellDetailsProps {
     address: string;
     network: string;
     currency: string;
     qrcode: string | null;
     sellingId: number;
-}
+};
 
 interface tradeState {
     item:tradeProps | null;
@@ -61,6 +76,8 @@ interface tradeState {
     accountDetails: accountDetailsProps | null; 
     sellDetails:  sellDetailsProps | null;
     coinNetwork: string | null;
+    cryptoTradeDetails: cryptoTradeDetailsProps | null;
+    setCryptoTradeDetails: (newDetails: cryptoTradeDetailsProps) => void;
     setCoinNetwork: (newNetwork: string) => void;                 
     setItem: (newItem:  tradeProps) => void;
     setTransactionId: (newId: number) => void;
@@ -70,6 +87,7 @@ interface tradeState {
     clearItem: () =>void;
     clearTransactionId: () => void;
     clearAccountDetails: () => void;
+    clearCryptoTradeDetails: () => void;
     clearSellDetail: () => void;
 };
 
@@ -81,6 +99,8 @@ const useTradeStore = create<tradeState>((set) => ({
     sellDetails: null,
     coinNetwork: null,
     pendingDetails: null,
+    cryptoTradeDetails: null,
+    setCryptoTradeDetails: (newDetails: cryptoTradeDetailsProps) => set({cryptoTradeDetails: newDetails}),
     setPendingDetails: (detail: pendingDetailsProps) => set({pendingDetails: detail}),
     setCoinNetwork: (newNetwork) => set({coinNetwork: newNetwork}), 
     setItem: (newItem) => set({item: newItem}),
@@ -90,6 +110,7 @@ const useTradeStore = create<tradeState>((set) => ({
     setSellDetails: (detail: sellDetailsProps) => set({sellDetails: detail}),
     clearItem: () => set({item: null}),
     clearAccountDetails: () => set({accountDetails: null}),
+    clearCryptoTradeDetails: () => set({cryptoTradeDetails: null}),
     clearTransactionId: () => set({transactionId: null}),
     clearSellDetail: () => set({sellDetails: null})
   }));

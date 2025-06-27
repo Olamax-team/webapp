@@ -7,6 +7,7 @@ interface billsProps {
     inputAmount: string;  
     paymentAmount: string; 
     fiatPayment:string;
+    current_rate?: number;
     transaction_type?: string;
     naira_amount?: number;
     coin_token_id?: number;

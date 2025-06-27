@@ -65,7 +65,7 @@ const CableTv = () => {
   const navigate = useNavigate();
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
-  const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices, fetchTvServices, fetchPackages } = useFetchStore();
+  const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices, fetchTvServices, fetchPackages, fetchLiveRates } = useFetchStore();
 
     const { data: stables } = useQuery({
       queryKey: ['stable-coins'],
@@ -90,6 +90,11 @@ const CableTv = () => {
      queryKey: ['coin-prices'],
      queryFn: fetchAllCoinPrices
    });
+
+    const {data:liveRates } = useQuery({
+      queryKey: ['live-rates'],
+      queryFn: fetchLiveRates,
+    });
  
    const getSellingPrice = (coinCode: string) => {
      const id = getCoinId(coinCode);
@@ -162,7 +167,7 @@ const CableTv = () => {
   };
 
 
-    const { data:subscriptionPackages, status:cablePackageStatus} = useQuery({
+  const { data:subscriptionPackages, status:cablePackageStatus} = useQuery({
     queryKey: ['cable-packages', selectedNetwork, selectedNetworkDetails?.product_number],
     queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
     enabled: selectedNetworkDetails && selectedNetworkDetails.product_number !== 0
@@ -171,6 +176,31 @@ const CableTv = () => {
   const [selectedPackage, setSelectedPackage] = useState('');
   const [selectedPackageDetails, setSelectedPackageDetails] = useState<packageProps | undefined>(undefined);
   const isReadyAndAvailable = cablePackageStatus === 'success' && subscriptionPackages.length > 0;
+
+  const dollarPrice = useMemo(() => {
+    if (activeButton === 'crypto') {
+      return getSellingPrice(selectPayment);
+    } else {
+      return getBuyingPrice(selectPayment);
+    }
+  }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
+
+  const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
+
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
+
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
+
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
+
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
+  const currentRate = getCoinSellingPriceInNaira(selectPayment);
 
   const handleSelectPackage = (package_name: packageProps) => {
     setSelectedPackage(package_name.payment_item_name);
@@ -260,7 +290,7 @@ const CableTv = () => {
         if (activeButton === 'fiat') {
           setValue('paymentAmount', subscriptionPackages[0].amount.toString())
         } else {
-          setValue('paymentAmount', (subscriptionPackages[0].amount / 1000).toFixed(6))
+          setValue('paymentAmount', (subscriptionPackages[0].amount / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000)).toFixed(6))
         }
       } else {
         setSelectedPackage('Package Loading...')
@@ -289,6 +319,7 @@ const CableTv = () => {
       coin_amount: activeButton === 'crypto' ?  Number(data.paymentAmount) : undefined,
       bills: selectedBill,
       network: selectedNetwork,
+      current_rate: currentRate?.priceInUsd,
       package_product_number: selectedNetworkDetails?.product_number,
     };
   

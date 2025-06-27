@@ -8,7 +8,7 @@ export const formValidationSchema = z.object({
     paymentAmount: z
     .string()
     .min(1, 'Payment amount is required')
-    .refine(val => parseFloat(val) >= 0.01, { message: 'Payment amount must be at least 0.01' }),
+    .refine(val => parseFloat(val) >= 0.000001, { message: 'Payment amount must be at least 0.000001' }),
 
 });
 
@@ -74,7 +74,7 @@ export const formValidationSchema = z.object({
       .string()
       .min(1, 'Required field')
       .regex(/^[0-9]+(\.[0-9]{1,6})?$/, 'Invalid amount')
-      .refine(val => parseFloat(val) >= 0.000001, { message: 'Amount must be at least 1' }),
+      .refine(val => parseFloat(val) >= 0.000001, { message: 'Amount must be at least 0.000001' }),
       amount2: z
       .string()
       .min(1, 'Required field')
