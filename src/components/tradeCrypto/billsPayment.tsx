@@ -31,10 +31,7 @@ type cableServicesProps = {
     icon: string;
 };
 
-const BillsPayment: React.FC<BillsPaymentProps> = ({
-    categories,
-    className = "",
-}) => {
+const BillsPayment: React.FC<BillsPaymentProps> = ({categories,className = "",}) => {
     
     const { user, fetchKycDetails, kycDetails } = useUserDetails();
     

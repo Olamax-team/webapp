@@ -332,7 +332,7 @@ export const useFetchStore = create<FetchStore>(() => ({
     return data;
   },
 
-    fetchBills: async () => {
+  fetchBills: async () => {
     const response = await axios.request({
       method: 'get',
       maxBodyLength: Infinity,

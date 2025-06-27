@@ -3,12 +3,15 @@ import { useConfirmCompleteTransaction, useCryptoPaymentDetailsModal, useFiatPay
 import useTradeStore from '../../../stores/tradeStore';
 import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
+import React from 'react';
 
 const ConfirmCompleteTransaction = () => {
 
   const { isOpen, onClose } = useConfirmCompleteTransaction();
   const { transactionId, setAccountDetails, item, coinNetwork } = useTradeStore();
   const paymentDetails = item?.tradeType === 'sell' ? useCryptoPaymentDetailsModal() : useFiatPaymentDetailsModal();
+
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const confirmDeposit = async () => {
     onClose();
@@ -22,6 +25,7 @@ const ConfirmCompleteTransaction = () => {
   });
 
   const createBuyOrder = async () => {
+    setIsLoading(true);
     await axios.request(createBuyConfig)
     .then((response) => {
       if (response.status === 200) {
@@ -31,7 +35,7 @@ const ConfirmCompleteTransaction = () => {
       }
     }).catch((error) => {
       console.log(error)
-    })
+    }).finally(() => setIsLoading(false))
   };
 
   const completeTransaction = () => {
@@ -53,10 +57,10 @@ const ConfirmCompleteTransaction = () => {
       <div className='flex font-Inter flex-col gap-10'>
         <p className='text-sm lg:text-base'>{item?.tradeType === 'sell' ? 'Are you sure you want to continue with this transaction' : 'Are you sure you want to proceed with the transaction process?'}</p>
         <div className="flex items-center justify-between gap-4">
-          <button className='w-full font-poppins h-12 rounded-lg bg-primary text-white' onClick={completeTransaction}>
-            Yes
+          <button className='w-full font-poppins h-12 rounded-lg bg-primary text-white cursor-pointer' onClick={completeTransaction} >
+            {isLoading ? 'Completing Transaction' : 'Yes'}
           </button>
-          <button className='w-full font-poppins h-12 rounded-lg border-primary border text-primary' onClick={() =>onClose()}>
+          <button className='w-full font-poppins h-12 rounded-lg border-primary border text-primary cursor-pointer' onClick={() =>onClose()}>
             No
           </button>
         </div>

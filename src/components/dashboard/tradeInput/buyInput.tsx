@@ -77,7 +77,7 @@ const BuyInput: React.FC = () => {
       wallet_address: data.walletAddress,
       blockchain_id: selectedBlockChainDetails?.id,
       transaction_type: 'transfer',
-      transaction_charges: minTransaction ? minTransaction.transaction_charges : 0,
+      transaction_charges: minTransaction ? (minTransaction.transaction_charges * 1000) : 0,
       phone: data.phoneNumber,
     };
 
