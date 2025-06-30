@@ -59,12 +59,12 @@ const BillsIink = ({ index }: billsLinkProps) => {
   const { active, showTransactionDetail, selectedBill } = activityIndex();
  // ===== Queries =====
   const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills'], queryFn: fetchBills });
-
-  // ===== Local State =====
-  const [cat0, setCat0] = useState("Select");
     // Derive categories from billServices.service
 
   const categories = billServices?.slice(2).map((service) => service.service) ?? [];
+  // ===== Local State =====
+  const [cat0, setCat0] = useState(categories[0]);
+
   
   const selectedIndex = categories.findIndex((cat) => cat === cat0);
   
@@ -124,9 +124,7 @@ const BillsIink = ({ index }: billsLinkProps) => {
                     />
                   </div>
                 </div>
-                {selectedIndex !== -1 && (
-                  <div className="">{renderBill()}</div>
-                )}
+                <div className="">{renderBill()}</div>
               </>
             )}
           </>

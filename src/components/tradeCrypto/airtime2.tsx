@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -44,26 +45,23 @@ useEffect(() => {
     }
 }, [user])
 
-const BillsIink = ({ index }: billsLinkProps) => {
+const BillsIink = ({ index}: billsLinkProps) => {
   const { setActive } = activityIndex();
 
   return (
     <select
-      key={index}
-      value={cat0}
-      onChange={(e) => {
-        setCat0(e.target.value);
-        setActive(index);
-      }}
-      className="ml-auto p-2 bg-white text-textDark rounded-md text-right"
-    >
-      
-        {airtimeOptions.map((prop) => (
-          <option key={prop} value={prop} className="text-center">
-            {prop}
-          </option>
-        ))}
-    </select>
+    key={index}
+    value={cat0}
+    onChange={(e) => { setCat0(e.target.value);        
+        setActive(index); }}
+    className="ml-auto p-2 bg-white text-textDark rounded-md text-right"
+>
+    {airtimeOptions.map((prop) => (
+    <option key={prop} value={prop} className="text-center">
+        {prop}
+    </option>
+    ))}
+</select>
   );
 };
 
@@ -71,10 +69,10 @@ const BillsIink = ({ index }: billsLinkProps) => {
   const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills-service'], queryFn: fetchBillServices });
 
   // ===== Local State =====
-  const [cat0, setCat0] = useState("Select");
-  const selectedIndex = airtimeOptions.findIndex((cat) => cat === cat0);
+  const [cat0, setCat0] = useState("Airtime");
+  
   const renderBill = () => {
-    switch (selectedIndex) {
+    switch (active) {
       case 0:
         return <AirtimeRecharge />;
       case 1:
@@ -123,7 +121,7 @@ const BillsIink = ({ index }: billsLinkProps) => {
                         />
                   </div>
                 </div>
-                <div className="">{cat0 !== "Select" && renderBill()}</div>
+                <div className="">{renderBill()}</div>
               </>
             )}
           </>
