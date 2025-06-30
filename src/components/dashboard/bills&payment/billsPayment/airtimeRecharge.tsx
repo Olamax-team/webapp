@@ -41,6 +41,7 @@ interface coinsProps {
 const AirtimeRecharge = () => {
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
+  
   const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchLiveRates, fetchPackages } = useFetchStore();
 
   const { data:billServices, status:billServiceStatus} = useQuery({
@@ -130,9 +131,9 @@ const AirtimeRecharge = () => {
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
 
   const [fiatPayment, setFiaPayment] = useState((stables && stables.length > 0) ? stables[0].coin : 'NGN');
-  const [fiatPaymentDetails, setFiatPaymentDetails] = useState<coinsProps | undefined>(() => stables && stables.length > 0 ? stables[0] : undefined);
+  // const [fiatPaymentDetails, setFiatPaymentDetails] = useState<coinsProps | undefined>(() => stables && stables.length > 0 ? stables[0] : undefined);
 
-  console.log('fiat-payment', fiatPaymentDetails);
+  // console.log('fiat-payment', fiatPaymentDetails);
 
   const { setItem } = useBillsStore();
 
@@ -152,6 +153,28 @@ const AirtimeRecharge = () => {
         return getBuyingPrice(selectPayment);
       }
     }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
+
+
+      const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
+
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
+
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
+
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
+
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
+  const currentCoinPrice = React.useMemo(() => {
+    if (!selectPayment) return undefined;
+    const nairaValue = getCoinSellingPriceInNaira(selectPayment)
+    return nairaValue?.priceInNaira;
+  }, [selectPayment, liveRates, dollarPrice]);
     
   useEffect(() => {
     
@@ -193,7 +216,7 @@ const AirtimeRecharge = () => {
       setAmount1(newAmount1);
       setValue("inputAmount", newAmount1);
     }
-  }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
+  }, [amount2, selectPayment, activeButton, prices, coin, lastChanged, currentCoinPrice]);
 
   // const getCoinSellingPriceInNaira = (coinCode:string) => {
   //   if (coinCode) {
@@ -210,27 +233,6 @@ const AirtimeRecharge = () => {
   //     }
   //   } else return;
   // }
-
-  const getCoinSellingPriceInNaira = (coinCode: string) => {
-    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
-
-    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
-    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
-
-    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
-    const dollarValue = parseFloat(String(dollarPrice));
-
-    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
-
-    const priceInNaira = priceInUsd * dollarValue;
-    return { priceInNaira, priceInUsd, dollarValue };
-  };
-
-  const currentCoinPrice = React.useMemo(() => {
-    if (!selectPayment) return undefined;
-    const nairaValue = getCoinSellingPriceInNaira(selectPayment)
-    return nairaValue?.priceInNaira;
-  }, [selectPayment, liveRates, dollarPrice]);
 
   React.useEffect(() => {
     const nairaValue = getCoinSellingPriceInNaira(selectPayment);
@@ -254,7 +256,7 @@ const AirtimeRecharge = () => {
    
   const handleChange = (payment: coinsProps) => {
     setFiaPayment(payment.coin);
-    setFiatPaymentDetails(payment)
+    // setFiatPaymentDetails(payment)
     setIsPaymentDropdownOpen(false);
   };
 

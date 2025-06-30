@@ -11,6 +11,8 @@ const ConfirmCompleteTransaction = () => {
   const { transactionId, setAccountDetails, item, coinNetwork } = useTradeStore();
   const paymentDetails = item?.tradeType === 'sell' ? useCryptoPaymentDetailsModal() : useFiatPaymentDetailsModal();
 
+  console.log(transactionId);
+
   const [isLoading, setIsLoading] = React.useState(false)
 
   const confirmDeposit = async () => {
@@ -39,7 +41,7 @@ const ConfirmCompleteTransaction = () => {
   };
 
   const completeTransaction = () => {
-    if (coinNetwork) {
+    if (coinNetwork && item?.tradeType == 'sell') {
       confirmDeposit();
     } else {
       createBuyOrder();
