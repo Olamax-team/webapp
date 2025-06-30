@@ -37,6 +37,7 @@ import KYCConfirmationModal from '../OTC/KYCConfirmationModal'
 import TransactionPendingModal from '../dashboard/tradeModals/TransactionPendingModal'
 import IdentityVerifiedModal from '../modals/IdentityVerifiedModal'
 import PendingTransactionDetailsModal from '../dashboard/tradeModals/PendingTransactionDetailsModal'
+import ConfirmBillsModal from '../dashboard/bills&payment/billsInput/confirmBillsModal'
 
 
 const ModalProvider = () => {
@@ -84,6 +85,7 @@ const ModalProvider = () => {
       <IdentityVerifiedModal/>
       <ConfirmModal/>
       <PendingTransactionDetailsModal/>
+      <ConfirmBillsModal/>
     </React.Fragment>
   )
 }

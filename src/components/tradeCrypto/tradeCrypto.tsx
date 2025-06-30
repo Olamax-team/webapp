@@ -3,7 +3,7 @@ import { Card, CardContent } from "../ui/card";
 import IndicatorButtonGroup from "./indicator";
 import CryptoMarketToday from "./cryptoMarketToday";
 import BillsPayment from "./billsPayment";
-import AirtimePayment from "./airtime1";
+import AirtimePayment from "./airtime2";
 import BuySell from "./buy/buySell";
 
 

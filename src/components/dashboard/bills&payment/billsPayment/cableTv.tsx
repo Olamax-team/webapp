@@ -202,6 +202,12 @@ const CableTv = () => {
 
   const currentRate = getCoinSellingPriceInNaira(selectPayment);
 
+    const currentCoinPrice = React.useMemo(() => {
+      if (!selectPayment) return undefined;
+      const nairaValue = getCoinSellingPriceInNaira(selectPayment)
+      return nairaValue?.priceInNaira;
+    }, [selectPayment, liveRates, dollarPrice]);
+
   const handleSelectPackage = (package_name: packageProps) => {
     setSelectedPackage(package_name.payment_item_name);
     setSelectedPackageDetails(package_name);
@@ -214,7 +220,6 @@ const CableTv = () => {
     setIsNetworkDataPackageOpen(false);
   };
 
-  console.log(selectedPackageDetails);
 
   //autofill for both inputs
   const price = useMemo(() => {
@@ -224,8 +229,6 @@ const CableTv = () => {
       return getBuyingPrice(selectPayment);
     }
   }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
-
-  console.log('price', price)
 
   // useEffect(() => {
     

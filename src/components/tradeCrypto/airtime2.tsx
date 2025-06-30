@@ -79,6 +79,7 @@ const BillsIink = ({ index }: billsLinkProps) => {
   // ===== Local State =====
   const [cat0, setCat0] = useState("Select");
   const selectedIndex = airtimeOptions.findIndex((cat) => cat === cat0);
+  
   const renderBill = () => {
     switch (selectedIndex) {
       case 0:
