@@ -78,7 +78,7 @@ const CryptoPaymentDetailsModal = () => {
 
     const completeBuyTransaction = async () => {
         
-    await axios.request(item?.bills === 'airtime' ? completeBuyConfig :  item?.bills === 'data' ? completeBuyConfig  : completeBillConfig)
+    await axios.request(item?.bills === 'airtime' ? completeBillConfig :  item?.bills === 'data' ? completeBillConfig : item?.bills === 'cable' ? completeBillConfig : item?.bills === 'electricity' ? completeBillConfig : completeBuyConfig)
     .then((response) => {
         console.log(response)
         if (response.status === 200) {

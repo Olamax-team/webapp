@@ -60,7 +60,7 @@ const ConfirmCompleteTransaction = () => {
         <p className='text-sm lg:text-base'>{item?.tradeType === 'sell' ? 'Are you sure you want to continue with this transaction' : 'Are you sure you want to proceed with the transaction process?'}</p>
         <div className="flex items-center justify-between gap-4">
           <button className='w-full font-poppins h-12 rounded-lg bg-primary text-white cursor-pointer' onClick={completeTransaction} >
-            {isLoading ? 'Completing Transaction' : 'Yes'}
+            {isLoading ? 'Completing ...' : 'Yes'}
           </button>
           <button className='w-full font-poppins h-12 rounded-lg border-primary border text-primary cursor-pointer' onClick={() =>onClose()}>
             No
