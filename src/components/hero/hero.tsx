@@ -15,6 +15,8 @@ const HeroSection: React.FC = () => {
     }
   }, [user, token]);
 
+  console.log(kycDetails)
+
 
 
   return (
@@ -87,7 +89,8 @@ const HeroSection: React.FC = () => {
                 OLAMAX is a highly-secure crypto platform to buy, sell or trade Bitcoin, Ethereum, 
                 Tether <br/>(USDT), Celo, Stellar, USDC, and other cryptocurrencies at the best rates.
               </p>           
-              <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary" onClick={() =>{ (user && kycDetails?.status === 'Verified') ? navigate('/dashboard')  : (user && kycDetails?.status === 'Unverified') ? navigate('/dashboard/identity_verification') :  navigate('/sign-up') }}>
+              <Button className="bg-primary font-poppins p-[25px_25px] gap-[10px] rounded-[10px] text-white font-semibold hover:bg-secondary" 
+              onClick={() =>{ (user && kycDetails?.status === 'verified') ? navigate('/dashboard')  : (user && kycDetails?.status === 'Unverified') ? navigate('/dashboard/identity_verification') :  navigate('/sign-up') }}>
                 Trade Now !
               </Button>
             </div>
