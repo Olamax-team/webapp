@@ -230,6 +230,11 @@ const CableTv = () => {
     }
   }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
 
+  console.log(price);
+  console.log(currentCoinPrice);
+  console.log(selectedPackageDetails);
+
+
   // useEffect(() => {
     
   //   if (lastChanged !== 'amount1') return;

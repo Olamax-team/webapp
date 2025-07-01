@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { numberSchema, numberSchemaValues } from "../../../formValidation/formValidation";
 import useBillsStore from "../../../../stores/billsStore";
-import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmBillsModal, useConfirmModal } from "../../../../lib/utils";
+import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmBillsModal } from "../../../../lib/utils";
 import { Info, Loader2 } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
