@@ -10,7 +10,6 @@ import BuySell from "./buy/buySell";
 const TradeCrypto = () => {
   const [activeTab, setActiveTab] = useState("Buy & Sell Crypto");
   const tabs = ["Buy & Sell Crypto", "Airtime & Data", "Bills & Payment"];
-  const airtimeOptions = ["Airtime", "Data" ];
 
   const handleTabClick = (index: number) => {
     const selectedTab = tabs[index];
@@ -26,7 +25,7 @@ const TradeCrypto = () => {
         );
       case "Airtime & Data":
         return (
-          <AirtimePayment airtimeOptions={airtimeOptions}/>
+          <AirtimePayment/>
       );
     case "Bills & Payment":
       return (

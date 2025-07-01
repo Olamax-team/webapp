@@ -2,14 +2,9 @@ import React, {useEffect, useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-import btcLogo from '../../../../assets/images/BTC Circular.png'
-import ETHLogo from '../../../../assets/images/ETH Circular.png'
-import USDTLogo from '../../../../assets/images/USDT Circular.png'
-import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-import ngnlogo from '../../../../assets/images/NGN Circular.png';
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
@@ -130,21 +125,8 @@ const Datapurchase = () => {
     }
   });
 
-  useEffect(() => {
-    if (dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
-      setSelectedPackage(dataPackages[0].payment_item_name);
-      setSelectedPackageDetails(dataPackages[0]);
-      setValue('inputAmount', dataPackages[0].payment_item_name);
-      if (activeButton === 'fiat') {
-        setValue('paymentAmount', dataPackages[0].amount.toString())
-      } else {
-        // setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
-        setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
-      }
-    } else {
-      setSelectedPackage('Package Loading...')
-    }
-  }, [dataPackageStatus, dataPackages, activeButton])
+  const inputAmount = watch("inputAmount");
+  const paymentAmount = watch("paymentAmount");
 
   const handleChange = (payment: string) => {
     setFiaPayment(payment);
@@ -163,31 +145,18 @@ const Datapurchase = () => {
     setIsPaymentDropdownOpen(false); 
   };
 
-  const getCoinSellingPriceInNaira = (coinCode: string) => {
-    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
-
-    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
-    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
-
-    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
-    const dollarValue = parseFloat(String(dollarPrice));
-
-    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
-
-    const priceInNaira = priceInUsd * dollarValue;
-    return { priceInNaira, priceInUsd, dollarValue };
+    const getSellingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    if (prices) {
+      return prices.find(p => p.coin_id === id)?.selling;
+    }
   };
 
-  const handleSelectPackage = (package_name: dataPackageProps) => {
-    setSelectedPackage(package_name.payment_item_name);
-    setSelectedPackageDetails(package_name);
-    if (activeButton === 'fiat') {
-      setValue('paymentAmount', package_name.amount.toString())
-    } else {
-      setValue('paymentAmount', (package_name.amount / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000)).toFixed(6))
+  const getBuyingPrice = (coinCode: string) => {
+    const id = getCoinId(coinCode);
+    if (prices) {
+      return prices.find(p => p.coin_id === id)?.buying;
     }
-    setValue('inputAmount', package_name.payment_item_name);
-    setIsNetworkDataPackageOpen(false);
   };
 
     const {data:liveRates } = useQuery({
@@ -206,24 +175,8 @@ const Datapurchase = () => {
       queryKey: ['coin-prices'],
       queryFn: fetchAllCoinPrices,
       enabled: activeButton === 'crypto'
-    });
-
-  const inputAmount = watch("inputAmount");
-  const paymentAmount = watch("paymentAmount");
-
-  const getSellingPrice = (coinCode: string) => {
-    const id = getCoinId(coinCode);
-    if (prices) {
-      return prices.find(p => p.coin_id === id)?.selling;
-    }
-  };
-
-  const getBuyingPrice = (coinCode: string) => {
-    const id = getCoinId(coinCode);
-    if (prices) {
-      return prices.find(p => p.coin_id === id)?.buying;
-    }
-  };
+    })
+    
 
   const dollarPrice = React.useMemo(() => {
     if (activeButton === 'crypto') {
@@ -233,21 +186,70 @@ const Datapurchase = () => {
     }
   }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
 
-  const currentRate = getCoinSellingPriceInNaira(selectPayment);
-   
-  const fiatPaymentOptions = [
-    { value: 'NGN', logo: ngnlogo },
-    { value: 'USD', logo: ngnlogo },
-    { value: 'EUR', logo: ngnlogo },
-    { value: 'GBP', logo: ngnlogo },
-  ];
+    const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
 
-  const paymentOptions = [
-    { value: 'BTC', logo: btcLogo },
-    { value: 'ETH', logo: ETHLogo },
-    { value: 'USDT', logo: USDTLogo },
-    { value: 'SOL', logo: SOLLogo },
-  ];
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
+
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
+
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
+
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
+  const currentRate = getCoinSellingPriceInNaira(selectPayment);
+
+    const currentCoinPrice = React.useMemo(() => {
+      if (!selectPayment) return undefined;
+      const nairaValue = getCoinSellingPriceInNaira(selectPayment)
+      return nairaValue?.priceInNaira;
+    }, [selectPayment, liveRates, dollarPrice]);
+
+    useEffect(() => {
+    if (dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
+      setSelectedPackage(dataPackages[0].payment_item_name);
+      setSelectedPackageDetails(dataPackages[0]);
+      setValue('inputAmount', dataPackages[0].payment_item_name);
+      if (activeButton === 'fiat') {
+        setValue('paymentAmount', dataPackages[0].amount.toString())
+      } else {
+        // setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
+        setValue('paymentAmount', (dataPackages[0].amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+      }
+    } else {
+      setSelectedPackage('Package Loading...')
+    }
+  }, [dataPackageStatus, dataPackages, activeButton, currentCoinPrice])
+
+  const handleSelectPackage = (package_name: dataPackageProps) => {
+    setSelectedPackage(package_name.payment_item_name);
+    setSelectedPackageDetails(package_name);
+    if (activeButton === 'fiat') {
+      setValue('paymentAmount', package_name.amount.toString())
+    } else {
+      setValue('paymentAmount', (package_name.amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+    }
+    setValue('inputAmount', package_name.payment_item_name);
+    setIsNetworkDataPackageOpen(false);
+  };
+   
+  // const fiatPaymentOptions = [
+  //   { value: 'NGN', logo: ngnlogo },
+  //   { value: 'USD', logo: ngnlogo },
+  //   { value: 'EUR', logo: ngnlogo },
+  //   { value: 'GBP', logo: ngnlogo },
+  // ];
+
+  // const paymentOptions = [
+  //   { value: 'BTC', logo: btcLogo },
+  //   { value: 'ETH', logo: ETHLogo },
+  //   { value: 'USDT', logo: USDTLogo },
+  //   { value: 'SOL', logo: SOLLogo },
+  // ];
 
   React.useEffect(() => {
     setSelectedBill('data');
@@ -415,7 +417,7 @@ const Datapurchase = () => {
                   { activeButton === 'crypto' ? (
                     <>
                       <img
-                        src={paymentOptions.find(option => option.value === selectPayment)?.logo}
+                        src={coin?.find(option => option.coin === selectPayment)?.icon}
                         alt={selectPayment}
                         className="size-6 mr-2"
                       />
@@ -424,7 +426,7 @@ const Datapurchase = () => {
                   ) : (
                     <>
                       <img
-                        src={fiatPaymentOptions.find(option => option.value === fiatPayment)?.logo}
+                        src={stables?.find(option => option.coin === fiatPayment)?.icon}
                         alt={fiatPayment}
                         className="size-6 mr-2"
                       />

@@ -322,3 +322,23 @@ export const usePendingTransactionDetailsModal = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+export const useConfirmBillsModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+export const useFiatBillsPaymentModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+export const useCryptoBillsPaymentModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+
+

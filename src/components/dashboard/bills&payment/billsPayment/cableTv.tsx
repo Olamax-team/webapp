@@ -130,9 +130,10 @@ const CableTv = () => {
 
   const inputAmount = watch("inputAmount");
   const paymentAmount = watch("paymentAmount");
+  const [lastChanged, setLastChanged] = useState<'amount1' | 'amount2' | null>(null);
 
-  // const [amount1, setAmount1] = useState<string>("0");
-  // const [amount2, setAmount2] = useState<string>("0");
+  const [amount1, setAmount1] = useState<string>("0");
+  const [amount2, setAmount2] = useState<string>("0");
 
   const [selectedNetwork, setSelectedNetwork] = useState(tvServices ? tvServices[0].abrv : 'DSTV');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<cableServicesProps | undefined>(() => tvServices && tvServices.length > 0 ? tvServices[0] : undefined);
@@ -146,7 +147,7 @@ const CableTv = () => {
 
   const { setItem } = useBillsStore();
 
-  const [fiatPayment, setFiaPayment] = useState('NGN');
+  const [fiatPayment, setFiaPayment] = useState((stables && stables.length > 0) ? stables[0].coin : 'NGN');
   const [activeButton, setActiveButton] = useState(billServices ? billServices[0].cs : 'fiat');
   
   const handleSelectChange = (network: cableServicesProps) => {
@@ -202,6 +203,12 @@ const CableTv = () => {
 
   const currentRate = getCoinSellingPriceInNaira(selectPayment);
 
+    const currentCoinPrice = React.useMemo(() => {
+      if (!selectPayment) return undefined;
+      const nairaValue = getCoinSellingPriceInNaira(selectPayment)
+      return nairaValue?.priceInNaira;
+    }, [selectPayment, liveRates, dollarPrice]);
+
   const handleSelectPackage = (package_name: packageProps) => {
     setSelectedPackage(package_name.payment_item_name);
     setSelectedPackageDetails(package_name);
@@ -214,18 +221,56 @@ const CableTv = () => {
     setIsNetworkDataPackageOpen(false);
   };
 
-  console.log(selectedPackageDetails);
-
-  //autofill for both inputs
-  const price = useMemo(() => {
-    if (activeButton === 'crypto') {
-      return getSellingPrice(selectPayment);
-    } else {
-      return getBuyingPrice(selectPayment);
+useEffect(() => {
+    
+    if (lastChanged !== 'amount1') return;
+    if (!amount1) {
+      setAmount2("");
+      setValue("paymentAmount", "");
+      return;
+  }
+  
+    if (dollarPrice) {
+      let newAmount2 = '';
+      if (activeButton === "crypto") {
+        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPrice))).toFixed(6); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newAmount2 = (parseFloat(amount1)).toFixed(2); // NGN
+      }
+  // Updating Zustand state
+      setAmount2(newAmount2);
+      setValue("paymentAmount", newAmount2);
     }
-  }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
+  }, [amount1, fiatPayment, activeButton, prices, coin, lastChanged]);
 
-  console.log('price', price)
+  useEffect(() => {
+    if (lastChanged !== 'amount2') return;
+    if (!amount2) {
+      setAmount1("");
+      setValue("inputAmount", "");
+      return;
+      }
+  
+    if (dollarPrice) {
+      let newAmount1 = '';
+      if (activeButton === "crypto") {
+        newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPrice))).toFixed(2); // NGN → crypto
+      } else if (activeButton === 'fiat') {
+        newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
+      }
+      setAmount1(newAmount1);
+      setValue("inputAmount", newAmount1);
+    }
+  }, [amount2, selectPayment, activeButton, prices, coin, lastChanged, currentCoinPrice]);
+
+  // //autofill for both inputs
+  // const price = useMemo(() => {
+  //   if (activeButton === 'crypto') {
+  //     return getSellingPrice(selectPayment);
+  //   } else {
+  //     return getBuyingPrice(selectPayment);
+  //   }
+  // }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
 
   // useEffect(() => {
     

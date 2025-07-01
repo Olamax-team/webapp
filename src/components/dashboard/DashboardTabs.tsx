@@ -35,7 +35,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
     alert("copied!");
   };
 
-  const { user, kycStatus, fetchKycStatus } = useUserDetails();
+  const { user,  fetchKycStatus } = useUserDetails();
 
     const openConfirmVerification = useConfirmVerificationModal();
     
@@ -45,8 +45,6 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
       }
     }, [user]);
 
-    console.log(kycStatus)
-
     React.useEffect(() => {
       if (user && user.account_status === 'Unverified') {
         openConfirmVerification.onOpen();
@@ -54,16 +52,6 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
         openConfirmVerification.onClose();
       }
     }, [user, user?.account_status])
-
-    // const hasOpenedRef = React.useRef(false);
-    // React.useEffect(() => {
-    //   if (user && user.account_status === 'Unverified' && !hasOpenedRef.current) {
-    //     openConfirmVerification.onOpen();
-    //     hasOpenedRef.current = true; 
-    //   } else {
-    //     openConfirmVerification.onClose();
-    //   }
-    // }, [isVerified, user, openConfirmVerification.onOpen, openConfirmVerification.onClose]);
 
   return (
     <div className="flex flex-col w-full h-auto">
@@ -231,9 +219,7 @@ const DashboardTab: React.FC = () => {
           </div>
         </>
       ) : (
-        <TradeDetails
-          activeInput={selectedBill}
-          />
+        <TradeDetails activeInput={selectedBill}/>
 
       )}
     </section>

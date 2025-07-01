@@ -59,7 +59,9 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     fetchDataPurchaseNetworks,
     fetchAllCoinPrices,
     fetchStableCoins,
-    fetchAllCoins
+    fetchAllCoins, 
+    fetchPackages,
+    fetchLiveRates
   } = useFetchStore();
 
   const airtimeDetails = useBillsStore();
@@ -71,16 +73,38 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   const { data: coin, status: coinStatus } = useQuery({ queryKey: ['all-coins'], queryFn: fetchAllCoins });
   const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills-service'], queryFn: fetchBillServices });
   const { data: airtimeNetworks, status:airtimeNetworkStatus } = useQuery({ queryKey: ['airtime-networks'], queryFn: fetchNetworkAirtime });
-  const { data: networkOptionsList, status:networkOptionStatus } = useQuery({ queryKey: ['data-networks'], queryFn: fetchDataPurchaseNetworks }); console.log("netoption",networkOptionsList)
-  const { data: prices } = useQuery({ queryKey: ['coin-prices'], queryFn: fetchAllCoinPrices });
+  const { data: networkOptionsList, status:networkOptionStatus } = useQuery({ queryKey: ['data-networks'], queryFn: fetchDataPurchaseNetworks });
+  const { data:packageDetails} = useQuery({queryKey: ['package-data'], queryFn: () => fetchPackages(Number(selectedNetworkDetails?.product_number) || 0)})
+    const {data:liveRates } = useQuery({
+      queryKey: ['live-rates'],
+      queryFn: fetchLiveRates,
+    });
+
+  React.useEffect(() => {
+    if (networkOptionsList && networkOptionsList.length > 0) {
+      setSelectedNetwork(networkOptionsList[0].network)  
+    }
+  }, [networkOptionsList])
 
   // ===== Local State =====
   const [cat0, setCat0] = useState("Airtime");
   const [subTab, setSubTab] = useState(billServices?.[0]?.cs ?? "fiat");
 
-  const [selectedNetwork, setSelectedNetwork] = useState<string>(
-    networkOptionsList?.[0]?.network ?? "MTN"
-  );
+    const { data:prices } = useQuery({
+      queryKey: ['coin-prices'],
+      queryFn: fetchAllCoinPrices,
+      enabled: subTab === 'crypto'
+    });
+  
+  
+    const getSellingPrice = (coinCode: string) => {
+      const id = getCoinId(coinCode);
+      if (prices) {
+        return prices.find(p => p.coin_id === id)?.selling;
+      }
+    };
+
+  const [selectedNetwork, setSelectedNetwork] = useState<string>(networkOptionsList ? networkOptionsList[0].network : "MTN");
 
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<AirtimeNetwork | undefined>(
     networkOptionsList?.[0]
@@ -140,7 +164,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
   } = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema),
     defaultValues: {
@@ -148,6 +172,47 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
       paymentAmount: ""
     }
   });
+
+
+    const dollarPrice = React.useMemo(() => {
+    if (subTab === 'crypto') {
+        return getSellingPrice(prop2);
+    } else {
+        return getBuyingPrice(prop2);
+    }
+    }, [subTab, prices, coin]);
+      
+
+
+const getCoinSellingPriceInNaira = (coinCode: string) => {
+    if (!coinCode || !liveRates || liveRates.length === 0) return undefined;
+
+    const currentCoin = liveRates.find((item) => item.symbol === coinCode);
+    if (!currentCoin || !currentCoin.price || !dollarPrice) return undefined;
+
+    const priceInUsd = parseFloat(currentCoin.price.replace(/,/g, ""));
+    const dollarValue = parseFloat(String(dollarPrice));
+
+    if (isNaN(priceInUsd) || isNaN(dollarValue)) return undefined;
+
+    const priceInNaira = priceInUsd * dollarValue;
+    return { priceInNaira, priceInUsd, dollarValue };
+  };
+
+    const currentRate = getCoinSellingPriceInNaira(prop2);
+    const coinId = getCoinId(prop2);
+
+    const currentCoinPrice = React.useMemo(() => {
+      if (!prop2) return undefined;
+      const nairaValue = getCoinSellingPriceInNaira(prop2)
+      return nairaValue?.priceInNaira;
+    }, [prop2, liveRates, dollarPrice, coin, prop1, coinId]);
+
+    console.log(prop1)
+    console.log(prop2)
+
+    console.log(currentCoinPrice)
+    console.log(currentRate?.priceInUsd);
   
   const handleSelectPackage = (package_name: dataPackageProps) => {
     setSelectedPackage(package_name.payment_item_name);
@@ -157,8 +222,8 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
       setValue('paymentAmount', package_name.amount.toString())
     } else {
         //WE DONOT KNOW THE FORMULA YET
-      setAmount2((package_name.amount / 1000).toFixed(6))
-      setValue('paymentAmount', (package_name.amount / 1000).toFixed(6))
+      setAmount2((package_name.amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+      setValue('paymentAmount', (package_name.amount / parseFloat(String(currentCoinPrice))).toFixed(6))
     }
     setAmount1(package_name.payment_item_name);
     setValue('inputAmount', package_name.payment_item_name);
@@ -171,18 +236,18 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         setSelectedPackageDetails(dataPackages[0]);
         setAmount1(dataPackages[0].payment_item_name);
         setValue('inputAmount', dataPackages[0].payment_item_name);
-        if (subTab === 'crypto') {
-            //WE DONOT KNOW THE FORMULA YET
-            setAmount2((dataPackages[0].amount / 1000).toFixed(6))
-            setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
+            if (subTab === 'crypto') {
+                //WE DONOT KNOW THE FORMULA YET
+                setAmount2((dataPackages[0].amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+                setValue('paymentAmount', (dataPackages[0].amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+            } else {
+                setAmount2(dataPackages[0].amount.toString())
+                setValue('paymentAmount', dataPackages[0].amount.toString())
+            }
         } else {
-            setAmount2(dataPackages[0].amount.toString())
-            setValue('paymentAmount', dataPackages[0].amount.toString())
+            setSelectedPackage('Package Loading...')
         }
-        } else {
-        setSelectedPackage('Package Loading...')
-        }
-    }, [dataPackageStatus, dataPackages, subTab])
+    }, [dataPackageStatus, dataPackages, subTab, cat0, dataPackages?.length, currentCoinPrice])
 
     //autofill for both inputs
     useEffect(() => {
@@ -195,14 +260,14 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         if (price) {
             let newAmount2 = '';
             if (subTab === "crypto") {
-            newAmount2 = amount1 ? (parseFloat(amount1) / parseFloat(price)).toFixed(6) : "0.00000"; // NGN → crypto
+            newAmount2 = amount1 ? (parseFloat(amount1) / parseFloat(String(currentCoinPrice))).toFixed(6) : "0.00000"; // NGN → crypto
             } else if (subTab === 'fiat') {
             newAmount2 = amount1 ? (parseFloat(amount1)).toFixed(2) : "0.00"; // crypto → NGN
             }
             setAmount2(newAmount2);
             setValue("paymentAmount", newAmount2);
         }
-        }, [amount1, prop1, subTab, prices, lastChanged]);
+        }, [amount1, prop1, subTab, prices, lastChanged, currentCoinPrice]);
 
 
     useEffect(() => {
@@ -215,14 +280,14 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         if (price) {
         let newAmount1 = '';
         if (subTab === "crypto") {
-            newAmount1 = amount2 ? (parseFloat(amount2) * parseFloat(price)).toFixed(2): "0.00000"; // NGN → crypto
+            newAmount1 = amount2 ? (parseFloat(amount2) * parseFloat(String(currentCoinPrice))).toFixed(2): "0.00000"; // NGN → crypto
         } else if (subTab === 'fiat') {
             newAmount1 = amount2 ? (parseFloat(amount2)).toFixed(2) : "0.00"; // crypto → NGN
         }
         setAmount1(newAmount1);
         setValue("inputAmount", newAmount1);
         }
-    }, [amount2, prop2, subTab, prices, lastChanged]);
+    }, [amount2, prop2, subTab, prices, lastChanged, currentCoinPrice]);
 
 
     useEffect(() => {
@@ -254,18 +319,28 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
         };
 
         const Payload = {
-          selectedNetwork,
-          selectPayment: subTab === "fiat" ? "" : prop2,
-          inputAmount: amount1,
-          paymentAmount: amount2,
-          fiatPayment: subTab === "fiat" ? prop1 : "",
+            ...data,
+            coin_token_id: coinId,
+            transaction_type: subTab,
+            selectedNetwork: selectedNetwork,
+            selectPayment: subTab === "fiat" ? prop1 : prop2,
+            inputAmount: amount1,
+            paymentAmount: amount2,
+            coin_amount: subTab === 'crypto' ?  Number(amount2) : undefined,
+            naira_amount: subTab === 'crypto' ? Number(data.inputAmount) : Number(data.paymentAmount),
+            package_product_number: cat0 === 'Airtime' ? (packageDetails && packageDetails.length > 0 ? packageDetails[0].product_number : undefined) : selectedPackageDetails?.product_number,
+            network: selectedNetwork,
+            current_rate: currentRate?.priceInUsd,
+            bills: cat0 === 'Airtime' ? 'airtime' : 'data'
         };
-        console.log('pay',Payload);
+
+        console.log(Payload);
+
         setActive(cat0 === 'Airtime' ? 0 : 1);
         navigate('/dashboard/bills_payment');
         setShowTransactionDetail(true);
         setSelectedBill(cat0 === 'Airtime' ? 'airtime' : 'data');
-        cat0 === 'Airtime' ? airtimeDetails.setItem({ ...data, ...Payload }) : dataDetails.setItem({ ...data, ...Payload });
+        cat0 === 'Airtime' ? airtimeDetails.setItem(Payload) : dataDetails.setItem(Payload);
       };
       
   return (
@@ -299,7 +374,7 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
                                 </p>
                                 <select
                                 value={cat0}
-                                onChange={(e) => setCat0(e.target.value)}
+                                onChange={(e) => {setCat0(e.target.value);}}
                                 className="ml-auto p-2 bg-bg text-textDark rounded-md text-right"
                                 >
                                 {airtimeOptions.map((prop) => (

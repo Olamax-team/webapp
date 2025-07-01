@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,7 +16,6 @@ import BillsDetails from "../dashboard/bills&payment/billsDetails";
 // ===== Types =====
 interface airtimePaymentProps {
   className?: string;
-  airtimeOptions: string[];
 }
 
 type billsLinkProps = {
@@ -28,13 +26,13 @@ type billsLinkProps = {
 // ===== Component =====
 const AirtimePayment: React.FC<airtimePaymentProps> = ({
   className,
-  airtimeOptions,
+  
 }) => {
   const { active, showTransactionDetail, selectedBill } = activityIndex();
   const { user, fetchKycDetails } = useUserDetails();
 
   const {
-    fetchBillServices,
+    fetchBills,
   } = useFetchStore();
 
   // ===== Effect Hooks =====
@@ -50,35 +48,42 @@ const BillsIink = ({ index}: billsLinkProps) => {
 
   return (
     <select
-    key={index}
-    value={cat0}
-    onChange={(e) => { setCat0(e.target.value);        
-        setActive(index); }}
-    className="ml-auto p-2 bg-white text-textDark rounded-md text-right"
->
-    {airtimeOptions.map((prop) => (
-    <option key={prop} value={prop} className="text-center">
-        {prop}
-    </option>
-    ))}
-</select>
+        key={index}
+        value={cat0}
+        onChange={(e) => { setCat0(e.target.value);        
+            setActive(index); }}
+        className="ml-auto p-2 bg-white text-textDark rounded-md text-right"
+    >
+        {categories.map((prop) => (
+        <option key={prop} value={prop} className="text-center">
+            {prop}
+        </option>
+        ))}
+    </select>
   );
 };
 
   // ===== Queries =====
-  const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills-service'], queryFn: fetchBillServices });
+  const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills'], queryFn: fetchBills });
+  const categories = billServices?.slice(0,2).map((service) => service.service) ?? [];
+  const [cat0, setCat0] = useState<string>("");
 
-  // ===== Local State =====
-  const [cat0, setCat0] = useState("Airtime");
+  // If cat0 is empty and categories[0] exists, set cat0 to categories[0]
+  if (!cat0 && categories[0]) {
+    setCat0(categories[0]);
+  }
+
+  const selectedIndex = categories.findIndex((cat) => cat === cat0);
+  console.log("Selected Index:", selectedIndex);
   
   const renderBill = () => {
-    switch (active) {
+    switch (selectedIndex) {
       case 0:
         return <AirtimeRecharge />;
       case 1:
         return <Datapurchase />;
       default:
-        return null;
+        return null; 
     }
   };
 
@@ -114,8 +119,8 @@ const BillsIink = ({ index}: billsLinkProps) => {
                       Choose Category
                     </p>
                         <BillsIink
-                            key={cat0 === "Airtime" ? 1 : 0}
-                            index={cat0 === "Airtime" ? 1 : 0}
+                            key={selectedIndex}
+                            index={selectedIndex}
                             active={active}
                             name={cat0}
                         />
