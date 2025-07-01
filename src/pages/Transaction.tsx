@@ -13,15 +13,41 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-type pagiantionProps = {
-  total: number;
-  per_page: number;
+
+interface transaction {
+  id: number;
+  user_id: number;
+  created_at: string;
+  ref: string;
+  coin_id: string;
+  coin_name: string;
+  payment_method: string;
+  naira_value: number;
+  payment_status: string;
+  transaction_charges: number | null;
+  type: string;
+}
+
+interface link {
+  url: string | null;
+  label: string;
+  active: boolean;
+}
+
+interface transactionHistory {
   current_page: number;
-  last_page: number;
-  next_page_url: string;
-  prev_page_url: string;
+  data: transaction[];
+  first_page_url: string;
   from: number;
+  last_page: number;
+  last_page_url: string;
+  links: link[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
   to: number;
+  total: number;
 }
 
 type transactionProps = {
@@ -38,12 +64,6 @@ type transactionProps = {
   type: string;
 };
 
-type transactionDetails = {
-  pagination: pagiantionProps;
-  user_id: number;
-  transactions: transactionProps[];
-  status: string;
-};
 
 type dateComponentProps = {
   date: Date | undefined;
@@ -77,14 +97,17 @@ const Transaction = () => {
       throw new Error('Something went wrong, try again later');
     }
   
-    const data = response.data as transactionDetails;
+    const data = response.data as transactionHistory;
     return data;
   };
 
-  const { data:allTransactionDetails, status } = useQuery({
+  const { data:allTransactionData, status } = useQuery({
     queryKey: ['user-tranasctions'],
     queryFn: fetchTranscations,
   });
+
+  const allTransactionDetails = allTransactionData?.data
+  console.log(allTransactionDetails)
 
 
   const DateComponent = ({date, setDate, placeholder}:dateComponentProps) => {
@@ -153,7 +176,7 @@ const Transaction = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allTransactionDetails && allTransactionDetails.transactions && allTransactionDetails.transactions.length > 0 &&  allTransactionDetails.transactions.map((item) => (
+          {allTransactionDetails && allTransactionDetails.length > 0 && allTransactionDetails.map((item) => (
             <TableRow className="border-b-0 h-[60px] even:bg-white font-Inter even:hover:bg-white odd:bg-[#f5f5f5]" key={item.id}>
               <TableCell className="text-center">{format(new Date(item.created_at), 'dd/MM/yyyy')}</TableCell>
               <TableCell className="text-center">{item.id}</TableCell>
@@ -236,14 +259,20 @@ const Transaction = () => {
 
     return (
       <React.Fragment>
-        {allTransactionDetails && allTransactionDetails.transactions && allTransactionDetails.transactions.length > 0 &&  allTransactionDetails.transactions.map((item:transactionProps, index:number) => (
-          <MobileTransactionItem
-            key={index} 
-            open={index === currentIndex} 
-            toggleTable={() => toggleTranscationItem(index)} 
-            transaction={item}
-          />
-        ))}
+        {allTransactionDetails && allTransactionDetails.length > 0 && allTransactionDetails.map((item: transaction, index: number) => {
+          const transactionPropsObj: transactionProps = {
+            ...item,
+            transaction_charges: item.transaction_charges !== null ? item.transaction_charges.toString() : "0"
+          };
+          return (
+            <MobileTransactionItem
+              key={index}
+              open={index === currentIndex}
+              toggleTable={() => toggleTranscationItem(index)}
+              transaction={transactionPropsObj}
+            />
+          );
+        })}
       </React.Fragment>
     )
   };
