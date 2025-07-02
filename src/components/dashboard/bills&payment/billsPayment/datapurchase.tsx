@@ -2,14 +2,9 @@ import React, {useEffect, useState,  } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { formValidationSchema } from "../../../formValidation/formValidation";
 import arrowIcon from '../../../../assets/images/arrowdown.svg'; 
-import btcLogo from '../../../../assets/images/BTC Circular.png'
-import ETHLogo from '../../../../assets/images/ETH Circular.png'
-import USDTLogo from '../../../../assets/images/USDT Circular.png'
-import SOLLogo from '../../../../assets/images/SOL Circular.png'
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-import ngnlogo from '../../../../assets/images/NGN Circular.png';
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
@@ -242,19 +237,19 @@ const Datapurchase = () => {
     setIsNetworkDataPackageOpen(false);
   };
    
-  const fiatPaymentOptions = [
-    { value: 'NGN', logo: ngnlogo },
-    { value: 'USD', logo: ngnlogo },
-    { value: 'EUR', logo: ngnlogo },
-    { value: 'GBP', logo: ngnlogo },
-  ];
+  // const fiatPaymentOptions = [
+  //   { value: 'NGN', logo: ngnlogo },
+  //   { value: 'USD', logo: ngnlogo },
+  //   { value: 'EUR', logo: ngnlogo },
+  //   { value: 'GBP', logo: ngnlogo },
+  // ];
 
-  const paymentOptions = [
-    { value: 'BTC', logo: btcLogo },
-    { value: 'ETH', logo: ETHLogo },
-    { value: 'USDT', logo: USDTLogo },
-    { value: 'SOL', logo: SOLLogo },
-  ];
+  // const paymentOptions = [
+  //   { value: 'BTC', logo: btcLogo },
+  //   { value: 'ETH', logo: ETHLogo },
+  //   { value: 'USDT', logo: USDTLogo },
+  //   { value: 'SOL', logo: SOLLogo },
+  // ];
 
   React.useEffect(() => {
     setSelectedBill('data');
@@ -422,7 +417,7 @@ const Datapurchase = () => {
                   { activeButton === 'crypto' ? (
                     <>
                       <img
-                        src={paymentOptions.find(option => option.value === selectPayment)?.logo}
+                        src={coin?.find(option => option.coin === selectPayment)?.icon}
                         alt={selectPayment}
                         className="size-6 mr-2"
                       />
@@ -431,7 +426,7 @@ const Datapurchase = () => {
                   ) : (
                     <>
                       <img
-                        src={fiatPaymentOptions.find(option => option.value === fiatPayment)?.logo}
+                        src={stables?.find(option => option.coin === fiatPayment)?.icon}
                         alt={fiatPayment}
                         className="size-6 mr-2"
                       />

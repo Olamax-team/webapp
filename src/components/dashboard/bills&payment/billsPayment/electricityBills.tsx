@@ -259,7 +259,7 @@ const ElectricityBills = () => {
       let newinputAmount = '';
       if (activeButton === "crypto") {
         //WE DONOT KNOW THE FORMULA YET
-        newinputAmount = (parseFloat(amount2) * parseFloat(dollarPrice)).toFixed(2); // NGN → crypto
+        newinputAmount = (parseFloat(amount2) * parseFloat(String(currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000))).toFixed(2); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newinputAmount = (parseFloat(amount2)).toFixed(2); 
       }

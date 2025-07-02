@@ -45,7 +45,8 @@ type AirtimeNetwork = {
 };
 
 // ===== Component =====
-const AirtimePayment: React.FC<airtimePaymentProps> = ({className,
+const AirtimePayment: React.FC<airtimePaymentProps> = ({
+  className,
   airtimeOptions,
 }) => {
 
@@ -105,7 +106,9 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({className,
 
   const [selectedNetwork, setSelectedNetwork] = useState<string>(networkOptionsList ? networkOptionsList[0].network : "MTN");
 
-  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<AirtimeNetwork | undefined>(networkOptionsList ? networkOptionsList[0] : undefined);
+  const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<AirtimeNetwork | undefined>(
+    networkOptionsList?.[0]
+  );
 
   const [selectedPackage, setSelectedPackage] = useState('');
   const [selectedPackageDetails, setSelectedPackageDetails] = useState<dataPackageProps | undefined>();
@@ -144,9 +147,9 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({className,
   };
 
   const { data: dataPackages, status: dataPackageStatus } = useQuery({
-    queryKey: ['data-packages', selectedNetwork],
+    queryKey: ['data-packages', selectedNetwork, selectedNetworkDetails?.product_number],
     queryFn: fetchDataPackages,
-    enabled: networkOptionsList && networkOptionsList.length > 0 && networkOptionsList[0].network !== ''
+    enabled: !!selectedNetworkDetails?.product_number
   });
   
   const isReadyAndAvailable = dataPackageStatus === 'success' && dataPackages.length > 0;
@@ -228,7 +231,7 @@ const getCoinSellingPriceInNaira = (coinCode: string) => {
   };
 
     useEffect(() => {
-        if (cat0 === "Data" && dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
+        if (cat0==="Data" && dataPackageStatus === 'success' && dataPackages && dataPackages.length > 0) {
         setSelectedPackage(dataPackages[0].payment_item_name);
         setSelectedPackageDetails(dataPackages[0]);
         setAmount1(dataPackages[0].payment_item_name);
@@ -292,6 +295,9 @@ const getCoinSellingPriceInNaira = (coinCode: string) => {
            fetchKycDetails(); 
         }
     }, [user])
+
+
+    console.log(selectedPackageDetails);
     
     const handleSelectChange = (network: AirtimeNetwork) => {
         setSelectedNetwork(network.network);
@@ -349,7 +355,7 @@ const getCoinSellingPriceInNaira = (coinCode: string) => {
                             <button
                             key={item.cs}
                             type="button"
-                            onClick={() => {setSubTab(item.cs); }}
+                            onClick={() => {setSubTab(item.cs)}}
                             className={`${item.act === 'off' && 'hidden'} mt-[30px] w-[60px] xl:w-[80px] xl:h-[44px] h-[32px] rounded-md font-poppins font-semibold text-[12px] xl:text-[16px] leading-[18px] xl:leading-[24px] p-5 items-center justify-center flex uppercase ${subTab === item.cs ? 'bg-[#f5f5f5] text-[#039AE4]' : 'bg-transparent text-[#121826]'}`}
                             >
                             {item.cs}
@@ -413,7 +419,6 @@ const getCoinSellingPriceInNaira = (coinCode: string) => {
                                         <p>DataPackages not available</p>
                                     </div>
                                     )}
-
                                     { dataPackageStatus === 'error' && (
                                     <div className="flex items-center justify-center w-full h-full px-2">
                                         <p>Error occured while loading data packages. Try again later.</p>
