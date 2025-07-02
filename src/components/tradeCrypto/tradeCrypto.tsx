@@ -2,16 +2,14 @@ import { useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import IndicatorButtonGroup from "./indicator";
 import CryptoMarketToday from "./cryptoMarketToday";
-import BillsPayment from "./billsPayment";
+import BillsPayment from "./billsPayment1";
 import AirtimePayment from "./airtime2";
 import BuySell from "./buy/buySell";
 
 
 const TradeCrypto = () => {
   const [activeTab, setActiveTab] = useState("Buy & Sell Crypto");
-  const categories = ["Electricity", "CableTV"];
   const tabs = ["Buy & Sell Crypto", "Airtime & Data", "Bills & Payment"];
-  const airtimeOptions = ["Airtime", "Data" ];
 
   const handleTabClick = (index: number) => {
     const selectedTab = tabs[index];
@@ -27,11 +25,11 @@ const TradeCrypto = () => {
         );
       case "Airtime & Data":
         return (
-          <AirtimePayment airtimeOptions={airtimeOptions}/>
+          <AirtimePayment/>
       );
     case "Bills & Payment":
       return (
-        <BillsPayment categories={categories}/>
+        <BillsPayment/>
       );
     default:
       return null;
