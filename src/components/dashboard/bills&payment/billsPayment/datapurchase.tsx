@@ -90,7 +90,7 @@ const Datapurchase = () => {
     queryFn: fetchStableCoins,
   });
 
-  const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0].network : 'MTN');
+  const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0].network : 'Select Network');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0] : undefined);
   
   const [selectPayment, setSelectPayment] = useState((coin && coin.length > 0) ? coin[0].coin : 'BTC');
@@ -221,7 +221,7 @@ const Datapurchase = () => {
         setValue('paymentAmount', (dataPackages[0].amount / parseFloat(String(currentCoinPrice))).toFixed(6))
       }
     } else {
-      setSelectedPackage('Package Loading...')
+      setSelectedPackage('Select Network Provider')
     }
   }, [dataPackageStatus, dataPackages, activeButton, currentCoinPrice])
 
@@ -265,13 +265,14 @@ const Datapurchase = () => {
     if (!user) {
       navigate("/log-in");
       return;
-    }
+    };
+
     if (user && kycDetails) {
-      if (kycDetails.status === 'Unverified') {
+      if (kycDetails.status === 'Unverified' || kycDetails.status === 'pending' || kycDetails.status === 'Pending') {
         navigate("/dashboard/identity_verification"); 
         return;
       }
-    }
+    };
 
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
@@ -359,11 +360,13 @@ const Datapurchase = () => {
                   className="cursor-pointer   bg-white xl:text-[16px] text-[13px] leading-[19.5px] text-[#212121] lg:mt-4 mt-3 w-full h-[40px]  xl:h-[40px] border border-none rounded-sm flex items-center justify-between  focus:outline-none focus:ring-0   "
                   onClick={() => {setIsNetworkDropdownOpen(!isNetworkDropdownOpen); setIsNetworkDataPackageOpen(false)}}
                 >
-                  <img
-                    src={networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList.find(option => option.network === selectedNetwork)?.icon : '/images/MTN Circular.png'}
-                    alt={selectedNetwork}
-                    className="size-6 mr-2 rounded-full"
-                  />
+                  { selectedNetwork === 'Select Network' ? <div className="invisible"/> :
+                    <img
+                      src={networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList.find(option => option.network === selectedNetwork)?.icon : '/images/MTN Circular.png'}
+                      alt={selectedNetwork}
+                      className="size-6 mr-2 rounded-full"
+                    />
+                  }
                   <span className="flex">{networkOptionStatus === 'pending' ? <Loader2 className="animate-spin"/> : selectedNetwork} <HiChevronDown   className="size-6"/>             
                   </span>
                 </div>

@@ -346,13 +346,14 @@ const CableTv = () => {
     if (!user) {
       navigate("/log-in");
       return;
-    }
+    };
+
     if (user && kycDetails) {
-      if (kycDetails.status === 'Unverified') {
+      if (kycDetails.status === 'Unverified' || kycDetails.status === 'pending' || kycDetails.status === 'Pending') {
         navigate("/dashboard/identity_verification"); 
         return;
       }
-    }
+    };
 
     const regdata = {...data,
       selectPayment: activeButton === 'crypto' ? selectPayment : fiatPayment,
