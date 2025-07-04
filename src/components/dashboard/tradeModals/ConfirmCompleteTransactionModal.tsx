@@ -54,15 +54,15 @@ const ConfirmCompleteTransaction = () => {
       onClose={onClose}
       useCloseButton={false}
       title={item?.tradeType === 'sell' ? 'Continue Transaction' :  'Complete Transaction'}
-      modalSize='w-[420px]'
+      modalSize='max-w-[420px] w-full'
     >
       <div className='flex font-Inter flex-col gap-10'>
         <p className='text-sm lg:text-base'>{item?.tradeType === 'sell' ? 'Are you sure you want to continue with this transaction' : 'Are you sure you want to proceed with the transaction process?'}</p>
         <div className="flex items-center justify-between gap-4">
-          <button className='w-full font-poppins h-12 rounded-lg bg-primary text-white cursor-pointer' onClick={completeTransaction} >
+          <button className='w-full font-poppins h-12 rounded-lg bg-primary text-white cursor-pointer text-sm' onClick={completeTransaction} >
             {isLoading ? 'Completing ...' : 'Yes'}
           </button>
-          <button className='w-full font-poppins h-12 rounded-lg border-primary border text-primary cursor-pointer' onClick={() =>onClose()}>
+          <button className='w-full font-poppins h-12 rounded-lg border-primary border text-primary cursor-pointer text-sm' onClick={() =>onClose()}>
             No
           </button>
         </div>

@@ -85,8 +85,11 @@ const Transaction = () => {
   const [pendingMenu, setPendingMenu] = React.useState('view');
   const [completedMenu, setCompletedMenu] = React.useState('save');
 
+  const formattedTo = toDate ? format(new Date(toDate.toISOString()), 'yyyy-MM-dd') : '';
+  const formattedFrom = fromDate ? format(new Date(fromDate.toISOString()), 'yyyy-MM-dd') : '';
+
   const getTranscationConfig = useApiConfig({
-    url: 'get-transactions-history',
+    url: fromDate && toDate ? `get-transactions-history?begin_date=${formattedFrom}&end_date=${formattedTo}&per_page=10&order=desc`: `get-transactions-history`,
     method: 'get'
   });
   
@@ -102,13 +105,11 @@ const Transaction = () => {
   };
 
   const { data:allTransactionData, status } = useQuery({
-    queryKey: ['user-tranasctions'],
+    queryKey: ['user-tranasctions', fromDate && toDate ],
     queryFn: fetchTranscations,
   });
 
-  const allTransactionDetails = allTransactionData?.data
-  console.log(allTransactionDetails)
-
+  const allTransactionDetails = (fromDate && toDate) ? allTransactionData?.data :  allTransactionData?.data
 
   const DateComponent = ({date, setDate, placeholder}:dateComponentProps) => {
     return (
@@ -125,7 +126,7 @@ const Transaction = () => {
             selected={date}
             onSelect={setDate}
             disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-            initialFocus
+            captionLayout="dropdown"
           />
         </PopoverContent>
       </Popover>
@@ -160,6 +161,14 @@ const Transaction = () => {
       )
     };
 
+    if (status === 'success' && allTransactionDetails && allTransactionDetails.length < 1) {
+      return (
+        <div className="w-full py-5 flex items-center justify-center text-gray-600">
+          {(fromDate && toDate) ? 'You do have any transaction for the query date': 'You have made any transactions yet'}
+        </div>
+      )
+    };
+
     return (
       <Table>
         <TableHeader className="rounded-lg h-[60px] [&_tr]:border-b-0">
@@ -176,7 +185,7 @@ const Transaction = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allTransactionDetails && allTransactionDetails.length > 0 && allTransactionDetails.map((item) => (
+          { allTransactionDetails && allTransactionDetails.length > 0 && allTransactionDetails.map((item) => (
             <TableRow className="border-b-0 h-[60px] even:bg-white font-Inter even:hover:bg-white odd:bg-[#f5f5f5]" key={item.id}>
               <TableCell className="text-center">{format(new Date(item.created_at), 'dd/MM/yyyy')}</TableCell>
               <TableCell className="text-center">{item.id}</TableCell>

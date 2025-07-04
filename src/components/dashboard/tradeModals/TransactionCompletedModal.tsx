@@ -13,7 +13,7 @@ const TransactionCompletedModal = () => {
       onClose={onClose}
       useCloseButton={false}
       title='Transaction Complete'
-      modalSize='w-[420px]'
+      modalSize='max-w-[420px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <p className='text-sm lg:text-base font-Inter'>Your payment has been confirmed and your exchange for   <span className="font-bold">{tradeData.item?.tradeType === "Buy"? `${tradeData.item?.cryptoType} ${tradeData.item?.cryptoAmount}`: `${tradeData.item?.fiatType} ${tradeData.item?.fiatAmount}`}</span> has been processed.</p>

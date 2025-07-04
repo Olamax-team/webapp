@@ -121,7 +121,7 @@ const AirtimeRecharge = () => {
   const [amount1, setAmount1] = useState<string>("0");
   const [amount2, setAmount2] = useState<string>("0");
 
-  const [selectedNetwork, setSelectedNetwork] = useState((airtimeNetworks && airtimeNetworks.length > 0) ? airtimeNetworks[0].network : 'MTN');
+  const [selectedNetwork, setSelectedNetwork] = useState((airtimeNetworks && airtimeNetworks.length > 0) ? airtimeNetworks[0].network : 'Select Network');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => airtimeNetworks && airtimeNetworks.length > 0 ? airtimeNetworks[0] : undefined);
 
   const [selectPayment, setSelectPayment] = useState((coin && coin.length > 0) ? coin[0].coin : 'BTC');
@@ -268,7 +268,7 @@ const AirtimeRecharge = () => {
     if (user) {
       fetchKycDetails();
     }
-  }, [user])
+  }, [user]);
 
   const currentRate = getCoinSellingPriceInNaira(selectPayment);
 
@@ -276,13 +276,14 @@ const AirtimeRecharge = () => {
       if (!user) {
         navigate("/log-in");
         return;
-      }
+      };
+
       if (user && kycDetails) {
-        if (kycDetails.status === 'Unverified') {
+        if (kycDetails.status === 'Unverified' || kycDetails.status === 'pending' || kycDetails.status === 'Pending') {
           navigate("/dashboard/identity_verification"); 
           return;
         }
-      }
+      };
 
     const newData = {
       ...data,
@@ -416,14 +417,16 @@ const AirtimeRecharge = () => {
 
             <div className="relative">
               <div
-                className="cursor-pointer bg-[#f5f5f5] xl:text-[16px] text-[13px] leading-[19.5px] text-[#121826] w-[120px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
+                className="cursor-pointer bg-[#f5f5f5] xl:text-[15px] text-[13px] leading-[19.5px] text-[#121826] text-sm w-[120px] 2xl:w-[150px] h-[25px] xl:w-[135px] xl:h-[32px] border border-none rounded-sm flex items-center justify-center focus:outline-none focus:ring-0 xl:ml-4"
                 onClick={() => {setIsNetworkDropdownOpen(!isNetworkDropdownOpen); setIsPaymentDropdownOpen(false)}}
               >
-                <img
-                  src={airtimeNetworks && airtimeNetworks.find(option => option.network === selectedNetwork)?.icon}
-                  alt={selectedNetwork}
-                  className="size-5 mr-1 rounded-full"
-                />
+                { selectedNetwork === 'Select Network' ? <div className="invisible"/> : 
+                  <img
+                    src={airtimeNetworks && airtimeNetworks.find(option => option.network === selectedNetwork)?.icon}
+                    alt={selectedNetwork}
+                    className="size-5 mr-1 rounded-full"
+                  />
+                }
                 <span>{selectedNetwork}</span>
                 <HiChevronDown className="size-6"/>            
               </div>
