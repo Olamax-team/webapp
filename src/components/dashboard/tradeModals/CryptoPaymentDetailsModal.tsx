@@ -123,8 +123,8 @@ const CryptoPaymentDetailsModal = () => {
                         <div className="bg-textDark text-white p-[42px] w-[40%] h-screen">
                             <h3 className="text-base font-poppins font-semibold mb-4">Information</h3>
                             <div className="space-y-6 items-center justify-center text-sm font-Inter font-normal text-wrap">
-                                <p className="border bg-white bg-opacity-20 p-3 rounded-md">Kindly complete the transaction by making payment to the displayed banking details.</p>
-                                <p className="bg-white bg-opacity-20 border p-3 rounded-md">Please verify the banking details before authorizing the payment, we would not be held responsible if funds are sent to a wrong account.</p>
+                                <p className="border bg-white bg-opacity-20 p-3 rounded-md">Kindly complete the transaction by making payment to the displayed wallet address.</p>
+                                <p className="bg-white bg-opacity-20 border p-3 rounded-md">Please verify the wallet address before authorizing the payment, we would not be held responsible if funds are sent to a wrong wallet address.</p>
                                 <p className="bg-white bg-opacity-20 border p-3 rounded-md">Upon successful payment, click the "I Have Made Payment" button to complete the transaction.</p>
                                 <p className="bg-white bg-opacity-20 border p-3 rounded-md">This transaction has a time limit of 30 minutes before it is cancelled.</p>
                         </div>
@@ -148,16 +148,13 @@ const CryptoPaymentDetailsModal = () => {
                             </div>
                             
                             {/* Account Details */}
-                            <div className="px-5 py-[14px] font-Inter w-[360px] border rounded-md space-y-4">
+                            <div className="px-5 py-[14px] font-Inter w-full border rounded-md space-y-4">
                             <div className='space-y- border-b-2'>
                                 <p className="text-sm text-left text-textDark">Wallet Address</p>
-                                <span className="flex text-center justify-between gap-2 mb-4">
-                                <p className="text-[14px] leading-[21px">{walletAdd}</p>
-                                    <HiOutlineDuplicate 
-                                    size={24}
-                                    className='text-textDark cursor-pointer'
-                                    onClick={copyToClipboard}/>
-                                </span>
+                                <div className="flex items-center justify-between gap-2 mb-4">
+                                    <p className="text-[14px] leading-[21px] text-wrap flex-1">{walletAdd}</p>
+                                    <HiOutlineDuplicate size={24} className='text-textDark cursor-pointer flex-none' onClick={copyToClipboard}/>
+                                </div>
                             </div>
                             <div className='space-y-2'>
                                 <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Network</p>
@@ -186,8 +183,8 @@ const CryptoPaymentDetailsModal = () => {
                     {/* Left Side: Information Panel */}
                     <div className="bg-textDark text-white p-[42px] w-full transition-all duration-300 h-full">
                         <div className="space-y-6 items-center justify-center text-sm font-Inter font-normal text-wrap">
-                            <p className="border bg-white bg-opacity-20 p-3 rounded-md">Kindly complete the transaction by making payment to the displayed banking details.</p>
-                            <p className="bg-white bg-opacity-20 border p-3 rounded-md">Please verify the banking details before authorizing the payment, we would not be held responsible if funds are sent to a wrong account.</p>
+                            <p className="border bg-white bg-opacity-20 p-3 rounded-md">Kindly complete the transaction by making payment to the displayed wallet address.</p>
+                            <p className="bg-white bg-opacity-20 border p-3 rounded-md">Please verify the wallet address before authorizing the payment, we would not be held responsible if funds are sent to a wrong wallet address.</p>
                             <p className="bg-white bg-opacity-20 border p-3 rounded-md">Upon successful payment, click the "I Have Made Payment" button to complete the transaction.</p>
                             <p className="bg-white bg-opacity-20 border p-3 rounded-md">This transaction has a time limit of 30 minutes before it is cancelled.</p>
                         </div>
@@ -209,16 +206,13 @@ const CryptoPaymentDetailsModal = () => {
                         </div>
                         
                         {/* Account Details */}
-                        <div className="px-5 py-[14px] font-Inter w-[360px] border rounded-md space-y-4">
-                        <div className='space-y- border-b-2'>
+                        <div className="px-5 py-[14px] font-Inter w-[90%] border rounded-md space-y-4">
+                        <div className='space-y- border-b-2 w-full'>
                             <p className="text-sm text-left text-textDark">Wallet Address</p>
-                            <span className="flex text-center justify-between gap-2 mb-4">
-                            <p className="text-[14px] leading-[21px">{walletAdd}</p>
-                                <HiOutlineDuplicate 
-                                size={24}
-                                className='text-textDark cursor-pointer'
-                                onClick={copyToClipboard}/>
-                            </span>
+                            <div className="flex text-center justify-between gap-2 mb-4 w-full">
+                                <p className="text-[14px] leading-[21px]">{walletAdd}</p>
+                                <HiOutlineDuplicate size={24} className='text-textDark cursor-pointer flex-none' onClick={copyToClipboard}/>
+                            </div>
                         </div>
                         <div className='space-y-2'>
                             <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Network</p>

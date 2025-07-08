@@ -88,6 +88,18 @@ const NameHeader = () => {
     }
   };
 
+  function hasProfileImage(imageUrl: string): boolean {
+    const base = 'https://api.olamax.io/storage/';
+    return imageUrl.startsWith(base) && imageUrl.length > base.length;
+  }
+
+  const userFirstName = userDetails ? userDetails.first_name : '';
+  const userLastName = userDetails ? userDetails.last_name : '';
+
+  const placeholder = (userFirstName && userLastName) ? (userFirstName?.charAt(0) + userLastName?.charAt(0)) : (userDetails?.email ? userDetails.email.charAt(0) + userDetails?.email.charAt(1) : '');
+
+  const profileImagePresent = hasProfileImage(userDetails?.profile_image ?? '');
+
   return (
     <div className="w-full h-[125px] lg:h-[160px] rounded-md bg-white p-4 lg:p-5 flex items-center justify-between">
       <div className="flex gap-4 items-center">
@@ -103,7 +115,7 @@ const NameHeader = () => {
               </div>
             </div>
           }
-          <img src={imageSrc} alt="profile" className='object-cover rounded-full h-full w-full'/>
+          { profileImagePresent ? <img src={imageSrc} alt="profile" className='object-cover rounded-full h-full w-full'/> : <div className='w-full h-full bg-primary rounded-full flex items-center justify-center tracking-wider text-white 2xl:text-6xl text-4xl'>{placeholder}</div>}
           <Input
             type="file"
             accept="image/*"
