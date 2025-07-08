@@ -178,7 +178,7 @@ const BuyInput: React.FC = () => {
             {/* Warning Message */}
             <div className="flex items-start justify-start space-x-3 mt-4">
               <span className="flex justify-start"><Info size={24} /></span>
-              <p className="text-[#121826] font-normal font-Inter xl:text-[16px] xl:leading-[24px]">Please verify the wallet address before proceeding, we would not be held responsible if the details provided are incorrect.</p>
+              <p className="text-[#121826] font-normal font-Inter text-sm">Please verify the wallet address before proceeding, we would not be held responsible if the details provided are incorrect.</p>
             </div>
 
             {/* Proceed Button */}

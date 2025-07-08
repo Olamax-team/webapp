@@ -9,6 +9,8 @@ import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import useUserDetails from '../../../stores/userStore';
 import { CustomSelectSearch } from '../../ui/custom-select-search';
+import { HiArrowRight } from 'react-icons/hi2';
+import { useApiConfig } from '../../../hooks/api';
 
 
 const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentStep:React.Dispatch<React.SetStateAction<number>>}) => {
@@ -31,11 +33,10 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     setDateOfBirth(event.target.value);
   };
 
-  console.log(userDetails?.gender)
-
   const [gender, setGender] = React.useState(userDetails && userDetails.gender !== null ? userDetails.gender : '');
   const [nationality, setNationality] = React.useState(userDetails ? userDetails.nationality : '');
   const [phoneNumber, setPhoneNumber] = React.useState(userDetails ? userDetails.phone_number : '');
+  const [phoneOtp, setPhoneOtp] = React.useState('')
 
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -158,9 +159,51 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     }
   }, [kycStatus]);
 
-  
+  const sendOtpConfig = useApiConfig({
+    url: 'get-sms-otp',
+    method: 'post',
+    formdata: {phone_number: phoneNumber, email: 'eluxdon@gmail.com'}
+  });
 
-  
+  const verifyOtpConfig = useApiConfig({
+    url: 'verify-sms-otp',
+    method: 'post',
+    formdata: {verify_otp: phoneOtp}
+  })
+
+  const [disableProceed, setDisableProceed] = React.useState(true);
+  const [showOtp, setShowOtp] = React.useState(false)
+
+  const sendOtp = async () => {
+    await axios.request(sendOtpConfig)
+    .then((response) => {
+      if (response && response.status === 200) {
+        toast({
+          title: 'Success',
+          description: 'Otp successfully sent to your phone number',
+          variant: 'success'
+        })
+        setShowOtp(true);
+      }
+    })
+  };
+
+  const verifyOtp = async () => {
+    await axios.request(verifyOtpConfig)
+    .then((response) => {
+      if (response && response.status === 200) {
+        toast({
+          title: 'Success',
+          description: 'Phone number successfully verified',
+          variant: 'success'
+        })
+        setPhoneOtp('');
+        setShowOtp(false);
+        setDisableProceed(false);
+      }
+    })
+  };
+
   return (
     <div className='flex flex-col lg:gap-1 gap-2'>
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Bio-Data</h2>
@@ -223,18 +266,39 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           inputValue={phoneNumber}
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
+          onBlur={() => sendOtp()}
           label='Phone Number'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
           name='phoneNumber'
           id='phoneNumber'
         />
+        { showOtp &&
+          <div className="w-full flex gap-3">
+            <div className="flex-1">
+              <AuthInput
+                inputValue={phoneOtp}
+                value={phoneOtp}
+                onChange={(e) => setPhoneOtp(e.target.value)}
+                label='Phone OTP'
+                inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px] flex-1'
+                name='phoneOtp'
+                id='phoneOtp'
+              />
+            </div>
+            <button type="button" className='border rounded-md px-3 flex-none' onClick={() => verifyOtp()}>
+              <HiArrowRight/>
+            </button>
+          </div>
+        }
       </div>
-      <div className='lg:p-2 lg:mt-2 mt-5'>
-        <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center gap-3' onClick={onNext} disabled={isLoading}>
-          {isLoading ? 'Updating bio-data' : 'Proceed'}
-          {isLoading && <Loader2 className='animate-spin'/>}
-        </button>
-      </div>
+      { !disableProceed &&
+        <div className='lg:p-2 lg:mt-2 mt-5'>
+          <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center gap-3' onClick={onNext} disabled={isLoading}>
+            {isLoading ? 'Updating bio-data' : 'Proceed'}
+            {isLoading && <Loader2 className='animate-spin'/>}
+          </button>
+        </div>
+      }
     </div>
   )
 };

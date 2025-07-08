@@ -191,7 +191,6 @@ export const useActiveCompleteTransactionModals = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
-
 export const useConfirmCompleteTransaction = create<modalProps>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),

@@ -12,6 +12,14 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useFetchStore } from "../../../stores/fetch-store";
 import { useToast } from "../../../hooks/use-toast";
+import { Switch } from "../../ui/switch";
+
+type accountDetailsType = {
+  addDetials: boolean;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+};
 
 const SellInput: React.FC = () => {
 
@@ -27,9 +35,28 @@ const SellInput: React.FC = () => {
         fetchKycStatus();
       }
     },[user]);
+
+
+    useEffect(() => {
+      const details = localStorage.getItem(`user_${user?.UID}`);
+      if (details) {
+        try {
+          const parsedDetails: accountDetailsType = JSON.parse(details);
+          setValue('accountName', parsedDetails.accountName);
+          setValue('bankName', parsedDetails.bankName);
+          setValue('accountNumber', parsedDetails.accountNumber);
+        } catch (error) {
+          console.error("Failed to parse account details from localStorage", error);
+        }
+      }
+    }, [user?.UID]);
+
+
     const {
       register,
       handleSubmit,
+      watch,
+      setValue,
       formState: { errors },
     } = useForm({
       resolver: zodResolver(sellInput),
@@ -47,6 +74,27 @@ const SellInput: React.FC = () => {
       method: 'get',
       url: 'get-bank-list'
     });
+
+    const bank = watch('bankName');
+    const account = watch('accountNumber');
+    const name = watch('accountName');
+
+    const details = localStorage.getItem(`user_${user?.UID}`);
+    const parsedDetails:accountDetailsType = details ? JSON.parse(details) : {};
+
+    const [addDetails, setAddDetails] = React.useState(parsedDetails ? parsedDetails.addDetials : false);
+
+    const accountDetails = {
+      addDetials: addDetails,
+      bankName: bank,
+      accountNumber: account,
+      accountName: name
+    }
+
+    const handleAddDetails = (value:boolean) => {
+      setAddDetails(value);
+      localStorage.setItem(`user_${user?.UID}`, JSON.stringify(accountDetails))
+    };
 
   
     const fetchBankList = async () => {
@@ -208,11 +256,19 @@ const SellInput: React.FC = () => {
                       )}
                     </div>
 
+                    <div className="flex w-full gap-3">
+                      <span className="flex justify-start"><Info size={24} className="text-blue-600" /></span>
+                      <p className="text-primary font-semibold text-sm">Remember my account details against other transactions</p>
+                      <Switch
+                        checked={addDetails}
+                        onCheckedChange={(value) => handleAddDetails(value)}
+                      />
+                    </div>
 
                     {/* Warning Message */}
                     <div className="flex items-start justify-start space-x-3 mt-4">
-                    <span className="flex justify-start"><Info size={24} /></span>
-                    <p className="text-[#121826] font-normal font-Inter xl:text-[16px] xl:leading-[24px]">Please verify the wallet address before proceeding, we would not be held responsible if the details provided are incorrect.</p>
+                      <span className="flex justify-start"><Info size={24} /></span>
+                      <p className="text-[#121826] font-normal font-Inter text-sm">Please verify the wallet address before proceeding, we would not be held responsible if the details provided are incorrect.</p>
                     </div>
 
                     {/* Proceed Button */}

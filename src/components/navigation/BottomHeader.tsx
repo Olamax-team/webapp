@@ -41,7 +41,7 @@ const BottomHeader = ({notifications}:bottomProps) => {
   const { user, token , clearUser, kycDetails, fetchKycDetails, fetchUserDetails, userDetails} = useUserDetails();
 
   function hasProfileImage(imageUrl: string): boolean {
-    const base = 'https://api.olamax.io/storage/app/public/';
+    const base = 'https://api.olamax.io/storage/';
     return imageUrl.startsWith(base) && imageUrl.length > base.length;
   }
 
