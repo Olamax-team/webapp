@@ -114,3 +114,19 @@ export type userDataProps = {
 //   message: string;
 //   transaction: Transaction;
 // }
+
+interface Favorite {
+  coin: string;
+  coin_name: string;
+  id: number;
+  icon: string;
+  stable_coins: 'yes' | 'no';
+  sell: 'on' | 'off';
+  buy: 'on' | 'off';
+  escrow: 'on' | 'off';
+}
+
+export interface FavoritesResponse {
+  status: 'success' | 'error'; // assuming status can be 'success' or 'error'
+  favorites: Favorite[];
+}

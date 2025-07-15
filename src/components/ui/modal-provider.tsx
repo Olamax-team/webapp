@@ -38,6 +38,7 @@ import TransactionPendingModal from '../dashboard/tradeModals/TransactionPending
 import IdentityVerifiedModal from '../modals/IdentityVerifiedModal'
 import PendingTransactionDetailsModal from '../dashboard/tradeModals/PendingTransactionDetailsModal'
 import ConfirmBillsModal from '../dashboard/bills&payment/billsInput/confirmBillsModal'
+import ReviewsModal from '../modals/ReviewsModal'
 
 
 const ModalProvider = () => {
@@ -86,6 +87,7 @@ const ModalProvider = () => {
       <ConfirmModal/>
       <PendingTransactionDetailsModal/>
       <ConfirmBillsModal/>
+      <ReviewsModal/>
     </React.Fragment>
   )
 }

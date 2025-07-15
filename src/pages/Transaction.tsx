@@ -110,6 +110,7 @@ const Transaction = () => {
   });
 
   const allTransactionDetails = (fromDate && toDate) ? allTransactionData?.data :  allTransactionData?.data
+  console.log(allTransactionDetails)
 
   const DateComponent = ({date, setDate, placeholder}:dateComponentProps) => {
     return (
