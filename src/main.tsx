@@ -29,9 +29,13 @@ import Cookies from './pages/Cookies';
 import VerificationPage from './pages/VerificationPage';
 import GoogleLoginCallback from './pages/GoogLoginCallback';
 import ProtectAuthRoute from './components/layout/ProtectAuthRoutes';
+import ComingSoon from './pages/ComingSoon';
 
 const router = createBrowserRouter([
-  
+  {
+    path: '/coming-soon',
+    element: <ProtectedRoute><ComingSoon/></ProtectedRoute>
+  },
   {
     element: <Layout/>,
     children: [
@@ -61,13 +65,12 @@ const router = createBrowserRouter([
         element: <ModuleOne/>
       },
       {
-          path:'/referral-program',
-          element: <ReferralPrograme/>
+        path:'/referral-program',
+        element: <ReferralPrograme/>
       },
       {
         path: '/escrow-services',
         element:  <Escrow/>
-
       },
       {
         path: '/sign-up',
@@ -130,7 +133,7 @@ const router = createBrowserRouter([
         element:<Cookies/>
       },
       { path: '/google-callback', element: <GoogleLoginCallback /> },
-    ]
+    ], 
   }
 ]); 
 

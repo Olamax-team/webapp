@@ -82,6 +82,7 @@ type cableServicesProps = {
 
 
 type liveRateCoin = {
+  id: number;
   coin: string;
   symbol: string;
   price: string;

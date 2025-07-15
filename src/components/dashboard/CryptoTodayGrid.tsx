@@ -2,14 +2,20 @@ import React from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
-import { useQuery } from "@tanstack/react-query";
-import { Loader } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useFetchStore } from "../../stores/fetch-store";
+import { HiHeart, HiOutlineHeart } from "react-icons/hi2";
+import { useApiConfig } from "../../hooks/api";
+import axios from "axios";
+import useUserDetails from "../../stores/userStore";
+import { FavoritesResponse } from "../../lib/types";
 
 // Define the type for a single crypto item
 
 interface liveRateCoin {
+  id: number;
   coin: string;
   symbol: string;
   price: string;
@@ -59,13 +65,48 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     navigator.clipboard.writeText(userInvite);
     alert("Invite link copied to clipboard!");
   };
-  const tabs = ["Trending", "Favorite"]
+  const tabs = ["Trending", "Favorite"];
   const dynamicButtonClassName = (index: number, activeIndex: number) => {
     return index === activeIndex
       ? "text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] font-bold text-textDark"
       : "px-6 py-2 text-[16px] leading-[24px] xl:text-[18px] xl:leading-[27px] text-[#00000066]";
   };
+
+  const queryClient = useQueryClient();
+
   const LiveRateComponent = ({coin}:{coin:liveRateCoin}) => {
+    const [liked, setLiked] = React.useState(false);
+
+    const IsFavourite = (coinId?: number): boolean => {
+      if (typeof coinId !== 'number' || !allUserFavouriteCoin || !Array.isArray(allUserFavouriteCoin)) {
+        return false;
+      }
+
+      return allUserFavouriteCoin.some((item) => item.id === coinId);
+    };
+
+    const isFav = IsFavourite(coin.id);
+    
+    const likeCoin = async () => {
+
+      const config = {
+        method: isFav ? 'delete' : 'post',
+        maxBodyLength: Infinity,
+        url: isFav ? `https://api.olamax.io/api/user/remove-from-favourites/${coin.id}` : `https://api.olamax.io/api/user/add-to-favourites/${coin.id}`,
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      }
+
+      const result = await axios.request(config)
+      if (result && result.status === 200) {
+        if (isFav) { setLiked(true)} else setLiked(false)
+        queryClient.invalidateQueries({ queryKey: ['user-favourite-coins'] });
+      }
+    };
+
+
     return(
         <div className={itemClassName}>
           {/* Crypto Info */}
@@ -95,30 +136,58 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
               {coin.arrow}
               <span className={cn('', coin.color === "red" ? 'text-red-600' : 'text-green-600')}>{coin.percentageChange}</span>
             </div>
-            </div>
-            <Button 
-              className="text-secondary hover:bg-white hover:text-secondary"
-              variant={"ghost"}
-              >
-                Trade
-            </Button>
+          </div>
+          <div>
+            <button type="button" className="cursor-pointer" onClick={() => likeCoin()}>
+              {isFav || liked ? <HiHeart className="size-6 fill-red-600"/>  : <HiOutlineHeart className="size-6 text-gray-600"/>}
+            </button>
+          </div>
+          <Button 
+            className="text-secondary hover:bg-white hover:text-secondary"
+            variant={"ghost"}
+            >
+              Trade
+          </Button>
         </div>
     )
   };
 
   const { fetchLiveRates } = useFetchStore();
   
-    const { data, status } = useQuery({
-      queryKey: ['live-rates'],
-      queryFn: fetchLiveRates,
-    });
+  const { data, status } = useQuery({
+    queryKey: ['live-rates'],
+    queryFn: fetchLiveRates,
+  });
+
+  const favouriteCoInConfig = useApiConfig({
+    method: 'get',
+    url: 'user/favourites'
+  });
+
+  const fetchFavouriteCoins = async () => {
+    const response = await axios.request(favouriteCoInConfig)
+    if (response.status !== 200) {
+      throw new Error('Something went wrong, try again later');
+    }
+    const data = response.data as FavoritesResponse
+    return data;
+  };
+
+  const { data:userCoins } = useQuery({
+    queryFn: fetchFavouriteCoins,
+    queryKey: ['user-favourite-coins']
+  })
+
+  const allUserFavouriteCoin = userCoins?.favorites
+
+  const { token } = useUserDetails();
   
     const LiveRates = () => {
   
       if (status === 'pending') {
         return (
           <div className="w-full h-full flex items-center justify-center my-8">
-            <Loader className="animate-spin"/>
+            <Loader2 className="animate-spin"/>
           </div>
         )
       }
@@ -186,9 +255,9 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
                 {news.map((item) => (
                     <div key={item.id} className="flex flex-row flex-wrap items-center gap-4">
                       <img
-                          src={item.imageUrl}
-                          alt="photo"
-                          className="w-full h-auto rounded-sm object-fit"
+                        src={item.imageUrl}
+                        alt="photo"
+                        className="w-full h-auto rounded-sm object-fit"
                       />
                       <div>
                           <h3 className="text-wrap text-[14px] leading-[21px] font-medium">{item.title}</h3>
