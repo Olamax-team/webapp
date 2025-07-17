@@ -66,6 +66,7 @@ const links = {
       label: 'support@olamax.io',
       path: 'support@olamax.io',
       image: "/images/email.png",
+
     },
     {
       label: 'Call Us',
@@ -127,13 +128,13 @@ const BottomSection = () => {
                 ))}
               </div> 
             </div>
-            <div className="w-full h-full">
+            <div className="w-full h-full ">
               <h2 className='text-lg font-semibold mb-5 font-DMSans'>Contact Us</h2>
-              <div className='flex flex-col gap-4'>
+              <div className='flex flex-col gap-3 '>
                 {links.contact.map((item) => (
                   <a href={item.label === 'Call Us' ? `tel: ${item.path}` : item.label === 'support@olamax.io' ? `mailto:${item.path}` : item.path} target="_blank" rel="noopener noreferrer" className='flex font-Inter items-center gap-2' key={item.path} >
-                    <div className="size-[16.67px]">
-                      <img src={item.image} alt="icon" className='object-cover'/>
+                    <div className="size-6  flex-none">
+                      <img src={item.image} alt="icon" className='object-contain size-5'/>
                     </div>
                     {item.label}
                   </a>
@@ -197,8 +198,8 @@ const BottomSection = () => {
                     className='flex font-Inter items-center gap-2'
                     key={item.path}
                   >
-                    <div className="size-[16.67px]">
-                      <img src={item.image} alt="icon" className='object-cover'/>
+                    <div className="size-6">
+                      <img src={item.image} alt="icon" className='object-contain size-6'/>
                     </div>
                     {item.label}
                   </a>
