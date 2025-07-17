@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import IndicatorButtonGroup from "../tradeCrypto/indicator";
@@ -42,6 +42,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     itemClassName = "flex justify-between items-center",
     userInvite,
 }) => {
+  const [activeTab, setActiveTab] = useState(0);
 
   // Static data for the "Latest News" section
   const news: News[] = [
@@ -220,6 +221,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
               <IndicatorButtonGroup
                 buttons={tabs}
                 dynamicButtonClassName={dynamicButtonClassName}
+                onButtonClick={setActiveTab}
                 bgClassName="bg-[#F8F9FA]"
                 indicatorColor="bg-textDark"
                 indicatorSize="w-[39px]"
