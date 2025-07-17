@@ -196,13 +196,13 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
       if (status === 'error') {
         return (
           <div className="w-full h-full flex items-center justify-center">
-            <p>Something went wrong while loading live rates, refresh the page please.</p>
+            <p>Something went wrong while loading live rates, refresh the page please...</p>
           </div>
         )
       }
   
       return (
-        <div className={contentClassName}>
+        <div className={contentClassName}> 
           {data.map((item, index) => (
             <LiveRateComponent coin={item} key={index}/>
           ))}
@@ -214,7 +214,7 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
     <>
       <h2 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-Inter xl:font-DMSans font-bold my-2 xl:mb-4">Crypto Market Today</h2>
       <div className="flex flex-col xl:flex-row gap-10 xl:gap-8 justify-start w-full">
-        {/* Trending Section */}
+        {/* Trending Section. */}
         <div className="xl:col-span-5 w-full xl:w-[65%]">
           <div className="bg-white rounded-lg p-4">
             <div className="flex mb-4">
