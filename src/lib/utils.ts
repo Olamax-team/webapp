@@ -245,6 +245,13 @@ export const useConfirmVerificationModal = create<modalProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+//2famodal
+export const useConfirmFactorAuthModal = create<modalProps>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
 export const generateImagePath = (image: string) => {
   return `%PUBLIC_URL%/images/${image}`;
 };
