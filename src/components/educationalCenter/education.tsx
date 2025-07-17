@@ -1,16 +1,13 @@
 import React from "react";
 import TopHeader from "../footer/TopHeader";
 import bgImage from '../../assets/images/bgImage.svg';
-// import rectangleA from '../../assets/images/RectangleA.svg'
-// import rectangleB from '../../assets/images/RectanglB.svg'
-// import rectangleC from '../../assets/images/Rectangle C.svg'
-// import rectangleD from '../../assets/images/RectangleD.svg'
-// import rectangleZ from '../../assets/images/Rectangle Z.svg'
 import { useNavigate } from "react-router-dom";
+import { documentTitle } from "../../lib/utils";
 
 
 
 const Education = () => {
+    documentTitle('Education Center')
     const navigate = useNavigate();
 
     const modules = [
