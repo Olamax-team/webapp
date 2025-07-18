@@ -9,7 +9,7 @@ const WhatNextUploadModal = () => {
       onClose={onClose}
       useCloseButton={false}
       title='Identity Verified'
-      modalSize='w-[420px]'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <p className='text-sm lg:text-base'>Congratulations! Your identity has been verified. You now have full access to all our products and services. Thank you for completing this step</p>

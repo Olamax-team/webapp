@@ -9,7 +9,7 @@ const VerificationProgressModal = () => {
       onClose={onClose}
       useCloseButton
       title='Verification in Progress'
-      modalSize='w-[420px]'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <p className='text-sm lg:text-base'>Thank you for submitting your information. Your verification is currently being processed. Check back in 3-5 minutes for an update on your status.</p>

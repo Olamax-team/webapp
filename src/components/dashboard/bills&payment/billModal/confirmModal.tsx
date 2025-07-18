@@ -19,7 +19,7 @@ const ConfirmModal = () => {
       onClose={onClose}
       useCloseButton={false}
       title='Complete Transaction'
-      modalSize='w-[420px]'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <p className='text-sm lg:text-base'>Are you sure you want to proceed with the transaction process?</p>

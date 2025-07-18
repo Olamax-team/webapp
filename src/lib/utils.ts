@@ -2,11 +2,17 @@ import React from "react"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { create } from 'zustand';
+import CryptoJS from "crypto-js";
 
 type modalProps = {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
+};
+
+export interface EncryptedResult {
+  encrypted: string;
+  iv: string;
 };
 
 
@@ -351,6 +357,49 @@ export const useReviewsModal = create<modalProps>((set) => ({
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 })); 
+
+const secretKey = import.meta.env.VITE_ENCRYPTION_KEY;
+
+if (!secretKey) {
+  throw new Error('ENCRYPTION_KEY is not defined in .env file');
+}
+
+
+export function encryptPayload(payload: Record<string, any>): EncryptedResult {
+  const iv = CryptoJS.lib.WordArray.random(16);
+
+  const encrypted = CryptoJS.AES.encrypt(
+    JSON.stringify(payload),
+    CryptoJS.enc.Utf8.parse(secretKey),
+    {
+      iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    }
+  );
+
+  return {
+    encrypted: encrypted.toString(),
+    iv: CryptoJS.enc.Base64.stringify(iv),
+  };
+}
+
+export function decryptPayload<T = any>(ciphertext: string, ivBase64: string): T {
+  const iv = CryptoJS.enc.Base64.parse(ivBase64);
+
+  const decrypted = CryptoJS.AES.decrypt(
+    ciphertext,
+    CryptoJS.enc.Utf8.parse(secretKey),
+    {
+      iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    }
+  );
+
+  return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+}
+
 
 
 

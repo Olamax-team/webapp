@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import FloatingTag from '../ui/floating-tag';
 import { useNavigate } from 'react-router-dom';
 import useUserDetails from '../../stores/userStore';
+import { useConfirmFactorAuthModal } from '../../lib/utils';
 
 
 const HeroSection: React.FC = () => {
@@ -15,7 +16,21 @@ const HeroSection: React.FC = () => {
     }
   }, [user, token]);
 
-  console.log(kycDetails)
+    const { userDetails, fetchUserDetails} = useUserDetails();
+  
+    React.useEffect(() => {
+      if (user) {
+        fetchUserDetails();
+      }
+    },[user]);
+  
+    const { onOpen } = useConfirmFactorAuthModal();
+  
+    React.useEffect(() => {
+      if (user && userDetails?.status === 'verified' && userDetails?.is_auth_code === 'inactive') {
+        onOpen();
+      }
+    }, [])
 
 
 
@@ -23,7 +38,7 @@ const HeroSection: React.FC = () => {
     <section className="relative bg-bgSurface overflow-hidden w-full h-[650px] mx-auto mt-1">
 
       {/* Content */}
-      <>
+      <React.Fragment>
         <div className="relative mx-auto my-[72px] w-full xl:w-[1220.42px] h-auto xl:h-[326.34px]">
           <div className="font-poppins w-full flex flex-wrap text-center mx-auto items-center justify-center">
             {/* Floating Tags */}
@@ -108,7 +123,7 @@ const HeroSection: React.FC = () => {
             className="absolute bottom-0 xl:hidden block w-full h-[222px]"
           />
         </div>
-      </>
+      </React.Fragment>
     </section>
   );
 };

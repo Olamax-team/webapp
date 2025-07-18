@@ -60,33 +60,37 @@ export type kycDetailsStatusProps = {
 export type userDataProps = {
   id: number;
   uid: string;
-  email: string;
-  phone_number: string;
-  status: string;
   first_name: string;
-  middle_name: string;
   last_name: string;
-  profile_image: string;
-  available_bonus: string;
-  total_bonus: string;
-  verification_method: string,
-  is_blocked: number,
-  is_suspended: number,
-  is_deactivated: number,
-  referral_code: string;
-  referral_balance: string;
-  newbie_bonus: string;
-  newbie_seen: string;
-  total_referred_users: number,
-  unverified_referred_users: number,
-  date_of_birth: string;
-  gender: string;
-  created_at: string;
-  updated_at: string;
-  referred_by: number
-  last_activity: string;
+  middle_name: string | null;
+  email: string;
+  email_verified: boolean;
+  phone_number: string;
+  phone_number_verified: boolean;
+  date_of_birth: string; // ISO date string: "YYYY-MM-DD"
+  gender: 'male' | 'female' | string;
   nationality: string;
-  profile_picture: string;
+  profile_image: string;
+  access_right: string; // e.g., "Full Access"
+  role: string; // e.g., "superAdmin"
+  status: string; // e.g., "verified"
+  is_blocked: number; // 0 or 1
+  is_deactivated: number; // 0 or 1
+  is_suspended: number; // 0 or 1
+  is_auth_code: 'active' | 'inactive' | string;
+  referral_code: string;
+  referred_by: string | null;
+  referral_balance: string | null;
+  total_bonus: string;
+  available_bonus: string;
+  newbie_bonus: 'Claimed' | 'Unclaimed' | string;
+  newbie_seen: 'yes' | 'no' | string;
+  total_referred_users: number;
+  unverified_referred_users: number;
+  last_activity: string; // "YYYY-MM-DD HH:mm:ss"
+  created_at: string; // ISO 8601
+  updated_at: string; // ISO 8601
+  verification_method: string | null;
 };
 
 // interface TransactionDetails {
