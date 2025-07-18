@@ -77,8 +77,8 @@ module.exports = {
   			bg: '#F8F9FA',
   			tagGreen: '#03E41D',
   			tagPurple: '#C912B1',
-  			'darkBg': '#121826',
-  			'lightBg': '#F8F9FA'
+  			darkBg: '#121826',
+  			lightBg: '#F8F9FA'
   		}
   	}
   },

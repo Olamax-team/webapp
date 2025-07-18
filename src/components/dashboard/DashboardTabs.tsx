@@ -4,10 +4,12 @@ import { ArrowRightCircle, ShieldCheck } from "lucide-react";
 import CryptoTodayGrid from "./CryptoTodayGrid";
 import { HiOutlineDeviceMobile, HiOutlineDuplicate, HiOutlineLightBulb, HiOutlineShieldCheck } from "react-icons/hi";
 import TradeDetails from "./tradeDetails";
-import { useConfirmVerificationModal } from "../../lib/utils";
+import { useConfirmFactorAuthModal, useConfirmVerificationModal } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { activityIndex } from "../../stores/generalStore";
+import { useApiConfig } from "../../hooks/api";
+import axios from "axios";
 
 interface UserInfoProps {
   name: string;
@@ -44,6 +46,8 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
         fetchKycStatus();
       }
     }, [user]);
+    
+    console.log(user)
 
     React.useEffect(() => {
       if (user && user.account_status === 'Unverified') {
@@ -57,7 +61,7 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
     <div className="flex flex-col w-full h-auto">
       
         <div>
-          {isVerified === 'Verified' ? (
+          {isVerified === 'verified' ? (
             <h1 className="text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {name}</h1>
           ):(
               <h1 className="text-nowrap text-[20px] xl:text-[26px] leading-[30px] xl:leading-[39px] font-DMSans font-bold text-textDark">Hello, {email}</h1>
@@ -149,19 +153,30 @@ const ServicesCard: React.FC<ServicesProps> = ({ services }) => {
 
 const DashboardTab: React.FC = () => {
 
-  const { user:userDetail, fetchKycDetails, fetchKycStatus, kycDetails, kycStatus } = useUserDetails();
+  const { user:userDetail, fetchKycDetails, fetchKycStatus, kycDetails, kycStatus, userDetails, fetchUserDetails } = useUserDetails();
   const {selectedBill, showTransactionDetail}= activityIndex();
 
   React.useEffect(() => {
     if (userDetail) {
       fetchKycDetails();
       fetchKycStatus();
+      fetchUserDetails();
     }
   },[userDetail]);
 
+  const { onOpen } = useConfirmFactorAuthModal();
+
   console.log(userDetail);
+  console.log(kycDetails)
+  console.log(userDetails)
 
   const baseLink = 'https://app.olamax.io/';
+
+  React.useEffect(() => {
+    if (userDetail && userDetails?.status === 'verified' && userDetails?.is_auth_code === 'inactive') {
+      onOpen();
+    }
+  }, [])
 
   const user = {
     name: kycDetails ? `${kycDetails.lname+' '+kycDetails.fname }`: '' ,
@@ -188,6 +203,30 @@ const DashboardTab: React.FC = () => {
             </div>,
     },
   ];
+
+  const formData = new FormData();
+  formData.append('description', 'This is what i have to say');
+  formData.append('title', 'What a lovely story');
+  formData.append('link', 'Everyonelovesit.com');
+
+  const config = useApiConfig({
+    method: 'post',
+    url: 'admin/add-news',
+    formdata: formData
+  })
+
+  const runNews = async () => {
+    await axios.request(config)
+    .then((result) => {
+      if (result) {
+        console.log(result)
+      }
+    })
+  }
+
+  React.useEffect(() => {
+    runNews();
+  }, [])
 
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">

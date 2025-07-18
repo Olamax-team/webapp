@@ -9,7 +9,7 @@ const WhatNextPasswordModal = () => {
       onClose={onClose}
       useCloseButton={false}
       title='What Next ?'
-      modalSize='w-[420px]'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <p className='text-sm lg:text-base'>To enjoy the complete range of our products & Services, we recommend you complete the identity verification process.</p>

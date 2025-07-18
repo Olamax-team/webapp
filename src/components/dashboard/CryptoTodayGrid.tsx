@@ -138,11 +138,13 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
               <span className={cn('', coin.color === "red" ? 'text-red-600' : 'text-green-600')}>{coin.percentageChange}</span>
             </div>
           </div>
-          <div>
-            <button type="button" className="cursor-pointer" onClick={() => likeCoin()}>
-              {isFav || liked ? <HiHeart className="size-6 fill-red-600"/>  : <HiOutlineHeart className="size-6 text-gray-600"/>}
-            </button>
-          </div>
+          { activeTab === 0 &&
+            <div>
+              <button type="button" className="cursor-pointer" onClick={() => likeCoin()}>
+                {isFav || liked ? <HiHeart className="size-6 fill-red-600"/>  : <HiOutlineHeart className="size-6 text-gray-600"/>}
+              </button>
+            </div>
+          }
           <Button 
             className="text-secondary hover:bg-white hover:text-secondary"
             variant={"ghost"}
@@ -201,16 +203,17 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
         )
       }
   
-      const listToRender =
-        activeTab === 0
-          ? data
-          : allUserFavouriteCoin;
+      
+      const coinIds = allUserFavouriteCoin?.map((item) => item.id);
+      const likedCoins = data.filter((item) => coinIds?.includes(item.id))
+      
+      const listToRender = activeTab === 0 ? data : likedCoins;
   
       return (
         <div className={contentClassName}> 
           {(listToRender ?? []).map((item, index) => (
-  <LiveRateComponent coin={item} key={index}/>
-))}
+            <LiveRateComponent coin={item} key={index}/>
+          ))}
         </div>
       )
     };

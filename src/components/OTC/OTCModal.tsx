@@ -6,10 +6,11 @@ const OTCModal = () => {
   const { isOpen, onClose } = useOTCModal();
     const { user } = useUserDetails();
     const isVerified = user?.account_status;
+    
     const OTCButton = () => {
-      if (isVerified === 'Verified') {
+      if (isVerified === 'verified') {
         window.open("https://wa.me/+2347074322020", "_blank");
-      }else {
+      } else {
         onClose();
       }
 };
@@ -17,14 +18,14 @@ const OTCModal = () => {
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
-      useCloseButton={false}
+      useCloseButton={true}
       title='Are You Eligible for the OTC Desk?'
-      modalSize='w-[420px]'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <p className='text-sm lg:text-base'>To access the OTC Desk, ensure you meet the following eligibility requirements:
             <ul>USDT & USDC Transactions: Minimum of $50,000</ul>
-            <ul>BTC Transactions: Minimum of 2 BTC</ul>
+            <ul>BTC Transactions: Minimum of 0.5 BTC</ul>
         </p>
         <p>Are you eligible to proceed?</p>
         <div className="flex items-center justify-between gap-4">

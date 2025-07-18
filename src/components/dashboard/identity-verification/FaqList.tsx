@@ -38,10 +38,10 @@ const FaqList = () => {
     return (
       <div className={cn("h-[27px] overflow-hidden cursor-pointer transition-all duration-300 font-Inter", open && 'h-auto')} onClick={() => toggleItem()}>
         <div className="flex items-center justify-between">
-          <h2 className="text-[18px] leading-normal font-semibold">{faq.question}</h2>
+          <h2 className="2xl:text-[18px] md:text-base text-sm leading-normal font-semibold">{faq.question}</h2>
           { open ? <ChevronDown className="size-5"/> : <ChevronUp className="size-5"/> }
         </div>
-        <p className="text-sm pr-6 mt-1 text-justify">{faq.answer}</p>
+        <p className="md:text-sm text-xs pr-6 mt-1 text-justify">{faq.answer}</p>
       </div>
     )
   };

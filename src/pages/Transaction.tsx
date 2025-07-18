@@ -107,6 +107,7 @@ const Transaction = () => {
   const { data:allTransactionData, status } = useQuery({
     queryKey: ['user-tranasctions', fromDate && toDate ],
     queryFn: fetchTranscations,
+    refetchInterval: 5000,
   });
 
   const allTransactionDetails = (fromDate && toDate) ? allTransactionData?.data :  allTransactionData?.data

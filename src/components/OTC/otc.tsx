@@ -33,7 +33,7 @@ const OTC = () => {
     
     const OTCButton = () => {
         if (user && token) {
-            if (isVerified === 'Verified') {
+            if (isVerified === 'verified') {
                 openOTCModal.onOpen();
             } else {
                 openKYCCONfirmation.onOpen();

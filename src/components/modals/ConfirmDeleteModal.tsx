@@ -42,7 +42,7 @@ const ConfirmDeleteModal = () => {
       onClose={onClose}
       useCloseButton={false}
       title='Delete Account'
-      modalSize='w-[420px]'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <p className='text-sm lg:text-base'>Permanently remove your account and all associated data. This action cannot be undone, so please ensure you want to proceed.</p>

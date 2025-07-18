@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -6,11 +5,11 @@ import { Mail, MapPin, Phone } from "lucide-react";
 
 const Contact = () => {
   return (
-    <React.Fragment>
-      <div className="bg-[#f5f5f5] min-h-screen flex items-center justify-center lg:py-10 lg:px-4">
-        <div className="bg-white rounded-xl shadow-md grid md:grid-cols-2 w-full max-w-6xl p-10">
+    <div className="p-4">
+      <div className="max-h-screen flex justify-center lg:py-10 lg:px-4 mx-auto h-full">
+        <div className="rounded-xl flex justify-center items-center w-full max-w-7xl p-10">
           {/* Left Side */}
-          <div className="space-y-6">
+          <div className="space-y-6 flex-1">
             <div>
               <h4 className="text-[14px]  lg:text-[18px] font-Inter font-semibold  lg:text-lg  lg:font-bold  text-primary">
                 Contact Us
@@ -77,10 +76,9 @@ const Contact = () => {
           </div>
 
           {/* Right Side */}
-          <div className="relative  mt-10 lg:mt-0">
+          <div className="relative  mt-10 lg:mt-0 flex-1">
             {/* Pink half-circle */}
-            <div className="absolute -top-8 -right-8 lg:w-16 lg:h-16 hidden lg:flex  bg-primary rounded-bl-full"></div>
-            <div className="bg-white rounded-lg p-6 space-y-4 ">
+            <div className="rounded-lg p-6 space-y-4 ">
               <p className="lg:flex gap-5 ">
                 <Input
                   placeholder="Your Name"
@@ -97,7 +95,7 @@ const Contact = () => {
               />
               <Textarea
                 placeholder="Your Message "
-                className="bg-[#f5f5f5] border border-transparent focus:border-primary focus:outline-none text-[14px] lg:text-[16px]"
+                className="bg-[#f5f5f5] border outline-none focus:outline-none text-[14px] lg:text-[16px] h-[160px] resize-none focus-visible:ring-0 focus-visible:border"
                 rows={4}
               />
               <Button
@@ -111,7 +109,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 export default Contact;

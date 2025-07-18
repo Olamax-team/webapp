@@ -38,7 +38,7 @@ const StartDeleteModal = () => {
       onClose={() => {onClose(); setEmail('')}}
       useCloseButton
       title='Confirm Delete Account'
-      modalSize='w-[420px] md:w-[450px]'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-6'>
         <p className='text-red-500 text-sm lg:text-base'>You are about to permanently remove your account and all associated data? To proceed with this action, type in your default email address (the one you used in creating your account).</p>

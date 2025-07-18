@@ -43,6 +43,7 @@ import ConfirmFactorAuthModal from '../dashboard/dashboardModals/ConfirmFactorAu
 
 
 const ModalProvider = () => {
+  
   return (
     <React.Fragment>
       <WhatNextPasswordModal/>

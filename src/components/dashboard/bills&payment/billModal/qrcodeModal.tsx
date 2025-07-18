@@ -21,7 +21,7 @@ const openPaymentModals = useActivePaymentModals();
       onClose={onClose}
       useCloseButton={false}
       title=''
-      modalSize='w-[1000px] h-[640px]'
+      modalSize='md:w-[1000px] h-[640px] w-full'
       modalStyle='p-0 xl:p-0'
     >
       <div className="flex flex-row gap-8">
