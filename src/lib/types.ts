@@ -124,6 +124,12 @@ interface Favorite {
   coin_name: string;
   id: number;
   icon: string;
+  symbol: string;
+  price: string;
+  change: string;
+  percentageChange: string;
+  arrow: string;
+  color: string;
   stable_coins: 'yes' | 'no';
   sell: 'on' | 'off';
   buy: 'on' | 'off';
