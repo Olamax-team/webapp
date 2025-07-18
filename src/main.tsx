@@ -29,6 +29,8 @@ import Cookies from './pages/Cookies';
 import VerificationPage from './pages/VerificationPage';
 import GoogleLoginCallback from './pages/GoogLoginCallback';
 import ProtectAuthRoute from './components/layout/ProtectAuthRoutes';
+import Faq from './components/FAQ/faq';
+import Contact from './components/support/contact-Us';
 
 const router = createBrowserRouter([
   
@@ -124,6 +126,14 @@ const router = createBrowserRouter([
       {
         path:'/terms',
         element:<TOS/>
+      },
+      {
+        path: "/frequently-asked-questions",
+        element: <Faq/>
+      },
+      {
+        path: "Contact-Us",
+        element: <Contact/>
       },
       {
         path:'/cookies',
