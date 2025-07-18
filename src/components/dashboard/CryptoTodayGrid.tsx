@@ -201,11 +201,16 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
         )
       }
   
+      const listToRender =
+        activeTab === 0
+          ? data
+          : allUserFavouriteCoin;
+  
       return (
         <div className={contentClassName}> 
-          {data.map((item, index) => (
-            <LiveRateComponent coin={item} key={index}/>
-          ))}
+          {(listToRender ?? []).map((item, index) => (
+  <LiveRateComponent coin={item} key={index}/>
+))}
         </div>
       )
     };
