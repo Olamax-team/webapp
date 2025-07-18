@@ -4,12 +4,13 @@ import btcEscrow from '../../assets/images/BitcoinEscrow.svg'
 import alertescrow from '../../assets/images/alertescrow.svg'
 import shieldCheck from '../../assets/images/shield-check.svg'
 import trustbuild from '../../assets/images/trustBuild.svg'
-import { useKYCConfirmationModal } from "../../lib/utils"
+import { documentTitle, useKYCConfirmationModal } from "../../lib/utils"
 import useUserDetails from "../../stores/userStore"
 import { useNavigate } from "react-router-dom"
  
 
 const Escrow = () => {
+    documentTitle('Escrow')
     const navigate = useNavigate();
     const escrowBenefit = [
         {
@@ -35,7 +36,7 @@ const Escrow = () => {
     const EscrowButton = () => {
         if (user && token) {
             if (isVerified === 'verified') {
-                window.open("/", "_blank");
+                window.open("/coming-soon", "_blank");
             } else {
                 openKYCCONfirmation.onOpen();
             }

@@ -1,11 +1,3 @@
-// import deskBanner from '../../assets/images/Rectangle 45.png';
-// import mobBanner from '../../assets/images/Rectangle 4763.png';
-// import instagram from '../../assets/images/Vector_1.png';
-// import facebook from '../../assets/images/Vector_2.png';
-// import x from '../../assets/images/Vector_3.png';
-// import youtube from '../../assets/images/Vector_4.png';
-// import linkedin from '../../assets/images/Vector.png';
-// import send from '../../assets/images/Vector_5.png';
 import React from 'react';
 
 
@@ -17,12 +9,12 @@ const mediaList = [
   },
   {
     name: 'instagram',
-    path: 'https://www.instagram.com/olamax',
+    path: 'https://www.instagram.com/olamax.io?igsh=MWQ1bWI3ZXR1YXFjYg==',
     image: '/images/Vector_1.png'
   },
   {
     name: 'facebook',
-    path: 'https://www.facebook.com/olamax',
+    path: 'https://www.facebook.com/share/1Eok7twtfv/',
     image: '/images/Vector_2.png'
   },
   {
@@ -32,7 +24,7 @@ const mediaList = [
   },
   {
     name: 'x',
-    path: 'https://www.x.com/olamax',
+    path: 'https://x.com/OlamaxIO?t=vwv9y5_WSyXJzCZQPDgJYA&s=09',
     image: '/images/Vector_3.png'
   },
 ]

@@ -10,8 +10,10 @@ import strokeleft from '../../assets/images/strokesLeft.svg'
 import strokeright from '../../assets/images/strokesRight.svg'
 import useUserDetails from '../../stores/userStore';
 import { useNavigate } from 'react-router-dom';
+import { documentTitle } from '../../lib/utils';
 
 export const ReferralPrograme = () => {
+    documentTitle('Referral Program')
     const [openQuestion, setOpenQuestion] = useState<number | null>(null);
 
     const toggleQuestion = (index: number) => {

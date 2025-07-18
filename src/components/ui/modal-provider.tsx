@@ -41,6 +41,7 @@ import ConfirmBillsModal from '../dashboard/bills&payment/billsInput/confirmBill
 import ConfirmFactorAuthModal from '../dashboard/dashboardModals/ConfirmFactorAuthModal'
 
 
+
 const ModalProvider = () => {
   return (
     <React.Fragment>
@@ -87,7 +88,7 @@ const ModalProvider = () => {
       <ConfirmModal/>
       <PendingTransactionDetailsModal/>
       <ConfirmBillsModal/>
-      <ConfirmFactorAuthModal />
+      <ConfirmFactorAuthModal /> 
     </React.Fragment>
   )
 }

@@ -1,16 +1,11 @@
 import React from "react"
-import { useKYCConfirmationModal, useOTCModal } from "../../lib/utils";
+import { documentTitle, useKYCConfirmationModal, useOTCModal } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
-// import { Link } from "react-router-dom";
-// import rectangleOTC from '../../assets/images/RectangleOTC.svg'
-// import btcOTC from '../../assets/images/BitcoinOTC.svg'
-// import alertOTC from '../../assets/images/alertOTC.svg'
-// import shieldCheck from '../../assets/images/shield-check.svg'
-// import trustbuild from '../../assets/images/trustBuild.svg'
  
 
 const OTC = () => {
+    documentTitle('OTC Desk')
     const OTCBenefit = [
         {
             icon:'/images/shield-check.svg',
