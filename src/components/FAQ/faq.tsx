@@ -47,8 +47,8 @@ const categories = [
 const Faq = () => {
   return (
     <React.Fragment>
-      <div className="min-h-screen bg-[#f5f5f5] text-[#121826] font-sans px-6 py-12">
-        <div className="flex max-w-6xl mx-auto">
+      <div className="max-h-screen lg:py-10 lg:px-4 mx-auto h-full md:min-h-[calc(100vh_-_130px)] flex items-center justify-center">
+        <div className="flex max-w-7xl w-full">
           {/* Sidebar */}
           <div className=" lg:pr-10   border-r border-[#121826]">
             <ul className="space-y-4 text-[14px] lg:text-[18px] font-medium text-[#121826]">

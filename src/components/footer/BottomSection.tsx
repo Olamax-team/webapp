@@ -58,7 +58,7 @@ const links = {
     },
     {
       label: 'FAQ',
-      path: '/faq'
+      path: '/frequently-asked-questions'
     },
   ],
   contact: [

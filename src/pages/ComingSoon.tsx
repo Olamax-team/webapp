@@ -6,7 +6,7 @@ const ComingSoon = () => {
   const [email, setEmail] = React.useState('')
   return (
     <div className='w-full h-screen pt-5 pb-10 bg-gray-100'>
-      <div className="w-[90%] mx-auto h-full overflow-hidden bg-[url('/images/undraw_qa.svg')] bg-contain md:bg-left bg-bottom bg-no-repeat" >
+      <div className="w-[90%] mx-auto h-full overflow-hidden bg-[url('/images/undraw_qa.svg')] bg-contain md:bg-left bg-bottom bg-no-repeat">
         <div className='w-[110px] xl:w-[153px] h-[34px] xl:h-[48px]'>
           <img src={'/images/olamax_logo_2.png'} alt="logo" className='object-cover '/>
         </div>
