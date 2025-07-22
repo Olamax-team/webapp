@@ -8,6 +8,12 @@ const sideInformations = [
     "Your information is securely stored and used solely for identity"
   ],
   [
+    "Ensure your contact information is accurately set to avoid verification delays.",
+    "Contact verification helps us ensure compliance with local regulations and guidelines.",
+    "Your contact data is securely stored and used solely for identity verification purposes.",
+    "Keep your contact information up-to-date to ensure smooth communication.",
+  ],
+  [
     "Ensure documents are clearly visible and not blurry to avoid verification delays.",
     "Only valid, unexpired documents are accepted; expired IDs will delay your application.",
     "The name on your documents must match the personal information provided.",

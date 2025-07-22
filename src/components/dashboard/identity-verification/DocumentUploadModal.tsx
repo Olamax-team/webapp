@@ -7,14 +7,15 @@ import StepOne from './StepOne'
 import StepTwoDesktop from './StepTwoDesktop'
 import StepTwoMobile from './StepTwoMobile'
 import StepThree from './StepThree'
+import StepFour from './StepFour'
 
-const headers = ['Personal Information', 'Documents Identification ', 'Liveness Check']
+const headers = ['Personal Information I', 'Personal Information II', 'Documents Identification ', 'Liveness Check']
 
 const DocumentUploadModal = () => {
   const { isOpen, onClose} = useUploadDocumentModal();
   const [showModal, setShowModal] = React.useState(isOpen);
 
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const [currentStep, setCurrentStep] = React.useState(1);
 
   const [open, setOpen] = React.useState(false)
 
@@ -50,8 +51,9 @@ const DocumentUploadModal = () => {
           </div>
           <div className='mt-5'>
             { currentStep === 0 && <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
-            { currentStep === 1 && <StepTwoDesktop currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
-            { currentStep === 2 && <StepThree/> }
+            {currentStep === 1 && <StepFour currentStep={currentStep} setCurrentStep={setCurrentStep} />}
+            { currentStep === 2 && <StepTwoDesktop currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
+            { currentStep === 3 && <StepThree/> }
           </div>
         </div>
       </React.Fragment>
@@ -95,8 +97,9 @@ const DocumentUploadModal = () => {
               </div>
               <div className='mt-5'>
                 { currentStep === 0 && <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
-                { currentStep === 1 && <StepTwoMobile currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
-                { currentStep === 2 && <StepThree /> }
+                { currentStep === 1 && <StepFour currentStep={currentStep} setCurrentStep={setCurrentStep}/>}
+                { currentStep === 2 && <StepTwoMobile currentStep={currentStep} setCurrentStep={setCurrentStep} /> }
+                { currentStep === 3 && <StepThree /> }
               </div>
             </div>
           </React.Fragment>
