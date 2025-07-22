@@ -18,7 +18,6 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
   const [frontImage, setFrontImage] = React.useState<File | null>(null);
   const [backImage, setBackImage] = React.useState<File | null>(null);
   const [holdingImage, setHoldingImage] = React.useState<File | null>(null);
-  const [bvn, setBvn] = React.useState('');
   const [nin, setNin] = React.useState('');
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -59,13 +58,12 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
       fetchKyc();
       fetchKycStatus();
     }
-  },[user]);
+  },[user, token,]);
 
   const DocumentSelect = () => {
 
     const handleDocumentSelect = (value:string) => {
       setDocumentType(value);
-      setBvn('');
       setNin('');
     };
 
@@ -141,11 +139,11 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
   }
 
   const handleSubmit = () => {
-    if (documentType === 'bvn' || documentType === 'nin') {
+    if (documentType === 'nin') {
 
       const kycData = {
-        method: documentType == 'bvn' ? 'bvn' : 'nin',
-        identityNumber:documentType == 'bvn' ?  bvn : nin
+        method: 'nin',
+        identityNumber: nin
       };
 
       const config = {
@@ -159,21 +157,9 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
         data: kycData,
       };
 
-      if (currentStep === 3) {
+      if (currentStep === 4) {
         return;
       };
-
-      if (documentType === 'bvn') {
-        if (bvn.trim().length < 11 || bvn.trim().length > 11 || !isNumeric(bvn)) {
-          toast({
-            title: 'Error',
-            description:'Invalid BVN number!!!',
-            variant: 'destructive'
-          });
-          setBvn('');
-          return;
-        }
-      }
 
       if (documentType === 'nin') {
         if (nin.trim().length < 11 || nin.trim().length > 11 || !isNumeric(nin)) {
@@ -284,24 +270,25 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
       };
     };
   };  
-    const document_status = { kyc_documents_status: 'pending' };
-  
-    React.useEffect(() => {
-      if (kycStatus) {
-        function checkObjectPresence(object1: Record<string, any>, generalObject: Record<string, any>): boolean {
-          const object1Keys = Object.keys(object1);
-        
-          return object1Keys.every((key) => generalObject.hasOwnProperty(key));
-        }
 
-        if (kycStatus.front !== null || kycStatus.back !== null || kycStatus.hold !== null) {
-          if (checkObjectPresence(document_status, kycStatus)) {
-            setCurrentStep(2);
-          }
-        };
+  const document_status = { kyc_documents_status: 'pending' };
   
+  React.useEffect(() => {
+    if (kycStatus) {
+      function checkObjectPresence(object1: Record<string, any>, generalObject: Record<string, any>): boolean {
+        const object1Keys = Object.keys(object1);
+      
+        return object1Keys.every((key) => generalObject.hasOwnProperty(key));
       }
-    }, [kycStatus]);
+
+      if (kycStatus.front !== null || kycStatus.back !== null || kycStatus.hold !== null) {
+        if (checkObjectPresence(document_status, kycStatus)) {
+          setCurrentStep(3);
+        }
+      };
+
+    }
+  }, [kycStatus]);
 
   return (
     <div className='lg:w-75% hidden lg:block'>
@@ -311,18 +298,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
           {documentType && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Identity Type</label>}
           <DocumentSelect/>
         </div>
-        { documentType === 'bvn' ?
-          <React.Fragment>
-            <h2 className='text-sm'>Confirming your BVN helps us verify your identity and protect your account from fraud</h2>
-            <AuthInput
-              inputValue={bvn}
-              value={bvn}
-              onChange={(e) => setBvn(e.target.value)} 
-              label='BVN'
-              inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
-            />
-          </React.Fragment>
-        : documentType === 'nin' ?
+        { documentType === 'nin' ?
           <React.Fragment>
             <h2 className='text-sm'>Confirming your NIN helps us verify your identity and protect your account from fraud.</h2>
             <AuthInput
@@ -332,7 +308,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
               label='NIN'
               inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
             />
-          </React.Fragment> :
+          </React.Fragment>  :
           <React.Fragment>
             <div className='flex flex-col gap-2'>
               <h2 className='text-sm'>Document Front Side</h2>
@@ -378,14 +354,7 @@ const StepTwoDesktop = ({setCurrentStep, currentStep}:{currentStep:number; setCu
             </div>
           </React.Fragment>
         }
-        { documentType === 'bvn' ?
-          <div className='lg:p-2 lg:mt-2 mt-5'>
-            <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
-            {isLoading ? `${'Verifying BVN...'}` : 'Proceed'}
-              {isLoading && <Loader2 className='animate-spin'/>}
-            </button>
-          </div> :
-          documentType === 'nin' ?
+        { documentType === 'nin' ?
             <div className='lg:p-2 lg:mt-2 mt-5'>
               <button className='py-3 px-8 bg-primary rounded-md text-white leading-normal text-[13px] lg:text-[16px] flex items-center justify-center gap-3 disabled:bg-primary/50' onClick={handleSubmit} disabled={isLoading}>
               {isLoading ? `${'Verifying NIN...'}` : 'Proceed'}

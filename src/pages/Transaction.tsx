@@ -7,7 +7,7 @@ import { Calendar } from "../components/ui/calendar";
 import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { HiEllipsisVertical } from "react-icons/hi2";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
 import { useApiConfig } from "../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -82,8 +82,6 @@ const Transaction = () => {
 
   const [fromDate, setFromDate] = React.useState<Date | undefined>();
   const [toDate, setToDate] = React.useState<Date | undefined>();
-  const [pendingMenu, setPendingMenu] = React.useState('view');
-  const [completedMenu, setCompletedMenu] = React.useState('save');
 
   const formattedTo = toDate ? format(new Date(toDate.toISOString()), 'yyyy-MM-dd') : '';
   const formattedFrom = fromDate ? format(new Date(fromDate.toISOString()), 'yyyy-MM-dd') : '';
@@ -111,7 +109,6 @@ const Transaction = () => {
   });
 
   const allTransactionDetails = (fromDate && toDate) ? allTransactionData?.data :  allTransactionData?.data
-  console.log(allTransactionDetails)
 
   const DateComponent = ({date, setDate, placeholder}:dateComponentProps) => {
     return (
@@ -204,19 +201,19 @@ const Transaction = () => {
                       <HiEllipsisVertical className="size-7"/>
                     </button>
                   </DropdownMenuTrigger>
-                  { item.payment_status === 'Pending' ?
+                  { item.payment_status === 'pending' ?
                     <DropdownMenuContent className="rounded-xl">
-                      <DropdownMenuRadioGroup value={pendingMenu} onValueChange={setPendingMenu}>
-                        <DropdownMenuRadioItem value="view" className="rounded-lg">View</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="cancel" className="rounded-lg">Cancel</DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem className="rounded-lg">View</DropdownMenuItem>
+                        <DropdownMenuItem className="rounded-lg">Cancel</DropdownMenuItem>
+                      </DropdownMenuGroup>
                     </DropdownMenuContent> :
-                    item.payment_status === 'Completed' ?
+                    item.payment_status === 'completed' ?
                     <DropdownMenuContent className="rounded-xl">
-                      <DropdownMenuRadioGroup value={completedMenu} onValueChange={setCompletedMenu}>
-                        <DropdownMenuRadioItem value="save" className="rounded-lg">Save</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="report" className="rounded-lg">Report</DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem className="rounded-lg">Save</DropdownMenuItem>
+                        <DropdownMenuItem className="rounded-lg">Report</DropdownMenuItem>
+                      </DropdownMenuGroup>
                     </DropdownMenuContent> :
                     ''}
                 </DropdownMenu>

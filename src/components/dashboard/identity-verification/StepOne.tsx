@@ -18,8 +18,10 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
 
   const [lname, setLName] = React.useState(userDetails ? userDetails.last_name : '');
   const [fname, setFName] = React.useState(userDetails ? userDetails.first_name : '');
-  const [mname, setMName] = React.useState(userDetails ? userDetails.middle_name : '');
+  const [mname, setMName] = React.useState(userDetails ? userDetails?.middle_name : '');
   const [dateOfBirth, setDateOfBirth] = React.useState<string| null>(userDetails ? userDetails.date_of_birth : null);
+  const [address, setAddress] = React.useState(userDetails ? userDetails.address : '');
+  const [city, setCity] = React.useState('');
 
 
   React.useLayoutEffect(() => {
@@ -52,11 +54,11 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
 
   const onNext = () => {
 
-    if (currentStep === 3) {
+    if (currentStep === 4) {
       return;
     };
 
-    if (!lname || !fname || !dateOfBirth || !gender || !nationality || !phoneNumber) {
+    if (!lname || !fname || !dateOfBirth || !gender || !nationality || !phoneNumber || !mname || !address) {
       toast({
         title: 'Error',
         description: 'Make sure all fields are completely filled inorder to proceed!',
@@ -68,8 +70,10 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     const stepOneData = {
       lname: lname,
       fname: fname,
+      mname: mname,
       dateOfBirth: dateOfBirth ? format(dateOfBirth, 'yyyy-MM-dd') : '',
       gender: gender,
+      address: address,
       nationality: nationality,
       phone_number: formatPhoneNumber(phoneNumber),
     };
@@ -121,13 +125,13 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const GenderSelect = () => {
     return (
       <Select onValueChange={(value) => setGender(value)} defaultValue={gender}>
-        <SelectTrigger className={cn("w-full h-full pl-4 font-semibold text-base focus:border-primary focus:border-2 focus:ring-0", gender ? 'lg:pt-5 pt-6': '')}>
+        <SelectTrigger className={cn("text-sm w-full h-full pl-4 font-semibold focus:border-primary focus:border-2 focus:ring-0", gender ? 'lg:pt-5 pt-6': '')}>
           <SelectValue placeholder="Select Gender" />
         </SelectTrigger>
         <SelectContent className='z-[300000]'>
           <SelectGroup>
-            <SelectItem value="male">Male</SelectItem>
-            <SelectItem value="female">Female</SelectItem> 
+            <SelectItem value="male" className='text-sm'>Male</SelectItem>
+            <SelectItem value="female" className='text-sm'>Female</SelectItem> 
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -137,6 +141,8 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const stepOneData = {
     lname: lname,
     fname: fname,
+    mname: mname,
+    address: address,
     dateOfBirth: dateOfBirth ? format(dateOfBirth, 'yyyy-MM-dd') : '',
     gender: gender,
     phone_number: formatPhoneNumber(phoneNumber),
@@ -150,7 +156,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
         return object1Keys.every((key) => generalObject.hasOwnProperty(key));
       }
 
-      if (kycStatus.lname !== null && kycStatus.fname !== null && kycStatus.dateOfBirth !== null && kycStatus.gender !== null && kycStatus.phone_number !== null) {
+      if (kycStatus.lname !== null && kycStatus.fname !== null && kycStatus.dateOfBirth !== null && kycStatus.gender !== null && kycStatus.phone_number !== null && address !== null && kycStatus.mname !== null) {
         if (checkObjectPresence(stepOneData, kycStatus)) {
           setCurrentStep(1);
         }
@@ -207,10 +213,10 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   return (
     <div className='flex flex-col lg:gap-1 gap-2'>
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Bio-Data</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-3 gap-2 lg:p-2">
+      <div className="grid grid-cols-2 lg:gap-3 gap-2 lg:p-2">
         <AuthInput
-          inputValue={lname}
-          value={lname}
+          inputValue={lname || ''}
+          value={lname ?? ''}
           onChange={(e) => setLName(e.target.value)}
           label='Last Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
@@ -218,8 +224,8 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           id='lname'
         />
         <AuthInput
-          inputValue={fname}
-          value={fname}
+          inputValue={fname || ''}
+          value={fname ?? ''}
           onChange={(e) => setFName(e.target.value)}
           label='First Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
@@ -227,8 +233,8 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           id='fname'
         />
         <AuthInput
-          inputValue={mname}
-          value={mname}
+          inputValue={mname || ''}
+          value={mname ?? ''}
           onChange={(e) => setMName(e.target.value)}
           label='Middle Name'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
@@ -236,12 +242,12 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           id='mname'
         />
         <div className="relative">
-          {/* {dateOfBirth && <label className='-translate-y-[5%] text-black/50 top-2 text-[13px] font-semibold absolute left-4'>Date of Birth</label>} */}
           <div className='w-full lg:h-[55px] h-[48px] relative border rounded-md px-4 flex gap-2 items-center'>
-            <h2 className={cn('font-semibold')}>Date Of Birth</h2>
+            <h2 className={cn('font-semibold hidden md:block')}>Date Of Birth</h2>
+            <h2 className={cn('font-semibold md:hidden')}>DOB</h2>
             <input 
               type="date" 
-              className={cn('flex-1 h-full focus:outline-none')}
+              className={cn('flex-1 h-full focus:outline-none text-sm')}
               value={dateOfBirth || ''}
               onChange={handleDateChange}
             />
@@ -260,8 +266,29 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           />
         </div>
       </div>
-      <h2 className='font-semibold font-Inter text-sm lg:text-base'>Contact Information</h2>
+      <h2 className='font-semibold font-Inter text-sm lg:text-base'>Contact Address</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-3 gap-2 lg:p-2">
+        <AuthInput
+          inputValue={address || ''}
+          value={address ?? ''}
+          onChange={(e) => setAddress(e.target.value)}
+          label='Address'
+          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+          name='address'
+          id='address'
+        />
+        <AuthInput
+          inputValue={city}
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          label='City'
+          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+          name='city'
+          id='city'
+        />
+      </div>
+      <h2 className='font-semibold font-Inter text-sm lg:text-base'>Contact Information</h2>
+      <div className="grid grid-cols-2 lg:gap-3 gap-2 lg:p-2">
         <AuthInput
           inputValue={phoneNumber}
           value={phoneNumber}

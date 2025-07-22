@@ -20,6 +20,44 @@ export type kycDetailsProps = {
   prolife_image: string;
 };
 
+// {
+//     "user_id": 94,
+//     "uid": "32634136",
+//     "email": "onome962+124@gmail.com",
+//     "referral_code": "76a2ca55",
+//     "verification_method": null,
+//     "fname": null,
+//     "mname": null,
+//     "prolife_image": null,
+//     "lname": null,
+//     "status": "Unverified",
+//     "phone_number": null,
+//     "gender": null,
+//     "dateOfBirth": null,
+//     "nationality": null,
+//     "documents_id": null,
+//     "front": null,
+//     "back": null,
+//     "hold": null,
+//     "short_video": null,
+//     "address_file": null,
+//     "kyc_documents_created_at": null,
+//     "kyc_documents_updated_at": null,
+//     "kyc_documents_video_status": null,
+//     "kyc_documents_status": null,
+//     "kyc_user_details_id": null,
+//     "kyc_user_details_status": null,
+//     "bvn_status": null,
+//     "kyc_fname": null,
+//     "kyc_lname": null,
+//     "kyc_gender": null,
+//     "kyc_dateOfBirth": null,
+//     "kyc_phone_number": null,
+//     "kyc_picture": null,
+//     "kyc_user_details_created_at": null,
+//     "kyc_user_details_updated_at": null
+// }
+
 export type kycDetailsStatusProps = {
   user_id: number;
   uid: string;
@@ -30,7 +68,7 @@ export type kycDetailsStatusProps = {
   mname: string | null;
   prolife_image: string | null; // Note: Is this meant to be "profile_image"?
   lname: string | null;
-  status: "Unverified" | "Verified" | string; // Adjust enum if needed
+  status: "Unverified" | "verified" | string; // Adjust enum if needed
   phone_number: string | null;
   gender: string | null;
   dateOfBirth: string | null; // Could be Date if parsed
@@ -40,12 +78,14 @@ export type kycDetailsStatusProps = {
   back: string | null;
   hold: string | null;
   short_video: string | null;
+  address_file: string | null;
   kyc_documents_created_at: string | null;
   kyc_documents_updated_at: string | null;
   kyc_documents_video_status: string | null;
   kyc_documents_status: string | null;
   kyc_user_details_id: number | null;
   kyc_user_details_status: string | null;
+  bvn_status: boolean;
   kyc_fname: string | null;
   kyc_lname: string | null;
   kyc_gender: string | null;
@@ -69,6 +109,10 @@ export type userDataProps = {
   phone_number_verified: boolean;
   date_of_birth: string; // ISO date string: "YYYY-MM-DD"
   gender: 'male' | 'female' | string;
+  bvn_status: boolean; // true or false
+  address_status: boolean; // true or false
+  address_file: string | null; // URL or path to the address file
+  address: string | null; // Full address as a string
   nationality: string;
   profile_image: string;
   access_right: string; // e.g., "Full Access"

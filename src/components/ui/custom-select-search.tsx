@@ -26,7 +26,7 @@ export function CustomSelectSearch ({name, value, setValue, stringArray}:customS
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between text-base rounded lg:h-[60px] h-[48px] bg-inherit hover:bg-inherit"
+          className="w-full justify-between text-sm rounded lg:h-[60px] h-[48px] bg-inherit hover:bg-inherit"
         >
           {value
             ? stringArray.find((string) => string === value)
@@ -34,12 +34,12 @@ export function CustomSelectSearch ({name, value, setValue, stringArray}:customS
           <ChevronsUpDown className="ml-2 h-5 w-5 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="md:w-[236px] w-[316px] p-0 rounded z-[120000]">
+      <PopoverContent className="md:w-[236px] w-[200px] p-0 rounded z-[120000]">
         <Command>
-          <CommandInput placeholder={`Search ${name}...`} className="h-9 text-base" />
+          <CommandInput placeholder={`Search ${name}...`} className="h-9 text-sm" />
           <CommandList>
             <CommandEmpty>
-              <p className="text-base">{`No ${name} found.`}</p>
+              <p className="text-sm">{`No ${name} found.`}</p>
             </CommandEmpty>
             <CommandGroup>
               {stringArray.map((string, index:number) => (
@@ -52,7 +52,7 @@ export function CustomSelectSearch ({name, value, setValue, stringArray}:customS
                     setOpen(false)
                   }}
                 >
-                  <p className="text-base">{string}</p>
+                  <p className="text-sm">{string}</p>
                   <CheckIcon
                     className={cn(
                       "ml-auto h-5 w-5",

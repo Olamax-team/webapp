@@ -173,9 +173,9 @@ const DashboardTab: React.FC = () => {
   const baseLink = 'https://app.olamax.io/';
 
   React.useEffect(() => {
-    if (userDetail && userDetails?.status === 'verified' && userDetails?.is_auth_code === 'inactive') {
+    if ((userDetail && userDetails?.status === 'verified') && userDetails?.is_auth_code === 'inactive') {
       onOpen();
-    }
+    } else { return; }
   }, [])
 
   const user = {
