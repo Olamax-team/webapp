@@ -54,6 +54,8 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
     return `+234${tenDigits}`;
   };
 
+  console.log(userDetails)
+
   const onNext = () => {
 
     if (currentStep === 4) {
@@ -210,6 +212,25 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
         setSendingOtp(false)
         setShowOtp(true);
       }
+    }).catch((error) => {
+      if (axios.isAxiosError(error)) {
+        toast({
+          title: 'Error',
+          description: error.response? error.response.data.message : 'Something went wrong, try again later!',
+          variant: 'destructive'
+        });
+        setSendingOtp(false)
+        console.log(error)
+        console.error("Error fetching data message:", error.response?.data.message || error.message);        
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Something went wrong!! Try again later',
+          variant: 'destructive'
+        });
+        setSendingOtp(false)
+        console.error("Unexpected error:", error);
+      };
     })
   };
 
@@ -321,7 +342,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
             id='phoneNumber'
           />
           { !phoneNumberVerified &&
-            <button type="button" className='border rounded-md px-3 flex-none' onClick={() => sendOtp()}>
+            <button type="button" className='border-green-500 bg-green-500 text-white rounded-md px-3 flex-none' onClick={() => sendOtp()}>
               { sendingOtp ? <Loader2 className='animate-spin size-5'/> : <HiArrowRight/>}
             </button>
           }
@@ -339,7 +360,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
                 id='phoneOtp'
               />
             </div>
-            <button type="button" className='border rounded-md px-3 flex-none' onClick={() => verifyOtp()}>
+            <button type="button" className='border border-green-500 bg-green-500 text-white rounded-md px-3 flex-none' onClick={() => verifyOtp()}>
               { verifyingOtp ? <Loader2 className='animate-spin size-5'/> : <HiArrowRight/>}
             </button>
           </div>

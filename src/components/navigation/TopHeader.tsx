@@ -2,21 +2,54 @@ import React from "react";
 import { cn } from "../../lib/utils";
 import useUserDetails from "../../stores/userStore";
 import { HiOutlineInformationCircle } from "react-icons/hi";
+import { useApiConfig } from "../../hooks/api";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
-const textArray = [
-  "GET MORE VALUE FOR YOUR USDT AND BTC WHEN YOU BUY OR SELL USDT/BTC AND EARN BONK TOKEN. PROMO STARTS FROM 6TH OF MARCH TILL 6TH OF APRIL. FOR ENQUIRIES CLICK HERE",
-  "ENJOY LOWER FEES ON ALL CRYPTO TRANSACTIONS WHEN YOU TRADE ETH AND LTC. SPECIAL DISCOUNT RUNS FROM 1ST OF NOVEMBER TO 1ST OF DECEMBER. FOR DETAILS, CLICK HERE",
-  "TRADE YOUR CRYPTO SECURELY AND EARN REWARDS ON EVERY BTC AND DOGE TRANSACTION. PROMO RUNS FROM 10TH OF OCTOBER TO 10TH OF NOVEMBER. FOR MORE INFO, CLICK HERE"
-];
+export interface AnnouncementProps {
+  id: number;
+  description: string;
+  title: string | null;
+  link: string | null;
+  image: string;
+  announcement_by: string;
+  announcement_by_image: string;
+  created_at: string; // ISO timestamp
+  updated_at: string; // ISO timestamp
+}
 
 const TopHeader = () => {
+  const config = useApiConfig({
+    method: 'get',
+    url: 'get-announcement'
+  });
+
+  const fetchAnnoucement = async () => {
+    const response = await axios.request(config)
+
+    if (response && response.status === 200) {
+      return response 
+    } else {
+      throw new Error('Something went wrong')
+    }
+  };
+
+  const { data, status } = useQuery({
+    queryKey: ['annoucements'],
+    queryFn: fetchAnnoucement,
+  });
+
+  const annoucement = data?.data.announcement as AnnouncementProps[];
+  const textArray = annoucement && annoucement.map((item) => item.description);
+
   const [textIndex, setTextIndex] = React.useState(0);
   const { user, fetchKycDetails, fetchKycStatus } = useUserDetails();
 
  // this is to cycle the header text
   React.useEffect(() => {
     const intervalId = setInterval(() => {
-      setTextIndex((prevIndex) => (prevIndex + 1) % textArray.length);
+      setTextIndex((prevIndex) => (prevIndex + 1) % textArray?.length);
     }, 2000);
 
     return () => clearInterval(intervalId);
@@ -28,6 +61,14 @@ const TopHeader = () => {
       fetchKycStatus();
     }
   }, [user]);
+
+  if (status === 'pending') {
+    return (
+      <div className="w-full bg-primary md:h-[40px] h-[32px] flex items-center justify-center">
+        <Loader2 className="animate-spin size-5"/>
+      </div>
+    )
+  }
 
   return (
     <div className={cn("w-full bg-primary md:h-[40px] h-[32px] flex items-center justify-center", user?.account_status === 'Unverified' ? 'bg-[#E41D0333]/20' : '')}>
