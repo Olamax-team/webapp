@@ -41,8 +41,6 @@ const CableInput = () => {
 
     const [userIsValid, setUserIsValid] = React.useState(false);
     const [isValidating, setIsValidating] = React.useState(false);
-
-    console.log(item);
     
     React.useEffect(() => {
       if (user) {

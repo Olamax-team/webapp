@@ -8,8 +8,6 @@ import { useConfirmFactorAuthModal, useConfirmVerificationModal } from "../../li
 import useUserDetails from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { activityIndex } from "../../stores/generalStore";
-import { useApiConfig } from "../../hooks/api";
-import axios from "axios";
 
 interface UserInfoProps {
   name: string;
@@ -46,8 +44,6 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
         fetchKycStatus();
       }
     }, [user]);
-    
-    console.log(user)
 
     React.useEffect(() => {
       if (user && user.account_status === 'Unverified') {
@@ -166,17 +162,13 @@ const DashboardTab: React.FC = () => {
 
   const { onOpen } = useConfirmFactorAuthModal();
 
-  console.log(userDetail);
-  console.log(kycDetails)
-  console.log(userDetails)
-
   const baseLink = 'https://app.olamax.io/';
 
   React.useEffect(() => {
     if ((userDetail && userDetails?.status === 'verified') && userDetails?.is_auth_code === 'inactive') {
       onOpen();
     } else { return; }
-  }, [])
+  }, [userDetail, userDetails])
 
   const user = {
     name: kycDetails ? `${kycDetails.lname+' '+kycDetails.fname }`: '' ,
@@ -203,30 +195,6 @@ const DashboardTab: React.FC = () => {
             </div>,
     },
   ];
-
-  const formData = new FormData();
-  formData.append('description', 'This is what i have to say');
-  formData.append('title', 'What a lovely story');
-  formData.append('link', 'Everyonelovesit.com');
-
-  const config = useApiConfig({
-    method: 'post',
-    url: 'admin/add-news',
-    formdata: formData
-  })
-
-  const runNews = async () => {
-    await axios.request(config)
-    .then((result) => {
-      if (result) {
-        console.log(result)
-      }
-    })
-  }
-
-  React.useEffect(() => {
-    runNews();
-  }, [])
 
   return (
     <section className="flex flex-col w-full items-center h-auto space-y-2">

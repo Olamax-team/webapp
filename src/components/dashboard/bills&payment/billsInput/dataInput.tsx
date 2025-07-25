@@ -64,9 +64,6 @@ const DataInput = () => {
             return;
         }
         const finalData = removeEmptyKeys(newData);
-
-        console.log(finalData)
-
        
         const config = {
             method: 'post',
@@ -82,7 +79,6 @@ const DataInput = () => {
          setIsLoading(true)
         await axios.request(config)
         .then((response) => {
-            console.log(response)
             if (response.status === 201) {
                 setTransactionId(response.data?.transaction_id);
                 { item?.transaction_type === 'fiat' ? 
@@ -93,7 +89,7 @@ const DataInput = () => {
                 onOpen();
             }
         }).catch((error) => {
-            console.log(error)
+            console.error(error)
             if (error) {
                 toast({
                     title: 'Error',

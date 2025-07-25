@@ -18,8 +18,6 @@ const NameHeader = () => {
     }
   },[user]);
 
-  console.log(userDetails);
-
   const copyToClipboard = () => {
     navigator.clipboard.writeText(userDetails? userDetails.uid : '');
     alert("copied!");
@@ -61,7 +59,6 @@ const NameHeader = () => {
                 const response = await axios.request(imageUploadConfig);
 
                 if (response) {
-                  console.log(response)
                   if (response.status === 200) {
                     toast({
                       title: 'Success',
