@@ -199,19 +199,16 @@ const FiatBillsPaymentModal = () => {
   const completeBuyTransaction = async () => {
     await axios.request(isBill ? completeBillConfig : completeBuyConfig)
     .then((response) => {
-      console.log(response)
       if (response.status === 200) {
-        console.log(response.data)
         clearAccountDetails();
         clearItem();
         clearTransactionId();
         onClose(); 
         openPaymentConfirmation.onOpen(); 
       } else {
-        console.log('Error:', response.statusText);
+        console.error('Error:', response.statusText);
       }
     }).catch((error:any) => {
-      console.log(error);
       console.error(error);
       const errorMessage = error.response?.data?.message || error.response?.data?.[0]?.message || error.message || 'An unexpected error occurred.';
       toast({

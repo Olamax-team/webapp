@@ -76,6 +76,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       address: address,
       nationality: nationality,
       phone_number: formatPhoneNumber(phoneNumber),
+      city: city,
     };
 
     const config = {
@@ -109,6 +110,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           variant: 'destructive'
         });
         setIsLoading(false);
+        console.log(error)
         console.error("Error fetching data message:", error.response?.data.message || error.message);        
       } else {
         toast({

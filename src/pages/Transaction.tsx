@@ -108,7 +108,9 @@ const Transaction = () => {
     refetchInterval: 5000,
   });
 
-  const allTransactionDetails = (fromDate && toDate) ? allTransactionData?.data :  allTransactionData?.data
+  const allTransactionDetails = (fromDate && toDate) ? allTransactionData?.data :  allTransactionData?.data;
+
+  console.table(allTransactionDetails);
 
   const DateComponent = ({date, setDate, placeholder}:dateComponentProps) => {
     return (

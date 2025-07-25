@@ -131,9 +131,6 @@ const AirtimeRecharge = () => {
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
 
   const [fiatPayment, setFiaPayment] = useState((stables && stables.length > 0) ? stables[0].coin : 'NGN');
-  // const [fiatPaymentDetails, setFiatPaymentDetails] = useState<coinsProps | undefined>(() => stables && stables.length > 0 ? stables[0] : undefined);
-
-  // console.log('fiat-payment', fiatPaymentDetails);
 
   const { setItem } = useBillsStore();
 
@@ -234,13 +231,13 @@ const AirtimeRecharge = () => {
   //   } else return;
   // }
 
-  React.useEffect(() => {
-    const nairaValue = getCoinSellingPriceInNaira(selectPayment);
-    const dollarValue = getCoinSellingPriceInNaira(selectPayment);
-    const price = selectPayment ? nairaValue?.priceInNaira : undefined;
-    console.log(price);
-    console.log(dollarValue?.priceInUsd);
-  }, [selectPayment, liveRates, dollarPrice]);
+  // React.useEffect(() => {
+  //   const nairaValue = getCoinSellingPriceInNaira(selectPayment);
+  //   const dollarValue = getCoinSellingPriceInNaira(selectPayment);
+  //   const price = selectPayment ? nairaValue?.priceInNaira : undefined;
+  //   console.log(price);
+  //   console.log(dollarValue?.priceInUsd);
+  // }, [selectPayment, liveRates, dollarPrice]);
 
   const handleSelectChange = (network: airtimeNetworkProps) => {
     setSelectedNetwork(network.network);

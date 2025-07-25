@@ -27,8 +27,17 @@ const ActivateAuthModal = () => {
 
 
   const start2Fa = async () => {
-    const response = await axios.request(start2FaConfig);
-    setActivationCode(response?.data.key);
+    await axios.request(start2FaConfig)
+    .then((response) => {
+      if (response && response.status === 200) {
+        setActivationCode(response?.data.key);
+      }
+    }).catch((e) => {
+      if (e) {
+        console.log(e)
+      }
+    })
+
   };
 
   const getEmailOtp = async () => {

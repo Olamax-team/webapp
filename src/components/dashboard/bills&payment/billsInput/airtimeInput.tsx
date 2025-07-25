@@ -80,8 +80,6 @@ const AirtimeInput = () => {
 
         const finalData = removeEmptyKeys(newData);
 
-        console.log(finalData)
-
         const config = {
             method: 'post',
             maxBodyLength: Infinity,
@@ -96,7 +94,6 @@ const AirtimeInput = () => {
         setIsLoading(true);
         await axios.request(config)
         .then((response) => {
-            console.log(response)
             if (response.status === 201) {
                 setTransactionId(response.data.transaction_id);
                 { item?.transaction_type === 'fiat' ? 

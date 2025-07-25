@@ -121,7 +121,7 @@ const StepFour = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentS
 
     const kycBvnData = {
       method: 'bvn',
-      bvn: bvn,
+      identityNumber: bvn,
     }
 
     const kycBvnConfig = {
@@ -168,6 +168,7 @@ const StepFour = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentS
           }
         };
       }).catch((error) => {
+        console.log(error);
         if (axios.isAxiosError(error)) {
           toast({
             title: 'Error',

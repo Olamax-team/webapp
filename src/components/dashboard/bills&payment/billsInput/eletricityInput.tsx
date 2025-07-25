@@ -92,7 +92,6 @@ const ElectricityInput = () => {
 
         setIsValidating(true);
         await axios.request(validateCustomerConfig).then((response) => {
-            console.log(response);
             if (response.status !== 200) {
                 setIsValidating(false);
                 throw new Error('Something went wrong, try again later');
@@ -103,7 +102,7 @@ const ElectricityInput = () => {
                 setUserIsValid(true);
             };
         }).catch((error) => {
-            console.log(error);
+            console.error(error);
             if (AxiosError) {
                 setIsValidating(false);
                 toast({
