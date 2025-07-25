@@ -14,41 +14,41 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
 
-interface transaction {
-  id: number;
-  user_id: number;
-  created_at: string;
-  ref: string;
-  coin_id: string;
-  coin_name: string;
-  payment_method: string;
-  naira_value: number;
-  payment_status: string;
-  transaction_charges: number | null;
-  type: string;
-}
+// interface transaction {
+//   id: number;
+//   user_id: number;
+//   created_at: string;
+//   ref: string;
+//   coin_id: string;
+//   coin_name: string;
+//   payment_method: string;
+//   naira_value: number;
+//   payment_status: string;
+//   transaction_charges: number | null;
+//   type: string;
+// }
 
-interface link {
-  url: string | null;
-  label: string;
-  active: boolean;
-}
+// interface link {
+//   url: string | null;
+//   label: string;
+//   active: boolean;
+// }
 
-interface transactionHistory {
-  current_page: number;
-  data: transaction[];
-  first_page_url: string;
-  from: number;
-  last_page: number;
-  last_page_url: string;
-  links: link[];
-  next_page_url: string | null;
-  path: string;
-  per_page: number;
-  prev_page_url: string | null;
-  to: number;
-  total: number;
-}
+// interface transactionHistory {
+//   current_page: number;
+//   data: transaction[];
+//   first_page_url: string;
+//   from: number;
+//   last_page: number;
+//   last_page_url: string;
+//   links: link[];
+//   next_page_url: string | null;
+//   path: string;
+//   per_page: number;
+//   prev_page_url: string | null;
+//   to: number;
+//   total: number;
+// }
 
 type transactionProps = {
   id: number;
@@ -77,6 +77,46 @@ type mobileTransactionProps = {
   transaction: transactionProps
 };
 
+export interface PaginationLink {
+  url: string | null;
+  label: string;
+  active: boolean;
+}
+
+export interface BuyTransaction {
+  id: number;
+  created_at: string;
+  ref: string;
+  coin_id: string;
+  coin_name: string;
+  payment_method: string;
+  naira_amount_to_buy: number;
+  naira_amount_transfered: number | null;
+  coin_to_receive: number;
+  coin_amount_to_buy: number;
+  payment_status: string;
+  transaction_charges: string;
+  type: string;
+}
+
+export interface PaginatedBuyTransactionResponse {
+  current_page: number;
+  data: BuyTransaction[];
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  links: PaginationLink[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number;
+  total: number;
+}
+
+
+
 const Transaction = () => {
   documentTitle('Transaction');
 
@@ -87,7 +127,7 @@ const Transaction = () => {
   const formattedFrom = fromDate ? format(new Date(fromDate.toISOString()), 'yyyy-MM-dd') : '';
 
   const getTranscationConfig = useApiConfig({
-    url: fromDate && toDate ? `get-transactions-history?begin_date=${formattedFrom}&end_date=${formattedTo}&per_page=10&order=desc`: `get-transactions-history`,
+    url: fromDate && toDate ? `get-buy-transactions-history?begin_date=${formattedFrom}&end_date=${formattedTo}&per_page=10&order=desc`: `get-buy-transactions-history`,
     method: 'get'
   });
   
@@ -98,7 +138,7 @@ const Transaction = () => {
       throw new Error('Something went wrong, try again later');
     }
   
-    const data = response.data as transactionHistory;
+    const data = response.data as PaginatedBuyTransactionResponse;
     return data;
   };
 
@@ -180,6 +220,7 @@ const Transaction = () => {
             <TableHead className="text-center font-bold">Coins</TableHead>
             <TableHead className="text-center font-bold">Payment Method</TableHead>
             <TableHead className="text-center font-bold">Amount</TableHead>
+            <TableHead className="text-center font-bold">Coin Amount</TableHead>
             <TableHead className="text-center font-bold">Status</TableHead>
             <TableHead className="text-center font-bold">Fees</TableHead>
             <TableHead className="text-center font-bold">Action</TableHead>
@@ -193,7 +234,8 @@ const Transaction = () => {
               <TableCell className="text-center uppercase">{item.type}</TableCell>
               <TableCell className="text-center">{item.coin_name}</TableCell>
               <TableCell className="text-center capitalize">{item.payment_method}</TableCell>
-              <TableCell className="text-center">NGN{item.naira_value.toLocaleString()}</TableCell>
+              <TableCell className="text-center">NGN{item.naira_amount_to_buy?.toLocaleString()}</TableCell>
+              <TableCell className="text-center">{item.coin_amount_to_buy}</TableCell>
               <TableCell className={cn("text-center font-medium", item.payment_status === 'Pending' ? 'text-[#ff9c00]': item.payment_status === 'Completed' ? 'text-[#1faf38]': 'text-[#e41d03]')}>{item.payment_status}</TableCell>
               <TableCell className="text-center">{item.transaction_charges} {item.coin_name}</TableCell>
               <TableCell className="flex items-center justify-center mt-1.5">
@@ -233,7 +275,7 @@ const Transaction = () => {
       <div className={cn("font-Inter w-full odd:bg-white even:bg-inherit h-[68px] md:h-[72px] overflow-hidden p-3 md:p-4 cursor-pointer transition-all duration-300", open ? 'h-auto md:h-auto': '')} onClick={toggleTable}>
         <div className="flex items-center justify-between">
           <p className="text-sm uppercase">{transaction.type}</p>
-          <p className="text-sm">NGN{transaction.naira_value.toLocaleString()}</p>
+          <p className="text-sm">NGN{transaction.naira_value?.toLocaleString()}</p>
         </div>
         <div className="flex items-center justify-between mt-1">
           <p className={cn("text-center font-medium text-sm", transaction.payment_status === 'Pending' ? 'text-[#ff9c00]': transaction.payment_status === 'Completed' ? 'text-[#1faf38]': 'text-[#e41d03]')}>{transaction.payment_status}</p>
@@ -269,9 +311,11 @@ const Transaction = () => {
 
     return (
       <React.Fragment>
-        {allTransactionDetails && allTransactionDetails.length > 0 && allTransactionDetails.map((item: transaction, index: number) => {
+        {allTransactionDetails && allTransactionDetails.length > 0 && allTransactionDetails.map((item: BuyTransaction, index: number) => {
           const transactionPropsObj: transactionProps = {
             ...item,
+            user_id: 0, // Replace with actual user_id if available
+            naira_value: item.naira_amount_to_buy,
             transaction_charges: item.transaction_charges !== null ? item.transaction_charges.toString() : "0"
           };
           return (

@@ -21,7 +21,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const [mname, setMName] = React.useState(userDetails ? userDetails?.middle_name : '');
   const [dateOfBirth, setDateOfBirth] = React.useState<string| null>(userDetails ? userDetails.date_of_birth : null);
   const [address, setAddress] = React.useState(userDetails ? userDetails.address : '');
-  const [city, setCity] = React.useState('');
+  const [city, setCity] = React.useState(userDetails ? userDetails.city : '');
 
 
   React.useLayoutEffect(() => {
@@ -30,6 +30,8 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       fetchKycStatus();
     }
   }, [user]);
+
+
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDateOfBirth(event.target.value);
@@ -180,9 +182,23 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   })
 
   const [disableProceed, setDisableProceed] = React.useState(true);
-  const [showOtp, setShowOtp] = React.useState(false)
+  const [showOtp, setShowOtp] = React.useState(false);
+  const [sendingOtp, setSendingOtp] = React.useState(false);
+  const [verifyingOtp, setVerifyingOtp] = React.useState(false);
+
+  console.log(userDetails)
+  console.log(kycStatus)
+
+  const phoneNumberVerified = userDetails && userDetails.phone_number_verified;
+
+  React.useEffect(() => {
+    if (phoneNumberVerified) {
+      setDisableProceed(false)
+    }
+  }, [phoneNumberVerified]);
 
   const sendOtp = async () => {
+    setSendingOtp(true);
     await axios.request(sendOtpConfig)
     .then((response) => {
       if (response && response.status === 200) {
@@ -191,12 +207,14 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           description: 'Otp successfully sent to your phone number',
           variant: 'success'
         })
+        setSendingOtp(false)
         setShowOtp(true);
       }
     })
   };
 
   const verifyOtp = async () => {
+    setVerifyingOtp(true);
     await axios.request(verifyOtpConfig)
     .then((response) => {
       if (response && response.status === 200) {
@@ -208,6 +226,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
         setPhoneOtp('');
         setShowOtp(false);
         setDisableProceed(false);
+        setVerifyingOtp(false)
       }
     })
   };
@@ -291,18 +310,24 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
       </div>
       <h2 className='font-semibold font-Inter text-sm lg:text-base'>Contact Information</h2>
       <div className="grid grid-cols-2 lg:gap-3 gap-2 lg:p-2">
-        <AuthInput
-          inputValue={phoneNumber}
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          onBlur={() => sendOtp()}
-          label='Phone Number'
-          inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
-          name='phoneNumber'
-          id='phoneNumber'
-        />
+        <div className="flex gap-2">
+          <AuthInput
+            inputValue={phoneNumber}
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            label='Phone Number'
+            inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
+            name='phoneNumber'
+            id='phoneNumber'
+          />
+          { !phoneNumberVerified &&
+            <button type="button" className='border rounded-md px-3 flex-none' onClick={() => sendOtp()}>
+              { sendingOtp ? <Loader2 className='animate-spin size-5'/> : <HiArrowRight/>}
+            </button>
+          }
+        </div>
         { showOtp &&
-          <div className="w-full flex gap-3">
+          <div className="w-full flex gap-2">
             <div className="flex-1">
               <AuthInput
                 inputValue={phoneOtp}
@@ -315,7 +340,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
               />
             </div>
             <button type="button" className='border rounded-md px-3 flex-none' onClick={() => verifyOtp()}>
-              <HiArrowRight/>
+              { verifyingOtp ? <Loader2 className='animate-spin size-5'/> : <HiArrowRight/>}
             </button>
           </div>
         }

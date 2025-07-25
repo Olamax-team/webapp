@@ -107,6 +107,7 @@ export type userDataProps = {
   email_verified: boolean;
   phone_number: string;
   phone_number_verified: boolean;
+  city: string;
   date_of_birth: string; // ISO date string: "YYYY-MM-DD"
   gender: 'male' | 'female' | string;
   bvn_status: boolean; // true or false
