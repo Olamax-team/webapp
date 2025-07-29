@@ -1,44 +1,24 @@
 import Modal from '../ui/modal'
 import { useActivateAuthModal, useQRCodeModal, useSecurityAuthModal } from '../../lib/utils'
 import { HiOutlineDuplicate } from 'react-icons/hi';
-import React from 'react';
 import useUserDetails from '../../stores/userStore';
 import { useApiConfig } from '../../hooks/api';
 import axios from 'axios';
+import { useToast } from '../../hooks/use-toast';
 
 const ActivateAuthModal = () => {
-  const {user, token} = useUserDetails();
+  const {authDetails} = useUserDetails();
+
+  const { toast } = useToast();
 
   const { isOpen, onClose } = useActivateAuthModal();
   const openQRModal = useQRCodeModal();
   const openSecurityAuthModal = useSecurityAuthModal();
 
-  const [activationCode, setActivationCode] = React.useState('');
-
-  const start2FaConfig = useApiConfig({
-    method: 'get',
-    url: 'two-fact-auth'
-  });
-
   const getEmailOtpConfig = useApiConfig({
     method: 'get',
     url: 'get-email-otp'
   });
-
-
-  const start2Fa = async () => {
-    await axios.request(start2FaConfig)
-    .then((response) => {
-      if (response && response.status === 200) {
-        setActivationCode(response?.data.key);
-      }
-    }).catch((e) => {
-      if (e) {
-        console.log(e)
-      }
-    })
-
-  };
 
   const getEmailOtp = async () => {
     await axios.request(getEmailOtpConfig)
@@ -51,16 +31,15 @@ const ActivateAuthModal = () => {
     })
   }
 
-
-  React.useEffect(() => {
-    if (user && token) {
-      start2Fa();
-    }
-  }, []);
-
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(activationCode);
-    alert("copied!");
+    if (authDetails && authDetails.key) {
+      navigator.clipboard.writeText(authDetails.key);
+      toast({
+        title: 'Copy Content',
+        description: 'Activation key copied',
+        variant: 'success'
+      })
+    } else {return; }
   };
 
   const openQrCode = () => {
@@ -81,7 +60,7 @@ const ActivateAuthModal = () => {
         <div>
           <p className='text-sm lg:text-base'>Open your authenticator app and tap [+], Select [Enter a setup key] and enter the following key</p>
           <div className="w-full lg:h-[60px] h-[48px] rounded bg-[#f5f5f5] mt-7 flex items-center justify-between p-4" onClick={copyToClipboard}>
-            <h2 className='text-sm lg:text-base'>{activationCode}</h2>
+            <h2 className='text-sm lg:text-base'>{authDetails?.key}</h2>
             <HiOutlineDuplicate className='lg:size-6 size-5'/>
           </div>
         </div>

@@ -83,10 +83,10 @@ const CryptoPaymentDetailsModal = () => {
         console.log(response)
         if (response.status === 200) {
         console.log(response.data)
-        tradeData.clearAccountDetails();
-        tradeData.clearItem();
-        tradeData.clearTransactionId();
-        tradeData.clearCryptoTradeDetails();
+        // tradeData.clearAccountDetails();
+        // tradeData.clearItem();
+        // tradeData.clearTransactionId();
+        // tradeData.clearCryptoTradeDetails();
         onClose(); 
         openPaymentConfirmation.onOpen(); 
         } else {
@@ -238,7 +238,7 @@ const CryptoPaymentDetailsModal = () => {
   // Copy account number to clipboard
     const copyToClipboard = () => {
         navigator.clipboard.writeText(walletAdd ?? '');
-        alert("Account number copied!");
+        alert("Wallet address copied!");
     };
 
   return (

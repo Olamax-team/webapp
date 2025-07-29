@@ -42,6 +42,7 @@ interface accountDetailsProps {
     narration: string;
     expiry_date: string;
     ref_number: string;
+    bank_icon: string;
 };
 
 export interface cryptoTradeDetailsProps {
@@ -58,7 +59,6 @@ export interface cryptoTradeDetailsProps {
   qrcode: string | null;
 };
 
-
 interface sellDetailsProps {
     address: string;
     network: string;
@@ -66,6 +66,17 @@ interface sellDetailsProps {
     qrcode: string | null;
     sellingId: number;
 };
+
+interface paymentData {
+    status: string;
+    message: string;
+    data: {
+        amount_transfered: number,
+        coin_to_receive: number,
+        message: string;
+    },
+    ref_number: string;
+}
 
 interface tradeState {
     item:tradeProps | null;
@@ -77,6 +88,7 @@ interface tradeState {
     sellDetails:  sellDetailsProps | null;
     coinNetwork: string | null;
     cryptoTradeDetails: cryptoTradeDetailsProps | null;
+    paymentDetails: paymentData | null;
     setCryptoTradeDetails: (newDetails: cryptoTradeDetailsProps) => void;
     setCoinNetwork: (newNetwork: string) => void;                 
     setItem: (newItem:  tradeProps) => void;
@@ -84,11 +96,13 @@ interface tradeState {
     setIsBill: (bill:boolean) => void,
     setAccountDetails: (newAccount: accountDetailsProps) => void;
     setSellDetails: (detail: sellDetailsProps) => void;
+    setPaymentDetails: (data: paymentData) => void;
     clearItem: () =>void;
     clearTransactionId: () => void;
     clearAccountDetails: () => void;
     clearCryptoTradeDetails: () => void;
     clearSellDetail: () => void;
+    clearPaymentDetails: () => void;
 };
 
 const useTradeStore = create<tradeState>((set) => ({         
@@ -100,6 +114,7 @@ const useTradeStore = create<tradeState>((set) => ({
     coinNetwork: null,
     pendingDetails: null,
     cryptoTradeDetails: null,
+    paymentDetails: null,
     setCryptoTradeDetails: (newDetails: cryptoTradeDetailsProps) => set({cryptoTradeDetails: newDetails}),
     setPendingDetails: (detail: pendingDetailsProps) => set({pendingDetails: detail}),
     setCoinNetwork: (newNetwork) => set({coinNetwork: newNetwork}), 
@@ -108,11 +123,13 @@ const useTradeStore = create<tradeState>((set) => ({
     setTransactionId: (newId) => set({transactionId: newId}),
     setIsBill: (bill) => set({isBill: bill}),
     setSellDetails: (detail: sellDetailsProps) => set({sellDetails: detail}),
+    setPaymentDetails: (detail: paymentData) => set({paymentDetails: detail}),
     clearItem: () => set({item: null}),
     clearAccountDetails: () => set({accountDetails: null}),
     clearCryptoTradeDetails: () => set({cryptoTradeDetails: null}),
     clearTransactionId: () => set({transactionId: null}),
-    clearSellDetail: () => set({sellDetails: null})
+    clearSellDetail: () => set({sellDetails: null}),
+    clearPaymentDetails: () => set({paymentDetails: null})
   }));
 
   export default useTradeStore;

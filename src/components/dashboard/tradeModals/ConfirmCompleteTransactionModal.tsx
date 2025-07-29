@@ -11,8 +11,6 @@ const ConfirmCompleteTransaction = () => {
   const { transactionId, setAccountDetails, item, coinNetwork } = useTradeStore();
   const paymentDetails = item?.tradeType === 'sell' ? useCryptoPaymentDetailsModal() : useFiatPaymentDetailsModal();
 
-  console.log(transactionId);
-
   const [isLoading, setIsLoading] = React.useState(false)
 
   const confirmDeposit = async () => {
@@ -32,8 +30,8 @@ const ConfirmCompleteTransaction = () => {
     .then((response) => {
       if (response.status === 200) {
         setAccountDetails(response.data.data)
-      onClose();
-      paymentDetails.onOpen();
+        onClose();
+        paymentDetails.onOpen();
       }
     }).catch((error) => {
       console.log(error)
@@ -54,7 +52,7 @@ const ConfirmCompleteTransaction = () => {
       onClose={onClose}
       useCloseButton={false}
       title={item?.tradeType === 'sell' ? 'Continue Transaction' :  'Complete Transaction'}
-      modalSize='max-w-[420px] w-full'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex font-Inter flex-col gap-10'>
         <p className='text-sm lg:text-base'>{item?.tradeType === 'sell' ? 'Are you sure you want to continue with this transaction' : 'Are you sure you want to proceed with the transaction process?'}</p>

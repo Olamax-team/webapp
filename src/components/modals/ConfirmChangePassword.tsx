@@ -8,7 +8,7 @@ const ConfirmChangePasswordModal = () => {
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
-      useCloseButton={false}
+      useCloseButton={true}
       title='Change Password'
       modalSize='md:max-w-[540px] w-full'
     >

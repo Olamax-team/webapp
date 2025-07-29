@@ -72,27 +72,31 @@ const FiatPaymentDetailsModal = () => {
                     <div className="text-center">
                     {/* Bank Logo and Name */}
                     <div className="flex font-Inter items-center justify-center gap-6 mb-8">
-                        <img src={logo} alt="Bank Logo" className="w-9 h-9" />
+                        <img src={accountDetails?.bank_icon} alt="Bank Logo" className="w-9 h-9" />
                         <p className="text-lg font-semibold">{accountDetails?.bank}</p>
                     </div>
                     
                     {/* Account Details */}
                     <div className="px-5 py-[14px] font-Inter w-[360px] border rounded-md space-y-4">
-                        <div className="space-y- border-b-2">
+                      <div className="space-y-2 border-b-2">
+                        <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Total Amount Expected</p>
+                        <p className="text-left text-[14px] leading-[21px]">NGN{accountDetails?.amount.toLocaleString()}.00</p>
+                      </div>
+                      <div className="space-y-2 border-b-2">
                         <p className="text-sm text-left text-textDark">Account Number</p>
-                        <span className="flex text-center justify-between gap-2 mb-4">
-                            <p className="text-[14px] leading-[21px]">{accountDetails?.bank_account}</p>
-                            <HiOutlineDuplicate 
-                            size={24}
-                            className="text-textDark cursor-pointer"
-                            onClick={() => copyToClipboard(accountDetails?.bank_account ?? '')}
-                            />
-                        </span>
+                        <div className="flex text-center justify-between gap-2 mb-4">
+                          <p className="text-[14px] leading-[21px]">{accountDetails?.bank_account}</p>
+                          <HiOutlineDuplicate 
+                          size={24}
+                          className="text-textDark cursor-pointer"
+                          onClick={() => copyToClipboard(accountDetails?.bank_account ?? '')}
+                          />
                         </div>
-                        <div className="space-y-2">
+                      </div>
+                      <div className="space-y-2">
                         <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Account Name</p>
                         <p className="text-left text-[14px] leading-[21px]">{accountDetails?.bank_account_name}</p>
-                        </div>
+                      </div>
                     </div>
                     </div>
 
@@ -182,7 +186,7 @@ const FiatPaymentDetailsModal = () => {
   };
   const { toast } = useToast();
 
-  const { accountDetails, isBill, clearAccountDetails, clearItem, clearTransactionId } = useTradeStore();
+  const { accountDetails, isBill, setPaymentDetails } = useTradeStore();
 
   const completeBuyConfig = useApiConfig({
     method: 'post',
@@ -199,12 +203,8 @@ const FiatPaymentDetailsModal = () => {
   const completeBuyTransaction = async () => {
     await axios.request(isBill ? completeBillConfig : completeBuyConfig)
     .then((response) => {
-      console.log(response)
       if (response.status === 200) {
-        console.log(response.data)
-        clearAccountDetails();
-        clearItem();
-        clearTransactionId();
+        setPaymentDetails(response.data)
         onClose(); 
         openPaymentConfirmation.onOpen(); 
       } else {

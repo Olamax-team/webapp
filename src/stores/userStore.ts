@@ -10,11 +10,21 @@ export type userProps = {
   last_login_location: string;
 };
 
+export type authFactorProps = {
+  qr_code_url: string;
+  key: string;
+  accountName: string;
+  status: string;
+};
+
 export type userDetailProps = {
+  authDetails: authFactorProps | null;
   user: userProps | null;
   token: string | null;
   userDetails: userDataProps | null;
   setUser: (user: userProps, token:string ) => void;
+  setAuthDetails: (details: authFactorProps) => void;
+  clearAuthDetails: () => void;
   clearUser: () => void;
   loading: boolean;
   setLoading: (loading:boolean) => void;
@@ -32,6 +42,7 @@ export const useUserDetails = create<userDetailProps>()(
   persist(
     (set, get) => ({
       user: null,
+      authDetails: null,
       userDetails: null,
       token: null,
       loading: false,
@@ -107,8 +118,10 @@ export const useUserDetails = create<userDetailProps>()(
       },
       clearUser: () => set({ user: null, token: null, kycDetails: null, kycStatus: null }),
       clearKycDetails: () => set({ kycDetails: null }),
-      clearUserDetails: () => set({ kycDetails: null }),
+      clearUserDetails: () => set({ userDetails: null }),
       clearKycStatus: () => set({ kycStatus: null }),
+      setAuthDetails: (details) => set({ authDetails: details}),
+      clearAuthDetails: () => set({authDetails: null})
     }),
     {
       name: 'user-store',

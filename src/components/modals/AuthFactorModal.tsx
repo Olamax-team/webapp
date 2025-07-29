@@ -37,7 +37,7 @@ const AuthFactorModal = () => {
         url: 'https://api.olamax.io/api/verify-two-fact-auth',
         headers: {
           'Content-Type':'application/json',
-          'Authorization': `Bearer ${token ? token : ''}`
+          'Authorization': `Bearer ${token}`
         },
         data: verifyData
       };
@@ -75,7 +75,7 @@ const AuthFactorModal = () => {
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
-      useCloseButton={false}
+      useCloseButton={true}
       title='Enter 2-FA Code'
       modalSize='md:max-w-[540px] w-full'
       modalStyle='rounded p-6 xl:p-7'

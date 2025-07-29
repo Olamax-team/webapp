@@ -138,13 +138,11 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
               <span className={cn('', coin.color === "red" ? 'text-red-600' : 'text-green-600')}>{coin.percentageChange}</span>
             </div>
           </div>
-          { activeTab === 0 &&
-            <div>
-              <button type="button" className="cursor-pointer" onClick={() => likeCoin()}>
-                {isFav || liked ? <HiHeart className="size-6 fill-red-600"/>  : <HiOutlineHeart className="size-6 text-gray-600"/>}
-              </button>
-            </div>
-          }
+          <div>
+            <button type="button" className="cursor-pointer" onClick={() => likeCoin()}>
+              {isFav || liked ? <HiHeart className="size-6 fill-red-600"/>  : <HiOutlineHeart className="size-6 text-gray-600"/>}
+            </button>
+          </div>
           <Button 
             className="text-secondary hover:bg-white hover:text-secondary"
             variant={"ghost"}

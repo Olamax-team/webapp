@@ -260,7 +260,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
           inputValue={lname || ''}
           value={lname ?? ''}
           onChange={(e) => setLName(e.target.value)}
-          label='Last Name'
+          label='Surname'
           inputStyle='capitalize font-semibold lg:pt-6 pt-6 lg:h-[60px] h-[48px]'
           name='lname'
           id='lname'
