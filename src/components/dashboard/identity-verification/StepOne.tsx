@@ -174,7 +174,7 @@ const StepOne = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentSt
   const sendOtpConfig = useApiConfig({
     url: 'get-sms-otp',
     method: 'post',
-    formdata: {phone_number: phoneNumber, email: 'eluxdon@gmail.com'}
+    formdata: {phone_number: phoneNumber, email: userDetails?.email}
   });
 
   const verifyOtpConfig = useApiConfig({
