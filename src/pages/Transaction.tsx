@@ -13,57 +13,6 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-
-// interface transaction {
-//   id: number;
-//   user_id: number;
-//   created_at: string;
-//   ref: string;
-//   coin_id: string;
-//   coin_name: string;
-//   payment_method: string;
-//   naira_value: number;
-//   payment_status: string;
-//   transaction_charges: number | null;
-//   type: string;
-// }
-
-// interface link {
-//   url: string | null;
-//   label: string;
-//   active: boolean;
-// }
-
-// interface transactionHistory {
-//   current_page: number;
-//   data: transaction[];
-//   first_page_url: string;
-//   from: number;
-//   last_page: number;
-//   last_page_url: string;
-//   links: link[];
-//   next_page_url: string | null;
-//   path: string;
-//   per_page: number;
-//   prev_page_url: string | null;
-//   to: number;
-//   total: number;
-// }
-
-// type transactionProps = {
-//   id: number;
-//   user_id: number;
-//   created_at: string;
-//   ref: string;
-//   coin_id: string;
-//   coin_name: string;
-//   payment_method: string;
-//   naira_value: number;
-//   payment_status: string;
-//   transaction_charges: string;
-//   type: string;
-// };
-
 type dateComponentProps = {
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;

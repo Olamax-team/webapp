@@ -21,39 +21,40 @@ export interface AnnouncementProps {
 
 const TopHeader = () => {
   const config = useApiConfig({
-    method: 'get',
-    url: 'get-announcement'
+    method: "get",
+    url: "get-announcement",
   });
 
   const fetchAnnoucement = async () => {
-    const response = await axios.request(config)
-
+    const response = await axios.request(config);
     if (response && response.status === 200) {
-      return response 
+      return response;
     } else {
-      throw new Error('Something went wrong')
+      throw new Error("Something went wrong");
     }
   };
 
   const { data, status } = useQuery({
-    queryKey: ['annoucements'],
+    queryKey: ["annoucements"],
     queryFn: fetchAnnoucement,
   });
 
   const annoucement = data?.data.announcement as AnnouncementProps[];
-  const textArray = annoucement && annoucement.map((item) => item.description);
+  const textArray = annoucement?.map((item) => item.description) ?? [];
 
   const [textIndex, setTextIndex] = React.useState(0);
   const { user, fetchKycDetails, fetchKycStatus } = useUserDetails();
 
- // this is to cycle the header text
+  // this is to cycle the header text
   React.useEffect(() => {
+    if (!textArray.length) return;
+
     const intervalId = setInterval(() => {
-      setTextIndex((prevIndex) => (prevIndex + 1) % textArray?.length);
+      setTextIndex((prevIndex) => (prevIndex + 1) % textArray.length);
     }, 2000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [textArray]);
 
   React.useEffect(() => {
     if (user) {
@@ -62,73 +63,69 @@ const TopHeader = () => {
     }
   }, [user]);
 
-  if (status === 'pending') {
+  if (status === "pending") {
     return (
       <div className="w-full bg-primary md:h-[40px] h-[32px] flex items-center justify-center">
-        <Loader2 className="animate-spin size-5"/>
+        <Loader2 className="animate-spin size-5" />
       </div>
-    )
+    );
+  }
+
+  if (status === "success" && textArray.length === 0) {
+    return null;
   }
 
   return (
-    <div className={cn("w-full bg-primary md:h-[40px] h-[32px] flex items-center justify-center", user?.account_status === 'Unverified' ? 'bg-[#E41D0333]/20' : '')}>
-      <div className={cn("h-[16px] w-[380px] md:h-[18px] xl:w-[1250px] md:w-[85%] relative overflow-hidden text-white font-DMSans", user?.account_status === 'Unverified' ? 'text-[#E41D03]' : '')}>
-        { user && user?.account_status === 'Verified' ?
+    <div
+      className={cn(
+        "w-full bg-primary md:h-[40px] h-[32px] flex items-center justify-center",
+        user?.account_status === "Unverified" ? "bg-[#E41D0333]/20" : ""
+      )}
+    >
+      <div
+        className={cn(
+          "h-[16px] w-[380px] md:h-[18px] xl:w-[1250px] md:w-[85%] relative overflow-hidden text-white font-DMSans",
+          user?.account_status === "Unverified" ? "text-[#E41D03]" : ""
+        )}
+      >
+        {user?.account_status === "Verified" ? (
           <React.Fragment>
-            <p
-              className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
-                textIndex === 0 ? 'translate-y-0' : 'translate-y-full'
-              }`}
-            >
-              {textArray[textIndex]}
-            </p>
-            <p
-              className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
-                textIndex === 1 ? 'translate-y-0' : 'translate-y-full'
-              }`}
-            >
-              {textArray[(textIndex + 1) % textArray.length]}
-            </p>
-            <p
-              className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
-                textIndex === 2 ? 'translate-y-0' : 'translate-y-full'
-              }`}
-            >
-              {textArray[(textIndex + 2) % textArray.length]}
-            </p>
-          </React.Fragment> :
-          user && user?.account_status === 'Unverified' ?
-          <div className="flex items-center gap-2">
-            <HiOutlineInformationCircle className="size-5"/>
-            <p className="xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px]">Please complete Identity Verification to have access to our full range of products & services</p>
-          </div> :
-          <React.Fragment>
-            <p
-              className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
-                textIndex === 0 ? 'translate-y-0' : 'translate-y-full'
-              }`}
-            >
-              {textArray[textIndex]}
-            </p>
-            <p
-              className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
-                textIndex === 1 ? 'translate-y-0' : 'translate-y-full'
-              }`}
-            >
-              {textArray[(textIndex + 1) % textArray.length]}
-            </p>
-            <p
-              className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
-                textIndex === 2 ? 'translate-y-0' : 'translate-y-full'
-              }`}
-            >
-              {textArray[(textIndex + 2) % textArray.length]}
-            </p>
+            {textArray.slice(0, 3).map((text, i) => (
+              <p
+                key={i}
+                className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
+                  textIndex === i ? "translate-y-0" : "translate-y-full"
+                }`}
+              >
+                {text}
+              </p>
+            ))}
           </React.Fragment>
-        }
+        ) : user?.account_status === "Unverified" ? (
+          <div className="flex items-center gap-2">
+            <HiOutlineInformationCircle className="size-5" />
+            <p className="xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px]">
+              Please complete Identity Verification to have access to our full
+              range of products & services
+            </p>
+          </div>
+        ) : (
+          <React.Fragment>
+            {textArray.slice(0, 3).map((text, i) => (
+              <p
+                key={i}
+                className={`line-clamp-1 xl:text-[14px] xl:leading-[18px] text-[10px] leading-[15px] absolute top-0 left-0 transition-transform duration-1000 ease-in-out ${
+                  textIndex === i ? "translate-y-0" : "translate-y-full"
+                }`}
+              >
+                {text}
+              </p>
+            ))}
+          </React.Fragment>
+        )}
       </div>
     </div>
-  )
+  );
 };
 
 export default TopHeader;
