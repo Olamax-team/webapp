@@ -60,6 +60,7 @@ const LoginPage = () => {
         const loginTime = Date.now();
         setItem('token', response.data.token);
         setItem('user', JSON.stringify(response.data.data.user));
+        setItem('login_time', JSON.stringify(loginTime));
         setUser(response.data.data.user, response.data.token, loginTime );
         toast({
           title: 'Success',
