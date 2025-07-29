@@ -18,8 +18,8 @@ const TransactionCompletedModal = () => {
       <div className='flex flex-col gap-10'>
         <div className='flex flex-col gap-2'>
           <div className="border-b-2 pb-2">
-            <p className='text-sm lg:text-base'>Amount Transferred: <span className='font-bold'>{paymentDetails?.data.amount_transfered}</span></p>
-            <p className='text-sm lg:text-base'>Coin to Recieve: <span className='font-bold'>{paymentDetails?.data.coin_to_receive}</span></p>
+            <p className='text-sm lg:text-base'>Amount Transferred: <span className='font-bold'>{paymentDetails?.data?.amount_transfered}</span></p>
+            <p className='text-sm lg:text-base'>Coin to Recieve: <span className='font-bold'>{paymentDetails?.data?.coin_to_receive}</span></p>
           </div>
           { paymentDetails?.status === 'error' ? 
             <p className='text-sm lg:text-base font-Inter'>Your payment has not been confirmed and your exchange for   <span className="font-bold">{item?.tradeType === "Buy"? `${item?.cryptoType} ${item?.cryptoAmount}`: `${item?.fiatType} ${item?.fiatAmount}`}</span> is not processed.</p> :

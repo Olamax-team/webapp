@@ -6,12 +6,15 @@ import useUserDetails, { userProps } from './stores/userStore';
 import React from 'react';
 import { getToken } from "firebase/messaging";
 import { messaging } from "./firebase/firebaseConfig";
+import { useAutoLogout } from './hooks/autologout';
 
 function App() {
   documentTitle('Home');
 
   const navigate = useNavigate();
   const { setUser } = useUserDetails();
+
+  useAutoLogout();
 
 
   const { VITE_APP_VAPID_KEY } = import.meta.env;
@@ -40,11 +43,12 @@ function App() {
   React.useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUserDetail = localStorage.getItem('userDetail');
+    const storedLoginTime = localStorage.getItem('login_time');
 
-    if (storedToken && storedUserDetail) {
+    if (storedToken && storedUserDetail && storedLoginTime) {
         try {
             const parsedUserDetail:userProps = JSON.parse(storedUserDetail);
-            setUser(parsedUserDetail, storedToken);
+            setUser(parsedUserDetail, storedToken, JSON.parse(storedLoginTime));
         } catch (error) {
             console.error("Error parsing user data:", error);
             localStorage.clear();
