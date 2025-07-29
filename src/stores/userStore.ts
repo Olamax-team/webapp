@@ -18,11 +18,12 @@ export type authFactorProps = {
 };
 
 export type userDetailProps = {
+  loginTime: number | null;
   authDetails: authFactorProps | null;
   user: userProps | null;
   token: string | null;
   userDetails: userDataProps | null;
-  setUser: (user: userProps, token:string ) => void;
+  setUser: (user: userProps, token:string, loginTime: number ) => void;
   setAuthDetails: (details: authFactorProps) => void;
   clearAuthDetails: () => void;
   clearUser: () => void;
@@ -42,6 +43,7 @@ export const useUserDetails = create<userDetailProps>()(
   persist(
     (set, get) => ({
       user: null,
+      loginTime: null,
       authDetails: null,
       userDetails: null,
       token: null,
@@ -49,7 +51,7 @@ export const useUserDetails = create<userDetailProps>()(
       kycDetails: null,
       kycStatus: null,
       setLoading: (loading) => set({ loading }),
-      setUser: (user, token) => set({ user, token}),
+      setUser: (user, token, loginTime) => set({ user, token, loginTime}),
       fetchKycDetails: async () => {
         const { token } = get();
         return axios.request({
@@ -116,7 +118,7 @@ export const useUserDetails = create<userDetailProps>()(
           }; 
         });
       },
-      clearUser: () => set({ user: null, token: null, kycDetails: null, kycStatus: null }),
+      clearUser: () => set({ user: null, token: null, kycDetails: null, kycStatus: null, loginTime: null }),
       clearKycDetails: () => set({ kycDetails: null }),
       clearUserDetails: () => set({ userDetails: null }),
       clearKycStatus: () => set({ kycStatus: null }),

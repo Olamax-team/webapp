@@ -57,9 +57,10 @@ const LoginPage = () => {
     axios.request(loginConfig)
     .then((response) => {
       if (response.status === 200) {
+        const loginTime = Date.now();
         setItem('token', response.data.token);
         setItem('user', JSON.stringify(response.data.data.user));
-        setUser(response.data.data.user, response.data.token );
+        setUser(response.data.data.user, response.data.token, loginTime );
         toast({
           title: 'Success',
           description: 'Login was successful, welcome!',
