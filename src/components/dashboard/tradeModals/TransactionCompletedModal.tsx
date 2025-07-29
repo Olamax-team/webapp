@@ -4,7 +4,7 @@ import useTradeStore from '../../../stores/tradeStore';
 
 const TransactionCompletedModal = () => {
   const { isOpen, onClose } = useTransactionCompletedModal();
-  const tradeData = useTradeStore();
+  const { paymentDetails, item } = useTradeStore();
 
   
   return (
@@ -12,11 +12,20 @@ const TransactionCompletedModal = () => {
       isOpen={isOpen} 
       onClose={onClose}
       useCloseButton={false}
-      title='Transaction Complete'
-      modalSize='max-w-[420px] w-full'
+      title={paymentDetails?.status === 'error' ? 'Transaction Incomplete' : 'Transaction Complete'}
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
-        <p className='text-sm lg:text-base font-Inter'>Your payment has been confirmed and your exchange for   <span className="font-bold">{tradeData.item?.tradeType === "Buy"? `${tradeData.item?.cryptoType} ${tradeData.item?.cryptoAmount}`: `${tradeData.item?.fiatType} ${tradeData.item?.fiatAmount}`}</span> has been processed.</p>
+        <div className='flex flex-col gap-2'>
+          <div className="border-b-2 pb-2">
+            <p className='text-sm lg:text-base'>Amount Transferred: <span className='font-bold'>{paymentDetails?.data.amount_transfered}</span></p>
+            <p className='text-sm lg:text-base'>Coin to Recieve: <span className='font-bold'>{paymentDetails?.data.coin_to_receive}</span></p>
+          </div>
+          { paymentDetails?.status === 'error' ? 
+            <p className='text-sm lg:text-base font-Inter'>Your payment has not been confirmed and your exchange for   <span className="font-bold">{item?.tradeType === "Buy"? `${item?.cryptoType} ${item?.cryptoAmount}`: `${item?.fiatType} ${item?.fiatAmount}`}</span> is not processed.</p> :
+            <p className='text-sm lg:text-base font-Inter'>Your payment has been confirmed and your exchange for   <span className="font-bold">{item?.tradeType === "Buy"? `${item?.cryptoType} ${item?.cryptoAmount}`: `${item?.fiatType} ${item?.fiatAmount}`}</span> has been processed.</p>
+          }
+        </div>
         <button className='w-full h-12 rounded-lg font-poppins bg-primary hover:bg-secondary text-white' onClick={() =>onClose()}>
           Close
         </button>

@@ -23,7 +23,7 @@ const PaymentConfirmationModal = () => {
         isOpen={isOpen} 
         onClose={onClose}
         useCloseButton={false}
-        modalSize='max-w-[420px] w-full'
+        modalSize='md:max-w-[540px] w-full'
         modalStyle='px-6 xl:px-10'
       >
         <div className="flex flex-col gap-10 items-center justify-center font-Inter">

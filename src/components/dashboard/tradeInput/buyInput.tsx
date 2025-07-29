@@ -1,9 +1,9 @@
 import axios from "axios";
 import useTradeStore from "../../../stores/tradeStore";
 import { HiOutlineClipboard } from "react-icons/hi";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import { Button } from "../../ui/button";
-import { formatNigerianPhoneNumber, useConfirmCompleteTransaction } from "../../../lib/utils";
+import { cn, formatNigerianPhoneNumber, useConfirmCompleteTransaction } from "../../../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { buyInput, buyInputValues } from "../../formValidation/formValidation";
@@ -11,6 +11,7 @@ import useUserDetails from "../../../stores/userStore";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFetchStore } from "../../../stores/fetch-store";
+import { useToast } from "../../../hooks/use-toast";
 
 const BuyInput: React.FC = () => {
     
@@ -19,6 +20,8 @@ const BuyInput: React.FC = () => {
   const { fetchCoinBlockChain, fetchMinimumTransaction} = useFetchStore();
 
   const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   //clipboard paste function
   const pasteFromClipboard = async () => {
@@ -38,13 +41,7 @@ const BuyInput: React.FC = () => {
     }
   },[user]);
     
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-    watch
-  } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm({
     resolver: zodResolver(buyInput),
     defaultValues: {
       walletAddress: '',
@@ -67,6 +64,10 @@ const BuyInput: React.FC = () => {
   const watchedNetwork = watch('network');
   const selectedBlockChainDetails = blockChains?.find((item) => item.blockchain_name === watchedNetwork);
 
+  const minTransactionInNaira = minTransaction && typeof minTransaction.transaction_charges === "number" ? minTransaction.transaction_charges * parseFloat(minTransaction.buy_naira_value ?? "0") : 0
+
+  const { toast } = useToast();
+
   const handleBuyInput = async (data:buyInputValues) => {
 
     const transactionData = {
@@ -77,11 +78,9 @@ const BuyInput: React.FC = () => {
       wallet_address: data.walletAddress,
       blockchain_id: selectedBlockChainDetails?.id,
       transaction_type: 'transfer',
-      transaction_charges: minTransaction ? (minTransaction.transaction_charges * 1000) : 0,
+      transaction_charges: minTransaction ? (minTransaction.transaction_charges * parseFloat(minTransaction.buy_naira_value)) : 0,
       phone: data.phoneNumber,
     };
-
-    console.log("Transaction Data: ", transactionData);
 
     const buyConfig = {
       method: 'post',
@@ -94,12 +93,26 @@ const BuyInput: React.FC = () => {
       data: transactionData,
     };
 
+    setIsLoading(true)
     await axios.request(buyConfig)
     .then((response) => {
-      setTransactionId(response.data.transaction_id);
-    });
-
-    openConfirmCompleteTransaction.onOpen();
+      console.log(response)
+      if (response && response.status === 201) {
+        setTransactionId(response.data.transaction_id);
+        setIsLoading(false)
+        openConfirmCompleteTransaction.onOpen();
+      }
+    }).catch((error) => {
+        if (error) {
+          toast({
+            title: 'Error',
+            description: error.response.data.error || error.response.data.message,
+            variant: 'destructive'
+          })
+          setIsLoading(false);
+          console.log(error.response.data.error || error.response.data.message)
+        }
+      })
   };
 
   return(
@@ -183,13 +196,14 @@ const BuyInput: React.FC = () => {
 
             {/* Proceed Button */}
             <div className="flex items-center justify-center ">
-              <Button 
+              <Button
+                disabled={isLoading} 
               type="submit"
-              className="xl:w-[150px] w-[96px] h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg">
-                Proceed
+              className={cn("flex items-center gap-3 h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-sm lg:text-base font-semibold text-white py-2 rounded-lg", isLoading ? 'w-fit px-6 lg:px-10': 'xl:w-[150px] w-[96px]')}>
+                {isLoading ? 'Proceeding...' : 'Proceed'}
+                {isLoading && <Loader2 className="animate-spin lg:size-7 size-6"/>}
               </Button>
             </div>
-
           </div>
         </form>
       </div>
@@ -220,12 +234,12 @@ const BuyInput: React.FC = () => {
                   <span>Withdrawal Fee</span>
                   <span className="flex justify-center"><Info size={20} /></span>
                 </div>
-                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {minTransaction?.transaction_charges}</span>
+                <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {minTransactionInNaira}</span>
               </div>
             </div>
             <div className="flex justify-between text-lg border-t-2 py-6">
               <span>Total</span>
-              <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {(Number(item?.fiatAmount) || 0) + (minTransaction?.transaction_charges || 0)}</span>
+              <span className="font-semibold xl:text-[18px] xl:leading-[27px]">NGN {(Number(item?.fiatAmount) || 0) + (minTransactionInNaira)}</span>
             </div>
           </div>
         </div>

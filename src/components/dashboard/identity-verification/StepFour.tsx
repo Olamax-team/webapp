@@ -158,7 +158,7 @@ const StepFour = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentS
               if (result.status === 200) {
                 toast({
                   title: 'Success',
-                  description: 'BVN verified && Utility Bill uploaded successfully!',
+                  description: 'BVN verified & Utility Bill uploaded successfully!',
                   variant: 'success'
                 });
               }

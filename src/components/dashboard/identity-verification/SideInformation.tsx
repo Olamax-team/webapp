@@ -4,14 +4,16 @@ const sideInformations = [
   [
     "Please double-check your information. Incorrect details may delay verification.",
     "Use your full legal name as it appears on your official documents.",
+    "Use your full legal name as it is arranged with your BVN and NIN",
     "Avoid using any nicknames or aliases to prevent verification issues.",
+    "Ensure your contact information is accurately set to avoid verification delays.",
     "Your information is securely stored and used solely for identity"
   ],
   [
-    "Ensure your contact information is accurately set to avoid verification delays.",
-    "Contact verification helps us ensure compliance with local regulations and guidelines.",
-    "Your contact data is securely stored and used solely for identity verification purposes.",
+    "BVN verification helps us ensure compliance with local regulations and guidelines.",
     "Keep your contact information up-to-date to ensure smooth communication.",
+    "Your contact data is securely stored and used solely for identity verification purposes.",
+    "Make sure the utility bill uploaded is a recent one. Using an old one can be rejected.",
   ],
   [
     "Ensure documents are clearly visible and not blurry to avoid verification delays.",
@@ -21,6 +23,7 @@ const sideInformations = [
     "Ensure each document is under the max file size limit of 5MB for faster upload and processing."
   ],
   [
+    "Before you begin process, make sure you have camera permission checked, to avoid delay in verification.",
     "Ensure your face aligns within the on-screen frame",
     "Ensure no hats, sunglasses, or masks are worn",
     "Check that you are in a well lit environment and your background is neutral",

@@ -164,7 +164,7 @@ const VerificationPage = () => {
             {isLoading ? 'Proceeding...' : 'Proceed'}
             {isLoading && <Loader2 className='animate-spin'/>}
           </button>
-          <p className='w-full font-Inter'>Didn&apos;t receive an email ? <span className='font-semibold'>Request Code again</span></p>
+          <p className='w-full font-Inter'>Didn&apos;t receive an email ? <span className='font-semibold' onClick={() => navigate('/sign-up')}>Review sign up details</span></p>
         </form> 
       </Form>
     );

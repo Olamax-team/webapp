@@ -67,6 +67,8 @@ type minTransaction = {
   coin: coinType;
   limit: limitType;
   current_rate: number;
+  sell_naira_rate: number,
+  buy_naira_rate: number,
   transaction_charges: number;
   sell_naira_value: string;
   buy_naira_value: string;

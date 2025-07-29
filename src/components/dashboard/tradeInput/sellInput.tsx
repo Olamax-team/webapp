@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import useTradeStore from "../../../stores/tradeStore";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import { Button } from "../../ui/button";
-import { formatNigerianPhoneNumber, useConfirmCompleteTransaction } from "../../../lib/utils";
+import { cn, formatNigerianPhoneNumber, useConfirmCompleteTransaction } from "../../../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { sellInput, sellInputValues } from "../../formValidation/formValidation";
@@ -15,7 +15,7 @@ import { useToast } from "../../../hooks/use-toast";
 import { Switch } from "../../ui/switch";
 
 type accountDetailsType = {
-  addDetials: boolean;
+  addDetails: boolean;
   bankName: string;
   accountNumber: string;
   accountName: string;
@@ -52,13 +52,7 @@ const SellInput: React.FC = () => {
     }, [user?.UID]);
 
 
-    const {
-      register,
-      handleSubmit,
-      watch,
-      setValue,
-      formState: { errors },
-    } = useForm({
+    const { register, handleSubmit, watch, setValue, formState: { errors },} = useForm({
       resolver: zodResolver(sellInput),
       defaultValues: {
         bankName: "",
@@ -68,7 +62,6 @@ const SellInput: React.FC = () => {
         blockChain: ""
       },
     });
-
 
     const bankListConfig = useApiConfig({
       method: 'get',
@@ -82,10 +75,11 @@ const SellInput: React.FC = () => {
     const details = localStorage.getItem(`user_${user?.UID}`);
     const parsedDetails:accountDetailsType = details ? JSON.parse(details) : {};
 
-    const [addDetails, setAddDetails] = React.useState(parsedDetails ? parsedDetails.addDetials : false);
+    const [addDetails, setAddDetails] = React.useState(parsedDetails ? parsedDetails.addDetails : false);
+    const [isLoading, setIsLoading] = React.useState(false)
 
     const accountDetails = {
-      addDetials: addDetails,
+      addDetails: addDetails,
       bankName: bank,
       accountNumber: account,
       accountName: name
@@ -141,13 +135,15 @@ const SellInput: React.FC = () => {
           'Authorization': `Bearer ${token}`
         },
         data: newData
-      }
-  
+      };
+
+      setIsLoading(true)
       await axios.request(startTransactionConfig)
       .then((response) => {
         if (response.status === 201) {
           tradeData.setSellDetails(response.data);
           tradeData.setCoinNetwork(data.blockChain);
+          setIsLoading(false)
           openConfirmCompleteTransaction.onOpen();
         };
       }).catch((error) => {
@@ -157,12 +153,13 @@ const SellInput: React.FC = () => {
             description: error.response.data.error || error.response.data.message,
             variant: 'destructive'
           })
+          setIsLoading(false);
           console.log(error.response.data.error || error.response.data.message)
         }
       })
     }
 
-    const fee= 0;
+    const fee = 0;
     return(
       <div className="p-5 xl:py-6 flex flex-col xl:flex-row gap-10 h-auto w-full my-auto space-y-6 font-Inter">
         {/* Left Section - Transaction Form */}
@@ -274,9 +271,11 @@ const SellInput: React.FC = () => {
                     {/* Proceed Button */}
                     <div className="flex items-center justify-center ">
                     <Button 
-                    type="submit"
-                    className="xl:w-[150px] w-[96px] h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg">
-                        Proceed
+                      type="submit"
+                      disabled={isLoading}
+                      className={cn("h-[38px] xl:h-[54px]  mt-4 bg-primary hover:bg-secondary text-[16px] leading-[24px] font-semibold text-white py-2 rounded-lg", isLoading ? 'w-fit px-6 lg:px-10': 'xl:w-[150px] w-[96px]')}>
+                      {isLoading ? 'Proceeding...' : 'Proceed'}
+                      {isLoading && <Loader2 className="animate-spin lg:size-7 size-6"/>}
                     </Button>
                     </div>
                 </div>

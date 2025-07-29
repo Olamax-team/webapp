@@ -14,7 +14,7 @@ const TransactionPendingModal = () => {
       onClose={onClose}
       useCloseButton={false}
       title='Transaction Pending'
-      modalSize='max-w-[420px] w-full'
+      modalSize='md:max-w-[540px] w-full'
     >
       <div className='flex flex-col gap-10'>
         <div>
