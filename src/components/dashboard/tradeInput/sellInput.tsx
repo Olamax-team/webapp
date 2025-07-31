@@ -10,9 +10,9 @@ import useUserDetails from "../../../stores/userStore";
 import { useApiConfig } from "../../../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { useFetchStore } from "../../../stores/fetch-store";
 import { useToast } from "../../../hooks/use-toast";
 import { Switch } from "../../ui/switch";
+import { useCoinBlockChains } from "../../../hooks/useCoinBlockChains";
 
 type accountDetailsType = {
   addDetails: boolean;
@@ -24,7 +24,6 @@ type accountDetailsType = {
 const SellInput: React.FC = () => {
 
     const { user, kycStatus, fetchKycStatus, token } = useUserDetails();
-    const { fetchCoinBlockChain } = useFetchStore();
     const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
     const tradeData = useTradeStore();
 
@@ -107,10 +106,7 @@ const SellInput: React.FC = () => {
     });
 
 
-    const { data:blockChains } = useQuery({
-      queryKey: ['block-chains', tradeData.item?.cryptoType_id],
-      queryFn: () => tradeData.item?.fiatType_id? fetchCoinBlockChain(tradeData.item.fiatType_id) : Promise.reject('coin token id is undefined')
-    });
+    const { data:blockChains } = useCoinBlockChains(typeof tradeData.item?.fiatType_id === "number" ? tradeData.item.fiatType_id : 0);
   
 
     const handleSellInput= async (data: sellInputValues) => {

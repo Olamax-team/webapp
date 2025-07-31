@@ -214,7 +214,7 @@ const StepFour = ({setCurrentStep, currentStep}:{currentStep:number; setCurrentS
             <label className="border rounded-md lg:h-[60px] h-[48px] w-full relative p-4 pl-14 cursor-pointer flex items-center" htmlFor='holding-image'>
               <HiOutlineDocumentText className='size-6 absolute left-4 top-1/2 -translate-y-1/2 '/>
               <Paperclip className='size-6 absolute right-4 top-1/2 -translate-y-1/2'/>
-              <p className='text-sm'>Upload Utility Bill</p>
+              <p className='text-sm'>Upload Utility Bill (e.g tax payment, electricity bill, tenant agreement, electricity bill etc.)</p>
               <input type='file' id='holding-image' hidden accept='jpeg' onChange={(e) => handleImageChange(e)}/>
             </label>
           }

@@ -4,6 +4,7 @@ import useTradeStore from '../../../stores/tradeStore';
 import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
 import React from 'react';
+import { Loader2 } from 'lucide-react';
 
 const ConfirmCompleteTransaction = () => {
 
@@ -57,8 +58,9 @@ const ConfirmCompleteTransaction = () => {
       <div className='flex font-Inter flex-col gap-10'>
         <p className='text-sm lg:text-base'>{item?.tradeType === 'sell' ? 'Are you sure you want to continue with this transaction' : 'Are you sure you want to proceed with the transaction process?'}</p>
         <div className="flex items-center justify-between gap-4">
-          <button className='w-full font-poppins h-12 rounded-lg bg-primary text-white cursor-pointer text-sm' onClick={completeTransaction} >
-            {isLoading ? 'Completing ...' : 'Yes'}
+          <button className='w-full font-poppins h-12 rounded-lg bg-primary text-white cursor-pointer text-sm px-6 flex items-center gap-2 justify-center' onClick={completeTransaction} >
+            {isLoading ? (item?.tradeType === 'sell' ? 'Continue...' : 'Completing...') : 'Yes'}
+            {isLoading && <Loader2 className='animate-spin'/>}
           </button>
           <button className='w-full font-poppins h-12 rounded-lg border-primary border text-primary cursor-pointer text-sm' onClick={() =>onClose()}>
             No

@@ -6,27 +6,12 @@ import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmModal } from "../
 import { Info, Loader2 } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useFetchStore } from "../../../../stores/fetch-store";
 import { useApiConfig } from "../../../../hooks/api";
 import axios, { AxiosError } from "axios";
 import { useToast } from "../../../../hooks/use-toast";
 import useTradeStore from "../../../../stores/tradeStore";
 import { HiArrowRight } from "react-icons/hi2";
-
-
-// transaction_type: activeButton,
-// naira_amount: inputAmount;
-// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
-// blockchain_id: number;
-// coin_amount: Number(paymentAmount);
-// bills: selectedBill;
-// network: selectedNetwork;
-// package_product_number: selectedNetworkDetails.product_number;
-// electricity_type: string;
-// phone_number: string;
-// cable_number: string;
-// meter_number: string;
+import { useCoinBlockChains } from "../../../../hooks/useCoinBlockChains";
 
 const CableInput = () => {
 
@@ -37,7 +22,6 @@ const CableInput = () => {
     const { toast } = useToast();
 
     const { user, fetchKycStatus, kycStatus, token } = useUserDetails();
-    const { fetchCoinBlockChain } = useFetchStore();
 
     const [userIsValid, setUserIsValid] = React.useState(false);
     const [isValidating, setIsValidating] = React.useState(false);
@@ -57,11 +41,7 @@ const CableInput = () => {
       }
     });
 
-    const { data:blockChains } = useQuery({
-        queryKey: ['block-chains', item?.coin_token_id],
-        queryFn: () => item?.coin_token_id ? fetchCoinBlockChain(item.coin_token_id) : Promise.reject('coin token id is undefined')
-    });
-
+    const { data: blockChains } = useCoinBlockChains(typeof item?.coin_token_id === "number" ? item.coin_token_id : 0);
     const cableNumber = watch('cableNumber');
     const block_chain = watch('blockChain');
 

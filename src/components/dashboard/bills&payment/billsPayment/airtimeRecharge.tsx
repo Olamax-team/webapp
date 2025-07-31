@@ -5,12 +5,17 @@ import arrowIcon from '../../../../assets/images/arrowdown.svg';
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
-import { useFetchStore } from "../../../../stores/fetch-store";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
+import { useAllBuyCoins } from "../../../../hooks/useAllBuyCoin";
+import { useBillServices } from "../../../../hooks/useBillServices";
+import { useStableCoins } from "../../../../hooks/useStableCoins";
+import { useLiveRates } from "../../../../hooks/useLiveRates";
+import { useAllCoinPrices } from "../../../../hooks/useAllCoinPrices";
+import { useAirtimeNetworks } from "../../../../hooks/useAirtimeNetworks";
+import { usePackages } from "../../../../hooks/usePackages";
 
 
 type Inputs = {
@@ -41,13 +46,8 @@ interface coinsProps {
 const AirtimeRecharge = () => {
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
-  
-  const { fetchBillServices, fetchNetworkAirtime, fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchLiveRates, fetchPackages } = useFetchStore();
 
-  const { data:billServices, status:billServiceStatus} = useQuery({
-    queryKey: ['bills-service'],
-    queryFn: fetchBillServices,
-  });
+  const { data:billServices, status:billServiceStatus} = useBillServices();
 
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
@@ -57,22 +57,13 @@ const AirtimeRecharge = () => {
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
 
-  const { data: stables } = useQuery({
-    queryKey: ['stable-coins'],
-    queryFn: fetchStableCoins
-  })
+  const { data: stables } = useStableCoins();
 
-  const { data:dataCoin } = useQuery({
-    queryKey: ['all-coins'],
-    queryFn: fetchAllBuyCoins
-  });
+  const { data:dataCoin } = useAllBuyCoins();
 
   const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
 
-  const {data:liveRates } = useQuery({
-    queryKey: ['live-rates'],
-    queryFn: fetchLiveRates,
-  });
+  const {data:liveRates } = useLiveRates();
   
   const getCoinId = (coinCode: string): number | undefined => {
     if (coin) {
@@ -81,11 +72,7 @@ const AirtimeRecharge = () => {
     return undefined; // Explicitly return undefined if coin is not defined
   };
 
-  const { data:prices } = useQuery({
-    queryKey: ['coin-prices'],
-    queryFn: fetchAllCoinPrices,
-    enabled: activeButton === 'crypto'
-  });
+  const { data:prices } = useAllCoinPrices(activeButton === 'crypto');
 
 
   const getSellingPrice = (coinCode: string) => {
@@ -102,10 +89,7 @@ const AirtimeRecharge = () => {
     }
   };
 
-  const { data:airtimeNetworks, status:airtimeNetworkStatus } = useQuery({
-    queryKey: ['airtime-networks'],
-    queryFn: fetchNetworkAirtime,
-  });
+  const { data:airtimeNetworks, status:airtimeNetworkStatus } = useAirtimeNetworks();
 
   const { register, handleSubmit, setValue, formState: { errors }, reset, watch} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
@@ -134,11 +118,7 @@ const AirtimeRecharge = () => {
 
   const { setItem } = useBillsStore();
 
-  const { data:packageData } = useQuery({
-    queryKey: ['package-details', selectedNetworkDetails?.product_number],
-    queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
-    enabled: selectedNetworkDetails?.product_number !== undefined
-  });
+  const { data:packageData } = usePackages(selectedNetworkDetails?.product_number ?? 0);
 
   const packageDetails = packageData?.[0];
 
@@ -214,30 +194,6 @@ const AirtimeRecharge = () => {
       setValue("inputAmount", newAmount1);
     }
   }, [amount2, selectPayment, activeButton, prices, coin, lastChanged, currentCoinPrice]);
-
-  // const getCoinSellingPriceInNaira = (coinCode:string) => {
-  //   if (coinCode) {
-  //     let currentCoin;
-  //     let price;
-  //     if (liveRates && liveRates.length > 0) {
-  //       currentCoin = liveRates.find((item) => item.symbol === coinCode);
-  //       if (currentCoin) {
-  //         price = parseFloat(currentCoin.price.replace(/,/g, ""));
-  //         price = price * parseFloat(String(dollarPrice)); // Convert to Naira
-  //       };
-
-  //       return price;
-  //     }
-  //   } else return;
-  // }
-
-  // React.useEffect(() => {
-  //   const nairaValue = getCoinSellingPriceInNaira(selectPayment);
-  //   const dollarValue = getCoinSellingPriceInNaira(selectPayment);
-  //   const price = selectPayment ? nairaValue?.priceInNaira : undefined;
-  //   console.log(price);
-  //   console.log(dollarValue?.priceInUsd);
-  // }, [selectPayment, liveRates, dollarPrice]);
 
   const handleSelectChange = (network: airtimeNetworkProps) => {
     setSelectedNetwork(network.network);

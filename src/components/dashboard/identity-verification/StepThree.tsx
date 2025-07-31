@@ -69,7 +69,7 @@ const StepThree: React.FC<LivenessCheckProps> = () => {
             mediaRecorderRef.current.stop();
             setIsRecording(false);
           }
-        }, 30000);
+        }, 10000);
       }
     } catch (error) {
       console.error('Error accessing camera:', error);

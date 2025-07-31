@@ -7,18 +7,17 @@ import { Info, Loader2 } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useFetchStore } from "../../../../stores/fetch-store";
 import { useApiConfig } from "../../../../hooks/api";
 import axios, { AxiosError } from "axios";
 import { useToast } from "../../../../hooks/use-toast";
 import useTradeStore from "../../../../stores/tradeStore";
 import { HiArrowRight } from "react-icons/hi2";
+import { useCoinBlockChains } from "../../../../hooks/useCoinBlockChains";
 
 
 const ElectricityInput = () => {
 
     const { item } = useBillsStore();
-    const { fetchCoinBlockChain } = useFetchStore();
     const { setAccountDetails, setTransactionId, setIsBill, setCryptoTradeDetails } = useTradeStore();
 
     const [userIsValid, setUserIsValid] = React.useState(false);
@@ -48,11 +47,7 @@ const ElectricityInput = () => {
     const meterNumber = watch('meterNumber');
     const block_chain = watch('blockChain');
 
-    const { data:blockChains } = useQuery({
-        queryKey: ['block-chains', item?.coin_token_id],
-        queryFn: () => item?.coin_token_id ? fetchCoinBlockChain(item.coin_token_id) : Promise.reject('coin token id is undefined')
-    });
-
+    const { data:blockChains } = useCoinBlockChains(typeof item?.coin_token_id === "number" ? item.coin_token_id : 0);
     const selectedChain = blockChains?.find((item) => item.blockchain_name === block_chain);
 
     const electricTypeConfig = useApiConfig({

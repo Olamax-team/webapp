@@ -5,13 +5,18 @@ import arrowIcon from '../../../../assets/images/arrowdown.svg';
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
-import { useFetchStore } from "../../../../stores/fetch-store";
 import { cn } from "../../../../lib/utils";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
+import { useBillServices } from "../../../../hooks/useBillServices";
+import { useDataPurchaseNetworks } from "../../../../hooks/useDataPurchaseNetworks";
+import { useAllBuyCoins } from "../../../../hooks/useAllBuyCoin";
+import { useStableCoins } from "../../../../hooks/useStableCoins";
+import { usePackages } from "../../../../hooks/usePackages";
+import { useAllCoinPrices } from "../../../../hooks/useAllCoinPrices";
+import { useLiveRates } from "../../../../hooks/useLiveRates";
 
 
 type Inputs = {
@@ -44,19 +49,6 @@ interface coinsProps {
   stable_coins: string;
 };
 
-// transaction_type: activeButton,
-// naira_amount: number;
-// coin_token_id: number;
-// blockchain_id: number;
-// coin_amount: number;
-// bills: selectedBill;
-// network: selectedNetwork;
-// package_product_number: selectedNetworkDetails.product_number;
-// electricity_type: string;
-// phone_number: string;
-// cable_number: string;
-// meter_number: string;
-
 const Datapurchase = () => {
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
@@ -64,31 +56,14 @@ const Datapurchase = () => {
   const navigate = useNavigate();
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
-  const { fetchBillServices, fetchDataPurchaseNetworks, fetchAllBuyCoins, fetchStableCoins, fetchPackages, fetchLiveRates, fetchAllCoinPrices } = useFetchStore();
 
-  
-
-  const { data:billServices, status:billServiceStatus} = useQuery({
-    queryKey: ['bills-service'],
-    queryFn: fetchBillServices,
-  });
-
-  const { data:networkOptionsList, status:networkOptionStatus} = useQuery({
-    queryKey: ['data-networks'],
-    queryFn: fetchDataPurchaseNetworks,
-  });
-
-  const { data: dataCoin } = useQuery({
-    queryKey: ['all-coins'],
-    queryFn: fetchAllBuyCoins,
-  });
+  const { data:billServices, status:billServiceStatus} = useBillServices();
+  const { data:networkOptionsList, status:networkOptionStatus} = useDataPurchaseNetworks();
+  const { data: dataCoin } = useAllBuyCoins();
 
   const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
 
-  const { data: stables } = useQuery({
-    queryKey: ['stable-coins'],
-    queryFn: fetchStableCoins,
-  });
+  const { data: stables } = useStableCoins();
 
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0].network : 'Select Network');
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<airtimeNetworkProps | undefined>(() => networkOptionsList && networkOptionsList.length > 0 ? networkOptionsList[0] : undefined);
@@ -105,12 +80,7 @@ const Datapurchase = () => {
   const [fiatPayment, setFiaPayment] = useState(stables && stables.length > 0 ? stables[0].coin : 'NGN');
   const [activeButton, setActiveButton] = useState( billServices ? billServices[0].cs : 'fiat');
 
-  const { data:dataPackages, status:dataPackageStatus} = useQuery({
-    queryKey: ['data-packages', selectedNetwork],
-    queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
-    enabled: networkOptionsList && networkOptionsList.length > 0 && networkOptionsList[0].network !== ''
-  });
-
+  const { data:dataPackages, status:dataPackageStatus} = usePackages(selectedNetworkDetails?.product_number ?? 0);
 
   const [selectedPackage, setSelectedPackage] = useState('');
   const [selectedPackageDetails, setSelectedPackageDetails] = useState<dataPackageProps | undefined>(undefined);
@@ -159,10 +129,7 @@ const Datapurchase = () => {
     }
   };
 
-    const {data:liveRates } = useQuery({
-      queryKey: ['live-rates'],
-      queryFn: fetchLiveRates,
-    });
+    const {data:liveRates } = useLiveRates();
     
     const getCoinId = (coinCode: string): number | undefined => {
       if (coin) {
@@ -171,11 +138,7 @@ const Datapurchase = () => {
       return undefined; // Explicitly return undefined if coin is not defined
     };
 
-    const { data:prices } = useQuery({
-      queryKey: ['coin-prices'],
-      queryFn: fetchAllCoinPrices,
-      enabled: activeButton === 'crypto'
-    })
+    const { data:prices } = useAllCoinPrices();
     
 
   const dollarPrice = React.useMemo(() => {
@@ -236,20 +199,6 @@ const Datapurchase = () => {
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
   };
-   
-  // const fiatPaymentOptions = [
-  //   { value: 'NGN', logo: ngnlogo },
-  //   { value: 'USD', logo: ngnlogo },
-  //   { value: 'EUR', logo: ngnlogo },
-  //   { value: 'GBP', logo: ngnlogo },
-  // ];
-
-  // const paymentOptions = [
-  //   { value: 'BTC', logo: btcLogo },
-  //   { value: 'ETH', logo: ETHLogo },
-  //   { value: 'USDT', logo: USDTLogo },
-  //   { value: 'SOL', logo: SOLLogo },
-  // ];
 
   React.useEffect(() => {
     setSelectedBill('data');

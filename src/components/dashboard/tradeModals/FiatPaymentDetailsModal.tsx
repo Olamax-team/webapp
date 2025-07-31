@@ -52,6 +52,7 @@ const FiatPaymentDetailsModal = () => {
                     <p className="border bg-white bg-opacity-20 p-3 rounded-md">Kindly complete the transaction by making payment to the displayed banking details.</p>
                     <p className="bg-white bg-opacity-20 border p-3 rounded-md">Please verify the banking details before authorizing the payment, we would not be held responsible if funds are sent to a wrong account.</p>
                     <p className="bg-white bg-opacity-20 border p-3 rounded-md">Upon successful payment, click the "I Have Made Payment" button to complete the transaction.</p>
+                    <p className="bg-white bg-opacity-20 border p-3 rounded-md">Make sure to pay the exact amount expect, nothing more, nothing less.</p>
                     <p className="bg-white bg-opacity-20 border p-3 rounded-md">This transaction has a time limit of 30 minutes before it is cancelled.</p>
                     </div>
                 </div>
@@ -71,16 +72,19 @@ const FiatPaymentDetailsModal = () => {
                     {/* Bank Details */}
                     <div className="text-center">
                     {/* Bank Logo and Name */}
-                    <div className="flex font-Inter items-center justify-center gap-6 mb-8">
-                        <img src={accountDetails?.bank_icon} alt="Bank Logo" className="w-9 h-9" />
-                        <p className="text-lg font-semibold">{accountDetails?.bank}</p>
+                    <div className="flex font-Inter items-center justify-center gap-4 mb-8">
+                        <img src={accountDetails?.bank_icon} alt="Bank Logo" className="w-9 h-9 border" />
+                        <div>
+                          <p className="font-semibold">Bank Name:</p>
+                          <p className="font-semibold">{accountDetails?.bank}</p>
+                        </div>
                     </div>
                     
                     {/* Account Details */}
                     <div className="px-5 py-[14px] font-Inter w-[360px] border rounded-md space-y-4">
                       <div className="space-y-2 border-b-2">
                         <p className="text-left mt-2 text-[14px] leading-[21px] text-textDark">Total Amount Expected</p>
-                        <p className="text-left text-[14px] leading-[21px]">NGN{accountDetails?.amount.toLocaleString()}.00</p>
+                        <p className="text-left text-[14px] leading-[21px] text-red-600">NGN{accountDetails?.amount.toLocaleString()}.00</p>
                       </div>
                       <div className="space-y-2 border-b-2">
                         <p className="text-sm text-left text-textDark">Account Number</p>

@@ -1,9 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { useFetchStore } from "../../stores/fetch-store";
+import { useLiveRates } from "../../hooks/useLiveRates";
 
 interface liveRateCoin {
   coin: string;
@@ -68,13 +67,7 @@ const CryptoMarketToday: React.FC<CryptoMarketTodayProps> = ({
     )
   };
 
-
-  const { fetchLiveRates } = useFetchStore();
-
-  const { data, status } = useQuery({
-    queryKey: ['live-rates'],
-    queryFn: fetchLiveRates,
-  });
+  const { data, status } = useLiveRates();
 
   const LiveRates = () => {
 

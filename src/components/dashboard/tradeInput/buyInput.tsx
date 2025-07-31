@@ -9,15 +9,14 @@ import { useForm } from "react-hook-form";
 import { buyInput, buyInputValues } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useFetchStore } from "../../../stores/fetch-store";
 import { useToast } from "../../../hooks/use-toast";
+import { useCoinBlockChains } from "../../../hooks/useCoinBlockChains";
+import { useMinimumTransaction } from "../../../hooks/useMinimumTransaction";
 
 const BuyInput: React.FC = () => {
     
   const { user, kycStatus, fetchKycStatus, token } = useUserDetails();
   const { item, setTransactionId } = useTradeStore();
-  const { fetchCoinBlockChain, fetchMinimumTransaction} = useFetchStore();
 
   const openConfirmCompleteTransaction = useConfirmCompleteTransaction();
 
@@ -51,15 +50,8 @@ const BuyInput: React.FC = () => {
     }
   });
 
-  const { data:blockChains } = useQuery({
-    queryKey: ['block-chains', item?.cryptoType_id],
-    queryFn: () => item?.cryptoType_id ? fetchCoinBlockChain(item.cryptoType_id) : Promise.reject('cryptoType_id is undefined')
-  });
-
-  const { data:minTransaction } = useQuery({
-    queryKey: ['min-transaction', item?.cryptoType_id],
-    queryFn: () => item?.cryptoType_id ? fetchMinimumTransaction(item.cryptoType_id) : Promise.reject('cryptoType_id is undefined')
-  });
+  const { data: blockChains } = useCoinBlockChains(typeof item?.cryptoType_id === "number" ? item.cryptoType_id : 0);
+  const { data: minTransaction } = useMinimumTransaction(item?.cryptoType_id ?? 0);
 
   const watchedNetwork = watch('network');
   const selectedBlockChainDetails = blockChains?.find((item) => item.blockchain_name === watchedNetwork);

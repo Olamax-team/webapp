@@ -1,5 +1,4 @@
 import  { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../stores/generalStore";
 import ElectricityBills from "../dashboard/bills&payment/billsPayment/electricityBills";
@@ -9,7 +8,7 @@ import CableTv from "../dashboard/bills&payment/billsPayment/cableTv";
 import CowryBills from "../dashboard/bills&payment/billsPayment/cowryBills";
 import WaterBills from "../dashboard/bills&payment/billsPayment/waterBills";
 import useUserDetails from "../../stores/userStore";
-import { useFetchStore } from "../../stores/fetch-store";
+import { useBills } from "../../hooks/useBills";
 
 interface BillsPaymentProps {
     className?: string; // Additional class names for styling
@@ -23,15 +22,14 @@ const BillsPayment:React.FC<BillsPaymentProps> = ({
   className,
 })  => {
   const { user, fetchKycDetails } = useUserDetails();
-const {fetchBills,} = useFetchStore();
 
   // ===== Effect Hooks =====
   // Fetch KYC details when user is available
-useEffect(() => {
-    if (user) {
-        fetchKycDetails(); 
-    }
-}, [user])
+  useEffect(() => {
+      if (user) {
+          fetchKycDetails(); 
+      }
+  }, [user])
 
 const BillsIink = ({ index }: billsLinkProps) => {
   const { setActive } = activityIndex();
@@ -58,7 +56,7 @@ const BillsIink = ({ index }: billsLinkProps) => {
 
   const { active, showTransactionDetail, selectedBill } = activityIndex();
  // ===== Queries =====
-  const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills'], queryFn: fetchBills });
+  const { data: billServices, status: billServiceStatus } = useBills();
     // Derive categories from billServices.service
 
   const categories = billServices?.slice(2).map((service) => service.service) ?? [];

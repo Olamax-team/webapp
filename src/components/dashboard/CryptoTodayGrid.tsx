@@ -5,12 +5,12 @@ import IndicatorButtonGroup from "../tradeCrypto/indicator";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { useFetchStore } from "../../stores/fetch-store";
 import { HiHeart, HiOutlineHeart } from "react-icons/hi2";
 import { useApiConfig } from "../../hooks/api";
 import axios from "axios";
 import useUserDetails from "../../stores/userStore";
 import { FavoritesResponse } from "../../lib/types";
+import { useLiveRates } from "../../hooks/useLiveRates";
 
 // Define the type for a single crypto item
 
@@ -152,13 +152,8 @@ const CryptoTodayGrid: React.FC<CryptoTodayGridProps> = ({
         </div>
     )
   };
-
-  const { fetchLiveRates } = useFetchStore();
   
-  const { data, status } = useQuery({
-    queryKey: ['live-rates'],
-    queryFn: fetchLiveRates,
-  });
+  const { data, status } = useLiveRates();
 
   const favouriteCoInConfig = useApiConfig({
     method: 'get',

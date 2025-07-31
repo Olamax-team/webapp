@@ -6,8 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { HiChevronDown } from "react-icons/hi";
-
-import { useFetchStore } from "../../stores/fetch-store";
 import { activityIndex } from "../../stores/generalStore";
 import useBillsStore from "../../stores/billsStore";
 import useUserDetails from "../../stores/userStore";
@@ -17,6 +15,14 @@ import { cn } from "../../lib/utils";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formValidationSchema } from "../formValidation/formValidation";
+import { useStableCoins } from "../../hooks/useStableCoins";
+import { useAllCoins } from "../../hooks/useAllCoins";
+import { useBillServices } from "../../hooks/useBillServices";
+import { useAirtimeNetworks } from "../../hooks/useAirtimeNetworks";
+import { useDataPurchaseNetworks } from "../../hooks/useDataPurchaseNetworks";
+import { usePackages } from "../../hooks/usePackages";
+import { useAllCoinPrices } from "../../hooks/useAllCoinPrices";
+import { useLiveRates } from "../../hooks/useLiveRates";
 
 // ===== Types =====
 interface airtimePaymentProps {
@@ -53,62 +59,36 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
   const navigate = useNavigate();
 
-  const {
-    fetchBillServices,
-    fetchNetworkAirtime,
-    fetchDataPurchaseNetworks,
-    fetchAllCoinPrices,
-    fetchStableCoins,
-    fetchAllCoins, 
-    fetchPackages,
-    fetchLiveRates
-  } = useFetchStore();
-
   const airtimeDetails = useBillsStore();
   const dataDetails = useBillsStore();
   const { setActive, setShowTransactionDetail, setSelectedBill } = activityIndex();
 
   // ===== Queries =====
-  const { data: stables, status: stablesStatus } = useQuery({ queryKey: ['stable-coins'], queryFn: fetchStableCoins });
-  const { data: coin, status: coinStatus } = useQuery({ queryKey: ['all-coins'], queryFn: fetchAllCoins });
-  const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills-service'], queryFn: fetchBillServices });
-  const { data: airtimeNetworks, status:airtimeNetworkStatus } = useQuery({ queryKey: ['airtime-networks'], queryFn: fetchNetworkAirtime });
-  const { data: networkOptionsList, status:networkOptionStatus } = useQuery({ queryKey: ['data-networks'], queryFn: fetchDataPurchaseNetworks });
-  const { data:packageDetails} = useQuery({queryKey: ['package-data'], queryFn: () => fetchPackages(Number(selectedNetworkDetails?.product_number) || 0)})
-    const {data:liveRates } = useQuery({
-      queryKey: ['live-rates'],
-      queryFn: fetchLiveRates,
-    });
-
-  React.useEffect(() => {
-    if (networkOptionsList && networkOptionsList.length > 0) {
-      setSelectedNetwork(networkOptionsList[0].network)  
-    }
-  }, [networkOptionsList])
-
+  const { data: stables, status: stablesStatus } = useStableCoins();
+  const { data: coin, status: coinStatus } = useAllCoins();
+  const { data: billServices, status: billServiceStatus } = useBillServices();
+  const { data: airtimeNetworks, status:airtimeNetworkStatus } = useAirtimeNetworks();
+  const { data: networkOptionsList, status:networkOptionStatus } = useDataPurchaseNetworks();
+  const { data: liveRates } = useLiveRates();
   // ===== Local State =====
   const [cat0, setCat0] = useState("Airtime");
   const [subTab, setSubTab] = useState(billServices?.[0]?.cs ?? "fiat");
-
-    const { data:prices } = useQuery({
-      queryKey: ['coin-prices'],
-      queryFn: fetchAllCoinPrices,
-      enabled: subTab === 'crypto'
-    });
-  
-  
-    const getSellingPrice = (coinCode: string) => {
-      const id = getCoinId(coinCode);
-      if (prices) {
-        return prices.find(p => p.coin_id === id)?.selling;
-      }
-    };
 
   const [selectedNetwork, setSelectedNetwork] = useState<string>(networkOptionsList ? networkOptionsList[0].network : "MTN");
 
   const [selectedNetworkDetails, setSelectedNetworkDetails] = useState<AirtimeNetwork | undefined>(
     networkOptionsList?.[0]
   );
+
+  const { data:packageDetails} = usePackages(selectedNetworkDetails?.product_number ?? 0);
+  const { data:prices } = useAllCoinPrices(subTab === 'crypto');
+
+    const getSellingPrice = (coinCode: string) => {
+        const id = getCoinId(coinCode);
+        if (prices) {
+        return prices.find(p => p.coin_id === id)?.selling;
+        }
+    };
 
   const [selectedPackage, setSelectedPackage] = useState('');
   const [selectedPackageDetails, setSelectedPackageDetails] = useState<dataPackageProps | undefined>();
