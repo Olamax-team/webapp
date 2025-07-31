@@ -1,10 +1,26 @@
 import Modal from '../../ui/modal'
 import { useTransactionCompletedModal } from '../../../lib/utils'
 import useTradeStore from '../../../stores/tradeStore';
+import { useNavigate } from 'react-router-dom';
+import { activityIndex } from '../../../stores/generalStore';
 
 const TransactionCompletedModal = () => {
   const { isOpen, onClose } = useTransactionCompletedModal();
-  const { paymentDetails, item } = useTradeStore();
+  const { paymentDetails, item, clearItem, clearPaymentDetails, clearAccountDetails } = useTradeStore();
+  const { setActive, setShowTransactionDetail, setActiveTab } = activityIndex();
+
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    setActive(0);
+    setActiveTab('buy');
+    setShowTransactionDetail(false);
+    onClose();
+    navigate('/dashboard/transaction');
+    clearItem();
+    clearPaymentDetails();
+    clearAccountDetails();
+  }
 
   
   return (
@@ -26,7 +42,7 @@ const TransactionCompletedModal = () => {
             <p className='text-sm lg:text-base font-Inter'>Your payment has been confirmed and your exchange for   <span className="font-bold">{item?.tradeType === "Buy"? `${item?.cryptoType} ${item?.cryptoAmount}`: `${item?.fiatType} ${item?.fiatAmount}`}</span> has been processed.</p>
           }
         </div>
-        <button className='w-full h-12 rounded-lg font-poppins bg-primary hover:bg-secondary text-white' onClick={() =>onClose()}>
+        <button className='w-full h-12 rounded-lg font-poppins bg-primary hover:bg-secondary text-white' onClick={() =>handleClose()}>
           Close
         </button>
       </div>

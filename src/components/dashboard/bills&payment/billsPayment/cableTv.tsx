@@ -5,13 +5,18 @@ import arrowIcon from '../../../../assets/images/arrowdown.svg';
 import useBillsStore from "../../../../stores/billsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
-import { useFetchStore } from "../../../../stores/fetch-store";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../../../../lib/utils";
+import { useStableCoins } from "../../../../hooks/useStableCoins";
+import { useAllBuyCoins } from "../../../../hooks/useAllBuyCoin";
+import { useAllCoinPrices } from "../../../../hooks/useAllCoinPrices";
+import { useLiveRates } from "../../../../hooks/useLiveRates";
+import { useBillServices } from "../../../../hooks/useBillServices";
+import { useTVServices } from "../../../../hooks/useTVServices";
+import { usePackages } from "../../../../hooks/usePackages";
 
 
 type Inputs = {
@@ -45,19 +50,6 @@ type packageProps = {
   amount: number
 };
 
-// transaction_type: activeButton,
-// naira_amount: inputAmount;
-// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
-// blockchain_id: number;
-// coin_amount: Number(paymentAmount);
-// bills: selectedBill;
-// network: selectedNetwork;
-// package_product_number: selectedNetworkDetails.product_number;
-// electricity_type: string;
-// phone_number: string;
-// cable_number: string;
-// meter_number: string;
-
 const CableTv = () => {
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
@@ -65,17 +57,9 @@ const CableTv = () => {
   const navigate = useNavigate();
 
   const { setShowTransactionDetail, setSelectedBill, selectedBill } = activityIndex();
-  const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices, fetchTvServices, fetchPackages, fetchLiveRates } = useFetchStore();
 
-    const { data: stables } = useQuery({
-      queryKey: ['stable-coins'],
-      queryFn: fetchStableCoins
-    })
-  
-    const { data:dataCoin } = useQuery({
-      queryKey: ['all-coins'],
-      queryFn: fetchAllBuyCoins
-    })
+    const { data: stables } = useStableCoins();
+    const { data:dataCoin } = useAllBuyCoins();
 
     const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
      
@@ -86,15 +70,8 @@ const CableTv = () => {
      return undefined; // Explicitly return undefined if coin is not defined
    };
  
-   const { data:prices } = useQuery({
-     queryKey: ['coin-prices'],
-     queryFn: fetchAllCoinPrices
-   });
-
-    const {data:liveRates } = useQuery({
-      queryKey: ['live-rates'],
-      queryFn: fetchLiveRates,
-    });
+   const { data:prices } = useAllCoinPrices();
+    const {data:liveRates } = useLiveRates();
  
    const getSellingPrice = (coinCode: string) => {
      const id = getCoinId(coinCode);
@@ -110,15 +87,8 @@ const CableTv = () => {
      }
    }; 
 
-  const { data:billServices, status:billServiceStatus } = useQuery({
-    queryKey: ['bills-service'],
-    queryFn: fetchBillServices,
-  });
-
-  const { data:tvServices, status:tvServiceStatus } = useQuery({
-    queryKey: ['tv-services'],
-    queryFn: fetchTvServices,
-  });
+  const { data:billServices, status:billServiceStatus } = useBillServices();
+  const { data:tvServices, status:tvServiceStatus } = useTVServices();
 
   const { register, handleSubmit,setValue, formState: { errors }, reset,watch} = useForm<Inputs>({
     resolver: zodResolver(formValidationSchema), 
@@ -167,11 +137,7 @@ const CableTv = () => {
   };
 
 
-  const { data:subscriptionPackages, status:cablePackageStatus} = useQuery({
-    queryKey: ['cable-packages', selectedNetwork, selectedNetworkDetails?.product_number],
-    queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
-    enabled: selectedNetworkDetails && selectedNetworkDetails.product_number !== 0
-  });
+  const { data:subscriptionPackages, status:cablePackageStatus} = usePackages(selectedNetworkDetails?.product_number ?? 0);
 
   const [selectedPackage, setSelectedPackage] = useState('');
   const [, setSelectedPackageDetails] = useState<packageProps | undefined>(undefined);
@@ -219,100 +185,6 @@ const CableTv = () => {
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
   };
-
-// useEffect(() => {
-    
-//     if (lastChanged !== 'amount1') return;
-//     if (!amount1) {
-//       setAmount2("");
-//       setValue("paymentAmount", "");
-//       return;
-//   }
-  
-//     if (dollarPrice) {
-//       let newAmount2 = '';
-//       if (activeButton === "crypto") {
-//         newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPrice))).toFixed(6); // NGN → crypto
-//       } else if (activeButton === 'fiat') {
-//         newAmount2 = (parseFloat(amount1)).toFixed(2); // NGN
-//       }
-//   // Updating Zustand state
-//       setAmount2(newAmount2);
-//       setValue("paymentAmount", newAmount2);
-//     }
-//   }, [amount1, fiatPayment, activeButton, prices, coin, lastChanged]);
-
-//   useEffect(() => {
-//     if (lastChanged !== 'amount2') return;
-//     if (!amount2) {
-//       setAmount1("");
-//       setValue("inputAmount", "");
-//       return;
-//       }
-  
-//     if (dollarPrice) {
-//       let newAmount1 = '';
-//       if (activeButton === "crypto") {
-//         newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPrice))).toFixed(2); // NGN → crypto
-//       } else if (activeButton === 'fiat') {
-//         newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
-//       }
-//       setAmount1(newAmount1);
-//       setValue("inputAmount", newAmount1);
-//     }
-//   }, [amount2, selectPayment, activeButton, prices, coin, lastChanged, currentCoinPrice]);
-
-  // //autofill for both inputs
-  // const price = useMemo(() => {
-  //   if (activeButton === 'crypto') {
-  //     return getSellingPrice(selectPayment);
-  //   } else {
-  //     return getBuyingPrice(selectPayment);
-  //   }
-  // }, [activeButton, inputAmount, paymentAmount, selectPayment, fiatPayment, prices, coin]);
-
-  // useEffect(() => {
-    
-  //   if (lastChanged !== 'amount1') return;
-  //   if (!amount1) {
-  //     setAmount2("");
-  //     setValue("paymentAmount", "");
-  //     return;
-  // }
-  //   if (price) {
-  //     let newpaymentAmount = '';
-  //     if (activeButton === "crypto") {
-  //       //WE DONOT KNOW THE FORMULA YET
-  //       newpaymentAmount = (parseFloat(amount1) / parseFloat(price)).toFixed(6); // NGN → crypto
-  //     } else if (activeButton === 'fiat') {
-  //       newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
-  //     }
-  // // Updating Zustand state
-  //     setAmount2(newpaymentAmount);
-  //     setValue("paymentAmount", newpaymentAmount);
-  //   }
-  // }, [amount1, fiatPayment, activeButton, prices, coin, lastChanged]);
-
-  // useEffect(() => {
-  //   if (lastChanged !== 'amount2') return;
-  //   if (!amount2) {
-  //     setAmount1("");
-  //     setValue("inputAmount", "");
-  //     return;
-  //     }
-  
-  //   if (price) {
-  //     let newinputAmount = '';
-  //     if (activeButton === "crypto") {
-  //       //WE DONOT KNOW THE FORMULA YET
-  //       newinputAmount = (parseFloat(amount2) * parseFloat(price)).toFixed(2); // NGN → crypto
-  //     } else if (activeButton === 'fiat') {
-  //       newinputAmount = (parseFloat(amount2)).toFixed(2); 
-  //     }
-  //     setAmount1(newinputAmount);
-  //     setValue("inputAmount", newinputAmount);
-  //   }
-  // }, [amount2, selectPayment, activeButton, prices, coin, lastChanged]);
 
   useEffect(() => {
     setSelectedBill('cable')

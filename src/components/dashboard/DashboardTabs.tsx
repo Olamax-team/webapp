@@ -48,8 +48,10 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ name, lastLogin, uid, isVerifie
     React.useEffect(() => {
       if (user && user.account_status === 'Unverified') {
         openConfirmVerification.onOpen();
+        return;
       } else {
         openConfirmVerification.onClose();
+        return;
       }
     }, [user, user?.account_status])
 
@@ -167,7 +169,8 @@ const DashboardTab: React.FC = () => {
   React.useEffect(() => {
     if ((userDetail && userDetails?.status === 'verified') && userDetails?.is_auth_code === 'inactive') {
       onOpen();
-    } else { return; }
+      return;
+    }
   }, [userDetail, userDetails])
 
   const user = {

@@ -10,9 +10,14 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
-import { useFetchStore } from "../../../../stores/fetch-store";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
+import { useStableCoins } from "../../../../hooks/useStableCoins";
+import { useAllBuyCoins } from "../../../../hooks/useAllBuyCoin";
+import { useLiveRates } from "../../../../hooks/useLiveRates";
+import { useAllCoinPrices } from "../../../../hooks/useAllCoinPrices";
+import { useBillServices } from "../../../../hooks/useBillServices";
+import { usePackages } from "../../../../hooks/usePackages";
   
 type Inputs = {
   inputAmount: string;
@@ -39,20 +44,6 @@ interface coinsProps {
   stable_coins: string;
 };
 
-// transaction_type: activeButton,
-// naira_amount: inputAmount;
-// coin_token_id: activeButton === 'crypto' && selectPaymentDetails.id;
-// blockchain_id: number;
-// coin_amount: Number(paymentAmount);
-// bills: selectedBill;
-// network: selectedNetwork;
-// package_product_number: selectedNetworkDetails.product_number;
-// electricity_type: string;
-// phone_number: string;
-// cable_number: string;
-// meter_number: string;
-
-
 const ElectricityBills = () => {
 
   const { user, fetchKycDetails, kycDetails } = useUserDetails();
@@ -66,8 +57,6 @@ const ElectricityBills = () => {
     url: 'get-electricity-branches/electricity/postpaid'
   });
 
- const { fetchAllCoinPrices, fetchStableCoins, fetchAllBuyCoins, fetchBillServices, fetchLiveRates, fetchPackages } = useFetchStore();
-
   const fetchElectricBranches = async () => {
     const response = await axios.request(electricBranchesConfig);
     if (response.status !== 200) {
@@ -77,20 +66,9 @@ const ElectricityBills = () => {
     return data;
   };
 
-   const { data: stables } = useQuery({
-     queryKey: ['stable-coins'],
-     queryFn: fetchStableCoins
-   })
- 
-   const { data:dataCoin } = useQuery({
-     queryKey: ['all-coins'],
-     queryFn: fetchAllBuyCoins
-   })
-
-  const {data:liveRates } = useQuery({
-    queryKey: ['live-rates'],
-    queryFn: fetchLiveRates,
-  });
+  const { data: stables } = useStableCoins();
+  const { data:dataCoin } = useAllBuyCoins();
+  const {data:liveRates } = useLiveRates();
 
   const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
     
@@ -100,12 +78,8 @@ const ElectricityBills = () => {
     }
     return undefined; // Explicitly return undefined if coin is not defined
   };
-  
 
-  const { data:prices } = useQuery({
-    queryKey: ['coin-prices'],
-    queryFn: fetchAllCoinPrices
-  });
+  const { data:prices } = useAllCoinPrices();
 
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
@@ -120,10 +94,7 @@ const ElectricityBills = () => {
       return prices.find(p => p.coin_id === id)?.buying;
     }
   };
-  const { data:billServices, status:billServiceStatus} = useQuery({
-    queryKey: ['bills-service'],
-    queryFn: fetchBillServices,
-  });
+  const { data:billServices, status:billServiceStatus} = useBillServices();
 
   const { data:electicBranches, status:electricBranchesStatus} = useQuery({
     queryKey: ['electric-branches'],
@@ -155,11 +126,7 @@ const ElectricityBills = () => {
 
   const { setItem } = useBillsStore();
 
-  const { data:packageData } = useQuery({
-    queryKey: ['package-details', selectedNetworkDetails?.product_number],
-    queryFn: () => selectedNetworkDetails?.product_number !== undefined ? fetchPackages(selectedNetworkDetails.product_number) : Promise.reject('product_number is undefined'),
-    enabled: selectedNetworkDetails?.product_number !== undefined
-  });
+  const { data:packageData } = usePackages(selectedNetworkDetails?.product_number ?? 0);
 
   const packageDetails = packageData?.[0];
 

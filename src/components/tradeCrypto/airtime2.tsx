@@ -1,8 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-
-
-import { useFetchStore } from "../../stores/fetch-store";
 import { activityIndex } from "../../stores/generalStore";
 import useUserDetails from "../../stores/userStore";
 
@@ -11,6 +7,7 @@ import AirtimeRecharge from "../dashboard/bills&payment/billsPayment/airtimeRech
 import Datapurchase from "../dashboard/bills&payment/billsPayment/datapurchase";
 import { Loader2 } from "lucide-react";
 import BillsDetails from "../dashboard/bills&payment/billsDetails";
+import { useBills } from "../../hooks/useBills";
 
 
 // ===== Types =====
@@ -31,17 +28,13 @@ const AirtimePayment: React.FC<airtimePaymentProps> = ({
   const { active, showTransactionDetail, selectedBill } = activityIndex();
   const { user, fetchKycDetails } = useUserDetails();
 
-  const {
-    fetchBills,
-  } = useFetchStore();
-
   // ===== Effect Hooks =====
   // Fetch KYC details when user is available
-useEffect(() => {
-    if (user) {
-        fetchKycDetails(); 
-    }
-}, [user])
+  useEffect(() => {
+      if (user) {
+          fetchKycDetails(); 
+      }
+  }, [user])
 
 const BillsIink = ({ index}: billsLinkProps) => {
   const { setActive } = activityIndex();
@@ -64,7 +57,7 @@ const BillsIink = ({ index}: billsLinkProps) => {
 };
 
   // ===== Queries =====
-  const { data: billServices, status: billServiceStatus } = useQuery({ queryKey: ['bills'], queryFn: fetchBills });
+  const { data: billServices, status: billServiceStatus } = useBills();
   const categories = billServices?.slice(0,2).map((service) => service.service) ?? [];
   const [cat0, setCat0] = useState<string>("");
 

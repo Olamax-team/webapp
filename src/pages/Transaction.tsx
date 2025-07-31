@@ -12,6 +12,9 @@ import { useApiConfig } from "../hooks/api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import useUserDetails from "../stores/userStore";
+import { useToast } from "../hooks/use-toast";
+import { activityIndex } from "../stores/generalStore";
 
 type dateComponentProps = {
   date: Date | undefined;
@@ -146,7 +149,11 @@ const Transaction = () => {
 
   const [fromDate, setFromDate] = React.useState<Date | undefined>();
   const [toDate, setToDate] = React.useState<Date | undefined>();
-  const [activeTab, setActiveTab] = React.useState('buy')
+  const { activeTab, setActiveTab } = activityIndex();
+
+  const { token } = useUserDetails();
+
+  const { toast } = useToast();
 
   const formattedTo = toDate ? format(new Date(toDate.toISOString()), 'yyyy-MM-dd') : '';
   const formattedFrom = fromDate ? format(new Date(fromDate.toISOString()), 'yyyy-MM-dd') : '';
@@ -172,8 +179,6 @@ const Transaction = () => {
     queryFn: fetchTranscations,
     refetchInterval: 5000,
   });
-
-  console.log(allTransactionData)
 
   const allTransactionDetails = allTransactionData?.data;
 
@@ -206,6 +211,72 @@ const Transaction = () => {
         <HiOutlineSearch className="size-7 absolute top-1/2 right-4 -translate-y-1/2"/>
       </div>
     )
+  };
+
+  const validateTransaction = async (refNumber:string) => {
+
+    const formdata = {
+      ref_number: refNumber
+    };
+
+    const validateConfig = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/validate-buy-transaction`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: formdata,
+    };
+
+    const validate = () => axios.request(validateConfig);
+
+    try {
+      const response = await validate();
+      if (response && response.status === 200) {
+        toast({
+          title: 'Transaction Update',
+          description: response.data.message,
+          variant: response.data.status === 'error' ? 'destructive' : 'success'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const finishTransaction = async (transactionId:number) => {
+
+    const formdata = {
+      transaction_id: transactionId
+    };
+
+    const finishConfig = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://api.olamax.io/api/admin/complete-selling-transaction`,
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: formdata,
+    };
+
+    const finish = () => axios.request(finishConfig);
+
+    try {
+      const response = await finish();
+      if (response && response.status === 200) {
+        toast({
+          title: 'Transaction Update',
+          description: response.data.message,
+          variant: response.data.status === 'error' ? 'destructive' : 'success'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const DesktopTransactionTable = () => {
@@ -274,18 +345,24 @@ const Transaction = () => {
                       { item.payment_status === 'pending' ?
                         <DropdownMenuContent className="rounded-xl">
                           <DropdownMenuGroup>
-                            <DropdownMenuItem className="rounded-lg">View</DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-lg">Cancel</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">View</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Cancel</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent> :
                         item.payment_status === 'completed' ?
                         <DropdownMenuContent className="rounded-xl">
                           <DropdownMenuGroup>
-                            <DropdownMenuItem className="rounded-lg">Save</DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-lg">Report</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Save</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Report</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent> :
-                        ''}
+                        <DropdownMenuContent className="rounded-xl">
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer" onClick={() => validateTransaction(item.ref)}>Refresh Transaction</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Cancel</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      }
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
@@ -305,7 +382,9 @@ const Transaction = () => {
                 <TableHead className="text-center font-bold">Coin Amount</TableHead>
                 <TableHead className="text-center font-bold">Naira Amount</TableHead>
                 <TableHead className="text-center font-bold">Status</TableHead>
-                <TableHead className="text-center font-bold">Account Transferred</TableHead>
+                <TableHead className="text-center font-bold">Account Name</TableHead>
+                <TableHead className="text-center font-bold">Bank Name</TableHead>
+                <TableHead className="text-center font-bold">Account Number</TableHead>
                 <TableHead className="text-center font-bold">Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -333,18 +412,24 @@ const Transaction = () => {
                       { item.payment_status === 'pending' ?
                         <DropdownMenuContent className="rounded-xl">
                           <DropdownMenuGroup>
-                            <DropdownMenuItem className="rounded-lg">View</DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-lg">Cancel</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">View</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Cancel</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent> :
                         item.payment_status === 'completed' ?
                         <DropdownMenuContent className="rounded-xl">
                           <DropdownMenuGroup>
-                            <DropdownMenuItem className="rounded-lg">Save</DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-lg">Report</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Save</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Report</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent> :
-                        ''}
+                        <DropdownMenuContent className="rounded-xl">
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer" onClick={() => finishTransaction(item.id)}>Refresh Transaction</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Cancel</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      }
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
@@ -390,18 +475,24 @@ const Transaction = () => {
                       { item.payment_status === 'pending' ?
                         <DropdownMenuContent className="rounded-xl">
                           <DropdownMenuGroup>
-                            <DropdownMenuItem className="rounded-lg">View</DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-lg">Cancel</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">View</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Cancel</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent> :
                         item.payment_status === 'completed' ?
                         <DropdownMenuContent className="rounded-xl">
                           <DropdownMenuGroup>
-                            <DropdownMenuItem className="rounded-lg">Save</DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-lg">Report</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Save</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Report</DropdownMenuItem>
                           </DropdownMenuGroup>
                         </DropdownMenuContent> :
-                        ''}
+                        <DropdownMenuContent className="rounded-xl">
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Refresh Transaction</DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-lg cursor-pointer">Cancel</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      }
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
@@ -555,8 +646,8 @@ const Transaction = () => {
       <h2 className="font-DMSans font-bold lg:text-[26px] leading-normal text-[20px]">Transaction</h2>
       <p className="font-Inter text-sm">Track, manage, and secure your trades effortlessly with a complete transaction history</p>
       <div className="w-full h-10 rounded mt-4 flex items-center gap-4 mb-4 md:mb-0">
-        <button type="button" className={cn("h-full px-6 lg:px-8 border rounded-md text-sm lg:text-base", activeTab === 'buy' && 'border-primary text-white bg-primary')} onClick={() => {setActiveTab('buy'); setFromDate(undefined); setToDate(undefined); }}>Buy</button>
         <button type="button" className={cn("h-full px-6 lg:px-8 border rounded-md text-sm lg:text-base", activeTab === 'sell' && 'border-primary text-white bg-primary')} onClick={() => {setActiveTab('sell'); setFromDate(undefined); setToDate(undefined);}}>Sell</button>
+        <button type="button" className={cn("h-full px-6 lg:px-8 border rounded-md text-sm lg:text-base", activeTab === 'buy' && 'border-primary text-white bg-primary')} onClick={() => {setActiveTab('buy'); setFromDate(undefined); setToDate(undefined); }}>Buy</button>
         <button type="button" className={cn("h-full px-6 lg:px-8 border rounded-md text-sm lg:text-base", activeTab === 'bills' && 'border-primary text-white bg-primary')} onClick={() => {setActiveTab('bills'); setFromDate(undefined); setToDate(undefined);}}>Bills</button>
       </div>
       <div className="mt-6 hidden lg:flex items-center gap-5">

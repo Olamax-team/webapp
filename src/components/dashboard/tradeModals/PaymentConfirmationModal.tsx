@@ -30,7 +30,7 @@ const PaymentConfirmationModal = () => {
             <div className="text-center font-Inter">
                 {/* Loading Spinner */}
                 <div className="flex justify-center mb-4">
-                <img src={loading} alt="Loading..." className="h-[50px] w-[50px] animate-spin" />
+                <img src={loading} alt="Loading..." className="size-[40px] animate-spin" />
                 </div>
                 <p className='font-bold text-[20px] leading-[30px]'>Confirming Transaction Status</p>
         

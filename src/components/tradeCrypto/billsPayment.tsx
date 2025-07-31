@@ -8,9 +8,13 @@ import { HiChevronDown } from "react-icons/hi";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../stores/generalStore";
 import { useNavigate } from "react-router-dom";
-import { useFetchStore } from "../../stores/fetch-store";
 import useBillsStore from "../../stores/billsStore";
 import useUserDetails from "../../stores/userStore";
+import { useStableCoins } from "../../hooks/useStableCoins";
+import { useAllBuyCoins } from "../../hooks/useAllBuyCoin";
+import { useAllCoinPrices } from "../../hooks/useAllCoinPrices";
+import { useBillServices } from "../../hooks/useBillServices";
+import { useTVServices } from "../../hooks/useTVServices";
 
 interface BillsPaymentProps {
     categories: string[]; // Categories to map for dropdown
@@ -22,30 +26,14 @@ type electricBranchProps = {
     product_number: number;
     abrv:string;
     icon: string;
-}; 
-
-type cableServicesProps = {
-    cable: string;
-    product_number: number;
-    abrv: string;
-    icon: string;
 };
 
 const BillsPayment: React.FC<BillsPaymentProps> = ({categories,className = "",}) => {
     
     const { user, fetchKycDetails, kycDetails } = useUserDetails();
-    
-    const { fetchAllCoinPrices, fetchBillServices, fetchAllBuyCoins, fetchStableCoins } = useFetchStore();
 
-    const { data: stables } = useQuery({
-        queryKey: ['stable-coins'],
-        queryFn: fetchStableCoins
-    });
-
-    const { data:coin } = useQuery({
-        queryKey: ['all-coins'],
-        queryFn: fetchAllBuyCoins
-    });
+    const { data: stables } = useStableCoins();
+    const { data:coin } = useAllBuyCoins();
     
     const getCoinId = (coinCode: string): number | undefined => {
         if (coin) {
@@ -54,10 +42,7 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({categories,className = "",})
         return undefined; // Explicitly return undefined if coin is not defined
       };    
 
-    const { data:prices } = useQuery({
-        queryKey: ['coin-prices'],
-        queryFn: fetchAllCoinPrices
-    });
+    const { data:prices } = useAllCoinPrices();
     
     const getPrice = (coinCode: string) => {
         const id = getCoinId(coinCode);
@@ -87,35 +72,15 @@ const BillsPayment: React.FC<BillsPaymentProps> = ({categories,className = "",})
         const data = response.data.branches as electricBranchProps[];
         return data;
     };
-    
-    const fetchTvServices = async () => {
-        const response = await axios.request({  method: 'get',
-            maxBodyLength: Infinity,
-            url: 'https://api.olamax.io/api/get-tv',
-            headers: {'Content-Type':'application/json'}
-        });
-        
-        if (response.status !== 200) {
-            throw new Error('Something went wrong, try again later');
-        }
-        const data = response.data.cable as cableServicesProps[];
-        return data;
-    };
 
-    const { data:billServices, status:billServiceStatus} = useQuery({
-        queryKey: ['bills-service'],
-        queryFn: fetchBillServices,
-    });
+    const { data:billServices, status:billServiceStatus} = useBillServices();
     
     const { data:electicBranches, status:electricBranchesStatus} = useQuery({
         queryKey: ['electric-branches'],
         queryFn: fetchElectricBranches,
     });
     
-    const { data:tvServices, status:tvServiceStatus } = useQuery({
-        queryKey: ['tv-services'],
-        queryFn: fetchTvServices,
-    });
+    const { data:tvServices, status:tvServiceStatus } = useTVServices();
 
     const [cat, setCat] = useState<string>(categories[0] || "Electricity");
     // const [currency, setCurrency] = useState<string>(props2currency[0] || "BTC");

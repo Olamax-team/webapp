@@ -6,11 +6,10 @@ import { formatNigerianPhoneNumber, removeEmptyKeys, useConfirmModal } from "../
 import { Info, Loader2 } from "lucide-react";
 import useUserDetails from "../../../../stores/userStore";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useFetchStore } from "../../../../stores/fetch-store";
 import axios from "axios";
 import useTradeStore from "../../../../stores/tradeStore";
 import { useToast } from "../../../../hooks/use-toast";
+import { useCoinBlockChains } from "../../../../hooks/useCoinBlockChains";
 
 const DataInput = () => {
     const { item } = useBillsStore();
@@ -19,7 +18,6 @@ const DataInput = () => {
     const { toast } = useToast();
     
     const { user, fetchKycStatus, kycStatus, token } = useUserDetails();
-    const { fetchCoinBlockChain } = useFetchStore();
 
     const [isLoading, setIsLoading] = React.useState(false);
     
@@ -37,10 +35,7 @@ const DataInput = () => {
         }
     });
 
-    const { data:blockChains } = useQuery({
-        queryKey: ['block-chains', item?.coin_token_id],
-        queryFn: () => item?.coin_token_id ? fetchCoinBlockChain(item.coin_token_id) : Promise.reject('coin token id is undefined')
-    });
+    const { data: blockChains } = useCoinBlockChains(typeof item?.coin_token_id === "number" ? item.coin_token_id : 0);
 
     const block_chain = watch('blockChain');
     const selectedChain = blockChains?.find((item) => item.blockchain_name === block_chain);

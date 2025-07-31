@@ -4,7 +4,7 @@ import logo from '../../../assets/images/OLAMAX Logo 4.svg'
 import { HiOutlineDuplicate } from 'react-icons/hi';
 import useTradeStore from '../../../stores/tradeStore';
 import UploadModal from '../../ui/upload-modal';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useApiConfig } from '../../../hooks/api';
 import axios from 'axios';
@@ -18,7 +18,8 @@ const CryptoPaymentDetailsModal = () => {
     const { item } = useBillsStore();
 
     const [showModal, setShowModal] = useState(isOpen);
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
+
     const closeModal = useCallback(() => {
     setShowModal(false);
     setTimeout(() => {
@@ -82,11 +83,6 @@ const CryptoPaymentDetailsModal = () => {
     .then((response) => {
         console.log(response)
         if (response.status === 200) {
-        console.log(response.data)
-        // tradeData.clearAccountDetails();
-        // tradeData.clearItem();
-        // tradeData.clearTransactionId();
-        // tradeData.clearCryptoTradeDetails();
         onClose(); 
         openPaymentConfirmation.onOpen(); 
         } else {
@@ -106,7 +102,7 @@ const CryptoPaymentDetailsModal = () => {
 
     const Desktop = () => {
         return (
-            <>
+            <React.Fragment>
                 <div className='flex bg-[#121826] p-6 gap-4 lg:hidden'>
                     <button className="w-full lg:hidden flex items-center justify-between text-white bg-[#121826]" onClick={() =>setOpen((state) =>!state)}>
                         <p className='font-poppins'>Information</p>
@@ -170,15 +166,15 @@ const CryptoPaymentDetailsModal = () => {
                         </div>
                     </div>
                 </div>
-            </>
+            </React.Fragment>
         )
     };
 
     const Mobile = () =>{
         return (
-            <>
+            <React.Fragment>
                 {open ?
-                <>
+                <React.Fragment>
                 <div className='lg:hidden block flex-col gap-8 w-full h-full'>
                     {/* Left Side: Information Panel */}
                     <div className="bg-textDark text-white p-[42px] w-full transition-all duration-300 h-full">
@@ -190,8 +186,8 @@ const CryptoPaymentDetailsModal = () => {
                         </div>
                     </div>
                 </div>
-                </>:
-                <>
+                </React.Fragment>:
+                <React.Fragment>
                 {/* Right Panel */}
                 <div className='lg:hidden text-center block flex-col gap-5 w-full justify-center items-center pb-9 transition-all duration-300'>
                     <div className="size-[150px] md:size-[200px] mx-auto">
@@ -226,9 +222,9 @@ const CryptoPaymentDetailsModal = () => {
                         </button>
                     </div>
                 </div>
-                </>
+                </React.Fragment>
                 }
-            </>
+            </React.Fragment>
         )
     };
 
@@ -238,16 +234,20 @@ const CryptoPaymentDetailsModal = () => {
   // Copy account number to clipboard
     const copyToClipboard = () => {
         navigator.clipboard.writeText(walletAdd ?? '');
-        alert("Wallet address copied!");
+        toast({
+           title: 'Copy Wallet Address',
+           description: 'Wallet address copied successfully',
+           variant: 'success'
+        })
     };
 
   return (
     <UploadModal
-    isOpen={isOpen}
-    modalSize='lg:max-w-[1000px] w-full max-w-[520px]'
-    modalStyle='rounded-md'
-    setShowModal={setShowModal}
-    showModal={showModal}
+        isOpen={isOpen}
+        modalSize='lg:max-w-[1000px] w-full max-w-[520px]'
+        modalStyle='rounded-md'
+        setShowModal={setShowModal}
+        showModal={showModal}
     >
         <Desktop/>
         <Mobile/>

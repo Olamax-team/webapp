@@ -8,10 +8,13 @@ import useTradeStore from "../../../stores/tradeStore";
 import { tradeSchema } from "../../formValidation/formValidation";
 import useUserDetails from "../../../stores/userStore";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { activityIndex } from "../../../stores/generalStore";
-import { useFetchStore } from "../../../stores/fetch-store";
 import { useToast } from "../../../hooks/use-toast";
+import { useLiveRates } from "../../../hooks/useLiveRates";
+import { useAllBuyCoins } from "../../../hooks/useAllBuyCoin";
+import { useCryptoServices } from "../../../hooks/useCryptoServices";
+import { useStableCoins } from "../../../hooks/useStableCoins";
+import { useAllCoinPrices } from "../../../hooks/useAllCoinPrices";
 
 
 interface BuySellProps {
@@ -51,36 +54,14 @@ const BuySell: React.FC<BuySellProps> = ({
   const amount1 = watch('amount1');
   const amount2 = watch('amount2');
 
-
-  const { fetchAllBuyCoins, fetchMinimumTransaction, fetchLiveRates, fetchAllCoinPrices, fetchCryptoServices, fetchStableCoins } = useFetchStore();
-
-  const { data: cryptoService } = useQuery({
-    queryKey: ['crypto-service'],
-    queryFn: fetchCryptoServices,
-  });
-
-
-  const { data: liveRates } = useQuery({
-    queryKey: ['live-rates'],
-    queryFn: fetchLiveRates,
-  });
-
-  const { data: prices } = useQuery({
-    queryKey: ['coin-prices'],
-    queryFn: fetchAllCoinPrices,
-  });
-
-  const { data: dataCoin } = useQuery({
-    queryKey: ['all-coins'],
-    queryFn: fetchAllBuyCoins,
-  });
+  const { data: cryptoService } = useCryptoServices();
+  const { data: liveRates } = useLiveRates();
+  const { data: prices } = useAllCoinPrices();
+  const { data: dataCoin } = useAllBuyCoins();
+  const { data: stables } = useStableCoins();
 
   const coin = dataCoin ? dataCoin.filter((item) => item.coin !== 'NGN') : undefined;
 
-  const { data: stables } = useQuery({
-    queryKey: ['stable-coins'],
-    queryFn: fetchStableCoins,
-  });
   
   const [prop1, setProp1] = useState("NGN");
   const [prop2, setProp2] = useState("BTC");
@@ -88,14 +69,6 @@ const BuySell: React.FC<BuySellProps> = ({
   const getCoinId = (coinCode: string): number => {
     return (coin ?? []).find(c => c.coin === coinCode)?.id || 0; 
   };
-
-  const { data: minTransaction } = useQuery({
-    queryKey: [coin?.find((c) => c.coin === prop2)?.id],
-    queryFn: ({ queryKey }) => queryKey[0] !== undefined ? fetchMinimumTransaction(queryKey[0] as number) : Promise.reject('coin id is undefined'),
-    enabled: coin?.find((c) => c.coin === prop2)?.id !== undefined,
-  });
-
-  console.log(minTransaction);
 
   const getSellingPrice = (coinCode: string) => {
     const id = getCoinId(coinCode);
@@ -124,45 +97,9 @@ const BuySell: React.FC<BuySellProps> = ({
     return { priceInNaira, priceInUsd, dollarValue };
   };
 
-  // const getCoinSellingPriceInNaira = (coinCode:string) => {
-  //   if (coinCode) {
-  //     let currentCoin;
-  //     let price;
-  //     if (liveRates && liveRates.length > 0) {
-  //       currentCoin = liveRates.find((item) => item.symbol === coinCode);
-  //       if (currentCoin) {
-  //         price = parseFloat(currentCoin.price.replace(/,/g, ""));
-  //           price = price * parseFloat(String(dollarPrice));
-  //       };
-
-  //       return price;
-  //     }
-  //   } else return;
-  // }
-
-  // const getCoinSellingPriceInDollar = (coinCode:string) => {
-  // if (coinCode) {
-  //   let currentCoin;
-  //   let price;
-  //   if (liveRates && liveRates.length > 0) {
-  //     currentCoin = liveRates.find((item) => item.symbol === coinCode);
-  //     if (currentCoin) {
-  //       price = parseFloat(currentCoin.price.replace(/,/g, ""));
-  //       if (typeof dollarPrice === 'number' && !isNaN(dollarPrice)) {
-  //         price = price;
-  //       }
-  //     };
-
-  //     return price;
-  //   }
-  // } else return;}
-
   const coinPrice = getCoinSellingPriceInNaira(prop2)
 
   const currentCoinPriceInNaira =  coinPrice?.priceInNaira
-  const currentCoinPriceInDollar =  coinPrice?.priceInUsd;
-
-  console.log(currentCoinPriceInDollar);
 
 
   useEffect(() => {
@@ -180,8 +117,6 @@ const BuySell: React.FC<BuySellProps> = ({
         newAmount2 = (parseFloat(amount1) * parseFloat(String(currentCoinPriceInNaira))).toFixed(2); // crypto → NGN
       }
 
-      // Syncing the calculated amount2 with react-hook-form
-      // setAmount2(newAmount2);  // Updating Zustand state
       setValue("amount2", newAmount2);
     }
   }, [amount1, prop1, prop2, subTab, dollarPrice, lastChanged, prices]);

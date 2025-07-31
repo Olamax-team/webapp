@@ -29,8 +29,9 @@ const HeroSection: React.FC = () => {
     React.useEffect(() => {
       if (user && userDetails?.status === 'verified' && userDetails?.is_auth_code === 'inactive') {
         onOpen();
+        return;
       }
-    }, [])
+    }, [user, userDetails?.status])
 
 
 
