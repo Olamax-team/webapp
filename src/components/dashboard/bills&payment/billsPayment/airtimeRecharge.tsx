@@ -16,6 +16,7 @@ import { useLiveRates } from "../../../../hooks/useLiveRates";
 import { useAllCoinPrices } from "../../../../hooks/useAllCoinPrices";
 import { useAirtimeNetworks } from "../../../../hooks/useAirtimeNetworks";
 import { usePackages } from "../../../../hooks/usePackages";
+import { truncateTo8Decimals } from "../../../../lib/utils";
 
 
 type Inputs = {
@@ -165,7 +166,9 @@ const AirtimeRecharge = () => {
     if (dollarPrice) {
       let newAmount2 = '';
       if (activeButton === "crypto") {
-        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPrice))).toString(); // NGN → crypto
+        const value = (parseFloat(amount1) / parseFloat(String(currentCoinPrice)));
+        const lastValue = truncateTo8Decimals(value)
+        newAmount2 = lastValue.toString(); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newAmount2 = (parseFloat(amount1)).toFixed(2); // NGN
       }
@@ -186,7 +189,9 @@ const AirtimeRecharge = () => {
     if (dollarPrice) {
       let newAmount1 = '';
       if (activeButton === "crypto") {
-        newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPrice))).toString(); // NGN → crypto
+        const value = (parseFloat(amount2) * parseFloat(String(currentCoinPrice)));
+        const lastValue = truncateTo8Decimals(value)
+        newAmount1 = lastValue.toString(); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
       }
