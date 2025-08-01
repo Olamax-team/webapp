@@ -400,6 +400,10 @@ export function decryptPayload<T = any>(ciphertext: string, ivBase64: string): T
   return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 }
 
+export function truncateTo8Decimals(num:number) {
+  return Math.floor(num * 1e8) / 1e8;
+};
+
 
 
 

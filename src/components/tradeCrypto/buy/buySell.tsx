@@ -15,6 +15,7 @@ import { useAllBuyCoins } from "../../../hooks/useAllBuyCoin";
 import { useCryptoServices } from "../../../hooks/useCryptoServices";
 import { useStableCoins } from "../../../hooks/useStableCoins";
 import { useAllCoinPrices } from "../../../hooks/useAllCoinPrices";
+import { truncateTo8Decimals } from "../../../lib/utils";
 
 
 interface BuySellProps {
@@ -112,7 +113,9 @@ const BuySell: React.FC<BuySellProps> = ({
     if (dollarPrice) {
       let newAmount2 = '';
       if (subTab === "buy") {
-        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPriceInNaira))).toString(); 
+        const value = (parseFloat(amount1) / parseFloat(String(currentCoinPriceInNaira)))
+        const lastValue = truncateTo8Decimals(value)
+        newAmount2 = lastValue.toString(); 
       } else if (subTab === 'sell') {
         newAmount2 = (parseFloat(amount1) * parseFloat(String(currentCoinPriceInNaira))).toFixed(2); // crypto → NGN
       }
@@ -134,7 +137,9 @@ const BuySell: React.FC<BuySellProps> = ({
       if (subTab === "buy") {
         newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPriceInNaira))).toFixed(2);// crypto → NGN
       } else if (subTab === 'sell') {
-        newAmount1 = (parseFloat(amount2) / parseFloat(String(currentCoinPriceInNaira))).toString(); // NGN → crypto
+        const value = (parseFloat(amount1) / parseFloat(String(currentCoinPriceInNaira)))
+        const lastValue = truncateTo8Decimals(value)
+        newAmount1 = lastValue.toString();  // NGN → crypto
       }
 
       // setAmount1(newAmount1); 
