@@ -18,7 +18,7 @@ import { useLiveRates } from "../../../../hooks/useLiveRates";
 import { useAllCoinPrices } from "../../../../hooks/useAllCoinPrices";
 import { useBillServices } from "../../../../hooks/useBillServices";
 import { usePackages } from "../../../../hooks/usePackages";
-import { truncateTo8Decimals } from "../../../../lib/utils";
+import { formatNumberSafely, truncateTo8Decimals } from "../../../../lib/utils";
   
 type Inputs = {
   inputAmount: string;
@@ -208,7 +208,7 @@ const ElectricityBills = () => {
         //WE DONOT KNOW THE FORMULA YET
         const value = (parseFloat(amount1) / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000))
         const lastValue = truncateTo8Decimals(value)
-        newpaymentAmount = lastValue.toString();
+        newpaymentAmount = formatNumberSafely(lastValue.toString())
       } else if (activeButton === 'fiat') {
         newpaymentAmount = (parseFloat(amount1)).toFixed(2); // NGN
       }
@@ -232,7 +232,7 @@ const ElectricityBills = () => {
         //WE DONOT KNOW THE FORMULA YET
         const value = (parseFloat(amount1) / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000))
         const lastValue = truncateTo8Decimals(value)
-        newinputAmount = lastValue.toString(); // NGN → crypto
+        newinputAmount = formatNumberSafely(lastValue.toString()); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newinputAmount = (parseFloat(amount2)).toFixed(2); 
       }

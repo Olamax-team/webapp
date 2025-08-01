@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
-import { cn, truncateTo8Decimals } from "../../../../lib/utils";
+import { cn, formatNumberSafely, truncateTo8Decimals } from "../../../../lib/utils";
 import { useStableCoins } from "../../../../hooks/useStableCoins";
 import { useAllBuyCoins } from "../../../../hooks/useAllBuyCoin";
 import { useAllCoinPrices } from "../../../../hooks/useAllCoinPrices";
@@ -182,7 +182,7 @@ const CableTv = () => {
     } else {
       const value = (package_name.amount / parseFloat(String(currentCoinPrice)));
       const lastValue = truncateTo8Decimals(value)
-      setValue('paymentAmount', lastValue.toString())
+      setValue('paymentAmount', formatNumberSafely(lastValue.toString()))
     }
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
@@ -210,7 +210,7 @@ const CableTv = () => {
         } else {
           const value = (subscriptionPackages[0].amount / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000));
           const lastValue = truncateTo8Decimals(value)
-          setValue('paymentAmount', lastValue.toString())
+          setValue('paymentAmount', formatNumberSafely(lastValue.toString()))
         }
       } else {
         setSelectedPackage('Package Loading...')

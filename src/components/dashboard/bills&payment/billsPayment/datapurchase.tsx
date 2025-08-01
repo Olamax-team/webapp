@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HiChevronDown } from "react-icons/hi";
 import { Loader2 } from "lucide-react";
 import { activityIndex } from "../../../../stores/generalStore";
-import { cn, truncateTo8Decimals } from "../../../../lib/utils";
+import { cn, formatNumberSafely, truncateTo8Decimals } from "../../../../lib/utils";
 import useUserDetails from "../../../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { useBillServices } from "../../../../hooks/useBillServices";
@@ -183,7 +183,7 @@ const Datapurchase = () => {
         // setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
         const value = (dataPackages[0].amount / parseFloat(String(currentCoinPrice)));
         const lastValue = truncateTo8Decimals(value)
-        setValue('paymentAmount', lastValue.toString())
+        setValue('paymentAmount', formatNumberSafely(lastValue.toString()))
       }
     } else {
       setSelectedPackage('Select Network Provider')
@@ -198,7 +198,7 @@ const Datapurchase = () => {
     } else {
       const value = (package_name.amount / parseFloat(String(currentCoinPrice)));
       const lastValue = truncateTo8Decimals(value)
-      setValue('paymentAmount', lastValue.toString())
+      setValue('paymentAmount', formatNumberSafely(lastValue.toString()))
     }
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
