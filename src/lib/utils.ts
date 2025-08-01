@@ -405,5 +405,20 @@ export function truncateTo8Decimals(num:number) {
 };
 
 
+export function formatNumberSafely(value: number | string): string {
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+
+  // If not exponential format, return as-is
+  if (!num.toString().includes('e-')) {
+    return num.toString();
+  }
+
+  // Expand small exponential number (like 1e-8)
+  const [base, exponent] = num.toExponential().split('e-');
+  const zeros = parseInt(exponent, 10) - 1;
+  return `0.${'0'.repeat(zeros)}${base.replace('.', '')}`;
+}
+
+
 
 
