@@ -181,7 +181,7 @@ const Datapurchase = () => {
         setValue('paymentAmount', dataPackages[0].amount.toString())
       } else {
         // setValue('paymentAmount', (dataPackages[0].amount / 1000).toFixed(6))
-        setValue('paymentAmount', (dataPackages[0].amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+        setValue('paymentAmount', (dataPackages[0].amount / parseFloat(String(currentCoinPrice))).toString())
       }
     } else {
       setSelectedPackage('Select Network Provider')
@@ -194,7 +194,7 @@ const Datapurchase = () => {
     if (activeButton === 'fiat') {
       setValue('paymentAmount', package_name.amount.toString())
     } else {
-      setValue('paymentAmount', (package_name.amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+      setValue('paymentAmount', (package_name.amount / parseFloat(String(currentCoinPrice))).toString())
     }
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);

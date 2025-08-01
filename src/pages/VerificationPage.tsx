@@ -6,11 +6,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom';
 import { documentTitle, useWhatNextPasswordModal } from '../lib/utils';
-// import gmailIcon from '../assets/images/logos_google-gmail.png'
-// import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
 import { Loader2 } from 'lucide-react';
+import { useToast } from '../hooks/use-toast';
 
 const VerificationPage = () => {
   documentTitle('Verification');
@@ -21,7 +20,9 @@ const VerificationPage = () => {
     const [isLoading, setIsLoading] = React.useState(false);
 
     const { onOpen } = useWhatNextPasswordModal();
-    
+
+    const { toast } = useToast();
+
     const defaultVerificationValues = {
       verificationCode: ''
     };
@@ -48,7 +49,6 @@ const VerificationPage = () => {
 
       setIsLoading(true);
       axios.request(config).then((response) => {
-        console.log(response);
         if (response.status === 200) {
           setIsLoading(false);
           onOpen();
@@ -68,12 +68,58 @@ const VerificationPage = () => {
     const [timeLeft, setTimeLeft] = React.useState<number | null>(null);
     const [showResendButton, setShowResendButton] = React.useState(false);
     const [isSending, setIsSending] = React.useState(false);
-  
+
     const resentOtp = async () => {
-      setIsSending(true);
-      setShowResendButton(false);
-      startDelay();
+      const emailAddress = localStorage.getItem('new_account');
+
+      if (!emailAddress) {
+        toast({
+          title: 'Error',
+          description: 'No email found in local storage. Start registration afresh',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      try {
+        setIsSending(true);
+        setShowResendButton(false);
+
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: 'https://api.olamax.io/api/request-email-otp',
+          headers: { 'Content-Type': 'application/json' },
+          data: { email: emailAddress, is_account: false }
+        };
+
+        const response = await axios.request(config);
+
+        if (response.status === 200) {
+          toast({
+            title: 'OTP Sent',
+            description: 'A new OTP has been sent to your email.',
+            variant: 'success'
+          });
+          startDelay(); 
+        } else {
+          throw new Error('Failed to resend OTP');
+        }
+      } catch (error) {
+        toast({
+          title: 'Resend Failed',
+          description: axios.isAxiosError(error)
+            ? error.response?.data?.message || 'Something went wrong.'
+            : 'Unexpected error occurred.',
+          variant: 'destructive'
+        });
+        startDelay();
+      } finally {
+        setIsSending(false);
+      }
     };
+
+
   
     const startCountdown = () => {
       setTimeLeft(60);

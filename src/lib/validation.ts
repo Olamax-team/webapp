@@ -12,6 +12,7 @@ const auth = z.object({
   currentPassword: requiredString,
   newPassword: requiredString,
   confirmPassword: requiredString,
+  emailOtp: requiredString,
 });
 
 export const loginSchema = auth.pick({ email: true, password: true });
@@ -31,3 +32,7 @@ export type securityAuthValues = z.infer<typeof securityAuthSchema>;
 
 export const changePasswordSchema = auth.pick({currentPassword: true, newPassword: true, confirmPassword: true});
 export type changePasswordValues = z.infer<typeof changePasswordSchema>;
+
+export const passwordRecoverySchema = auth.pick({emailOtp: true, newPassword: true, confirmPassword: true});
+export type passwordRecoveryValues = z.infer<typeof passwordRecoverySchema>;
+

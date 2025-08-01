@@ -95,46 +95,7 @@ const LoginPage = () => {
   };
 
   const continueWithGoogle = async () => {
-
-   
-      window.location.href = "https://api.olamax.io/auth/google"
-    
-    // const config = {
-    //   method: 'get',
-    //   url: 'https://api.olamax.io/auth/google',
-    // };
-
-    // setIsLoading(true);
-    // axios.request(config)
-    // .then((response) => {
-    //   console.log(response);
-    //   if (response.data.status === 'success') {
-    //     toast({
-    //       title: 'Success',
-    //       description: 'Registration was successful',
-    //        variant: 'success'
-    //     });
-    //     setIsLoading(false);
-    //   }
-    // }).catch((error) => {
-    //   if (axios.isAxiosError(error)) {
-    //     toast({
-    //       title: 'Error',
-    //       description: error.response?.data.message,
-    //       variant: 'destructive'
-    //     });
-    //     setIsLoading(false);
-    //     console.error("Error fetching data:", error.response?.data || error.message);        
-    //   } else {
-    //     toast({
-    //       title: 'Error',
-    //       description: 'Something went wrong, try again later',
-    //       variant: 'destructive'
-    //     });
-    //     setIsLoading(false);
-    //     console.error("Unexpected error:", error);
-    //   };
-    // })
+    window.location.href = "https://api.olamax.io/auth/google"
   };
 
   return (

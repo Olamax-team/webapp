@@ -9,7 +9,7 @@ import QueryProvider from '../ui/react-query-provider';
 
 const Layout = () => {
   const { pathname } = useLocation();
-  const authRoutes = ['/log-in', '/sign-up', '/password-recovery', '/verify-email']
+  const authRoutes = ['/log-in', '/sign-up', '/password-recovery', '/verify-email', '/set-new-password']
   const isAuthRoutes = authRoutes.includes(pathname);
   
   const location = useLocation();

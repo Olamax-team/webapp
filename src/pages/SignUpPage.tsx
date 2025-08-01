@@ -7,8 +7,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
-// import gmailIcon from '../assets/images/logos_google-gmail.png'
-// import arrow from '../assets/images/arrow-left.png'
 import axios from 'axios';
 import { useToast } from '../hooks/use-toast';
 import { Loader2 } from 'lucide-react';
@@ -60,6 +58,8 @@ const SignUpPage = () => {
         header: {'Content-Type':'application/json'},
         data: registerValues,
       };
+
+      localStorage.setItem('new_account', email);
 
       setLoading(true);
       axios.request(config)
