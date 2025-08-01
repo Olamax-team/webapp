@@ -180,7 +180,7 @@ const CableTv = () => {
     if (activeButton === 'fiat') {
       setValue('paymentAmount', package_name.amount.toString())
     } else {
-      setValue('paymentAmount', (package_name.amount / parseFloat(String(currentCoinPrice))).toFixed(6))
+      setValue('paymentAmount', (package_name.amount / parseFloat(String(currentCoinPrice))).toString())
     }
     setValue('inputAmount', package_name.payment_item_name);
     setIsNetworkDataPackageOpen(false);
@@ -206,7 +206,7 @@ const CableTv = () => {
         if (activeButton === 'fiat') {
           setValue('paymentAmount', subscriptionPackages[0].amount.toString())
         } else {
-          setValue('paymentAmount', (subscriptionPackages[0].amount / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000)).toFixed(6))
+          setValue('paymentAmount', (subscriptionPackages[0].amount / (currentRate && currentRate.priceInNaira ? currentRate.priceInNaira : 1000)).toString())
         }
       } else {
         setSelectedPackage('Package Loading...')

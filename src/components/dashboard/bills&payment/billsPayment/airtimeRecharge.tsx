@@ -165,7 +165,7 @@ const AirtimeRecharge = () => {
     if (dollarPrice) {
       let newAmount2 = '';
       if (activeButton === "crypto") {
-        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPrice))).toFixed(6); // NGN → crypto
+        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPrice))).toString(); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newAmount2 = (parseFloat(amount1)).toFixed(2); // NGN
       }
@@ -186,7 +186,7 @@ const AirtimeRecharge = () => {
     if (dollarPrice) {
       let newAmount1 = '';
       if (activeButton === "crypto") {
-        newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPrice))).toFixed(2); // NGN → crypto
+        newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPrice))).toString(); // NGN → crypto
       } else if (activeButton === 'fiat') {
         newAmount1 = (parseFloat(amount2)).toFixed(2); // crypto → NGN
       }

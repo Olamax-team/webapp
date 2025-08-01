@@ -32,6 +32,7 @@ import ProtectAuthRoute from './components/layout/ProtectAuthRoutes';
 import Faq from './components/FAQ/faq';
 import Contact from './components/support/contact-Us';
 import ComingSoon from './pages/ComingSoon';
+import NewPasswordForm from './pages/NewPasswordForm';
 
 const router = createBrowserRouter([
   {
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: '/password-recovery',
         element: <PasswordRecovery/>
+      },
+      {
+        path: '/set-new-password',
+        element: <NewPasswordForm/>
       },
       {
         path: '/news-and-announcement',

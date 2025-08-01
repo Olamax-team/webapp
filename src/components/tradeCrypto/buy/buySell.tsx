@@ -112,7 +112,7 @@ const BuySell: React.FC<BuySellProps> = ({
     if (dollarPrice) {
       let newAmount2 = '';
       if (subTab === "buy") {
-        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPriceInNaira))).toFixed(6); 
+        newAmount2 = (parseFloat(amount1) / parseFloat(String(currentCoinPriceInNaira))).toString(); 
       } else if (subTab === 'sell') {
         newAmount2 = (parseFloat(amount1) * parseFloat(String(currentCoinPriceInNaira))).toFixed(2); // crypto → NGN
       }
@@ -134,7 +134,7 @@ const BuySell: React.FC<BuySellProps> = ({
       if (subTab === "buy") {
         newAmount1 = (parseFloat(amount2) * parseFloat(String(currentCoinPriceInNaira))).toFixed(2);// crypto → NGN
       } else if (subTab === 'sell') {
-        newAmount1 = (parseFloat(amount2) / parseFloat(String(currentCoinPriceInNaira))).toFixed(6); // NGN → crypto
+        newAmount1 = (parseFloat(amount2) / parseFloat(String(currentCoinPriceInNaira))).toString(); // NGN → crypto
       }
 
       // setAmount1(newAmount1); 

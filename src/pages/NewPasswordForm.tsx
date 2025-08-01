@@ -2,18 +2,18 @@ import React from 'react';
 import AuthLayout from '../components/layout/AuthLayout';
 import { AuthInput } from '../components/auth/AuthInput';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../components/ui/form';
-import { recoverySchema, recoveryValues } from '../lib/validation';
+import { passwordRecoverySchema, passwordRecoveryValues } from '../lib/validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { documentTitle } from '../lib/utils';
 import axios from 'axios';
 import { useToast } from '../hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
 
-const PasswordRecovery = () => {
-  documentTitle('Password Recovery');
+const NewPasswordForm = () => {
+  documentTitle('New Password Form');
 
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
@@ -22,28 +22,34 @@ const PasswordRecovery = () => {
   const PasswordRecoveryForm = () => {
 
     const defaultRecoveryValues = {
-      email: '',
+      emailOtp: '',
+      newPassword: '',
+      confirmPassword: ''
     };
+
   
-    const form = useForm<recoveryValues>({
-      resolver: zodResolver(recoverySchema),
+    const form = useForm<passwordRecoveryValues>({
+      resolver: zodResolver(passwordRecoverySchema),
       defaultValues: defaultRecoveryValues,
     });
+
+    const watchedEmailOtp = form.watch('emailOtp');
+    const watchedNewPassword = form.watch('newPassword');
+    const watchedConfirmPassword = form.watch('confirmPassword');
   
-    const watchedEmail = form.watch('email');
-  
-    const onSubmitForm = (values:recoveryValues) => {
-      const { email } = values;
+    const onSubmitForm = (values:passwordRecoveryValues) => {
+      const { emailOtp, newPassword, confirmPassword } = values;
 
       const recoveryData = {
-        email: email,
-        is_account: true
+        otp: emailOtp, 
+        new_password: newPassword,
+        new_retyped_password: confirmPassword
       }
 
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `https://api.olamax.io/api/request-email-otp`,
+        url: `https://api.olamax.io/api/recover-account`,
         header: {'Content-Type':'application/json'},
         data: recoveryData,
       };
@@ -55,10 +61,10 @@ const PasswordRecovery = () => {
           setIsLoading(false);
           toast({
             title: 'Success',
-            description: 'Recovery password has been sent to ' + email,
+            description: 'Your new password has been set. Go ahead and login',
             variant: 'success'
           })
-          navigate('/set-new-password', {replace: true});
+          navigate('/log-in', {replace: true});
         }
       }).catch((error) => {
         if (axios.isAxiosError(error)) {
@@ -86,8 +92,8 @@ const PasswordRecovery = () => {
         <form onSubmit={form.handleSubmit(onSubmitForm)} className='flex flex-col gap-4 lg:w-[440px] md:w-[500px] w-[390px] mx-auto lg:mx-0'>
           <div className='mb-2 flex items-start justify-between'>
             <div>
-              <h2 className='text-[32px] leading-normal font-DMSans font-bold'>Password Recovery</h2>
-              <p className='text-base lg:-mr-6'>Don’t worry, resetting your password is very easy. Just type in the email address you registered with, and we would send you a one time password to confirm your identity</p>
+              <h2 className='text-[32px] leading-normal font-DMSans font-bold'>New Password Creation</h2>
+              <p className='text-base lg:-mr-6'>We know you have recieved the OTP. You can now change your password by entering the OTP as well as the new password you intend to use.</p>
             </div>
             <button className='flex gap-4 items-center text-black/50 lg:hidden mt-4 -mr-8' onClick={() => navigate(-1)}>
               <div className="size-[20px]">
@@ -98,21 +104,44 @@ const PasswordRecovery = () => {
           </div>
           <FormField
             control={form.control}
-            name='email'
+            name='emailOtp'
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <AuthInput {...field} inputValue={watchedEmail} label='Email Address' type='email'/>
+                  <AuthInput {...field} inputValue={watchedEmailOtp} label='Email OTP' type='text'/>
+                </FormControl>
+                <FormMessage/>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='newPassword'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <AuthInput {...field} inputValue={watchedNewPassword} label='New Password' type='password'/>
+                </FormControl>
+                <FormMessage/>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='confirmPassword'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <AuthInput {...field} inputValue={watchedConfirmPassword} label='Confirm Password' type='password'/>
                 </FormControl>
                 <FormMessage/>
               </FormItem>
             )}
           />
           <button className='w-full h-[70px] rounded-md bg-primary text-white mt-4 disabled:bg-primary/50 justify-center flex items-center gap-3' type='submit' disabled={isLoading}>
-            {isLoading ? 'Requesting OTP...' : 'Proceed'}
+            {isLoading ? 'Creating New Password...' : 'Proceed'}
             {isLoading && <Loader2 className='animate-spin'/>}
           </button>
-          <p className='font-poppins'>Don’t have an account ? <Link to={'/sign-up'} className='font-semibold'>Register</Link></p>
         </form> 
       </Form>
     )
@@ -125,4 +154,4 @@ const PasswordRecovery = () => {
   )
 }
 
-export default PasswordRecovery;
+export default NewPasswordForm;
